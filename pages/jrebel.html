@@ -26,6 +26,17 @@
     .copy-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
     .copy-btn.copied { color: #4ade80; border-color: #4ade80; }
     .disclaimer { margin-top: 40px; padding: 16px; background: var(--bg-tag); border-radius: var(--radius-md); font-size: 13px; color: var(--text-muted); }
+    /* 服务状态指示器 */
+    .server-status { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .server-status .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .server-status .status-dot.checking { background: #9ca3af; animation: status-spin 0.8s linear infinite; }
+    .server-status .status-dot.online { background: #22c55e; animation: status-breathe 2s ease-in-out infinite; }
+    .server-status .status-dot.unknown { background: #f59e0b; }
+    .server-status .status-dot.offline { background: #ef4444; }
+    .server-status #recheckBtn { padding: 6px 12px; font-size: 12px; background: var(--bg-tag); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; color: var(--text-secondary); }
+    .server-status #recheckBtn:hover { background: var(--bg-hover); color: var(--text); }
+    @keyframes status-spin { to { transform: rotate(360deg); } }
+    @keyframes status-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
   </style>
 </head>
 <body>
@@ -58,8 +69,14 @@
         <div class="value" id="licenseServerUrl">http://42.194.149.64:8088/3c4ebe94-d224-4af7-8ca8-20679a137b33</div>
         <div class="license-copy-wrap">
           <button type="button" class="copy-btn-big" id="copyLicenseUrl">一键复制地址</button>
+          <div class="server-status">
+            <span id="statusDot" class="status-dot checking"></span>
+            <span id="statusText">检测中...</span>
+            <button type="button" id="recheckBtn" onclick="checkServer()">重新检测</button>
+          </div>
         </div>
       </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">如显示离线，可自行搭建服务：<code>docker run -d -p 8888:8888 ilanyu/golang-reverseproxy</code></p>
       <p style="font-size: 13px; color: var(--text-muted);">激活邮箱（可选）：<code>936948286@qq.com</code></p>
 
       <h2 style="font-size: 1.2rem; margin: 28px 0 12px;">激活步骤</h2>
@@ -115,6 +132,41 @@ echo 完成。请重启 IDE 后重新激活。</code></pre>
         });
       });
     })();
+
+    async function checkServer() {
+      var dot = document.getElementById('statusDot');
+      var text = document.getElementById('statusText');
+      var recheckBtn = document.getElementById('recheckBtn');
+      var licenseUrl = document.getElementById('licenseServerUrl').textContent.trim();
+
+      dot.className = 'status-dot checking';
+      text.textContent = '检测中...';
+      recheckBtn.disabled = true;
+
+      var controller = new AbortController();
+      var timeoutId = setTimeout(function() { controller.abort(); }, 5000);
+
+      try {
+        var res = await fetch(licenseUrl, { method: 'GET', signal: controller.signal, mode: 'cors' });
+        clearTimeout(timeoutId);
+        dot.className = 'status-dot online';
+        text.textContent = '在线';
+      } catch (e) {
+        clearTimeout(timeoutId);
+        if (e.name === 'AbortError') {
+          dot.className = 'status-dot offline';
+          text.textContent = '离线';
+        } else if (e instanceof TypeError) {
+          dot.className = 'status-dot unknown';
+          text.textContent = '无法检测（服务可能正常）';
+        } else {
+          dot.className = 'status-dot offline';
+          text.textContent = '离线';
+        }
+      }
+      recheckBtn.disabled = false;
+    }
+    checkServer();
   </script>
 </body>
 </html>
