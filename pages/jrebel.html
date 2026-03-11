@@ -144,7 +144,12 @@ echo 完成。请重启 IDE 后重新激活。</code></pre>
     }
 
     function loadServersAndCheck() {
-      fetch('../data/servers.json')
+      // 本地 file:// 协议时直接用 GitHub raw，否则用相对路径
+      var isLocal = location.protocol === 'file:';
+      var jsonUrl = isLocal
+        ? 'https://raw.githubusercontent.com/SongYuanKun/dev-tools-nav/main/data/servers.json'
+        : '../data/servers.json';
+      fetch(jsonUrl)
         .then(function(r) { return r.json(); })
         .then(function(data) {
           var jrebel = data.jrebel || {};
