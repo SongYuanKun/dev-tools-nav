@@ -76,6 +76,88 @@
         return CATEGORIES.find((c) => c.id === categoryId) || { label: categoryId, icon: "🔧" };
       }
 
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      function renderContentSections(tool) {
+        const c = tool.content;
+        if (!c) return "";
+
+        let html = "";
+
+        if (c.features && c.features.length) {
+          const items = c.features.map((f) => `<li>${escapeHtml(f)}</li>`).join("");
+          html += `
+          <div class="detail-section">
+            <h2>核心特性</h2>
+            <ul class="detail-features-list">${items}</ul>
+          </div>`;
+        }
+
+        if (c.quickstart && c.quickstart.length) {
+          const steps = c.quickstart.map((step, i) => {
+            const title = escapeHtml(step.title || "");
+            const code = escapeHtml(step.code || "");
+            return `
+            <div class="detail-step" data-step-index="${i}">
+              <h3>${title}</h3>
+              <div class="detail-code-wrap">
+                <button type="button" class="detail-copy-btn">复制</button>
+                <pre><code>${code}</code></pre>
+              </div>
+            </div>`;
+          }).join("");
+          html += `
+          <div class="detail-section">
+            <h2>快速上手</h2>
+            <div class="detail-quickstart">${steps}</div>
+          </div>`;
+        }
+
+        if (c.tips) {
+          const tipsText = Array.isArray(c.tips) ? c.tips.map((t) => escapeHtml(t)).join("<br>") : escapeHtml(c.tips);
+          html += `
+          <div class="detail-section">
+            <h2>实用技巧</h2>
+            <div class="detail-tips-box">${tipsText}</div>
+          </div>`;
+        }
+
+        if (c.links && c.links.length) {
+          const linksHtml = c.links.map((l) => `<a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer" class="detail-link-btn">${escapeHtml(l.label)}</a>`).join("");
+          html += `
+          <div class="detail-section">
+            <h2>相关链接</h2>
+            <div class="detail-links-wrap">${linksHtml}</div>
+          </div>`;
+        }
+
+        return html;
+      }
+
+      function initCopyButtons(container) {
+        if (!container) return;
+        container.addEventListener("click", (e) => {
+          const btn = e.target.closest(".detail-copy-btn");
+          if (!btn) return;
+          const wrap = btn.closest(".detail-code-wrap");
+          const codeEl = wrap && wrap.querySelector("code");
+          const text = codeEl ? codeEl.textContent : "";
+          navigator.clipboard.writeText(text).then(() => {
+            const orig = btn.textContent;
+            btn.textContent = "✓ 已复制";
+            btn.classList.add("copied");
+            setTimeout(() => {
+              btn.textContent = orig;
+              btn.classList.remove("copied");
+            }, 2000);
+          });
+        });
+      }
+
       function renderDetail(tool) {
         document.title = `${tool.name} · DevTools Nav`;
 
@@ -136,7 +218,10 @@
               </tr>
             </table>
           </div>
+          ${renderContentSections(tool)}
         `;
+
+        initCopyButtons(document.getElementById("detailContent"));
 
         // 异步加载图标
         if (tool.icon) {

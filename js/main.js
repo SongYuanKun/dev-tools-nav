@@ -130,14 +130,17 @@ function createToolCard(tool) {
     <p class="card-desc">${escapeHtml(tool.description)}</p>
     <div class="card-tags">${tagsHtml}</div>
     <div class="card-footer">
-      <a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="visit-btn">
-        访问
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-          <polyline points="15 3 21 3 21 9"/>
-          <line x1="10" y1="14" x2="21" y2="3"/>
-        </svg>
-      </a>
+      ${tool.content
+        ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn">📖 教程</a>`
+        : `<a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="visit-btn">
+            ↗ 访问
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>`
+      }
       <a href="pages/template.html?id=${tool.id}" class="detail-link">详情 →</a>
     </div>
   `;
