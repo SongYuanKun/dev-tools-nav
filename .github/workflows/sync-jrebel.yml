@@ -1,0 +1,64 @@
+name: Sync JRebel License Server
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch jpy.wang page
+        run: curl -sL "https://www.jpy.wang/page/jrebel.html" -o /tmp/jrebel.html
+
+      - name: Extract and update servers.json
+        run: |
+          python3 << 'PY'
+          import re
+          import json
+          from datetime import datetime, timezone
+
+          with open("/tmp/jrebel.html", "r", encoding="utf-8", errors="ignore") as f:
+              content = f.read()
+
+          url_match = re.search(r"http://[\d.]+:\d+/[\w-]+", content)
+          email_match = re.search(r"[\w.+-]+@[\w.-]+\.\w+", content)
+
+          url = url_match.group(0) if url_match else ""
+          email = email_match.group(0) if email_match else ""
+
+          data_path = "data/servers.json"
+          try:
+              with open(data_path, "r", encoding="utf-8") as f:
+                  data = json.load(f)
+          except (FileNotFoundError, json.JSONDecodeError):
+              data = {}
+
+          data["jrebel"] = {
+              "url": url,
+              "email": email,
+              "updatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "source": "https://www.jpy.wang/page/jrebel.html"
+          }
+
+          with open(data_path, "w", encoding="utf-8") as f:
+              json.dump(data, f, ensure_ascii=False, indent=2)
+          PY
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet data/servers.json; then
+            echo "No changes to data/servers.json, skip commit."
+          else
+            git add data/servers.json
+            git commit -m "chore: 自动同步 JRebel 激活地址"
+            git push origin HEAD
+          fi

@@ -66,7 +66,7 @@
       <h2 style="font-size: 1.2rem; margin: 24px 0 8px;">License Server 地址</h2>
       <div class="license-box">
         <div class="label">服务器 URL（复制到 JRebel 设置中使用）</div>
-        <div class="value" id="licenseServerUrl">http://42.194.149.64:8088/3c4ebe94-d224-4af7-8ca8-20679a137b33</div>
+        <div class="value" id="licenseServerUrl">加载中...</div>
         <div class="license-copy-wrap">
           <button type="button" class="copy-btn-big" id="copyLicenseUrl">一键复制地址</button>
           <div class="server-status">
@@ -77,13 +77,14 @@
         </div>
       </div>
       <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">如显示离线，可自行搭建服务：<code>docker run -d -p 8888:8888 ilanyu/golang-reverseproxy</code></p>
-      <p style="font-size: 13px; color: var(--text-muted);">激活邮箱（可选）：<code>936948286@qq.com</code></p>
+      <p style="font-size: 13px; color: var(--text-muted);">激活邮箱（可选）：<code id="licenseEmail">-</code></p>
+      <p style="font-size: 13px; color: var(--text-muted);">最后同步时间：<span id="lastSyncTime">-</span></p>
 
       <h2 style="font-size: 1.2rem; margin: 28px 0 12px;">激活步骤</h2>
       <ol class="steps-list">
         <li>打开 IDE（IntelliJ IDEA / Eclipse 等），进入 <strong>JRebel → Settings / Configuration</strong>。</li>
         <li>选择 <strong>Activate JRebel</strong>，选择 <strong>Connect to a license server</strong>。</li>
-        <li>在 <strong>License server URL</strong> 中粘贴上方地址：<code>http://42.194.149.64:8088/3c4ebe94-d224-4af7-8ca8-20679a137b33</code>。</li>
+        <li>在 <strong>License server URL</strong> 中粘贴上方地址（页面加载后显示）。</li>
         <li>点击 <strong>Activate</strong> 完成激活。</li>
       </ol>
 
@@ -114,8 +115,9 @@ echo 完成。请重启 IDE 后重新激活。</code></pre>
   <script src="../js/main.js"></script>
   <script>
     (function() {
-      var url = 'http://42.194.149.64:8088/3c4ebe94-d224-4af7-8ca8-20679a137b33';
       document.getElementById('copyLicenseUrl').addEventListener('click', function() {
+        var url = document.getElementById('licenseServerUrl').textContent.trim();
+        if (!url || url === '加载中...') return;
         navigator.clipboard.writeText(url).then(function() {
           var btn = document.getElementById('copyLicenseUrl');
           var t = btn.textContent; btn.textContent = '已复制'; btn.classList.add('copied');
@@ -133,11 +135,41 @@ echo 完成。请重启 IDE 后重新激活。</code></pre>
       });
     })();
 
+    function formatSyncTime(isoStr) {
+      if (!isoStr) return '-';
+      try {
+        var d = new Date(isoStr);
+        return d.toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+      } catch (e) { return isoStr; }
+    }
+
+    function loadServersAndCheck() {
+      fetch('../data/servers.json')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var jrebel = data.jrebel || {};
+          var urlEl = document.getElementById('licenseServerUrl');
+          var emailEl = document.getElementById('licenseEmail');
+          var timeEl = document.getElementById('lastSyncTime');
+          urlEl.textContent = jrebel.url || '暂无数据';
+          emailEl.textContent = jrebel.email || '-';
+          timeEl.textContent = formatSyncTime(jrebel.updatedAt);
+          if (jrebel.url) checkServer();
+        })
+        .catch(function() {
+          document.getElementById('licenseServerUrl').textContent = '加载失败';
+          document.getElementById('statusText').textContent = '加载失败';
+          document.getElementById('statusDot').className = 'status-dot unknown';
+        });
+    }
+
     async function checkServer() {
       var dot = document.getElementById('statusDot');
       var text = document.getElementById('statusText');
       var recheckBtn = document.getElementById('recheckBtn');
       var licenseUrl = document.getElementById('licenseServerUrl').textContent.trim();
+
+      if (!licenseUrl || licenseUrl === '加载中...' || licenseUrl === '加载失败' || licenseUrl === '暂无数据') return;
 
       dot.className = 'status-dot checking';
       text.textContent = '检测中...';
@@ -166,7 +198,7 @@ echo 完成。请重启 IDE 后重新激活。</code></pre>
       }
       recheckBtn.disabled = false;
     }
-    checkServer();
+    loadServersAndCheck();
   </script>
 </body>
 </html>
