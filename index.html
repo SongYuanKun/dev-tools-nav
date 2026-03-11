@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="精选开发 & 建站管理工具导航，涵盖开发工具、建站托管、安全工具、运维监控、设计资源。" />
+  <meta name="keywords" content="开发工具,建站工具,导航站,程序员工具,前端工具" />
+  <meta property="og:title" content="DevTools Nav · 开发工具导航" />
+  <meta property="og:description" content="精选开发 & 建站管理工具集合" />
+  <meta property="og:type" content="website" />
+  <title>DevTools Nav · 开发工具导航</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ========== 顶部导航 ========== -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <!-- Logo -->
+        <a href="index.html" class="logo" aria-label="DevTools Nav 首页">
+          <div class="logo-icon" aria-hidden="true">🛠️</div>
+          <span class="logo-text">Dev<span>Tools</span> Nav</span>
+        </a>
+
+        <!-- 搜索框 -->
+        <div class="search-wrapper" role="search">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            id="searchInput"
+            class="search-input"
+            placeholder="搜索工具名称、描述、标签..."
+            aria-label="搜索工具"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+
+        <!-- 暗色模式切换 -->
+        <button
+          id="themeToggle"
+          class="theme-toggle"
+          aria-label="切换暗色模式"
+          title="切换暗色模式"
+        >🌙</button>
+      </div>
+    </nav>
+
+    <!-- 分类筛选栏 -->
+    <div class="category-bar" role="navigation" aria-label="分类筛选">
+      <div class="category-inner" id="categoryBar">
+        <!-- 由 JS 动态生成 -->
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== Hero 区域 ========== -->
+  <section class="hero" aria-label="页面介绍">
+    <h1 class="hero-title">开发 &amp; 建站工具导航</h1>
+    <p class="hero-subtitle">精选 30+ 款开发者常用工具，覆盖开发、建站、安全、运维、设计全流程</p>
+  </section>
+
+  <!-- ========== 主内容 ========== -->
+  <main class="main-content" id="main">
+    <!-- 统计信息 -->
+    <div class="stats-bar" aria-live="polite">
+      <p class="stats-text">
+        共找到 <strong id="statsCount">0</strong> 个工具
+      </p>
+    </div>
+
+    <!-- 工具卡片网格 -->
+    <div
+      class="tools-grid"
+      id="toolsGrid"
+      role="list"
+      aria-label="工具列表"
+    >
+      <!-- 由 JS 动态渲染 -->
+    </div>
+
+    <!-- 空状态 -->
+    <div class="empty-state" id="emptyState" role="status" aria-label="无搜索结果">
+      <div class="empty-icon" aria-hidden="true">🔍</div>
+      <h2 class="empty-title">没有找到相关工具</h2>
+      <p class="empty-desc">试试其他关键词，或切换分类查看</p>
+    </div>
+  </main>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer">
+    <p>
+      DevTools Nav &nbsp;·&nbsp;
+      数据来源于公开信息整理 &nbsp;·&nbsp;
+      <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+      &nbsp;·&nbsp;
+      <a href="pages/template.html" >工具详情模板</a>
+    </p>
+  </footer>
+
+  <!-- 数据 & 逻辑 -->
+  <script src="data/tools.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
