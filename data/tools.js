@@ -648,6 +648,30 @@ const TOOLS_DATA = [
       links: [{ label: "官网", url: "https://squoosh.app/" }],
     },
   },
+
+  // ==================== 🔑 激活工具 ====================
+  {
+    id: "kms",
+    name: "KMS 激活",
+    description: "Windows / Office / Server 全版本 KMS 激活工具，一键命令搞定",
+    category: "activate",
+    tags: ["Windows", "Office", "激活", "KMS"],
+    url: "pages/kms.html",
+    icon: "💻",
+    featured: true,
+    content: null,
+  },
+  {
+    id: "jrebel",
+    name: "JRebel 激活",
+    description: "JRebel 热部署工具 License Server，支持 2023.4.0+，无限试用",
+    category: "activate",
+    tags: ["Java", "热部署", "JRebel", "激活"],
+    url: "pages/jrebel.html",
+    icon: "☕",
+    featured: false,
+    content: null,
+  },
 ];
 
 /**
@@ -660,4 +684,5 @@ const CATEGORIES = [
   { id: "security", label: "安全工具", icon: "🔒" },
   { id: "ops", label: "运维监控", icon: "📊" },
   { id: "design", label: "设计资源", icon: "🎨" },
+  { id: "activate", label: "激活工具", icon: "🔑" },
 ];

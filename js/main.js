@@ -132,7 +132,9 @@ function createToolCard(tool) {
     <div class="card-footer">
       ${tool.content
         ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn">📖 教程</a>`
-        : `<a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="visit-btn">
+        : tool.category === "activate"
+          ? `<a href="${tool.url}" class="visit-btn">📖 访问</a>`
+          : `<a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="visit-btn">
             ↗ 访问
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -141,7 +143,7 @@ function createToolCard(tool) {
             </svg>
           </a>`
       }
-      <a href="pages/template.html?id=${tool.id}" class="detail-link">详情 →</a>
+      <a href="${tool.category === "activate" ? tool.url : `pages/template.html?id=${tool.id}`}" class="detail-link">详情 →</a>
     </div>
   `;
 
@@ -167,6 +169,7 @@ function loadIcon(tool, container) {
       security: "🔒",
       ops: "📊",
       design: "🎨",
+      activate: "🔑",
     };
     const fallback = container.querySelector(".card-icon-fallback");
     if (fallback) fallback.textContent = fallbackMap[tool.category] || "🔧";

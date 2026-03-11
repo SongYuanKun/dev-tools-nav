@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JRebel 热部署工具 License Server 激活，支持 2023.4.0+，无限试用" />
+  <title>JRebel 激活 · DevTools Nav</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .page-inner { max-width: 800px; margin: 0 auto; padding: 0 24px 48px; }
+    .jrebel-hero { margin-bottom: 28px; }
+    .jrebel-hero h1 { font-size: 1.75rem; margin-bottom: 8px; }
+    .license-box { background: var(--color-primary-light); border: 1px solid var(--color-primary); border-radius: var(--radius-md); padding: 16px 20px; margin: 20px 0 24px; }
+    .license-box .label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .license-box .value { font-family: var(--font-mono); font-size: 15px; word-break: break-all; color: var(--color-primary); font-weight: 600; }
+    .license-copy-wrap { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+    .copy-btn-big { padding: 8px 16px; font-size: 14px; background: var(--color-primary); color: var(--text-on-primary); border: none; border-radius: var(--radius-md); cursor: pointer; }
+    .copy-btn-big:hover { background: var(--color-primary-hover); }
+    .copy-btn-big.copied { background: #16a34a; }
+    .steps-list { margin: 20px 0; padding-left: 20px; }
+    .steps-list li { margin-bottom: 10px; line-height: 1.6; }
+    .code-block { position: relative; margin: 20px 0; }
+    .code-block .detail-code-wrap { border-radius: var(--radius-md); }
+    .copy-btn { position: absolute; top: 8px; right: 8px; padding: 6px 12px; font-size: 12px; color: #d4d4d4; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor: pointer; z-index: 1; }
+    .copy-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .copy-btn.copied { color: #4ade80; border-color: #4ade80; }
+    .disclaimer { margin-top: 40px; padding: 16px; background: var(--bg-tag); border-radius: var(--radius-md); font-size: 13px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../index.html" class="logo" aria-label="返回首页">
+          <div class="logo-icon" aria-hidden="true">🛠️</div>
+          <span class="logo-text">Dev<span>Tools</span> Nav</span>
+        </a>
+        <div class="search-wrapper" style="max-width:none; flex:1;"></div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="detail-page">
+    <div class="page-inner">
+      <a href="../index.html" class="back-btn" aria-label="返回工具列表">← 返回工具列表</a>
+
+      <div class="jrebel-hero">
+        <h1>☕ JRebel 激活</h1>
+        <p>JRebel 是 Java 热部署工具，修改代码后无需重启应用即可生效，大幅节省开发时间。支持 2023.4.0+ 版本，通过 License Server 激活。</p>
+      </div>
+
+      <h2 style="font-size: 1.2rem; margin: 24px 0 8px;">License Server 地址</h2>
+      <div class="license-box">
+        <div class="label">服务器 URL（复制到 JRebel 设置中使用）</div>
+        <div class="value" id="licenseServerUrl">http://42.194.149.64:8088/3c4ebe94-d224-4af7-8ca8-20679a137b33</div>
+        <div class="license-copy-wrap">
+          <button type="button" class="copy-btn-big" id="copyLicenseUrl">一键复制地址</button>
+        </div>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted);">激活邮箱（可选）：<code>936948286@qq.com</code></p>
+
+      <h2 style="font-size: 1.2rem; margin: 28px 0 12px;">激活步骤</h2>
+      <ol class="steps-list">
+        <li>打开 IDE（IntelliJ IDEA / Eclipse 等），进入 <strong>JRebel → Settings / Configuration</strong>。</li>
+        <li>选择 <strong>Activate JRebel</strong>，选择 <strong>Connect to a license server</strong>。</li>
+        <li>在 <strong>License server URL</strong> 中粘贴上方地址：<code>http://42.194.149.64:8088/3c4ebe94-d224-4af7-8ca8-20679a137b33</code>。</li>
+        <li>点击 <strong>Activate</strong> 完成激活。</li>
+      </ol>
+
+      <h2 style="font-size: 1.2rem; margin: 28px 0 12px;">一键无限试用脚本（bat）</h2>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">在 Windows 下可运行以下脚本重置试用（请勿用于商业用途）。</p>
+      <div class="code-block">
+        <div class="detail-code-wrap">
+          <pre><code>@echo off
+echo 正在重置 JRebel 试用...
+set JRebel_HOME=%USERPROFILE%\.jrebel
+if exist "%JRebel_HOME%" (
+  rd /s /q "%JRebel_HOME%"
+  echo 已删除 %JRebel_HOME%
+)
+echo 完成。请重启 IDE 后重新激活。</code></pre>
+          <button type="button" class="copy-btn" data-copy="@echo off&#10;echo 正在重置 JRebel 试用...&#10;set JRebel_HOME=%USERPROFILE%\.jrebel&#10;if exist &quot;%JRebel_HOME%&quot; (&#10;  rd /s /q &quot;%JRebel_HOME%&quot;&#10;  echo 已删除 %JRebel_HOME%&#10;)&#10;echo 完成。请重启 IDE 后重新激活。">复制</button>
+        </div>
+      </div>
+
+      <div class="disclaimer">本站内容仅供学习研究，请勿用于商业用途。</div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>DevTools Nav &nbsp;·&nbsp; <a href="../index.html">返回首页</a></p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    (function() {
+      var url = 'http://42.194.149.64:8088/3c4ebe94-d224-4af7-8ca8-20679a137b33';
+      document.getElementById('copyLicenseUrl').addEventListener('click', function() {
+        navigator.clipboard.writeText(url).then(function() {
+          var btn = document.getElementById('copyLicenseUrl');
+          var t = btn.textContent; btn.textContent = '已复制'; btn.classList.add('copied');
+          setTimeout(function() { btn.textContent = t; btn.classList.remove('copied'); }, 1500);
+        });
+      });
+      document.querySelectorAll('.copy-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var text = this.getAttribute('data-copy').replace(/&#10;/g, '\n');
+          navigator.clipboard.writeText(text).then(function() {
+            var t = btn.textContent; btn.textContent = '已复制'; btn.classList.add('copied');
+            setTimeout(function() { btn.textContent = t; btn.classList.remove('copied'); }, 1500);
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
