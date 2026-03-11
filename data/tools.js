@@ -1,7 +1,8 @@
 /**
  * 工具数据配置文件
- * 每个工具对象包含：id, name, description, category, tags, url, icon, featured
+ * 每个工具对象包含：id, name, description, category, tags, url, icon, featured, content
  * category 枚举：dev | hosting | security | ops | design
+ * content 可选：intro, features, quickstart, tips, links
  */
 const TOOLS_DATA = [
   // ==================== 🛠️ 开发工具 ====================
@@ -14,6 +15,15 @@ const TOOLS_DATA = [
     url: "https://code.visualstudio.com/",
     icon: "https://code.visualstudio.com/favicon.ico",
     featured: true,
+    content: {
+      intro: "VS Code 是微软推出的免费开源代码编辑器，基于 Electron 构建，支持 Windows/macOS/Linux。内置 Git、调试、智能补全，配合海量扩展可覆盖前端、后端、DevOps 全场景。",
+      features: ["内置 Git 与终端", "IntelliSense 智能补全与重构", "丰富的扩展市场（ESLint、Prettier、主题等）"],
+      quickstart: [
+        { title: "从命令行启动 VS Code", code: "code .", lang: "bash" },
+        { title: "安装扩展（示例：ESLint）", code: "code --install-extension dbaeumer.vscode-eslint", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://code.visualstudio.com/docs" }],
+    },
   },
   {
     id: "github",
@@ -24,6 +34,15 @@ const TOOLS_DATA = [
     url: "https://github.com/",
     icon: "https://github.com/favicon.ico",
     featured: true,
+    content: {
+      intro: "GitHub 是全球最大的代码托管与协作平台，基于 Git，提供仓库管理、Issues、Pull Request、Actions CI/CD、Discussions 等完整开发流程支持，是开源与团队协作的事实标准。",
+      features: ["Git 仓库托管与分支管理", "GitHub Actions 自动化 CI/CD", "Issues、PR、Projects 协作与看板"],
+      quickstart: [
+        { title: "克隆仓库", code: "git clone https://github.com/owner/repo.git", lang: "bash" },
+        { title: "推送新分支并创建 PR", code: "git checkout -b feature/xxx && git push -u origin feature/xxx", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://docs.github.com/" }],
+    },
   },
   {
     id: "postman",
@@ -34,6 +53,15 @@ const TOOLS_DATA = [
     url: "https://www.postman.com/",
     icon: "https://www.postman.com/favicon-32x32.png",
     featured: true,
+    content: {
+      intro: "Postman 是主流的 API 开发与测试工具，支持 REST、GraphQL、WebSocket、gRPC。提供集合、环境变量、脚本断言、Mock 与文档生成，适合个人与团队协作。",
+      features: ["多协议支持（REST、GraphQL、WebSocket）", "环境变量与 Pre-request Script", "集合运行与 CI 集成（ Newman ）"],
+      quickstart: [
+        { title: "使用 Newman 命令行运行集合", code: "npx newman run collection.json -e environment.json", lang: "bash" },
+        { title: "导出集合为 cURL", code: "在 Postman 中：Code → cURL，复制命令", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://learning.postman.com/docs/" }],
+    },
   },
   {
     id: "hoppscotch",
@@ -44,6 +72,15 @@ const TOOLS_DATA = [
     url: "https://hoppscotch.io/",
     icon: "https://hoppscotch.io/favicon.ico",
     featured: false,
+    content: {
+      intro: "Hoppscotch 是开源的 API 客户端，在浏览器中即可发送 REST、GraphQL、WebSocket、gRPC 等请求。无需安装，支持环境变量、预请求脚本与团队协作。",
+      features: ["浏览器内使用，无需安装", "REST、GraphQL、WebSocket、gRPC", "开源、可自托管"],
+      quickstart: [
+        { title: "发送 GET 请求示例", code: "curl -X GET https://api.example.com/users", lang: "bash" },
+        { title: "自托管运行（Docker）", code: "docker run -p 3000:3000 hoppscotch/hoppscotch:latest", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://docs.hoppscotch.io/" }],
+    },
   },
   {
     id: "regex101",
@@ -54,6 +91,11 @@ const TOOLS_DATA = [
     url: "https://regex101.com/",
     icon: "https://regex101.com/static/assets/favicon.ico",
     featured: false,
+    content: {
+      intro: "Regex101 提供正则表达式在线编写与调试，支持 PCRE、JavaScript、Python 等引擎，实时高亮匹配与分组，并给出每条部分的解释，便于学习和排错。",
+      features: ["多语言引擎（PCRE、JS、Python 等）", "实时匹配高亮与分组说明", "导出代码片段"],
+      links: [{ label: "官方说明", url: "https://regex101.com/" }],
+    },
   },
   {
     id: "json-formatter",
@@ -64,6 +106,11 @@ const TOOLS_DATA = [
     url: "https://jsonformatter.curiousconcept.com/",
     icon: "https://jsonformatter.curiousconcept.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "JSON Formatter 提供 JSON 的格式化、压缩、验证与树形查看，粘贴即可使用，适合快速检查接口返回或配置文件。",
+      features: ["格式化与压缩", "语法验证与错误定位", "树形视图浏览"],
+      links: [{ label: "官网", url: "https://jsonformatter.curiousconcept.com/" }],
+    },
   },
   {
     id: "caniuse",
@@ -74,6 +121,11 @@ const TOOLS_DATA = [
     url: "https://caniuse.com/",
     icon: "https://caniuse.com/img/favicon-128.png",
     featured: false,
+    content: {
+      intro: "Can I Use 用于查询 Web 技术在各浏览器与版本中的支持情况，覆盖桌面与移动端，是前端做兼容性决策的常用参考。",
+      features: ["按特性查询支持表", "多浏览器与版本覆盖", "可筛选按使用量"],
+      links: [{ label: "官网", url: "https://caniuse.com/" }],
+    },
   },
   {
     id: "devdocs",
@@ -84,6 +136,11 @@ const TOOLS_DATA = [
     url: "https://devdocs.io/",
     icon: "https://devdocs.io/favicon.ico",
     featured: false,
+    content: {
+      intro: "DevDocs 聚合大量语言与框架的官方文档，支持离线下载与全文搜索，一个站点即可查阅多种技术文档。",
+      features: ["多语言与框架文档聚合", "离线模式与快捷键", "全文搜索"],
+      links: [{ label: "官网", url: "https://devdocs.io/" }],
+    },
   },
   {
     id: "codesandbox",
@@ -94,6 +151,11 @@ const TOOLS_DATA = [
     url: "https://codesandbox.io/",
     icon: "https://codesandbox.io/favicon.ico",
     featured: true,
+    content: {
+      intro: "CodeSandbox 提供浏览器内的完整开发环境，支持 React、Vue、Node 等模板，可一键分享与嵌入，适合演示与协作。",
+      features: ["多框架模板与依赖管理", "实时预览与分享链接", "与 GitHub 同步"],
+      links: [{ label: "官方文档", url: "https://codesandbox.io/docs" }],
+    },
   },
   {
     id: "stackblitz",
@@ -104,6 +166,11 @@ const TOOLS_DATA = [
     url: "https://stackblitz.com/",
     icon: "https://stackblitz.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "StackBlitz 基于 WebContainers 在浏览器中运行真实 Node 环境，支持 Next、Vue、Vite 等，无需安装即可全栈开发与分享。",
+      features: ["浏览器内 Node 环境", "与 GitHub 同步与 PR", "可嵌入文档与教程"],
+      links: [{ label: "官方文档", url: "https://developer.stackblitz.com/" }],
+    },
   },
   {
     id: "transform-tools",
@@ -114,6 +181,11 @@ const TOOLS_DATA = [
     url: "https://transform.tools/",
     icon: "https://transform.tools/favicon.ico",
     featured: false,
+    content: {
+      intro: "Transform Tools 提供多种代码与格式之间的转换，如 JSON 转 TypeScript 类型、SVG 转 React 组件、CSS 转 JS 等，基于 AST 保证准确。",
+      features: ["JSON/TS/SQL/CSS 等多格式互转", "SVG 转 React/Vue 组件", "基于 AST 的可靠转换"],
+      links: [{ label: "官网", url: "https://transform.tools/" }],
+    },
   },
 
   // ==================== 🌐 建站工具 ====================
@@ -126,6 +198,16 @@ const TOOLS_DATA = [
     url: "https://vercel.com/",
     icon: "https://vercel.com/favicon.ico",
     featured: true,
+    content: {
+      intro: "Vercel 是面向前端与 Jamstack 的部署平台，与 GitHub/GitLab 集成后推送即部署，支持 Next、React、Vue 等，自带全球 CDN 与 Serverless 函数。",
+      features: ["Git 推送自动构建与部署", "Edge 与 Serverless 函数", "预览环境与回滚"],
+      quickstart: [
+        { title: "全局安装并登录", code: "npm i -g vercel && vercel login", lang: "bash" },
+        { title: "在项目目录部署", code: "vercel", lang: "bash" },
+        { title: "生产环境部署", code: "vercel --prod", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://vercel.com/docs" }],
+    },
   },
   {
     id: "netlify",
@@ -136,6 +218,15 @@ const TOOLS_DATA = [
     url: "https://www.netlify.com/",
     icon: "https://www.netlify.com/favicon/favicon-32x32.png",
     featured: true,
+    content: {
+      intro: "Netlify 提供静态站点与 Jamstack 的托管与 CI/CD，支持 Git 集成、表单、无服务器函数、分支预览与 A/B 测试，免费额度适合个人与小团队。",
+      features: ["Git 驱动构建与部署", "Netlify Functions 无服务器", "表单、身份与拆分测试"],
+      quickstart: [
+        { title: "安装 CLI 并登录", code: "npm i -g netlify-cli && netlify login", lang: "bash" },
+        { title: "本地链接并部署", code: "netlify init && netlify deploy --prod", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://docs.netlify.com/" }],
+    },
   },
   {
     id: "cloudflare",
@@ -146,6 +237,15 @@ const TOOLS_DATA = [
     url: "https://www.cloudflare.com/",
     icon: "https://www.cloudflare.com/favicon.ico",
     featured: true,
+    content: {
+      intro: "Cloudflare 提供 DNS、CDN、DDoS 防护、WAF、Workers 与 Pages 等一站式网络与托管服务，免费套餐即可加速与保护站点。",
+      features: ["全球 CDN 与 DNS", "DDoS 防护与 WAF", "Pages 静态托管与 Workers"],
+      quickstart: [
+        { title: "使用 Wrangler 部署 Workers/Pages", code: "npm create cloudflare@latest my-app", lang: "bash" },
+        { title: "发布到 Cloudflare Pages", code: "npx wrangler pages deploy dist --project-name=my-project", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://developers.cloudflare.com/" }],
+    },
   },
   {
     id: "namecheap",
@@ -156,6 +256,11 @@ const TOOLS_DATA = [
     url: "https://www.namecheap.com/",
     icon: "https://www.namecheap.com/assets/img/nc-icon/favicon.ico",
     featured: false,
+    content: {
+      intro: "Namecheap 是常用域名注册商，提供域名注册、续费、隐私保护、SSL 与邮箱等，价格透明，适合个人与小型项目。",
+      features: ["域名注册与转移", "免费 WHOIS 隐私", "SSL 与邮箱托管"],
+      links: [{ label: "官网", url: "https://www.namecheap.com/" }],
+    },
   },
   {
     id: "porkbun",
@@ -166,6 +271,11 @@ const TOOLS_DATA = [
     url: "https://porkbun.com/",
     icon: "https://porkbun.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "Porkbun 提供域名注册与续费，价格透明，免费 WHOIS 隐私与 SSL，界面简洁，适合追求性价比的开发者。",
+      features: ["低价域名与透明定价", "免费 WHOIS 隐私", "免费 SSL 与 API"],
+      links: [{ label: "官网", url: "https://porkbun.com/" }],
+    },
   },
   {
     id: "github-pages",
@@ -176,6 +286,11 @@ const TOOLS_DATA = [
     url: "https://pages.github.com/",
     icon: "https://github.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "GitHub Pages 从仓库分支或目录发布静态站点，支持 Jekyll 与自定义构建，免费 HTTPS，适合文档、博客与项目主页。",
+      features: ["从仓库自动发布", "自定义域名与 HTTPS", "Jekyll 与 GitHub Actions"],
+      links: [{ label: "官方文档", url: "https://docs.github.com/pages" }],
+    },
   },
   {
     id: "railway",
@@ -186,6 +301,11 @@ const TOOLS_DATA = [
     url: "https://railway.app/",
     icon: "https://railway.app/favicon.ico",
     featured: false,
+    content: {
+      intro: "Railway 支持从 Git 或 Docker 部署应用，内置 PostgreSQL、Redis 等数据库与 Cron，按资源用量计费，适合全栈与小团队。",
+      features: ["Git 与 Docker 部署", "内置数据库与 Cron", "按用量计费"],
+      links: [{ label: "官方文档", url: "https://docs.railway.app/" }],
+    },
   },
   {
     id: "letsencrypt",
@@ -196,6 +316,11 @@ const TOOLS_DATA = [
     url: "https://letsencrypt.org/",
     icon: "https://letsencrypt.org/favicon.ico",
     featured: false,
+    content: {
+      intro: "Let's Encrypt 提供免费 DV 证书与 ACME 协议，配合 certbot 等工具可自动化申请与续期，被广泛用于个人与小型站点 HTTPS。",
+      features: ["免费 DV 证书", "ACME 自动化申请与续期", "被主流浏览器信任"],
+      links: [{ label: "官网", url: "https://letsencrypt.org/" }, { label: "Certbot", url: "https://certbot.eff.org/" }],
+    },
   },
 
   // ==================== 🔒 安全工具 ====================
@@ -208,6 +333,15 @@ const TOOLS_DATA = [
     url: "https://www.ssllabs.com/ssltest/",
     icon: "https://www.ssllabs.com/favicon.ico",
     featured: true,
+    content: {
+      intro: "SSL Labs 对任意域名的 TLS/SSL 配置进行深度检测，给出 A+ 至 F 的评分，并列出协议、套件、证书与已知漏洞，是加固 HTTPS 的必备工具。",
+      features: ["协议与套件检测", "证书链与 OCSP 检查", "已知漏洞与配置建议"],
+      quickstart: [
+        { title: "在浏览器中检测", code: "打开 https://www.ssllabs.com/ssltest/ 输入域名如 example.com 提交", lang: "bash" },
+        { title: "API 方式提交扫描（需 API Key）", code: "curl -X POST 'https://api.ssllabs.com/api/v3/analyze?host=example.com'", lang: "bash" },
+      ],
+      links: [{ label: "SSL Labs 官网", url: "https://www.ssllabs.com/ssltest/" }],
+    },
   },
   {
     id: "virustotal",
@@ -218,6 +352,11 @@ const TOOLS_DATA = [
     url: "https://www.virustotal.com/",
     icon: "https://www.virustotal.com/favicon.ico",
     featured: true,
+    content: {
+      intro: "VirusTotal 聚合多家杀毒引擎对文件、URL、IP、域名进行扫描，可上传文件或输入链接快速查看多引擎结果与社区情报。",
+      features: ["文件与 URL 多引擎扫描", "IP、域名与哈希查询", "API 与集成能力"],
+      links: [{ label: "官网", url: "https://www.virustotal.com/" }],
+    },
   },
   {
     id: "haveibeenpwned",
@@ -228,6 +367,11 @@ const TOOLS_DATA = [
     url: "https://haveibeenpwned.com/",
     icon: "https://haveibeenpwned.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "Have I Been Pwned 可查询邮箱或密码是否出现在已知泄露库中，采用 k-anonymity 保护隐私，适合自查与提醒用户改密。",
+      features: ["邮箱泄露查询", "密码泄露查询（k-anonymity）", "域名级泄露通知"],
+      links: [{ label: "官网", url: "https://haveibeenpwned.com/" }],
+    },
   },
   {
     id: "securityheaders",
@@ -238,6 +382,11 @@ const TOOLS_DATA = [
     url: "https://securityheaders.com/",
     icon: "https://securityheaders.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "Security Headers 检测站点返回的 HTTP 安全头（如 CSP、HSTS、X-Frame-Options），给出 A+ 至 F 评分与改进建议。",
+      features: ["安全头检测与评分", "CSP/HSTS 等建议", "一键复测"],
+      links: [{ label: "官网", url: "https://securityheaders.com/" }],
+    },
   },
   {
     id: "bitwarden",
@@ -248,6 +397,11 @@ const TOOLS_DATA = [
     url: "https://bitwarden.com/",
     icon: "https://bitwarden.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "Bitwarden 是开源密码管理器，支持多端同步、浏览器扩展与 CLI，可自建服务器，端到端加密，适合个人与团队。",
+      features: ["跨平台与浏览器扩展", "端到端加密与自托管", "CLI 与 API"],
+      links: [{ label: "官网", url: "https://bitwarden.com/" }],
+    },
   },
   {
     id: "observatory",
@@ -258,6 +412,11 @@ const TOOLS_DATA = [
     url: "https://observatory.mozilla.org/",
     icon: "https://observatory.mozilla.org/favicon.ico",
     featured: false,
+    content: {
+      intro: "Mozilla Observatory 对网站进行安全扫描，涵盖 TLS、安全头、Cookie、CSP 等，给出分数与具体改进项。",
+      features: ["TLS 与 HTTP 头检测", "Cookie 与 CSP 检查", "改进建议与文档链接"],
+      links: [{ label: "官网", url: "https://observatory.mozilla.org/" }],
+    },
   },
 
   // ==================== 📊 运维监控 ====================
@@ -270,6 +429,15 @@ const TOOLS_DATA = [
     url: "https://uptimerobot.com/",
     icon: "https://uptimerobot.com/assets/img/logo_plain.svg",
     featured: true,
+    content: {
+      intro: "UptimeRobot 提供 HTTP(s)、Ping、Port、关键词等监控，免费版每 5 分钟检查，支持邮件/短信/Webhook 告警与状态页。",
+      features: ["多类型监控与 5 分钟间隔", "多种告警渠道与 Webhook", "公开状态页"],
+      quickstart: [
+        { title: "添加 HTTP 监控", code: "在 Dashboard → Add New Monitor，选 HTTP(s)，填 URL 如 https://example.com", lang: "bash" },
+        { title: "Webhook 告警（如 Slack）", code: "Alerts → Add Alert Contact → Webhook，URL 填 Slack Incoming Webhook", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://uptimerobot.com/api/" }],
+    },
   },
   {
     id: "grafana",
@@ -280,6 +448,15 @@ const TOOLS_DATA = [
     url: "https://grafana.com/",
     icon: "https://grafana.com/favicon.ico",
     featured: true,
+    content: {
+      intro: "Grafana 是开源的指标可视化与告警平台，支持 Prometheus、InfluxDB、Loki、云厂商等数据源，可构建仪表盘与告警规则。",
+      features: ["多数据源与丰富图表", "仪表盘与变量", "告警与 OnCall"],
+      quickstart: [
+        { title: "Docker 快速启动", code: "docker run -d -p 3000:3000 grafana/grafana", lang: "bash" },
+        { title: "默认登录", code: "打开 http://localhost:3000，用户名 admin，密码 admin", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://grafana.com/docs/grafana/latest/" }],
+    },
   },
   {
     id: "sentry",
@@ -290,6 +467,15 @@ const TOOLS_DATA = [
     url: "https://sentry.io/",
     icon: "https://sentry.io/favicon.ico",
     featured: true,
+    content: {
+      intro: "Sentry 提供错误追踪与性能监控，支持 JavaScript、Node、Python、Go 等多语言，可捕获异常、面包屑与 Release 关联，便于排查线上问题。",
+      features: ["多语言 SDK 与 Source Map", "Release 与用户反馈", "性能事务与告警"],
+      quickstart: [
+        { title: "前端（如 React）安装", code: "npm install @sentry/react", lang: "bash" },
+        { title: "初始化（在应用入口）", code: "import * as Sentry from '@sentry/react';\nSentry.init({ dsn: 'https://xxx@xxx.ingest.sentry.io/xxx' });", lang: "javascript" },
+      ],
+      links: [{ label: "官方文档", url: "https://docs.sentry.io/" }],
+    },
   },
   {
     id: "datadog",
@@ -300,6 +486,11 @@ const TOOLS_DATA = [
     url: "https://www.datadoghq.com/",
     icon: "https://www.datadoghq.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "Datadog 提供基础设施、APM、日志、RUM、安全等一体化监控，支持主流云与自建环境，适合中大型团队与合规需求。",
+      features: ["基础设施与 APM", "日志与 RUM", "安全与合规"],
+      links: [{ label: "官方文档", url: "https://docs.datadoghq.com/" }],
+    },
   },
   {
     id: "better-uptime",
@@ -310,6 +501,11 @@ const TOOLS_DATA = [
     url: "https://betterstack.com/",
     icon: "https://betterstack.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "Better Stack（原 Better Uptime）提供监控、状态页、日志与 On-Call，界面现代，支持多种告警与事件工作流。",
+      features: ["监控与状态页", "日志与告警", "On-Call 与事件管理"],
+      links: [{ label: "官方文档", url: "https://betterstack.com/docs" }],
+    },
   },
   {
     id: "logtail",
@@ -320,6 +516,11 @@ const TOOLS_DATA = [
     url: "https://betterstack.com/logs",
     icon: "https://betterstack.com/favicon.ico",
     featured: false,
+    content: {
+      intro: "Logtail（Better Stack Logs）提供日志采集、解析、搜索与告警，支持多种来源与查询语言，适合中小团队。",
+      features: ["结构化日志与实时搜索", "多来源接入", "告警与保存查询"],
+      links: [{ label: "官方文档", url: "https://betterstack.com/docs/logs/" }],
+    },
   },
   {
     id: "pagespeed",
@@ -330,6 +531,11 @@ const TOOLS_DATA = [
     url: "https://pagespeed.web.dev/",
     icon: "https://www.gstatic.com/pagespeed/insights/ui/logo/favicon_48.png",
     featured: false,
+    content: {
+      intro: "PageSpeed Insights 基于 Lighthouse 对 URL 进行移动端与桌面端性能分析，给出 Core Web Vitals 与优化建议。",
+      features: ["Lighthouse 性能与最佳实践", "Core Web Vitals", "实机与模拟数据"],
+      links: [{ label: "官网", url: "https://pagespeed.web.dev/" }],
+    },
   },
 
   // ==================== 🎨 设计资源 ====================
@@ -342,6 +548,15 @@ const TOOLS_DATA = [
     url: "https://www.figma.com/",
     icon: "https://static.figma.com/app/icon/1/favicon.ico",
     featured: true,
+    content: {
+      intro: "Figma 是基于浏览器的协作设计工具，支持 UI、原型、设计系统与开发交付，支持实时协作与插件生态，免费版即可满足多数需求。",
+      features: ["实时协作与评论", "组件与变体、设计系统", "开发模式与 CSS 导出"],
+      quickstart: [
+        { title: "安装桌面应用（可选）", code: "从 https://www.figma.com/downloads/ 下载 Figma Desktop", lang: "bash" },
+        { title: "在浏览器中打开文件", code: "直接访问 figma.com 登录后 New design file 或打开分享链接", lang: "bash" },
+      ],
+      links: [{ label: "官方文档", url: "https://help.figma.com/" }],
+    },
   },
   {
     id: "iconify",
@@ -352,6 +567,11 @@ const TOOLS_DATA = [
     url: "https://iconify.design/",
     icon: "https://iconify.design/favicon.ico",
     featured: true,
+    content: {
+      intro: "Iconify 聚合多套开源图标库，统一 API 与命名，支持 React、Vue、SVG 等多种用法，可按需加载。",
+      features: ["20 万+ 图标统一访问", "多框架组件与 SVG  sprite", "按需加载与离线"],
+      links: [{ label: "官方文档", url: "https://iconify.design/docs/" }],
+    },
   },
   {
     id: "coolors",
@@ -362,6 +582,11 @@ const TOOLS_DATA = [
     url: "https://coolors.co/",
     icon: "https://coolors.co/assets/img/favicon.png",
     featured: true,
+    content: {
+      intro: "Coolors 提供快速配色生成与调整，支持锁定颜色、渐变与导出 CSS/SCSS/PDF，可浏览与复用社区色板。",
+      features: ["一键生成与锁定色板", "渐变与图片取色", "导出与社区色板"],
+      links: [{ label: "官网", url: "https://coolors.co/" }],
+    },
   },
   {
     id: "google-fonts",
@@ -372,6 +597,11 @@ const TOOLS_DATA = [
     url: "https://fonts.google.com/",
     icon: "https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg",
     featured: false,
+    content: {
+      intro: "Google Fonts 提供大量免费可商用字体，支持通过 link 或 @import 引入，含多语言与可变字体，适合 Web 与设计稿。",
+      features: ["1400+ 字体家族", "CDN 与自托管", "多语言与可变字体"],
+      links: [{ label: "官网", url: "https://fonts.google.com/" }],
+    },
   },
   {
     id: "undraw",
@@ -382,6 +612,11 @@ const TOOLS_DATA = [
     url: "https://undraw.co/",
     icon: "https://undraw.co/favicon.ico",
     featured: false,
+    content: {
+      intro: "unDraw 提供可商用 SVG 插画，支持在线调整主色，适合落地页、空状态与文档配图，无需署名。",
+      features: ["可商用 SVG 插画", "自定义主色", "免费无需署名"],
+      links: [{ label: "官网", url: "https://undraw.co/" }],
+    },
   },
   {
     id: "css-gradient",
@@ -392,6 +627,11 @@ const TOOLS_DATA = [
     url: "https://cssgradient.io/",
     icon: "https://cssgradient.io/images/favicon-32x32.png",
     featured: false,
+    content: {
+      intro: "CSS Gradient 提供可视化渐变编辑，支持线性、径向、锥形与多色标，实时生成 CSS 代码便于复制。",
+      features: ["多种渐变类型", "实时预览与色标", "导出 CSS"],
+      links: [{ label: "官网", url: "https://cssgradient.io/" }],
+    },
   },
   {
     id: "squoosh",
@@ -402,6 +642,11 @@ const TOOLS_DATA = [
     url: "https://squoosh.app/",
     icon: "https://squoosh.app/c/favicon-32x32.png",
     featured: false,
+    content: {
+      intro: "Squoosh 是 Google 的在线图片压缩与格式转换工具，支持 WebP、AVIF、Oxipng 等，可对比原图与压缩结果。",
+      features: ["多格式压缩与转换", "WebP/AVIF 等现代格式", "左右对比预览"],
+      links: [{ label: "官网", url: "https://squoosh.app/" }],
+    },
   },
 ];
 
