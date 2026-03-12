@@ -57,7 +57,7 @@ function initCategories() {
   const container = document.getElementById("categoryBar");
   if (!container || typeof CATEGORIES === "undefined") return;
 
-  CATEGORIES.forEach((cat) => {
+  CATEGORIES.filter((cat) => !cat.hidden).forEach((cat) => {
     const btn = document.createElement("button");
     btn.className = "category-btn" + (cat.id === "all" ? " active" : "");
     btn.dataset.category = cat.id;
@@ -177,9 +177,16 @@ function loadIcon(tool, container) {
   img.src = tool.icon;
 }
 
+function isCategoryHidden(categoryId) {
+  if (typeof CATEGORIES === "undefined") return false;
+  const cat = CATEGORIES.find((c) => c.id === categoryId);
+  return cat && cat.hidden === true;
+}
+
 function filterTools() {
   if (typeof TOOLS_DATA === "undefined") return [];
   return TOOLS_DATA.filter((tool) => {
+    if (isCategoryHidden(tool.category)) return false;
     const matchCategory =
       state.currentCategory === "all" || tool.category === state.currentCategory;
     const q = state.searchQuery;

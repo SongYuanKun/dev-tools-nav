@@ -684,5 +684,5 @@ const CATEGORIES = [
   { id: "security", label: "安全工具", icon: "🔒" },
   { id: "ops", label: "运维监控", icon: "📊" },
   { id: "design", label: "设计资源", icon: "🎨" },
-  { id: "activate", label: "激活工具", icon: "🔑" },
+  { id: "activate", label: "激活工具", icon: "🔑", hidden: true },
 ];
