@@ -390,6 +390,10 @@ function initSearch() {
   const input = document.getElementById("searchInput");
   if (!input) return;
 
+  if (window.innerWidth <= 768) {
+    input.placeholder = "搜索工具…";
+  }
+
   let debounceTimer;
   input.addEventListener("input", (e) => {
     clearTimeout(debounceTimer);
@@ -474,10 +478,13 @@ function createToolCard(tool) {
 
   loadIcon(tool, card.querySelector(`#icon-${tool.id}`));
 
-  // 收藏按钮事件
   card.querySelector(".fav-btn").addEventListener("click", (e) => {
     e.stopPropagation();
     const added = Favorites.toggle(tool.id);
+    if (!added && state.currentCategory === "favorites") {
+      renderTools();
+      return;
+    }
     const btn = e.currentTarget;
     btn.classList.toggle("active", added);
     btn.textContent = added ? "★" : "☆";
@@ -511,6 +518,7 @@ function loadIcon(tool, container) {
   // 否则作为图片 URL 加载
   const img = document.createElement("img");
   img.alt = tool.name;
+  img.loading = "lazy";
   img.onload = () => {
     container.innerHTML = "";
     container.appendChild(img);
@@ -575,25 +583,42 @@ function renderTools() {
 
   const filtered = filterTools();
 
-  // 更新统计
   if (statsCount) statsCount.textContent = filtered.length;
 
-  // 清空并重渲染
   grid.innerHTML = "";
 
   if (filtered.length === 0) {
-    if (emptyState) emptyState.classList.add("visible");
+    if (emptyState) {
+      const icon = emptyState.querySelector(".empty-icon");
+      const title = emptyState.querySelector(".empty-title");
+      const desc = emptyState.querySelector(".empty-desc");
+      if (state.currentCategory === "favorites") {
+        if (icon) icon.textContent = "⭐";
+        if (title) title.textContent = "还没有收藏任何工具";
+        if (desc) desc.textContent = "浏览工具列表，点击 ☆ 收藏喜欢的工具";
+      } else if (state.currentCategory === "recent") {
+        if (icon) icon.textContent = "🕐";
+        if (title) title.textContent = "还没有访问记录";
+        if (desc) desc.textContent = "点击工具的「访问」或「详情」后会自动记录";
+      } else {
+        if (icon) icon.textContent = "🔍";
+        if (title) title.textContent = "没有找到相关工具";
+        if (desc) desc.textContent = "试试其他关键词，或切换分类查看";
+      }
+      emptyState.classList.add("visible");
+    }
     return;
   }
 
   if (emptyState) emptyState.classList.remove("visible");
 
-  // 精选工具优先显示
-  const sorted = [...filtered].sort((a, b) => {
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-    return 0;
-  });
+  const sorted = state.currentCategory === "favorites" || state.currentCategory === "recent"
+    ? filtered
+    : [...filtered].sort((a, b) => {
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        return 0;
+      });
 
   sorted.forEach((tool) => {
     grid.appendChild(createToolCard(tool));
@@ -647,10 +672,12 @@ function initArticles() {
 function initTrustBar() {
   const toolCountEl = document.getElementById("trustToolCount");
   const catCountEl = document.getElementById("trustCategoryCount");
+  const heroCountEl = document.getElementById("heroToolCount");
 
-  if (toolCountEl && typeof TOOLS_DATA !== "undefined") {
+  if (typeof TOOLS_DATA !== "undefined") {
     const count = TOOLS_DATA.filter((t) => !t.hidden).length;
-    animateCounter(toolCountEl, count);
+    if (toolCountEl) animateCounter(toolCountEl, count);
+    if (heroCountEl) heroCountEl.textContent = count + "+";
   }
   if (catCountEl && typeof CATEGORIES !== "undefined") {
     const count = CATEGORIES.filter((c) => !c.hidden && c.id !== "all").length;

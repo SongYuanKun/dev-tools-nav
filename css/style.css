@@ -570,17 +570,35 @@ img {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 48px 24px 0;
+  padding: 32px 24px 0;
   max-width: 1280px;
   margin: 0 auto;
 }
 
+.hero-scroll-hint {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition);
+  animation: gentleBounce 2s ease-in-out infinite;
+}
+
+.hero-scroll-hint:hover {
+  color: var(--color-primary);
+}
+
+@keyframes gentleBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
 .hero-title {
-  font-size: clamp(28px, 5vw, 42px);
+  font-size: clamp(24px, 4vw, 36px);
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1.2;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   background: linear-gradient(135deg, var(--color-primary), #8b5cf6, #ec4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -588,10 +606,10 @@ img {
 }
 
 .hero-subtitle {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-secondary);
   max-width: 520px;
-  margin: 0 auto 24px;
+  margin: 0 auto 16px;
 }
 
 /* 作者信息卡片 */
