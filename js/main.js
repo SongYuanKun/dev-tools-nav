@@ -9,6 +9,9 @@
 const state = {
   currentCategory: "all",
   searchQuery: "",
+  secretUnlocked: false, // 彩蛋解锁状态
+  clickSequence: [], // 点击序列追踪
+  konamiCode: [], // Konami 代码记录
 };
 
 // ============================================================
@@ -48,6 +51,244 @@ const ThemeManager = {
     localStorage.setItem(this.STORAGE_KEY, next);
     this.apply(next);
   },
+};
+
+// ============================================================
+// 彩蛋系统 - 激活工具分类解锁
+// ============================================================
+const EasterEgg = {
+  SECRET_KEY: "devtools2024", // URL 参数密钥
+  SECRET_CLICKS: 7, // Logo 点击次数
+  CLICK_TIMEOUT: 3000, // 点击超时时间(ms)
+  STORAGE_KEY: "devtools-secret-unlocked",
+
+  // 检查是否已解锁
+  isUnlocked() {
+    return localStorage.getItem(this.STORAGE_KEY) === "true" || state.secretUnlocked;
+  },
+
+  // 解锁彩蛋
+  unlock() {
+    state.secretUnlocked = true;
+    localStorage.setItem(this.STORAGE_KEY, "true");
+    this.showToast("🎉 恭喜！发现隐藏分类！");
+    this.revealSecretCategory();
+    this.addSecretConfetti();
+  },
+
+  // 显示提示（完整版，用于解锁成功等场景）
+  showToast(message) {
+    const existing = document.querySelector(".secret-toast");
+    if (existing) existing.remove();
+
+    const toast = document.createElement("div");
+    toast.className = "secret-toast";
+    toast.innerHTML = `
+      <div class="secret-toast-content">
+        <span class="secret-toast-icon">🔮</span>
+        <span class="secret-toast-message">${message}</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      toast.classList.add("show");
+    });
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  },
+
+  // 轻量级提示（用于点击计数，避免卡顿）
+  showLightToast(message, existingEl) {
+    // 复用已有元素，减少 DOM 操作
+    if (existingEl && document.body.contains(existingEl)) {
+      const msgEl = existingEl.querySelector(".secret-toast-message");
+      if (msgEl) {
+        msgEl.textContent = message;
+        return existingEl;
+      }
+    }
+
+    // 首次创建
+    if (existingEl) existingEl.remove();
+    
+    const toast = document.createElement("div");
+    toast.className = "secret-toast light";
+    toast.innerHTML = `<span class="secret-toast-message">${message}</span>`;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      toast.classList.add("show");
+    });
+
+    return toast;
+  },
+
+  // 揭示隐藏分类
+  revealSecretCategory() {
+    const activateCat = CATEGORIES.find(c => c.id === "activate");
+    if (!activateCat) return;
+
+    const container = document.getElementById("categoryBar");
+    if (!container) return;
+
+    // 检查是否已存在
+    if (container.querySelector(`[data-category="activate"]`)) return;
+
+    const btn = document.createElement("button");
+    btn.className = "category-btn secret-category";
+    btn.dataset.category = "activate";
+    btn.innerHTML = `<span>${activateCat.icon}</span><span>${activateCat.label}</span>`;
+    btn.addEventListener("click", () => {
+      state.currentCategory = "activate";
+      document.querySelectorAll(".category-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderTools();
+    });
+
+    container.appendChild(btn);
+
+    // 添加动画效果
+    setTimeout(() => {
+      btn.classList.add("animate-in");
+    }, 100);
+  },
+
+  // 撒花效果
+  addSecretConfetti() {
+    const colors = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"];
+    for (let i = 0; i < 50; i++) {
+      const confetti = document.createElement("div");
+      confetti.className = "secret-confetti";
+      confetti.style.left = Math.random() * 100 + "vw";
+      confetti.style.top = "-20px";
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.animationDelay = Math.random() * 2 + "s";
+      confetti.style.animationDuration = (2 + Math.random() * 2) + "s";
+      document.body.appendChild(confetti);
+
+      setTimeout(() => confetti.remove(), 5000);
+    }
+  },
+
+  // 初始化彩蛋系统
+  init() {
+    // 1. 检查 URL 参数
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get(this.SECRET_KEY) === "unlock") {
+      this.unlock();
+      // 清理 URL 参数
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+
+    // 2. 检查已解锁状态
+    if (this.isUnlocked()) {
+      this.revealSecretCategory();
+    }
+
+    // 3. Logo 点击序列
+    let clickTimer = null;
+    let clickCount = 0;
+    let toastEl = null; // 复用 toast 元素
+
+    const logo = document.querySelector(".logo");
+    if (logo) {
+      logo.addEventListener("click", (e) => {
+        // 阻止默认的链接跳转行为
+        e.preventDefault();
+        
+        clearTimeout(clickTimer);
+        clickCount++;
+
+        // 使用轻量级提示，避免频繁 DOM 操作
+        const messages = {
+          1: "🤔 继续点击...",
+          4: `🔍 还需要 ${this.SECRET_CLICKS - clickCount} 次...`,
+          6: "✨ 最后一击！"
+        };
+
+        if (messages[clickCount]) {
+          this.showLightToast(messages[clickCount], toastEl);
+        }
+
+        // 缩短超时时间到 1.5 秒
+        clickTimer = setTimeout(() => {
+          if (clickCount >= this.SECRET_CLICKS) {
+            this.unlock();
+          }
+          clickCount = 0;
+          if (toastEl) {
+            toastEl.remove();
+            toastEl = null;
+          }
+        }, 1500);
+      });
+
+      // Logo 悬停提示
+      logo.title = `点击 ${this.SECRET_CLICKS} 次解锁秘密...`;
+    }
+
+    // 4. 搜索框密钥
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+      searchInput.addEventListener("keydown", (e) => {
+        // Ctrl+Shift+A 或 Cmd+Shift+A
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "A") {
+          e.preventDefault();
+          this.unlock();
+        }
+      });
+    }
+
+  // 5. Konami 代码
+  const konamiSequence = [
+    "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+    "b", "a"
+  ];
+  let konamiIndex = 0;
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === konamiSequence[konamiIndex]) {
+      konamiIndex++;
+      if (konamiIndex === konamiSequence.length) {
+        this.unlock();
+        konamiIndex = 0;
+      }
+    } else {
+      konamiIndex = 0;
+    }
+  });
+
+  // 6. 页脚神秘问号
+  const footerHint = document.querySelector(".footer-secret-hint");
+  if (footerHint) {
+    let hintClickCount = 0;
+    footerHint.addEventListener("click", () => {
+      hintClickCount++;
+      const hints = [
+        "🔮 秘密藏在暗处...",
+        "✨ 有时候，答案就在眼前...",
+        "🎯 尝试点击 Logo？",
+        "🎮 还记得 Konami 代码吗？",
+        "🔑 URL 参数也能解锁秘密...",
+        "🎨 Ctrl+Shift+A 可能会有惊喜...",
+        "🎉 再点一次试试？"
+      ];
+
+      if (hintClickCount < hints.length) {
+        this.showToast(hints[hintClickCount - 1]);
+      } else {
+        this.unlock();
+        hintClickCount = 0;
+      }
+    });
+  }
+  }
 };
 
 // ============================================================
@@ -155,6 +396,20 @@ function createToolCard(tool) {
 
 function loadIcon(tool, container) {
   if (!tool.icon) return;
+  
+  // 检查是否是 emoji（单个字符且不是 URL）
+  const isEmoji = tool.icon.length <= 2 && !tool.icon.startsWith('http') && !tool.icon.startsWith('/');
+  
+  if (isEmoji) {
+    // 如果是 emoji，直接显示
+    const fallback = container.querySelector(".card-icon-fallback");
+    if (fallback) {
+      fallback.textContent = tool.icon;
+    }
+    return;
+  }
+  
+  // 否则作为图片 URL 加载
   const img = document.createElement("img");
   img.alt = tool.name;
   img.onload = () => {
@@ -242,6 +497,41 @@ function escapeHtml(str) {
 }
 
 // ============================================================
+// 侧边面板
+// ============================================================
+function initSidePanel() {
+  const toggle = document.getElementById("sidePanelToggle");
+  const content = document.getElementById("sidePanelContent");
+
+  if (!toggle || !content) return;
+
+  let isOpen = false;
+
+  // 点击切换
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    isOpen = !isOpen;
+    content.classList.toggle("active", isOpen);
+  });
+
+  // 点击外部关闭
+  document.addEventListener("click", (e) => {
+    if (isOpen && !content.contains(e.target) && !toggle.contains(e.target)) {
+      isOpen = false;
+      content.classList.remove("active");
+    }
+  });
+
+  // ESC 关闭
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen) {
+      isOpen = false;
+      content.classList.remove("active");
+    }
+  });
+}
+
+// ============================================================
 // 初始化
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -255,6 +545,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initCategories();
   initSearch();
   renderTools();
+  EasterEgg.init(); // 初始化彩蛋系统
+  initSidePanel(); // 初始化侧边面板
 });
 
 // 暴露给详情页使用

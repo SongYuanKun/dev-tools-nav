@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="精选开发 & 建站管理工具导航，涵盖开发工具、建站托管、安全工具、运维监控、设计资源。" />
-  <meta name="keywords" content="开发工具,建站工具,导航站,程序员工具,前端工具" />
-  <meta property="og:title" content="DevTools Nav · 开发工具导航" />
-  <meta property="og:description" content="精选开发 & 建站管理工具集合" />
+  <meta name="author" content="Koen" />
+  <meta name="description" content="Koen的工具箱 - 精选开发 & 建站管理工具导航，一个不想只写业务代码的程序员整理的工具合集。" />
+  <meta name="keywords" content="开发工具,建站工具,导航站,程序员工具,前端工具,Koen,独立开发" />
+  <meta property="og:title" content="Koen的工具箱 · 开发者工具导航" />
+  <meta property="og:description" content="精选开发 & 建站管理工具集合 | 一个不想只写业务代码的程序员" />
   <meta property="og:type" content="website" />
-  <title>DevTools Nav · 开发工具导航</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>" />
+  <meta property="og:image" content="assets/avatar.jpg" />
+  <title>Koen的工具箱 · 开发者工具导航</title>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -19,9 +21,9 @@
     <nav class="navbar" role="navigation" aria-label="主导航">
       <div class="navbar-inner">
         <!-- Logo -->
-        <a href="index.html" class="logo" aria-label="DevTools Nav 首页">
-          <div class="logo-icon" aria-hidden="true">🛠️</div>
-          <span class="logo-text">Dev<span>Tools</span> Nav</span>
+        <a href="index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
         </a>
 
         <!-- 搜索框 -->
@@ -58,8 +60,15 @@
 
   <!-- ========== Hero 区域 ========== -->
   <section class="hero" aria-label="页面介绍">
-    <h1 class="hero-title">开发 &amp; 建站工具导航</h1>
+    <h1 class="hero-title">Koen 的工具箱</h1>
     <p class="hero-subtitle">精选 30+ 款开发者常用工具，覆盖开发、建站、安全、运维、设计全流程</p>
+    <div class="hero-author">
+      <img src="assets/avatar.jpg" alt="Koen" class="author-avatar" />
+      <div class="author-info">
+        <span class="author-name">Koen</span>
+        <span class="author-bio">一个不想只写业务代码的程序员 | 独立开发斜杠中 | 开源爱好者</span>
+      </div>
+    </div>
   </section>
 
   <!-- ========== 主内容 ========== -->
@@ -91,14 +100,64 @@
 
   <!-- ========== 页脚 ========== -->
   <footer class="footer">
-    <p>
-      DevTools Nav &nbsp;·&nbsp;
-      数据来源于公开信息整理 &nbsp;·&nbsp;
-      <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
-      &nbsp;·&nbsp;
-      <a href="pages/template.html" >工具详情模板</a>
-    </p>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" title="CSDN 博客">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="pages/template.html">工具详情模板</a>
+        <span class="footer-secret-hint" title="🔮 有些东西藏在暗处...">?</span>
+      </div>
+      <p class="footer-copyright">
+        Made with ❤️ by Koen · 数据来源于公开信息整理
+      </p>
+    </div>
   </footer>
+
+  <!-- ========== 侧边悬浮组件 ========== -->
+  <aside class="side-panel">
+    <div class="side-panel-toggle" id="sidePanelToggle" title="关于作者">
+      <img src="assets/avatar.jpg" alt="Koen" />
+    </div>
+    <div class="side-panel-content" id="sidePanelContent">
+      <div class="panel-header">
+        <img src="assets/avatar.jpg" alt="Koen" class="panel-avatar" />
+        <div class="panel-name">Koen</div>
+        <div class="panel-tags">
+          <span class="panel-tag">🚀 独立开发</span>
+          <span class="panel-tag">💻 全栈探索</span>
+          <span class="panel-tag">❤️ 开源爱好者</span>
+        </div>
+      </div>
+      <p class="panel-bio">不想只写业务代码的程序员，正在斜杠独立开发之路，热衷于探索新技术和分享经验。</p>
+      <div class="panel-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" class="panel-link">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="panel-link">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+          CSDN 博客
+        </a>
+      </div>
+    </div>
+  </aside>
 
   <!-- 数据 & 逻辑 -->
   <script src="data/tools.js"></script>

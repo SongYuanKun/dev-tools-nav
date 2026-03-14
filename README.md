@@ -1,10 +1,10 @@
-# DevTools Nav · 开发工具导航站
+# Koen's 工具箱 · 开发者工具导航站
 
-> 精选 30+ 款开发 & 建站管理常用工具，纯静态实现，可直接部署到 GitHub Pages。
+> 精选 30+ 款开发 & 建站管理常用工具，纯静态实现，可直接部署到 GitHub Pages 或 1Panel。
 
 ## 预览
 
-![DevTools Nav](https://via.placeholder.com/1200x600/6366f1/ffffff?text=DevTools+Nav)
+![Koen's 工具箱](https://via.placeholder.com/1200x600/6366f1/ffffff?text=Koen's+Toolbox)
 
 ## 功能特性
 
@@ -14,6 +14,7 @@
 - **工具详情页**：每个工具独立详情页，含同类推荐
 - **响应式设计**：移动端、平板、桌面全适配
 - **精选标记**：高频推荐工具标注精选徽章
+- **🎮 彩蛋系统**：隐藏的"激活工具"分类，5 种趣味解锁方式！
 
 ## 工具分类
 
@@ -24,6 +25,7 @@
 | 🔒 安全工具 | 6 | SSL Labs、VirusTotal、Bitwarden |
 | 📊 运维监控 | 7 | UptimeRobot、Grafana、Sentry |
 | 🎨 设计资源 | 7 | Figma、Iconify、Coolors、Google Fonts |
+| 🔑 激活工具 | 2 | KMS 激活、JRebel 激活 |
 
 ## 文件结构
 
@@ -63,6 +65,14 @@ npx serve .
 3. Source 选择 `main` 分支，目录选 `/ (root)`
 4. 保存后等待几分钟，访问 `https://your-username.github.io/dev-tools-nav/`
 
+## 部署到 1Panel
+
+1. 将代码推送到 Git 仓库
+2. 在 1Panel 中创建静态网站
+3. 配置 Git 部署，填入仓库地址
+4. 设置网站目录为根目录
+5. 配置域名和 SSL 证书
+
 ## 添加新工具
 
 编辑 `data/tools.js`，在 `TOOLS_DATA` 数组中添加新对象：
@@ -95,6 +105,45 @@ npx serve .
 - **无障碍**：语义化 HTML，ARIA 标签，键盘可访问
 - **性能**：图标懒加载，防抖搜索，CSS 动画硬件加速
 
+## 🎮 彩蛋系统
+
+"激活工具"分类被隐藏，需要通过有趣的解锁方式才能发现！
+
+### 解锁方式
+
+1. **URL 参数** ⭐ - 最简单
+   ```
+   http://your-site.com/?devtools2024=unlock
+   ```
+
+2. **Logo 连击** ⭐⭐ - 点击页面 Logo 7 次（3 秒内）
+
+3. **Konami 代码** ⭐⭐⭐⭐ - 输入 ↑↑↓↓←→←→BA
+
+4. **快捷键** ⭐⭐⭐ - 搜索框中按 Cmd/Ctrl+Shift+A
+
+5. **页脚问号** ⭐ - 连续点击页脚的 "?" 7 次
+
+### 更多信息
+
+详细说明请查看：[彩蛋系统文档](./EGG_README.md)
+
+解锁后会显示：
+- 🎊 撒花动画
+- 💬 提示消息
+- 🌀 分类按钮动画
+- 持久化存储（一次解锁，永久享受）
+
 ## License
 
 MIT
+
+---
+
+## 📁 相关文档
+
+- [彩蛋系统详细说明](./EGG_README.md) - 所有解锁方式的详细指南
+- [彩蛋系统设计文档](./EGG_DESIGN.md) - 设计理念和技术实现
+- [彩蛋系统测试指南](./EGG_TESTING.md) - 测试清单和验证方法
+- [项目完成总结](./FINAL_SUMMARY.md) - 项目总结和成就
+- [交付清单](./DELIVERABLE.md) - 完整的交付物清单
