@@ -3,15 +3,6 @@
  * 功能：暗色模式、分类筛选、实时搜索、卡片渲染
  */
 
-// Umami 数据采集
-(function () {
-  const s = document.createElement("script");
-  s.defer = true;
-  s.src = "https://umami.songyuankun.top/script.js";
-  s.dataset.websiteId = "99e14cad-6300-4f3c-83d2-b3b71c7d6a25";
-  document.head.appendChild(s);
-})();
-
 // ============================================================
 // 状态
 // ============================================================
