@@ -4,7 +4,7 @@
 
 ## 预览
 
-![Koen's 工具箱](https://via.placeholder.com/1200x600/6366f1/ffffff?text=Koen's+Toolbox)
+![Koen's 工具箱](assets/screenshot.png)
 
 ## 功能特性
 
