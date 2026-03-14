@@ -14,7 +14,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI对话", "免费", "国产"],
     url: "https://chat.deepseek.com/",
-    icon: "https://cdn.simpleicons.org/deepseek",
+    icon: "https://icon.horse/icon/deepseek.com",
     featured: true,
     content: {
       intro: "DeepSeek 是国产 AI 大模型的代表作品，提供 DeepSeek-V3 和 DeepSeek-R1 等模型。支持 128K 超长上下文，擅长代码生成、数学推理、长文档分析，中文理解能力出色，完全免费开放使用。",
@@ -34,7 +34,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI对话", "GPT-4", "多模态"],
     url: "https://chat.openai.com/",
-    icon: "https://cdn.simpleicons.org/openai",
+    icon: "https://icon.horse/icon/openai.com",
     featured: true,
     content: {
       intro: "ChatGPT 是 OpenAI 推出的 AI 对话系统，支持 GPT-4o、GPT-4 Turbo 等先进模型。具备多模态能力（文字、图片、语音），覆盖写作、编程、数据分析、创意设计等场景，拥有丰富的插件和 GPTs 生态。",
@@ -132,7 +132,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI编程", "代码补全", "IDE插件"],
     url: "https://github.com/features/copilot",
-    icon: "https://cdn.simpleicons.org/github",
+    icon: "https://icon.horse/icon/github.com",
     featured: true,
     content: {
       intro: "GitHub Copilot 是最成熟的 AI 编程助手之一，深度集成 VS Code、JetBrains 等 IDE。支持实时代码补全、函数生成、单元测试编写，订阅制 $10/月，学生和开源维护者可免费使用。",
@@ -937,7 +937,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["UI设计", "原型", "协作"],
     url: "https://www.figma.com/",
-    icon: "https://cdn.simpleicons.org/figma",
+    icon: "https://icon.horse/icon/figma.com",
     featured: true,
     content: {
       intro: "Figma 是基于浏览器的协作设计工具，支持 UI、原型、设计系统与开发交付，支持实时协作与插件生态，免费版即可满足多数需求。",
@@ -986,7 +986,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["字体", "免费", "CDN"],
     url: "https://fonts.google.com/",
-    icon: "https://cdn.simpleicons.org/googlefonts",
+    icon: "https://icon.horse/icon/fonts.google.com",
     featured: false,
     content: {
       intro: "Google Fonts 提供大量免费可商用字体，支持通过 link 或 @import 引入，含多语言与可变字体，适合 Web 与设计稿。",
