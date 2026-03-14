@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="description" content="关于 Koen - 一个不想只写业务代码的程序员，独立开发者，开源爱好者。" />
+  <meta property="og:title" content="关于 Koen · 开发者工具导航" />
+  <meta property="og:description" content="了解 Koen 的技术栈、成长历程和开源项目" />
+  <title>关于我 · Koen的工具箱</title>
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+  <!-- ========== 顶部导航 ========== -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../index.html" class="nav-link">工具导航</a>
+          <a href="about.html" class="nav-link active">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== 关于页主内容 ========== -->
+  <main class="about-page">
+
+    <!-- 个人介绍 Hero -->
+    <section class="about-hero">
+      <img src="../assets/avatar.jpg" alt="Koen" class="about-avatar" />
+      <h1 class="about-name">Hi, 我是 Koen</h1>
+      <p class="about-tagline">一个不想只写业务代码的程序员</p>
+      <div class="about-tags">
+        <span class="about-tag">独立开发</span>
+        <span class="about-tag">全栈探索</span>
+        <span class="about-tag">开源爱好者</span>
+      </div>
+      <div class="about-social">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" class="about-social-btn" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="about-social-btn" title="CSDN 博客">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- 我的故事 -->
+    <section class="about-section">
+      <h2 class="about-section-title">我的故事</h2>
+      <div class="about-story">
+        <p>我是一名 Java 后端开发工程师，技术栈以 <strong>Java + Spring Boot + MySQL</strong> 为核心，日常和 MyBatis、Redis、消息队列打交道。</p>
+        <p>写了几年业务代码后，我开始思考：<strong>除了完成需求，技术还能为自己做些什么？</strong> 于是我开始探索独立开发——从写技术博客，到整理日常高频使用的工具，再到做出这个导航站。</p>
+        <p>这个工具箱收录了我在开发、建站、运维中反复使用的工具，每一个都亲自体验过。同时我也在 CSDN 持续输出技术文章，记录踩坑和思考。希望这些内容也能帮到你。</p>
+      </div>
+    </section>
+
+    <!-- 技术栈 -->
+    <section class="about-section">
+      <h2 class="about-section-title">技术栈</h2>
+      <div class="tech-stack-grid" id="techStackGrid">
+        <!-- 由 JS 渲染 -->
+      </div>
+    </section>
+
+    <!-- 成长时间线 -->
+    <section class="about-section">
+      <h2 class="about-section-title">成长历程</h2>
+      <div class="timeline" id="timeline">
+        <!-- 由 JS 渲染 -->
+      </div>
+    </section>
+
+    <!-- 项目作品 -->
+    <section class="about-section">
+      <h2 class="about-section-title">项目作品</h2>
+      <div class="projects-grid" id="projectsGrid">
+        <!-- 由 JS 渲染 -->
+      </div>
+    </section>
+
+    <!-- 信任指标 -->
+    <section class="about-section">
+      <h2 class="about-section-title">一些数字</h2>
+      <div class="trust-numbers">
+        <div class="trust-item">
+          <span class="trust-number" id="aboutToolCount">0</span>
+          <span class="trust-label">收录工具</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-number" id="aboutCategoryCount">0</span>
+          <span class="trust-label">工具分类</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-number" id="aboutArticleCount">0</span>
+          <span class="trust-label">技术文章</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-number">100%</span>
+          <span class="trust-label">亲测筛选</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section class="about-section">
+      <h2 class="about-section-title">联系我</h2>
+      <p class="about-contact-intro">如果你有好工具推荐、想交流技术，或者单纯想打个招呼，欢迎通过以下方式联系：</p>
+      <div class="contact-grid">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" class="contact-card">
+          <span class="contact-icon">💻</span>
+          <span class="contact-name">GitHub</span>
+          <span class="contact-handle">@SongYuanKun</span>
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="contact-card">
+          <span class="contact-icon">📝</span>
+          <span class="contact-name">CSDN 博客</span>
+          <span class="contact-handle">技术文章</span>
+        </a>
+        <a href="mailto:123839070@qq.com" class="contact-card">
+          <span class="contact-icon">📮</span>
+          <span class="contact-name">邮箱</span>
+          <span class="contact-handle">123839070@qq.com</span>
+        </a>
+        <div class="contact-card contact-card-disabled">
+          <span class="contact-icon">💬</span>
+          <span class="contact-name">微信公众号</span>
+          <span class="contact-handle">即将开通</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="about.html">关于我</a>
+        <span class="footer-divider">|</span>
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../data/tools.js"></script>
+  <script src="../data/articles.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    (function () {
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      function renderTechStack() {
+        const grid = document.getElementById("techStackGrid");
+        if (!grid || typeof TECH_STACK === "undefined") return;
+
+        const grouped = {};
+        TECH_STACK.forEach((t) => {
+          if (!grouped[t.category]) grouped[t.category] = [];
+          grouped[t.category].push(t);
+        });
+
+        let html = "";
+        Object.entries(grouped).forEach(([cat, techs]) => {
+          html += `<div class="tech-group">
+            <h3 class="tech-group-title">${escapeHtml(cat)}</h3>
+            <div class="tech-items">
+              ${techs.map((t) => `
+                <div class="tech-item">
+                  <span class="tech-icon">${t.icon}</span>
+                  <span class="tech-name">${escapeHtml(t.name)}</span>
+                  <div class="tech-bar"><div class="tech-bar-fill" style="width:${t.level}%"></div></div>
+                </div>
+              `).join("")}
+            </div>
+          </div>`;
+        });
+        grid.innerHTML = html;
+      }
+
+      function renderTimeline() {
+        const container = document.getElementById("timeline");
+        if (!container || typeof TIMELINE_DATA === "undefined") return;
+
+        let html = "";
+        TIMELINE_DATA.forEach((group) => {
+          html += `<div class="timeline-year">
+            <div class="timeline-year-label">${group.year}</div>
+            <div class="timeline-events">
+              ${group.events.map((e) => `
+                <div class="timeline-event">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-event-content">
+                    <span class="timeline-month">${e.month} 月</span>
+                    <h4 class="timeline-event-title">${escapeHtml(e.title)}</h4>
+                    <p class="timeline-event-desc">${escapeHtml(e.description)}</p>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>`;
+        });
+        container.innerHTML = html;
+      }
+
+      function renderProjects() {
+        const grid = document.getElementById("projectsGrid");
+        if (!grid || typeof PROJECTS_DATA === "undefined") return;
+
+        grid.innerHTML = PROJECTS_DATA.map((p) => `
+          <a href="${escapeHtml(p.url)}" target="_blank" rel="noopener noreferrer" class="project-card">
+            <div class="project-header">
+              <h3 class="project-name">${escapeHtml(p.name)}</h3>
+              <span class="project-status project-status-${p.status}">${p.status === "active" ? "维护中" : "已归档"}</span>
+            </div>
+            <p class="project-desc">${escapeHtml(p.description)}</p>
+            <div class="project-tags">
+              ${p.tags.map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("")}
+            </div>
+          </a>
+        `).join("");
+      }
+
+      function renderNumbers() {
+        const toolCount = document.getElementById("aboutToolCount");
+        const catCount = document.getElementById("aboutCategoryCount");
+        const artCount = document.getElementById("aboutArticleCount");
+
+        if (toolCount && typeof TOOLS_DATA !== "undefined") {
+          const visibleTools = TOOLS_DATA.filter((t) => !t.hidden);
+          animateNumber(toolCount, visibleTools.length);
+        }
+        if (catCount && typeof CATEGORIES !== "undefined") {
+          const visibleCats = CATEGORIES.filter((c) => !c.hidden && c.id !== "all");
+          animateNumber(catCount, visibleCats.length);
+        }
+        if (artCount && typeof ARTICLES_DATA !== "undefined") {
+          animateNumber(artCount, ARTICLES_DATA.length);
+        }
+      }
+
+      function animateNumber(el, target) {
+        let current = 0;
+        const step = Math.max(1, Math.floor(target / 20));
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          el.textContent = current;
+        }, 40);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        renderTechStack();
+        renderTimeline();
+        renderProjects();
+        renderNumbers();
+      });
+    })();
+  </script>
+</body>
+</html>

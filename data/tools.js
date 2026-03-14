@@ -1040,7 +1040,7 @@ const TOOLS_DATA = [
     },
   },
 
-  // ==================== 🔑 激活工具 ====================
+  // ==================== 🔑 激活工具（隐藏，不展示在首页） ====================
   {
     id: "kms",
     name: "KMS 激活",
@@ -1050,6 +1050,7 @@ const TOOLS_DATA = [
     url: "pages/kms.html",
     icon: "💻",
     featured: true,
+    hidden: true,
     content: null,
   },
   {
@@ -1061,6 +1062,7 @@ const TOOLS_DATA = [
     url: "pages/jrebel.html",
     icon: "☕",
     featured: false,
+    hidden: true,
     content: null,
   },
 ];

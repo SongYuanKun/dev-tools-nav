@@ -3,6 +3,15 @@
  * 功能：暗色模式、分类筛选、实时搜索、卡片渲染
  */
 
+// Umami 数据采集
+(function () {
+  const s = document.createElement("script");
+  s.defer = true;
+  s.src = "http://umami.songyuankun.top/script.js";
+  s.dataset.websiteId = "99e14cad-6300-4f3c-83d2-b3b71c7d6a25";
+  document.head.appendChild(s);
+})();
+
 // ============================================================
 // 状态
 // ============================================================
@@ -441,7 +450,9 @@ function isCategoryHidden(categoryId) {
 function filterTools() {
   if (typeof TOOLS_DATA === "undefined") return [];
   return TOOLS_DATA.filter((tool) => {
-    if (isCategoryHidden(tool.category)) return false;
+    const isSecretCategory = state.currentCategory === "activate";
+    if (!isSecretCategory && tool.hidden === true) return false;
+    if (!isSecretCategory && isCategoryHidden(tool.category)) return false;
     const matchCategory =
       state.currentCategory === "all" || tool.category === state.currentCategory;
     const q = state.searchQuery;
@@ -497,6 +508,69 @@ function escapeHtml(str) {
 }
 
 // ============================================================
+// 最新动态渲染
+// ============================================================
+function initArticles() {
+  const grid = document.getElementById("articlesGrid");
+  if (!grid || typeof ARTICLES_DATA === "undefined") return;
+
+  const articles = ARTICLES_DATA.slice(0, 3);
+  if (articles.length === 0) {
+    const section = document.getElementById("articlesSection");
+    if (section) section.style.display = "none";
+    return;
+  }
+
+  grid.innerHTML = articles.map((a) => {
+    const tagsHtml = a.tags
+      .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
+      .join("");
+
+    return `
+      <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" class="article-card">
+        <div class="article-meta">
+          <span class="article-platform">${escapeHtml(a.platform)}</span>
+          <span>${escapeHtml(a.date)}</span>
+        </div>
+        <h3 class="article-card-title">${escapeHtml(a.title)}</h3>
+        <p class="article-card-desc">${escapeHtml(a.description)}</p>
+        <div class="article-card-tags">${tagsHtml}</div>
+      </a>
+    `;
+  }).join("");
+}
+
+// ============================================================
+// 信任指标
+// ============================================================
+function initTrustBar() {
+  const toolCountEl = document.getElementById("trustToolCount");
+  const catCountEl = document.getElementById("trustCategoryCount");
+
+  if (toolCountEl && typeof TOOLS_DATA !== "undefined") {
+    const count = TOOLS_DATA.filter((t) => !t.hidden).length;
+    animateCounter(toolCountEl, count);
+  }
+  if (catCountEl && typeof CATEGORIES !== "undefined") {
+    const count = CATEGORIES.filter((c) => !c.hidden && c.id !== "all").length;
+    animateCounter(catCountEl, count);
+  }
+}
+
+function animateCounter(el, target) {
+  let current = 0;
+  const step = Math.max(1, Math.floor(target / 15));
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    el.textContent = current;
+  }, 50);
+}
+
+// ============================================================
 // 侧边面板
 // ============================================================
 function initSidePanel() {
@@ -545,8 +619,10 @@ document.addEventListener("DOMContentLoaded", () => {
   initCategories();
   initSearch();
   renderTools();
-  EasterEgg.init(); // 初始化彩蛋系统
-  initSidePanel(); // 初始化侧边面板
+  initArticles();
+  initTrustBar();
+  EasterEgg.init();
+  initSidePanel();
 });
 
 // 暴露给详情页使用
