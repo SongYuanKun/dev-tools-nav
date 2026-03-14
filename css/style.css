@@ -1849,6 +1849,137 @@ img {
 }
 
 /* ============================================================
+   推荐工具按钮
+   ============================================================ */
+.suggest-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.suggest-btn:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* ============================================================
+   收藏按钮
+   ============================================================ */
+.fav-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  z-index: 2;
+  line-height: 1;
+}
+
+.fav-btn:hover {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  transform: scale(1.2);
+}
+
+.fav-btn.active {
+  color: #f59e0b;
+}
+
+.tool-card.featured .fav-btn {
+  right: auto;
+  left: 12px;
+}
+
+/* ============================================================
+   卡片域名显示
+   ============================================================ */
+.card-domain {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+.card-domain::before {
+  content: "·";
+  margin-right: 6px;
+}
+
+/* ============================================================
+   回到顶部按钮
+   ============================================================ */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 90;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    left: 16px;
+    bottom: 16px;
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .suggest-btn {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
+
+/* ============================================================
    彩蛋系统样式
    ============================================================ */
 

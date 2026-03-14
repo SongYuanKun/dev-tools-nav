@@ -33,7 +33,7 @@
             type="search"
             id="searchInput"
             class="search-input"
-            placeholder="搜索工具名称、描述、标签..."
+            placeholder="搜索工具名称、描述、标签…（按 / 聚焦）"
             aria-label="搜索工具"
             autocomplete="off"
             spellcheck="false"
@@ -108,6 +108,7 @@
       <p class="stats-text">
         共找到 <strong id="statsCount">0</strong> 个工具
       </p>
+      <a href="https://github.com/SongYuanKun/dev-tools-nav/issues/new?title=推荐工具：&labels=推荐&body=工具名称：%0A工具地址：%0A推荐理由：" target="_blank" rel="noopener noreferrer" class="suggest-btn">+ 推荐工具</a>
     </div>
 
     <!-- 工具卡片网格 -->
@@ -127,6 +128,9 @@
       <p class="empty-desc">试试其他关键词，或切换分类查看</p>
     </div>
   </main>
+
+  <!-- ========== 回到顶部 ========== -->
+  <button class="back-to-top" id="backToTop" aria-label="回到顶部" title="回到顶部">↑</button>
 
   <!-- ========== 页脚 ========== -->
   <footer class="footer">

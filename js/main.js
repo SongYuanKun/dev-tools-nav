@@ -18,9 +18,55 @@
 const state = {
   currentCategory: "all",
   searchQuery: "",
-  secretUnlocked: false, // 彩蛋解锁状态
-  clickSequence: [], // 点击序列追踪
-  konamiCode: [], // Konami 代码记录
+  secretUnlocked: false,
+  clickSequence: [],
+  konamiCode: [],
+};
+
+// ============================================================
+// 收藏管理（localStorage）
+// ============================================================
+const Favorites = {
+  STORAGE_KEY: "devtools-favorites",
+
+  getAll() {
+    try {
+      return JSON.parse(localStorage.getItem(this.STORAGE_KEY)) || [];
+    } catch { return []; }
+  },
+
+  has(id) {
+    return this.getAll().includes(id);
+  },
+
+  toggle(id) {
+    const favs = this.getAll();
+    const idx = favs.indexOf(id);
+    if (idx === -1) { favs.push(id); } else { favs.splice(idx, 1); }
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(favs));
+    return idx === -1;
+  },
+};
+
+// ============================================================
+// 最近访问记录（localStorage）
+// ============================================================
+const RecentVisits = {
+  STORAGE_KEY: "devtools-recent",
+  MAX: 8,
+
+  getAll() {
+    try {
+      return JSON.parse(localStorage.getItem(this.STORAGE_KEY)) || [];
+    } catch { return []; }
+  },
+
+  add(id) {
+    let list = this.getAll().filter((i) => i !== id);
+    list.unshift(id);
+    if (list.length > this.MAX) list = list.slice(0, this.MAX);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
+  },
 };
 
 // ============================================================
@@ -307,19 +353,34 @@ function initCategories() {
   const container = document.getElementById("categoryBar");
   if (!container || typeof CATEGORIES === "undefined") return;
 
-  CATEGORIES.filter((cat) => !cat.hidden).forEach((cat) => {
-    const btn = document.createElement("button");
-    btn.className = "category-btn" + (cat.id === "all" ? " active" : "");
-    btn.dataset.category = cat.id;
-    btn.innerHTML = `<span>${cat.icon}</span><span>${cat.label}</span>`;
-    btn.addEventListener("click", () => {
-      state.currentCategory = cat.id;
-      document.querySelectorAll(".category-btn").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderTools();
-    });
+  const extraTabs = [
+    { id: "favorites", label: "我的收藏", icon: "⭐" },
+    { id: "recent", label: "最近访问", icon: "🕐" },
+  ];
+
+  CATEGORIES.filter((cat) => !cat.hidden).forEach((cat, i) => {
+    const btn = createCategoryBtn(cat, container);
+    if (cat.id === "all") btn.classList.add("active");
     container.appendChild(btn);
+
+    if (i === 0) {
+      extraTabs.forEach((tab) => container.appendChild(createCategoryBtn(tab, container)));
+    }
   });
+}
+
+function createCategoryBtn(cat, container) {
+  const btn = document.createElement("button");
+  btn.className = "category-btn";
+  btn.dataset.category = cat.id;
+  btn.innerHTML = `<span>${cat.icon}</span><span>${cat.label}</span>`;
+  btn.addEventListener("click", () => {
+    state.currentCategory = cat.id;
+    document.querySelectorAll(".category-btn").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderTools();
+  });
+  return btn;
 }
 
 // ============================================================
@@ -357,34 +418,48 @@ function getCategoryLabel(categoryId) {
   return cat ? `${cat.icon} ${cat.label}` : "";
 }
 
+function getDomain(url) {
+  try {
+    return new URL(url).hostname.replace("www.", "");
+  } catch { return ""; }
+}
+
 function createToolCard(tool) {
   const card = document.createElement("article");
   card.className = "tool-card" + (tool.featured ? " featured" : "");
+  if (Favorites.has(tool.id)) card.classList.add("favorited");
   card.dataset.id = tool.id;
 
   const tagsHtml = tool.tags
     .map((tag) => `<span class="tag">${tag}</span>`)
     .join("");
 
+  const domain = tool.url.startsWith("http") ? getDomain(tool.url) : "";
+  const domainHtml = domain ? `<span class="card-domain">${domain}</span>` : "";
+  const isFav = Favorites.has(tool.id);
+
   card.innerHTML = `
     ${tool.featured ? '<span class="featured-badge">精选</span>' : ""}
+    <button class="fav-btn${isFav ? " active" : ""}" data-id="${tool.id}" title="${isFav ? "取消收藏" : "收藏"}">
+      ${isFav ? "★" : "☆"}
+    </button>
     <div class="card-header">
       <div class="card-icon" id="icon-${tool.id}">
         <span class="card-icon-fallback">🔧</span>
       </div>
       <div>
         <div class="card-title">${escapeHtml(tool.name)}</div>
-        <div class="card-category-label">${getCategoryLabel(tool.category)}</div>
+        <div class="card-category-label">${getCategoryLabel(tool.category)}${domainHtml}</div>
       </div>
     </div>
     <p class="card-desc">${escapeHtml(tool.description)}</p>
     <div class="card-tags">${tagsHtml}</div>
     <div class="card-footer">
       ${tool.content
-        ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn">📖 教程</a>`
+        ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn" data-tool-id="${tool.id}">📖 教程</a>`
         : tool.category === "activate"
-          ? `<a href="${tool.url}" class="visit-btn">📖 访问</a>`
-          : `<a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="visit-btn">
+          ? `<a href="${tool.url}" class="visit-btn" data-tool-id="${tool.id}">📖 访问</a>`
+          : `<a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="visit-btn" data-tool-id="${tool.id}">
             ↗ 访问
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -393,12 +468,27 @@ function createToolCard(tool) {
             </svg>
           </a>`
       }
-      <a href="${tool.category === "activate" ? tool.url : `pages/template.html?id=${tool.id}`}" class="detail-link">详情 →</a>
+      <a href="${tool.category === "activate" ? tool.url : `pages/template.html?id=${tool.id}`}" class="detail-link" data-tool-id="${tool.id}">详情 →</a>
     </div>
   `;
 
-  // 异步加载图标，失败时保留 fallback emoji
   loadIcon(tool, card.querySelector(`#icon-${tool.id}`));
+
+  // 收藏按钮事件
+  card.querySelector(".fav-btn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    const added = Favorites.toggle(tool.id);
+    const btn = e.currentTarget;
+    btn.classList.toggle("active", added);
+    btn.textContent = added ? "★" : "☆";
+    btn.title = added ? "取消收藏" : "收藏";
+    card.classList.toggle("favorited", added);
+  });
+
+  // 记录访问
+  card.querySelectorAll("[data-tool-id]").forEach((link) => {
+    link.addEventListener("click", () => RecentVisits.add(tool.id));
+  });
 
   return card;
 }
@@ -449,12 +539,24 @@ function isCategoryHidden(categoryId) {
 
 function filterTools() {
   if (typeof TOOLS_DATA === "undefined") return [];
-  return TOOLS_DATA.filter((tool) => {
+
+  let pool = TOOLS_DATA;
+
+  if (state.currentCategory === "favorites") {
+    const favIds = Favorites.getAll();
+    pool = favIds.map((id) => TOOLS_DATA.find((t) => t.id === id)).filter(Boolean);
+  } else if (state.currentCategory === "recent") {
+    const recentIds = RecentVisits.getAll();
+    pool = recentIds.map((id) => TOOLS_DATA.find((t) => t.id === id)).filter(Boolean);
+  }
+
+  return pool.filter((tool) => {
     const isSecretCategory = state.currentCategory === "activate";
-    if (!isSecretCategory && tool.hidden === true) return false;
-    if (!isSecretCategory && isCategoryHidden(tool.category)) return false;
+    const isSpecialTab = state.currentCategory === "favorites" || state.currentCategory === "recent";
+    if (!isSecretCategory && !isSpecialTab && tool.hidden === true) return false;
+    if (!isSecretCategory && !isSpecialTab && isCategoryHidden(tool.category)) return false;
     const matchCategory =
-      state.currentCategory === "all" || tool.category === state.currentCategory;
+      isSpecialTab || state.currentCategory === "all" || tool.category === state.currentCategory;
     const q = state.searchQuery;
     const matchSearch =
       !q ||
@@ -605,6 +707,69 @@ function initSidePanel() {
 }
 
 // ============================================================
+// 回到顶部
+// ============================================================
+function initBackToTop() {
+  const btn = document.getElementById("backToTop");
+  if (!btn) return;
+
+  const onScroll = () => {
+    btn.classList.toggle("visible", window.scrollY > 400);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  btn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+// ============================================================
+// 键盘快捷键
+// ============================================================
+function initKeyboard() {
+  document.addEventListener("keydown", (e) => {
+    const active = document.activeElement;
+    const isInput = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.isContentEditable);
+
+    // / 聚焦搜索框（不在输入框时）
+    if (e.key === "/" && !isInput) {
+      e.preventDefault();
+      const input = document.getElementById("searchInput");
+      if (input) input.focus();
+      return;
+    }
+
+    // Esc 清空搜索并失焦
+    if (e.key === "Escape" && isInput) {
+      const input = document.getElementById("searchInput");
+      if (input && active === input) {
+        input.value = "";
+        state.searchQuery = "";
+        renderTools();
+        input.blur();
+      }
+      return;
+    }
+
+    // 左右方向键切换分类（不在输入框时）
+    if (!isInput && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+      const btns = Array.from(document.querySelectorAll(".category-btn:not(.secret-category)"));
+      if (btns.length === 0) return;
+      const currentIdx = btns.findIndex((b) => b.classList.contains("active"));
+      let nextIdx;
+      if (e.key === "ArrowLeft") {
+        nextIdx = currentIdx <= 0 ? btns.length - 1 : currentIdx - 1;
+      } else {
+        nextIdx = currentIdx >= btns.length - 1 ? 0 : currentIdx + 1;
+      }
+      btns[nextIdx].click();
+      btns[nextIdx].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+  });
+}
+
+// ============================================================
 // 初始化
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -620,6 +785,8 @@ document.addEventListener("DOMContentLoaded", () => {
   renderTools();
   initArticles();
   initTrustBar();
+  initBackToTop();
+  initKeyboard();
   EasterEgg.init();
   initSidePanel();
 });
