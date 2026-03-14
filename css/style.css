@@ -1319,9 +1319,7 @@ img {
    最新动态区域
    ============================================================ */
 .articles-section {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 40px 24px 0;
+  margin-bottom: 32px;
 }
 
 .articles-header {
@@ -1834,10 +1832,6 @@ img {
 
   .trust-item-inline span {
     font-size: 12px;
-  }
-
-  .articles-section {
-    padding: 24px 16px 0;
   }
 
   .articles-grid {

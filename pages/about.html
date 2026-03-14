@@ -100,8 +100,8 @@
           <span class="trust-label">工具分类</span>
         </div>
         <div class="trust-item">
-          <span class="trust-number" id="aboutArticleCount">0</span>
-          <span class="trust-label">技术文章</span>
+          <span class="trust-number">持续</span>
+          <span class="trust-label">博客更新中</span>
         </div>
         <div class="trust-item">
           <span class="trust-number">100%</span>
@@ -243,7 +243,6 @@
       function renderNumbers() {
         const toolCount = document.getElementById("aboutToolCount");
         const catCount = document.getElementById("aboutCategoryCount");
-        const artCount = document.getElementById("aboutArticleCount");
 
         if (toolCount && typeof TOOLS_DATA !== "undefined") {
           const visibleTools = TOOLS_DATA.filter((t) => !t.hidden);
@@ -252,9 +251,6 @@
         if (catCount && typeof CATEGORIES !== "undefined") {
           const visibleCats = CATEGORIES.filter((c) => !c.hidden && c.id !== "all");
           animateNumber(catCount, visibleCats.length);
-        }
-        if (artCount && typeof ARTICLES_DATA !== "undefined") {
-          animateNumber(artCount, ARTICLES_DATA.length);
         }
       }
 

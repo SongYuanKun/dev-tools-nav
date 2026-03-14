@@ -91,19 +91,18 @@
     </div>
   </section>
 
-  <!-- ========== 最新动态 ========== -->
-  <section class="articles-section" id="articlesSection">
-    <div class="articles-header">
-      <h2 class="articles-title">最新动态</h2>
-      <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="articles-more">查看全部 →</a>
-    </div>
-    <div class="articles-grid" id="articlesGrid">
-      <!-- 由 JS 渲染 -->
-    </div>
-  </section>
-
   <!-- ========== 主内容 ========== -->
   <main class="main-content" id="main">
+
+    <!-- 最新动态（有文章数据时显示） -->
+    <section class="articles-section" id="articlesSection" style="display:none;">
+      <div class="articles-header">
+        <h2 class="articles-title">最新动态</h2>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="articles-more">查看全部 →</a>
+      </div>
+      <div class="articles-grid" id="articlesGrid"></div>
+    </section>
+
     <!-- 统计信息 -->
     <div class="stats-bar" aria-live="polite">
       <p class="stats-text">

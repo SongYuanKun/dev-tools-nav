@@ -511,15 +511,14 @@ function escapeHtml(str) {
 // 最新动态渲染
 // ============================================================
 function initArticles() {
+  const section = document.getElementById("articlesSection");
   const grid = document.getElementById("articlesGrid");
-  if (!grid || typeof ARTICLES_DATA === "undefined") return;
+  if (!section || !grid || typeof ARTICLES_DATA === "undefined") return;
 
   const articles = ARTICLES_DATA.slice(0, 3);
-  if (articles.length === 0) {
-    const section = document.getElementById("articlesSection");
-    if (section) section.style.display = "none";
-    return;
-  }
+  if (articles.length === 0) return;
+
+  section.style.display = "";
 
   grid.innerHTML = articles.map((a) => {
     const tagsHtml = a.tags

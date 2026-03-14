@@ -3,33 +3,15 @@
  * platform: CSDN | 掘金 | GitHub | 博客 | Bilibili
  */
 const ARTICLES_DATA = [
-  {
-    title: "从零搭建开发者工具导航站：技术选型与实现",
-    description: "分享这个工具导航站从想法到上线的全过程，包括纯前端架构设计、暗色模式、搜索筛选和彩蛋系统的实现思路。",
-    date: "2026-03-12",
-    url: "https://blog.csdn.net/syk123839070",
-    tags: ["建站", "前端", "开源"],
-    platform: "CSDN",
-    cover: null,
-  },
-  {
-    title: "独立开发周记 #01：为什么我要做一个工具导航站",
-    description: "作为一个不想只写业务代码的程序员，聊聊我为什么开始独立开发，以及第一个项目的选择。",
-    date: "2026-03-05",
-    url: "https://blog.csdn.net/syk123839070",
-    tags: ["独立开发", "个人成长"],
-    platform: "CSDN",
-    cover: null,
-  },
-  {
-    title: "2026 年我在用的 10 个效率工具",
-    description: "精选我日常开发中高频使用的工具，涵盖编辑器、终端、API调试、部署等环节，每一个都亲测好用。",
-    date: "2026-02-20",
-    url: "https://blog.csdn.net/syk123839070",
-    tags: ["工具", "效率", "推荐"],
-    platform: "CSDN",
-    cover: null,
-  },
+  // 在 CSDN 发布文章后，按以下格式添加：
+  // {
+  //   title: "文章标题",
+  //   description: "文章简介",
+  //   date: "2026-03-14",
+  //   url: "https://blog.csdn.net/syk123839070/article/details/xxx",
+  //   tags: ["标签1", "标签2"],
+  //   platform: "CSDN",
+  // },
 ];
 
 /**
