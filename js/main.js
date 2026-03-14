@@ -245,46 +245,54 @@ const EasterEgg = {
       this.revealSecretCategory();
     }
 
-    // 3. Logo 点击序列
+    // 3. Logo 点击序列（兼容单击回首页）
     let clickTimer = null;
+    let navTimer = null;
     let clickCount = 0;
-    let toastEl = null; // 复用 toast 元素
+    let toastEl = null;
+    const NAV_DELAY = 300;
 
     const logo = document.querySelector(".logo");
     if (logo) {
       logo.addEventListener("click", (e) => {
-        // 阻止默认的链接跳转行为
         e.preventDefault();
-        
         clearTimeout(clickTimer);
+        clearTimeout(navTimer);
         clickCount++;
 
-        // 使用轻量级提示，避免频繁 DOM 操作
+        if (clickCount === 1) {
+          // 首次点击：等一小段时间，没有后续点击就正常跳转
+          navTimer = setTimeout(() => {
+            clickCount = 0;
+            window.location.href = logo.href;
+          }, NAV_DELAY);
+          return;
+        }
+
+        // 第 2 次及之后进入彩蛋流程
+        const remaining = this.SECRET_CLICKS - clickCount;
         const messages = {
-          1: "🤔 继续点击...",
-          4: `🔍 还需要 ${this.SECRET_CLICKS - clickCount} 次...`,
+          2: "🤔 继续点击...",
+          4: `🔍 还需要 ${remaining} 次...`,
           6: "✨ 最后一击！"
         };
 
         if (messages[clickCount]) {
-          this.showLightToast(messages[clickCount], toastEl);
+          toastEl = this.showLightToast(messages[clickCount], toastEl);
         }
 
-        // 缩短超时时间到 1.5 秒
-        clickTimer = setTimeout(() => {
-          if (clickCount >= this.SECRET_CLICKS) {
-            this.unlock();
-          }
+        if (clickCount >= this.SECRET_CLICKS) {
           clickCount = 0;
-          if (toastEl) {
-            toastEl.remove();
-            toastEl = null;
-          }
+          if (toastEl) { toastEl.remove(); toastEl = null; }
+          this.unlock();
+          return;
+        }
+
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+          if (toastEl) { toastEl.remove(); toastEl = null; }
         }, 1500);
       });
-
-      // Logo 悬停提示
-      logo.title = `点击 ${this.SECRET_CLICKS} 次解锁秘密...`;
     }
 
     // 4. 搜索框密钥
