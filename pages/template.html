@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>工具详情 · DevTools Nav</title>
+  <title>工具详情 · Koen的工具箱</title>
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../css/style.css" />
   <script defer src="../js/base.js"></script>
@@ -14,12 +14,13 @@
   <header>
     <nav class="navbar" role="navigation" aria-label="主导航">
       <div class="navbar-inner">
-        <a href="../index.html" class="logo" aria-label="返回首页">
-          <div class="logo-icon" aria-hidden="true">🛠️</div>
-          <span class="logo-text">Dev<span>Tools</span> Nav</span>
+        <a href="../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
         </a>
-        <div class="search-wrapper" style="max-width:none; flex:1;">
-          <!-- 详情页搜索框留空，点击跳回首页搜索 -->
+        <div class="nav-links">
+          <a href="../index.html" class="nav-link">工具导航</a>
+          <a href="about.html" class="nav-link">关于我</a>
         </div>
         <button
           id="themeToggle"
@@ -54,10 +55,20 @@
 
   <!-- ========== 页脚 ========== -->
   <footer class="footer">
-    <p>
-      DevTools Nav &nbsp;·&nbsp;
-      <a href="../index.html">返回首页</a>
-    </p>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="about.html">关于我</a>
+        <span class="footer-divider">|</span>
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
   </footer>
 
   <!-- 数据 & 逻辑 -->

@@ -40,9 +40,9 @@
       <h1 class="about-name">Hi, 我是 Koen</h1>
       <p class="about-tagline">一个不想只写业务代码的程序员</p>
       <div class="about-tags">
-        <span class="about-tag">独立开发</span>
-        <span class="about-tag">全栈探索</span>
+        <span class="about-tag">后端深耕 · 全栈探索</span>
         <span class="about-tag">开源爱好者</span>
+        <span class="about-tag">独立开发者</span>
       </div>
       <div class="about-social">
         <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" class="about-social-btn" title="GitHub">
@@ -58,9 +58,22 @@
     <section class="about-section">
       <h2 class="about-section-title">我的故事</h2>
       <div class="about-story">
-        <p>我是一名 Java 后端开发工程师，技术栈以 <strong>Java + Spring Boot + MySQL</strong> 为核心，日常和 MyBatis、Redis、消息队列打交道。</p>
-        <p>写了几年业务代码后，我开始思考：<strong>除了完成需求，技术还能为自己做些什么？</strong> 于是我开始探索独立开发——从写技术博客，到整理日常高频使用的工具，再到做出这个导航站。</p>
-        <p>这个工具箱收录了我在开发、建站、运维中反复使用的工具，每一个都亲自体验过。同时我也在 CSDN 持续输出技术文章，记录踩坑和思考。希望这些内容也能帮到你。</p>
+        <p>从2017年开始写代码，我的职业主线一直是<strong>Java后端开发</strong>。技术栈以 Spring Boot + MySQL 为核心，日常和 MyBatis、Redis、消息队列打交道。但我从不想做一个"只会写业务代码的程序员"——<strong>技术本身，才是让我兴奋的东西</strong>。</p>
+        <p>于是我开始向外探索：从深入 MySQL 主从复制原理，到剖析 LongAdder 的并发优化思路；从搭建 Jenkins + SonarQube 的 CI/CD 流程，到研究 Git 与代码托管的最佳实践。每一篇博客、每一个踩坑记录，都是我对技术边界的试探。</p>
+        <p>现在，我开始走向全栈与独立开发——这个工具箱就是我的第一个独立作品。它收录了我日常真正在用的工具，也是我从前端到部署、从产品到运维的完整实践。<strong>我不想只做需求的执行者，我想用技术，做自己的产品</strong>。</p>
+      </div>
+    </section>
+
+    <!-- 最新文章 -->
+    <section class="about-section">
+      <h2 class="about-section-title">最新文章</h2>
+      <div class="articles-grid" id="articlesGrid">
+        <!-- 由 JS 渲染 -->
+      </div>
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          查看全部文章 →
+        </a>
       </div>
     </section>
 
@@ -93,22 +106,25 @@
       <h2 class="about-section-title">一些数字</h2>
       <div class="trust-numbers">
         <div class="trust-item">
+          <span class="trust-number">7+</span>
+          <span class="trust-label">年开发经验</span>
+        </div>
+        <div class="trust-item">
           <span class="trust-number" id="aboutToolCount">0</span>
           <span class="trust-label">收录工具</span>
         </div>
         <div class="trust-item">
-          <span class="trust-number" id="aboutCategoryCount">0</span>
-          <span class="trust-label">工具分类</span>
+          <span class="trust-number">19</span>
+          <span class="trust-label">篇技术博客</span>
         </div>
         <div class="trust-item">
-          <span class="trust-number">持续</span>
-          <span class="trust-label">博客更新中</span>
-        </div>
-        <div class="trust-item">
-          <span class="trust-number">100%</span>
-          <span class="trust-label">亲测筛选</span>
+          <span class="trust-number">5.9w+</span>
+          <span class="trust-label">博客总访问</span>
         </div>
       </div>
+      <p class="trust-source" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem;">
+        数据来源：CSDN 博客（更新于 2025年3月）
+      </p>
     </section>
 
     <!-- 联系方式 -->
@@ -241,6 +257,32 @@
         `).join("");
       }
 
+      function renderArticles() {
+        const grid = document.getElementById("articlesGrid");
+        if (!grid || typeof ARTICLES_DATA === "undefined" || ARTICLES_DATA.length === 0) {
+          if (grid) grid.innerHTML = '<p style="text-align: center; color: var(--text-muted);">暂无文章</p>';
+          return;
+        }
+
+        // 只显示前4篇
+        const articles = ARTICLES_DATA.slice(0, 4);
+        
+        grid.innerHTML = articles.map((a) => `
+          <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" class="article-card">
+            <div class="article-meta">
+              <span class="article-platform">${escapeHtml(a.platform)}</span>
+              <span class="article-date">${escapeHtml(a.date)}</span>
+            </div>
+            <h3 class="article-title">${escapeHtml(a.title)}</h3>
+            <p class="article-desc">${escapeHtml(a.description)}</p>
+            <div class="article-tags">
+              ${a.tags.slice(0, 3).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("")}
+            </div>
+            ${a.views ? `<span class="article-views">👁 ${a.views} 阅读</span>` : ""}
+          </a>
+        `).join("");
+      }
+
       function renderNumbers() {
         const toolCount = document.getElementById("aboutToolCount");
         const catCount = document.getElementById("aboutCategoryCount");
@@ -272,6 +314,7 @@
         renderTechStack();
         renderTimeline();
         renderProjects();
+        renderArticles();
         renderNumbers();
       });
     })();

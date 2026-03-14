@@ -34,7 +34,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI对话", "GPT-4", "多模态"],
     url: "https://chat.openai.com/",
-    icon: "https://cdn.simpleicons.org/openai",
+    icon: "https://chat.openai.com/favicon.ico",
     featured: true,
     content: {
       intro: "ChatGPT 是 OpenAI 推出的 AI 对话系统，支持 GPT-4o、GPT-4 Turbo 等先进模型。具备多模态能力（文字、图片、语音），覆盖写作、编程、数据分析、创意设计等场景，拥有丰富的插件和 GPTs 生态。",
@@ -54,7 +54,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI对话", "长文本", "安全"],
     url: "https://claude.ai/",
-    icon: "https://www.google.com/s2/favicons?domain=claude.ai&sz=64",
+    icon: "https://claude.ai/favicon.ico",
     featured: true,
     content: {
       intro: "Claude 是 Anthropic 开发的 AI 助手，以安全性和可解释性著称。支持 200K 超长上下文，擅长长文档分析、代码审查、创意写作，回复自然流畅，被广泛认为是 GPT 的最佳替代方案。",
@@ -74,7 +74,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI对话", "长文本", "联网搜索"],
     url: "https://kimi.moonshot.cn/",
-    icon: "https://www.google.com/s2/favicons?domain=kimi.moonshot.cn&sz=64",
+    icon: "https://kimi.moonshot.cn/favicon.ico",
     featured: false,
     content: {
       intro: "Kimi 是月之暗面推出的 AI 助手，支持 200K 超长上下文和实时联网搜索。擅长资料收集、长文档分析、学术研究辅助，免费使用且响应速度快，是国内最受欢迎的 AI 工具之一。",
@@ -94,7 +94,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI对话", "语音", "免费"],
     url: "https://www.doubao.com/",
-    icon: "https://www.google.com/s2/favicons?domain=www.doubao.com&sz=64",
+    icon: "https://www.doubao.com/favicon.ico",
     featured: false,
     content: {
       intro: "豆包是字节跳动推出的 AI 助手，内置学习、职场、生活等多种预设角色。支持语音实时对话、图片生成、文档处理，完全免费，适合日常使用和轻度娱乐。",
@@ -111,7 +111,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI编程", "编辑器", "代码生成"],
     url: "https://cursor.sh/",
-    icon: "https://www.google.com/s2/favicons?domain=cursor.sh&sz=64",
+    icon: "https://cursor.sh/favicon.ico",
     featured: true,
     content: {
       intro: "Cursor 是一款 AI 原生代码编辑器，基于 VS Code 构建并深度集成 Claude、GPT-4 等模型。支持自然语言生成代码、智能重构、错误修复、代码解释，被誉为开发者必备的 AI 编程神器。",
@@ -152,7 +152,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI编程", "免费", "代码补全"],
     url: "https://codeium.com/",
-    icon: "https://www.google.com/s2/favicons?domain=codeium.com&sz=64",
+    icon: "https://codeium.com/favicon.ico",
     featured: false,
     content: {
       intro: "Codeium 是免费的 AI 代码补全工具，支持 70+ 编程语言，可集成 VS Code、JetBrains、Vim 等主流编辑器。基础补全功能永久免费，是 Copilot 的优秀免费替代方案。",
@@ -171,7 +171,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI编程", "IDE", "国产"],
     url: "https://trae.ai/",
-    icon: "https://www.google.com/s2/favicons?domain=trae.ai&sz=64",
+    icon: "https://trae.ai/favicon.ico",
     featured: false,
     content: {
       intro: "Trae 是字节跳动推出的 AI 原生 IDE，深度集成豆包大模型。支持自然语言编程、代码生成与重构，对中文开发者友好，免费开放使用。",
@@ -188,7 +188,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI绘画", "图像生成", "设计"],
     url: "https://www.midjourney.com/",
-    icon: "https://www.google.com/s2/favicons?domain=www.midjourney.com&sz=64",
+    icon: "https://www.midjourney.com/favicon.ico",
     featured: true,
     content: {
       intro: "Midjourney 是目前效果最好的 AI 图像生成工具之一，通过文字描述即可生成高质量艺术图像。支持多种艺术风格，生成效果惊艳，被广泛应用于概念设计、插画创作、素材生成等场景。",
@@ -208,7 +208,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI绘画", "开源", "本地部署"],
     url: "https://stability.ai/",
-    icon: "https://www.google.com/s2/favicons?domain=stability.ai&sz=64",
+    icon: "https://stability.ai/favicon.ico",
     featured: false,
     content: {
       intro: "Stable Diffusion 是开源的 AI 图像生成模型，支持本地部署，可精细控制生成过程。拥有丰富的社区资源（模型、插件、教程），适合对隐私和定制化有要求的深度用户。",
@@ -227,7 +227,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI绘画", "文字渲染", "Logo设计"],
     url: "https://ideogram.ai/",
-    icon: "https://www.google.com/s2/favicons?domain=ideogram.ai&sz=64",
+    icon: "https://ideogram.ai/favicon.ico",
     featured: false,
     content: {
       intro: "Ideogram 是擅长文字渲染的 AI 图像生成工具，能准确生成图像中的文字内容。特别适合 Logo 设计、海报制作、标题图文等需要精准文字的场景，免费额度充足。",
@@ -242,7 +242,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI绘画", "矢量图", "UI设计"],
     url: "https://www.recraft.ai/",
-    icon: "https://www.google.com/s2/favicons?domain=www.recraft.ai&sz=64",
+    icon: "https://www.recraft.ai/favicon.ico",
     featured: false,
     content: {
       intro: "Recraft 是专注于矢量图生成的 AI 工具，可生成可编辑的 SVG 文件。适合 UI 设计师、图标制作、品牌设计等场景，生成的矢量图可在 Figma、Illustrator 中进一步编辑。",
@@ -259,7 +259,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI办公", "PPT生成", "演示"],
     url: "https://gamma.app/",
-    icon: "https://www.google.com/s2/favicons?domain=gamma.app&sz=64",
+    icon: "https://gamma.app/favicon.ico",
     featured: true,
     content: {
       intro: "Gamma 是 AI 驱动的演示文稿工具，输入主题即可自动生成完整的 PPT。支持智能排版、图表生成、在线协作，大幅提升演示文稿制作效率，是职场必备的 AI 办公工具。",
@@ -279,7 +279,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI办公", "笔记", "写作"],
     url: "https://www.notion.so/product/ai",
-    icon: "https://www.google.com/s2/favicons?domain=notion.so&sz=64",
+    icon: "https://www.notion.so/images/favicon.ico",
     featured: false,
     content: {
       intro: "Notion AI 是 Notion 内置的 AI 写作助手，支持内容生成、摘要总结、翻译润色等功能。与 Notion 深度集成，无需切换工具即可提升文档撰写效率。",
@@ -297,7 +297,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI搜索", "研究", "联网"],
     url: "https://www.perplexity.ai/",
-    icon: "https://www.google.com/s2/favicons?domain=www.perplexity.ai&sz=64",
+    icon: "https://www.perplexity.ai/favicon.ico",
     featured: true,
     content: {
       intro: "Perplexity 是 AI 驱动的搜索引擎，结合大语言模型与实时联网搜索。提供带引用来源的精准答案，支持追问和多轮对话，是学术研究、信息收集的利器。",
@@ -319,7 +319,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI视频", "视频生成", "创作"],
     url: "https://runwayml.com/",
-    icon: "https://www.google.com/s2/favicons?domain=runwayml.com&sz=64",
+    icon: "https://runwayml.com/favicon.ico",
     featured: false,
     content: {
       intro: "Runway 是领先的 AI 视频生成与编辑平台，支持文本生成视频、图片生成视频。提供 Gen-3 等先进模型，效果出色，被广泛应用于影视制作、广告创作等领域。",
@@ -334,7 +334,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI视频", "国产", "视频生成"],
     url: "https://klingai.kuaishou.com/",
-    icon: "https://www.google.com/s2/favicons?domain=klingai.kuaishou.com&sz=64",
+    icon: "https://klingai.kuaishou.com/favicon.ico",
     featured: false,
     content: {
       intro: "可灵 AI 是快手推出的视频生成工具，支持文本生成视频、图片生成视频。效果出色且对中文用户友好，免费额度充足，是目前最实用的国产 AI 视频工具之一。",
@@ -349,7 +349,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI音乐", "歌曲生成", "创作"],
     url: "https://suno.ai/",
-    icon: "https://www.google.com/s2/favicons?domain=suno.ai&sz=64",
+    icon: "https://suno.ai/favicon.ico",
     featured: false,
     content: {
       intro: "Suno AI 是 AI 音乐生成工具，输入文字描述即可生成包含歌词、旋律、人声的完整歌曲。支持多种音乐风格，创作门槛极低，人人都能成为音乐创作者。",
@@ -369,7 +369,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI开发", "智能体", "无代码"],
     url: "https://www.coze.cn/",
-    icon: "https://www.google.com/s2/favicons?domain=www.coze.cn&sz=64",
+    icon: "https://www.coze.cn/favicon.ico",
     featured: false,
     content: {
       intro: "Coze 扣子是字节跳动推出的 AI 智能体开发平台，无需编程即可创建 AI Bot。支持知识库、插件、工作流，可一键发布到豆包、飞书、微信等平台。",
@@ -384,7 +384,7 @@ const TOOLS_DATA = [
     category: "ai",
     tags: ["AI开发", "开源", "企业级"],
     url: "https://dify.ai/",
-    icon: "https://www.google.com/s2/favicons?domain=dify.ai&sz=64",
+    icon: "https://dify.ai/favicon.ico",
     featured: false,
     content: {
       intro: "Dify 是开源的大语言模型应用开发平台，提供可视化界面构建 AI 应用。支持多模型接入、知识库管理、工作流编排，适合企业级 AI 应用开发和私有化部署。",
@@ -404,7 +404,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["编辑器", "IDE", "免费"],
     url: "https://code.visualstudio.com/",
-    icon: "https://www.google.com/s2/favicons?domain=code.visualstudio.com&sz=64",
+    icon: "https://code.visualstudio.com/favicon.ico",
     featured: true,
     content: {
       intro: "VS Code 是微软推出的免费开源代码编辑器，基于 Electron 构建，支持 Windows/macOS/Linux。内置 Git、调试、智能补全，配合海量扩展可覆盖前端、后端、DevOps 全场景。",
@@ -423,7 +423,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["代码托管", "Git", "协作"],
     url: "https://github.com/",
-    icon: "https://www.google.com/s2/favicons?domain=github.com&sz=64",
+    icon: "https://github.com/favicon.ico",
     featured: true,
     content: {
       intro: "GitHub 是全球最大的代码托管与协作平台，基于 Git，提供仓库管理、Issues、Pull Request、Actions CI/CD、Discussions 等完整开发流程支持，是开源与团队协作的事实标准。",
@@ -442,7 +442,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["API", "测试", "调试"],
     url: "https://www.postman.com/",
-    icon: "https://www.google.com/s2/favicons?domain=postman.com&sz=64",
+    icon: "https://www.postman.com/favicon-32x32.png",
     featured: true,
     content: {
       intro: "Postman 是主流的 API 开发与测试工具，支持 REST、GraphQL、WebSocket、gRPC。提供集合、环境变量、脚本断言、Mock 与文档生成，适合个人与团队协作。",
@@ -461,7 +461,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["API", "开源", "在线工具"],
     url: "https://hoppscotch.io/",
-    icon: "https://www.google.com/s2/favicons?domain=hoppscotch.io&sz=64",
+    icon: "https://hoppscotch.io/favicon.ico",
     featured: false,
     content: {
       intro: "Hoppscotch 是开源的 API 客户端，在浏览器中即可发送 REST、GraphQL、WebSocket、gRPC 等请求。无需安装，支持环境变量、预请求脚本与团队协作。",
@@ -480,7 +480,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["正则", "调试", "在线工具"],
     url: "https://regex101.com/",
-    icon: "https://www.google.com/s2/favicons?domain=regex101.com&sz=64",
+    icon: "https://regex101.com/static/assets/favicon.ico",
     featured: false,
     content: {
       intro: "Regex101 提供正则表达式在线编写与调试，支持 PCRE、JavaScript、Python 等引擎，实时高亮匹配与分组，并给出每条部分的解释，便于学习和排错。",
@@ -495,7 +495,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["JSON", "格式化", "在线工具"],
     url: "https://jsonformatter.curiousconcept.com/",
-    icon: "https://www.google.com/s2/favicons?domain=jsonformatter.curiousconcept.com&sz=64",
+    icon: "https://jsonformatter.curiousconcept.com/favicon.ico",
     featured: false,
     content: {
       intro: "JSON Formatter 提供 JSON 的格式化、压缩、验证与树形查看，粘贴即可使用，适合快速检查接口返回或配置文件。",
@@ -510,7 +510,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["兼容性", "浏览器", "参考"],
     url: "https://caniuse.com/",
-    icon: "https://www.google.com/s2/favicons?domain=caniuse.com&sz=64",
+    icon: "https://caniuse.com/img/favicon-128.png",
     featured: false,
     content: {
       intro: "Can I Use 用于查询 Web 技术在各浏览器与版本中的支持情况，覆盖桌面与移动端，是前端做兼容性决策的常用参考。",
@@ -525,7 +525,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["文档", "API", "离线"],
     url: "https://devdocs.io/",
-    icon: "https://www.google.com/s2/favicons?domain=devdocs.io&sz=64",
+    icon: "https://devdocs.io/favicon.ico",
     featured: false,
     content: {
       intro: "DevDocs 聚合大量语言与框架的官方文档，支持离线下载与全文搜索，一个站点即可查阅多种技术文档。",
@@ -540,7 +540,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["在线IDE", "原型", "分享"],
     url: "https://codesandbox.io/",
-    icon: "https://www.google.com/s2/favicons?domain=codesandbox.io&sz=64",
+    icon: "https://codesandbox.io/favicon.ico",
     featured: true,
     content: {
       intro: "CodeSandbox 提供浏览器内的完整开发环境，支持 React、Vue、Node 等模板，可一键分享与嵌入，适合演示与协作。",
@@ -555,7 +555,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["在线IDE", "Node.js", "全栈"],
     url: "https://stackblitz.com/",
-    icon: "https://www.google.com/s2/favicons?domain=stackblitz.com&sz=64",
+    icon: "https://stackblitz.com/favicon.ico",
     featured: false,
     content: {
       intro: "StackBlitz 基于 WebContainers 在浏览器中运行真实 Node 环境，支持 Next、Vue、Vite 等，无需安装即可全栈开发与分享。",
@@ -570,7 +570,7 @@ const TOOLS_DATA = [
     category: "dev",
     tags: ["转换", "代码生成", "在线工具"],
     url: "https://transform.tools/",
-    icon: "https://www.google.com/s2/favicons?domain=transform.tools&sz=64",
+    icon: "https://transform.tools/favicon.ico",
     featured: false,
     content: {
       intro: "Transform Tools 提供多种代码与格式之间的转换，如 JSON 转 TypeScript 类型、SVG 转 React 组件、CSS 转 JS 等，基于 AST 保证准确。",
@@ -587,7 +587,7 @@ const TOOLS_DATA = [
     category: "hosting",
     tags: ["部署", "CDN", "免费"],
     url: "https://vercel.com/",
-    icon: "https://www.google.com/s2/favicons?domain=vercel.com&sz=64",
+    icon: "https://vercel.com/favicon.ico",
     featured: true,
     content: {
       intro: "Vercel 是面向前端与 Jamstack 的部署平台，与 GitHub/GitLab 集成后推送即部署，支持 Next、React、Vue 等，自带全球 CDN 与 Serverless 函数。",
@@ -607,7 +607,7 @@ const TOOLS_DATA = [
     category: "hosting",
     tags: ["托管", "Jamstack", "免费"],
     url: "https://www.netlify.com/",
-    icon: "https://www.google.com/s2/favicons?domain=netlify.com&sz=64",
+    icon: "https://www.netlify.com/favicon/favicon-32x32.png",
     featured: true,
     content: {
       intro: "Netlify 提供静态站点与 Jamstack 的托管与 CI/CD，支持 Git 集成、表单、无服务器函数、分支预览与 A/B 测试，免费额度适合个人与小团队。",
@@ -626,7 +626,7 @@ const TOOLS_DATA = [
     category: "hosting",
     tags: ["CDN", "DNS", "安全"],
     url: "https://www.cloudflare.com/",
-    icon: "https://www.google.com/s2/favicons?domain=www.cloudflare.com&sz=64",
+    icon: "https://www.cloudflare.com/favicon.ico",
     featured: true,
     content: {
       intro: "Cloudflare 提供 DNS、CDN、DDoS 防护、WAF、Workers 与 Pages 等一站式网络与托管服务，免费套餐即可加速与保护站点。",
@@ -645,7 +645,7 @@ const TOOLS_DATA = [
     category: "hosting",
     tags: ["域名", "SSL", "邮箱"],
     url: "https://www.namecheap.com/",
-    icon: "https://www.google.com/s2/favicons?domain=namecheap.com&sz=64",
+    icon: "https://www.namecheap.com/assets/img/nc-icon/favicon.ico",
     featured: false,
     content: {
       intro: "Namecheap 是常用域名注册商，提供域名注册、续费、隐私保护、SSL 与邮箱等，价格透明，适合个人与小型项目。",
@@ -660,7 +660,7 @@ const TOOLS_DATA = [
     category: "hosting",
     tags: ["域名", "SSL", "免费隐私"],
     url: "https://porkbun.com/",
-    icon: "https://www.google.com/s2/favicons?domain=porkbun.com&sz=64",
+    icon: "https://porkbun.com/favicon.ico",
     featured: false,
     content: {
       intro: "Porkbun 提供域名注册与续费，价格透明，免费 WHOIS 隐私与 SSL，界面简洁，适合追求性价比的开发者。",
@@ -675,7 +675,7 @@ const TOOLS_DATA = [
     category: "hosting",
     tags: ["托管", "免费", "静态"],
     url: "https://pages.github.com/",
-    icon: "https://www.google.com/s2/favicons?domain=github.com&sz=64",
+    icon: "https://github.com/favicon.ico",
     featured: false,
     content: {
       intro: "GitHub Pages 从仓库分支或目录发布静态站点，支持 Jekyll 与自定义构建，免费 HTTPS，适合文档、博客与项目主页。",
@@ -690,7 +690,7 @@ const TOOLS_DATA = [
     category: "hosting",
     tags: ["部署", "Docker", "数据库"],
     url: "https://railway.app/",
-    icon: "https://www.google.com/s2/favicons?domain=railway.app&sz=64",
+    icon: "https://railway.app/favicon.ico",
     featured: false,
     content: {
       intro: "Railway 支持从 Git 或 Docker 部署应用，内置 PostgreSQL、Redis 等数据库与 Cron，按资源用量计费，适合全栈与小团队。",
@@ -705,7 +705,7 @@ const TOOLS_DATA = [
     category: "hosting",
     tags: ["SSL", "免费", "HTTPS"],
     url: "https://letsencrypt.org/",
-    icon: "https://www.google.com/s2/favicons?domain=letsencrypt.org&sz=64",
+    icon: "https://letsencrypt.org/favicon.ico",
     featured: false,
     content: {
       intro: "Let's Encrypt 提供免费 DV 证书与 ACME 协议，配合 certbot 等工具可自动化申请与续期，被广泛用于个人与小型站点 HTTPS。",
@@ -722,7 +722,7 @@ const TOOLS_DATA = [
     category: "security",
     tags: ["SSL", "扫描", "评分"],
     url: "https://www.ssllabs.com/ssltest/",
-    icon: "https://www.google.com/s2/favicons?domain=www.ssllabs.com&sz=64",
+    icon: "https://www.ssllabs.com/favicon.ico",
     featured: true,
     content: {
       intro: "SSL Labs 对任意域名的 TLS/SSL 配置进行深度检测，给出 A+ 至 F 的评分，并列出协议、套件、证书与已知漏洞，是加固 HTTPS 的必备工具。",
@@ -741,7 +741,7 @@ const TOOLS_DATA = [
     category: "security",
     tags: ["扫描", "病毒检测", "URL检测"],
     url: "https://www.virustotal.com/",
-    icon: "https://www.google.com/s2/favicons?domain=www.virustotal.com&sz=64",
+    icon: "https://www.virustotal.com/favicon.ico",
     featured: true,
     content: {
       intro: "VirusTotal 聚合多家杀毒引擎对文件、URL、IP、域名进行扫描，可上传文件或输入链接快速查看多引擎结果与社区情报。",
@@ -756,7 +756,7 @@ const TOOLS_DATA = [
     category: "security",
     tags: ["数据泄露", "密码安全", "邮箱检测"],
     url: "https://haveibeenpwned.com/",
-    icon: "https://www.google.com/s2/favicons?domain=haveibeenpwned.com&sz=64",
+    icon: "https://haveibeenpwned.com/favicon.ico",
     featured: false,
     content: {
       intro: "Have I Been Pwned 可查询邮箱或密码是否出现在已知泄露库中，采用 k-anonymity 保护隐私，适合自查与提醒用户改密。",
@@ -771,7 +771,7 @@ const TOOLS_DATA = [
     category: "security",
     tags: ["HTTP头", "安全检测", "评分"],
     url: "https://securityheaders.com/",
-    icon: "https://www.google.com/s2/favicons?domain=securityheaders.com&sz=64",
+    icon: "https://securityheaders.com/favicon.ico",
     featured: false,
     content: {
       intro: "Security Headers 检测站点返回的 HTTP 安全头（如 CSP、HSTS、X-Frame-Options），给出 A+ 至 F 评分与改进建议。",
@@ -786,7 +786,7 @@ const TOOLS_DATA = [
     category: "security",
     tags: ["密码管理", "开源", "加密"],
     url: "https://bitwarden.com/",
-    icon: "https://www.google.com/s2/favicons?domain=bitwarden.com&sz=64",
+    icon: "https://bitwarden.com/favicon.ico",
     featured: false,
     content: {
       intro: "Bitwarden 是开源密码管理器，支持多端同步、浏览器扩展与 CLI，可自建服务器，端到端加密，适合个人与团队。",
@@ -801,7 +801,7 @@ const TOOLS_DATA = [
     category: "security",
     tags: ["安全扫描", "Mozilla", "评分"],
     url: "https://observatory.mozilla.org/",
-    icon: "https://www.google.com/s2/favicons?domain=observatory.mozilla.org&sz=64",
+    icon: "https://observatory.mozilla.org/favicon.ico",
     featured: false,
     content: {
       intro: "Mozilla Observatory 对网站进行安全扫描，涵盖 TLS、安全头、Cookie、CSP 等，给出分数与具体改进项。",
@@ -818,7 +818,7 @@ const TOOLS_DATA = [
     category: "ops",
     tags: ["监控", "告警", "免费"],
     url: "https://uptimerobot.com/",
-    icon: "https://www.google.com/s2/favicons?domain=uptimerobot.com&sz=64",
+    icon: "https://uptimerobot.com/assets/img/logo_plain.svg",
     featured: true,
     content: {
       intro: "UptimeRobot 提供 HTTP(s)、Ping、Port、关键词等监控，免费版每 5 分钟检查，支持邮件/短信/Webhook 告警与状态页。",
@@ -837,7 +837,7 @@ const TOOLS_DATA = [
     category: "ops",
     tags: ["监控", "可视化", "开源"],
     url: "https://grafana.com/",
-    icon: "https://www.google.com/s2/favicons?domain=grafana.com&sz=64",
+    icon: "https://grafana.com/favicon.ico",
     featured: true,
     content: {
       intro: "Grafana 是开源的指标可视化与告警平台，支持 Prometheus、InfluxDB、Loki、云厂商等数据源，可构建仪表盘与告警规则。",
@@ -856,7 +856,7 @@ const TOOLS_DATA = [
     category: "ops",
     tags: ["错误监控", "性能", "告警"],
     url: "https://sentry.io/",
-    icon: "https://www.google.com/s2/favicons?domain=sentry.io&sz=64",
+    icon: "https://sentry.io/favicon.ico",
     featured: true,
     content: {
       intro: "Sentry 提供错误追踪与性能监控，支持 JavaScript、Node、Python、Go 等多语言，可捕获异常、面包屑与 Release 关联，便于排查线上问题。",
@@ -875,7 +875,7 @@ const TOOLS_DATA = [
     category: "ops",
     tags: ["APM", "日志", "企业级"],
     url: "https://www.datadoghq.com/",
-    icon: "https://www.google.com/s2/favicons?domain=www.datadoghq.com&sz=64",
+    icon: "https://www.datadoghq.com/favicon.ico",
     featured: false,
     content: {
       intro: "Datadog 提供基础设施、APM、日志、RUM、安全等一体化监控，支持主流云与自建环境，适合中大型团队与合规需求。",
@@ -890,7 +890,7 @@ const TOOLS_DATA = [
     category: "ops",
     tags: ["监控", "状态页", "告警"],
     url: "https://betterstack.com/",
-    icon: "https://www.google.com/s2/favicons?domain=betterstack.com&sz=64",
+    icon: "https://betterstack.com/favicon.ico",
     featured: false,
     content: {
       intro: "Better Stack（原 Better Uptime）提供监控、状态页、日志与 On-Call，界面现代，支持多种告警与事件工作流。",
@@ -905,7 +905,7 @@ const TOOLS_DATA = [
     category: "ops",
     tags: ["日志", "搜索", "告警"],
     url: "https://betterstack.com/logs",
-    icon: "https://www.google.com/s2/favicons?domain=betterstack.com&sz=64",
+    icon: "https://betterstack.com/favicon.ico",
     featured: false,
     content: {
       intro: "Logtail（Better Stack Logs）提供日志采集、解析、搜索与告警，支持多种来源与查询语言，适合中小团队。",
@@ -920,7 +920,7 @@ const TOOLS_DATA = [
     category: "ops",
     tags: ["性能", "Lighthouse", "Google"],
     url: "https://pagespeed.web.dev/",
-    icon: "https://www.google.com/s2/favicons?domain=pagespeed.web.dev&sz=64",
+    icon: "https://www.gstatic.com/pagespeed/insights/ui/logo/favicon_48.png",
     featured: false,
     content: {
       intro: "PageSpeed Insights 基于 Lighthouse 对 URL 进行移动端与桌面端性能分析，给出 Core Web Vitals 与优化建议。",
@@ -937,7 +937,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["UI设计", "原型", "协作"],
     url: "https://www.figma.com/",
-    icon: "https://cdn.simpleicons.org/figma",
+    icon: "https://static.figma.com/app/icon/1/favicon.ico",
     featured: true,
     content: {
       intro: "Figma 是基于浏览器的协作设计工具，支持 UI、原型、设计系统与开发交付，支持实时协作与插件生态，免费版即可满足多数需求。",
@@ -956,7 +956,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["图标", "开源", "免费"],
     url: "https://iconify.design/",
-    icon: "https://www.google.com/s2/favicons?domain=iconify.design&sz=64",
+    icon: "https://iconify.design/favicon.ico",
     featured: true,
     content: {
       intro: "Iconify 聚合多套开源图标库，统一 API 与命名，支持 React、Vue、SVG 等多种用法，可按需加载。",
@@ -971,7 +971,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["配色", "色板", "生成器"],
     url: "https://coolors.co/",
-    icon: "https://www.google.com/s2/favicons?domain=coolors.co&sz=64",
+    icon: "https://coolors.co/assets/img/favicon.png",
     featured: true,
     content: {
       intro: "Coolors 提供快速配色生成与调整，支持锁定颜色、渐变与导出 CSS/SCSS/PDF，可浏览与复用社区色板。",
@@ -986,7 +986,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["字体", "免费", "CDN"],
     url: "https://fonts.google.com/",
-    icon: "https://cdn.simpleicons.org/googlefonts",
+    icon: "https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg",
     featured: false,
     content: {
       intro: "Google Fonts 提供大量免费可商用字体，支持通过 link 或 @import 引入，含多语言与可变字体，适合 Web 与设计稿。",
@@ -1001,7 +1001,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["插画", "SVG", "免费商用"],
     url: "https://undraw.co/",
-    icon: "https://www.google.com/s2/favicons?domain=undraw.co&sz=64",
+    icon: "https://undraw.co/favicon.ico",
     featured: false,
     content: {
       intro: "unDraw 提供可商用 SVG 插画，支持在线调整主色，适合落地页、空状态与文档配图，无需署名。",
@@ -1016,7 +1016,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["CSS", "渐变", "生成器"],
     url: "https://cssgradient.io/",
-    icon: "https://www.google.com/s2/favicons?domain=cssgradient.io&sz=64",
+    icon: "https://cssgradient.io/images/favicon-32x32.png",
     featured: false,
     content: {
       intro: "CSS Gradient 提供可视化渐变编辑，支持线性、径向、锥形与多色标，实时生成 CSS 代码便于复制。",
@@ -1031,7 +1031,7 @@ const TOOLS_DATA = [
     category: "design",
     tags: ["图片压缩", "WebP", "优化"],
     url: "https://squoosh.app/",
-    icon: "https://www.google.com/s2/favicons?domain=squoosh.app&sz=64",
+    icon: "https://squoosh.app/c/favicon-32x32.png",
     featured: false,
     content: {
       intro: "Squoosh 是 Google 的在线图片压缩与格式转换工具，支持 WebP、AVIF、Oxipng 等，可对比原图与压缩结果。",
