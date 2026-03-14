@@ -517,7 +517,7 @@ function loadIcon(tool, container) {
   // 否则作为图片 URL 加载
   const img = document.createElement("img");
   img.alt = tool.name;
-  img.loading = "lazy";
+  // 移除懒加载，图标应该立即显示
   img.onload = () => {
     container.innerHTML = "";
     container.appendChild(img);
@@ -530,6 +530,7 @@ function loadIcon(tool, container) {
       security: "🔒",
       ops: "📊",
       design: "🎨",
+      ai: "🤖",
       activate: "🔑",
     };
     const fallback = container.querySelector(".card-icon-fallback");

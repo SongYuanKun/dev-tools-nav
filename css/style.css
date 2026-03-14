@@ -419,6 +419,7 @@ img {
   flex-shrink: 0;
   overflow: hidden;
   padding: 6px;
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
 .card-icon img {
@@ -426,6 +427,7 @@ img {
   height: 100%;
   object-fit: contain;
   border-radius: 4px;
+  transition: opacity 0.2s ease;
 }
 
 .card-icon-fallback {
