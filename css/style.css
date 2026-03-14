@@ -565,6 +565,9 @@ img {
    Hero 区域
    ============================================================ */
 .hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   padding: 48px 24px 0;
   max-width: 1280px;
