@@ -389,7 +389,7 @@ img {
   display: none;
   position: absolute;
   top: 12px;
-  right: 12px;
+  left: 12px;
   background: linear-gradient(135deg, #f59e0b, #ef4444);
   color: white;
   font-size: 10px;
@@ -397,6 +397,7 @@ img {
   padding: 2px 7px;
   border-radius: var(--radius-full);
   letter-spacing: 0.5px;
+  z-index: 2;
 }
 
 /* 卡片头部：图标 + 名称 */
@@ -1903,11 +1904,6 @@ img {
 
 .fav-btn.active {
   color: #f59e0b;
-}
-
-.tool-card.featured .fav-btn {
-  right: auto;
-  left: 12px;
 }
 
 /* ============================================================
