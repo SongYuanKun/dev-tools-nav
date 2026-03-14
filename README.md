@@ -8,7 +8,7 @@
 
 ## 功能特性
 
-- **分类筛选**：开发工具 / 建站工具 / 安全工具 / 运维监控 / 设计资源
+- **分类筛选**：AI 工具 / 开发工具 / 建站工具 / 安全工具 / 运维监控 / 设计资源
 - **实时搜索**：按名称、描述、标签即时过滤
 - **暗色模式**：跟随系统偏好 + 手动切换，偏好持久化
 - **工具详情页**：每个工具独立详情页，含同类推荐
@@ -20,6 +20,7 @@
 
 | 分类 | 数量 | 代表工具 |
 |------|------|----------|
+| 🤖 AI 工具 | 20 | DeepSeek、ChatGPT、Claude、Cursor、Midjourney |
 | 🛠️ 开发工具 | 11 | VS Code、GitHub、Postman、CodeSandbox |
 | 🌐 建站工具 | 8 | Vercel、Netlify、Cloudflare、Porkbun |
 | 🔒 安全工具 | 6 | SSL Labs、VirusTotal、Bitwarden |
