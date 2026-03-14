@@ -7,7 +7,7 @@
 (function () {
   const s = document.createElement("script");
   s.defer = true;
-  s.src = "http://umami.songyuankun.top/script.js";
+  s.src = "https://umami.songyuankun.top/script.js";
   s.dataset.websiteId = "99e14cad-6300-4f3c-83d2-b3b71c7d6a25";
   document.head.appendChild(s);
 })();
