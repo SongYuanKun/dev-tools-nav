@@ -593,13 +593,14 @@ img {
 /* 作者信息卡片 */
 .hero-author {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-full);
-  padding: 8px 20px 8px 8px;
-  margin-top: 8px;
+  border-radius: var(--radius-lg);
+  padding: 20px 28px;
+  margin-top: 12px;
   box-shadow: var(--shadow-card);
   transition: all var(--transition);
 }
@@ -610,30 +611,31 @@ img {
 }
 
 .author-avatar {
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--color-primary-light);
+  border: 3px solid var(--color-primary);
 }
 
 .author-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
 }
 
 .author-name {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
 .author-bio {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
-  white-space: nowrap;
+  line-height: 1.5;
 }
 
 /* ============================================================
@@ -1161,21 +1163,8 @@ img {
   }
 
   .hero-author {
-    flex-direction: column;
-    padding: 16px;
-    border-radius: var(--radius-lg);
-    width: 100%;
+    padding: 16px 20px;
     max-width: 320px;
-  }
-
-  .author-info {
-    align-items: center;
-    text-align: center;
-  }
-
-  .author-bio {
-    white-space: normal;
-    text-align: center;
   }
 
   .tools-grid {
