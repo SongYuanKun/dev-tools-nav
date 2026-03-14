@@ -19,14 +19,22 @@
   let currentUrl = location.pathname + location.search;
   let currentRef = document.referrer.startsWith(location.origin) ? "" : document.referrer;
 
-  function send(payload) {
-    const body = JSON.stringify({ type: "event", payload });
-    const headers = { "Content-Type": "application/json" };
+  var MAX_RETRIES = 2;
+  var RETRY_DELAY = 1500;
+
+  function send(payload, attempt) {
+    attempt = attempt || 0;
+    var body = JSON.stringify({ type: "event", payload });
+    var headers = { "Content-Type": "application/json" };
     if (cache) headers["x-umami-cache"] = cache;
-    fetch(`${UMAMI_HOST}/api/send`, { method: "POST", body, headers, keepalive: true, credentials: "omit" })
+    fetch(UMAMI_HOST + "/api/send", { method: "POST", body: body, headers: headers, keepalive: true, credentials: "omit" })
       .then(function (r) { return r.json(); })
       .then(function (d) { if (d) cache = d.cache; })
-      .catch(function () {});
+      .catch(function () {
+        if (attempt < MAX_RETRIES) {
+          setTimeout(function () { send(payload, attempt + 1); }, RETRY_DELAY * (attempt + 1));
+        }
+      });
   }
 
   function trackPageview() {
