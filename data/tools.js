@@ -25,6 +25,12 @@ const TOOLS_DATA = [
       ],
       tips: ["深度思考模式适合复杂推理任务", "可要求输出 Markdown 格式", "支持多轮对话上下文记忆"],
       links: [{ label: "DeepSeek 官网", url: "https://www.deepseek.com/" }],
+      freeQuota: {
+        models: ["DeepSeek-V3", "DeepSeek-R1"],
+        quota: "网页端无限使用（公平使用限制）；API 注册赠送 500 万 Token",
+        period: "网页端每日 / API 赠送额度 30 天有效",
+        refresh: "网页端每日刷新 / API 赠送额度不刷新",
+      },
     },
   },
   {
@@ -45,6 +51,12 @@ const TOOLS_DATA = [
       ],
       tips: ["使用 @ 提及特定 GPTs", "可上传文件让 AI 分析", "Custom Instructions 定制个性化回复风格"],
       links: [{ label: "OpenAI API 文档", url: "https://platform.openai.com/docs" }],
+      freeQuota: {
+        models: ["GPT-4o mini（无限）", "GPT-4o（限量）"],
+        quota: "GPT-4o mini 无限使用；GPT-4o 约 10 条消息/5 小时",
+        period: "滚动 5 小时窗口",
+        refresh: "自动滚动刷新",
+      },
     },
   },
   {
@@ -65,6 +77,12 @@ const TOOLS_DATA = [
       ],
       tips: ["Artifacts 功能可实时预览代码/图表/文档", "适合论文阅读、合同审查等长文本任务", "支持多种输出格式如 JSON、Markdown"],
       links: [{ label: "Claude 官网", url: "https://claude.ai/" }],
+      freeQuota: {
+        models: ["Claude Sonnet 4.5"],
+        quota: "约 9 条消息/5 小时",
+        period: "滚动 5 小时窗口",
+        refresh: "自动滚动刷新",
+      },
     },
   },
   {
@@ -85,6 +103,12 @@ const TOOLS_DATA = [
       ],
       tips: ["上传多个文件进行对比分析", "可要求 Kimi 总结网页内容", "支持导出对话为 Markdown"],
       links: [{ label: "Kimi 官网", url: "https://kimi.moonshot.cn/" }],
+      freeQuota: {
+        models: ["Kimi K2.5（标准/思考模式）"],
+        quota: "基础对话无限制，深度思考模式有频率限制",
+        period: "每日",
+        refresh: "每日刷新",
+      },
     },
   },
   {
@@ -100,6 +124,12 @@ const TOOLS_DATA = [
       intro: "豆包是字节跳动推出的 AI 助手，内置学习、职场、生活等多种预设角色。支持语音实时对话、图片生成、文档处理，完全免费，适合日常使用和轻度娱乐。",
       features: ["多角色预设切换", "语音实时对话", "图片生成", "完全免费"],
       links: [{ label: "豆包官网", url: "https://www.doubao.com/" }],
+      freeQuota: {
+        models: ["豆包大模型 2.0（Seed-2.0）"],
+        quota: "每日约 10 次生成",
+        period: "每日",
+        refresh: "每日刷新",
+      },
     },
   },
 
@@ -123,6 +153,12 @@ const TOOLS_DATA = [
       ],
       tips: ["Tab 键接受 AI 建议", "可选中代码后让 AI 重构或解释", "Composer 模式支持多文件协同编辑"],
       links: [{ label: "Cursor 文档", url: "https://docs.cursor.sh/" }],
+      freeQuota: {
+        models: ["Claude/GPT（慢速模式）"],
+        quota: "2000 次代码补全/月",
+        period: "每月",
+        refresh: "每月刷新",
+      },
     },
   },
   {
@@ -143,6 +179,12 @@ const TOOLS_DATA = [
       ],
       tips: ["Tab 接受建议，Esc 拒绝", "Ctrl+Enter 查看多个建议", "支持注释生成代码"],
       links: [{ label: "Copilot 文档", url: "https://docs.github.com/copilot" }],
+      freeQuota: {
+        models: ["Copilot 内置模型"],
+        quota: "2000 次代码补全 + 50 次聊天/月（学生和开源维护者完全免费）",
+        period: "每月",
+        refresh: "每月刷新",
+      },
     },
   },
   {
@@ -162,6 +204,12 @@ const TOOLS_DATA = [
         { title: "注册免费账号", code: "使用邮箱注册即可免费使用", lang: "bash" },
       ],
       links: [{ label: "Codeium 官网", url: "https://codeium.com/" }],
+      freeQuota: {
+        models: ["Codeium 模型"],
+        quota: "基础代码补全永久免费，无限制",
+        period: "无限制",
+        refresh: "不适用（永久免费）",
+      },
     },
   },
   {
@@ -177,6 +225,12 @@ const TOOLS_DATA = [
       intro: "Trae 是字节跳动推出的 AI 原生 IDE，深度集成豆包大模型。支持自然语言编程、代码生成与重构，对中文开发者友好，免费开放使用。",
       features: ["AI 原生 IDE", "深度集成豆包模型", "中文编程友好", "免费开放"],
       links: [{ label: "Trae 官网", url: "https://trae.ai/" }],
+      freeQuota: {
+        models: ["Claude 3.7 Sonnet", "GPT-4o", "DeepSeek R1"],
+        quota: "目前完全免费，无使用限制",
+        period: "无限制",
+        refresh: "不适用（目前完全免费）",
+      },
     },
   },
 
@@ -199,6 +253,12 @@ const TOOLS_DATA = [
       ],
       tips: ["详细描述风格、光影、构图效果更好", "使用 --ar 参数设置宽高比", "--v 6 使用最新模型版本"],
       links: [{ label: "Midjourney 官网", url: "https://www.midjourney.com/" }],
+      freeQuota: {
+        models: ["—"],
+        quota: "无免费额度（已于 2023 年 4 月取消免费试用）",
+        period: "—",
+        refresh: "不刷新（需订阅，$10/月起）",
+      },
     },
   },
   {
@@ -218,6 +278,12 @@ const TOOLS_DATA = [
         { title: "本地部署（推荐 WebUI）", code: "git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui", lang: "bash" },
       ],
       links: [{ label: "Stability AI", url: "https://stability.ai/" }],
+      freeQuota: {
+        models: ["Stable Diffusion 3.5 等"],
+        quota: "注册赠送 25~200 积分（约 100~200 张基础图片）",
+        period: "一次性",
+        refresh: "不刷新（用完即止）",
+      },
     },
   },
   {
@@ -233,6 +299,12 @@ const TOOLS_DATA = [
       intro: "Ideogram 是擅长文字渲染的 AI 图像生成工具，能准确生成图像中的文字内容。特别适合 Logo 设计、海报制作、标题图文等需要精准文字的场景，免费额度充足。",
       features: ["出色的文字渲染能力", "适合 Logo 与海报设计", "免费额度充足", "多种风格模板"],
       links: [{ label: "Ideogram 官网", url: "https://ideogram.ai/" }],
+      freeQuota: {
+        models: ["Ideogram 标准模型"],
+        quota: "每周 10 慢速积分（约 40 张图片）",
+        period: "每周",
+        refresh: "每周六 UTC 0:00 刷新",
+      },
     },
   },
   {
@@ -248,6 +320,12 @@ const TOOLS_DATA = [
       intro: "Recraft 是专注于矢量图生成的 AI 工具，可生成可编辑的 SVG 文件。适合 UI 设计师、图标制作、品牌设计等场景，生成的矢量图可在 Figma、Illustrator 中进一步编辑。",
       features: ["生成可编辑 SVG", "矢量和位图双模式", "品牌一致性风格", "免费层可用"],
       links: [{ label: "Recraft 官网", url: "https://www.recraft.ai/" }],
+      freeQuota: {
+        models: ["Recraft 模型"],
+        quota: "每日 50 积分",
+        period: "每日",
+        refresh: "每日刷新",
+      },
     },
   },
 
@@ -270,6 +348,12 @@ const TOOLS_DATA = [
       ],
       tips: ["上传文档可自动转换为 PPT", "支持导出为 PDF 或 PowerPoint", "可嵌入视频、图表等富媒体"],
       links: [{ label: "Gamma 官网", url: "https://gamma.app/" }],
+      freeQuota: {
+        models: ["Gamma AI"],
+        quota: "注册赠送 400 积分（约 10 份完整 PPT）",
+        period: "一次性",
+        refresh: "不刷新（用完即止）",
+      },
     },
   },
   {
@@ -288,6 +372,12 @@ const TOOLS_DATA = [
         { title: "在 Notion 中使用", code: "选中文字后点击 'Ask AI' 或按空格键唤醒 AI", lang: "bash" },
       ],
       links: [{ label: "Notion AI 介绍", url: "https://www.notion.so/product/ai" }],
+      freeQuota: {
+        models: ["Notion AI"],
+        quota: "有限试用体验，很快触达上限",
+        period: "试用期",
+        refresh: "不刷新（需订阅 $10/用户/月）",
+      },
     },
   },
   {
@@ -308,6 +398,12 @@ const TOOLS_DATA = [
       ],
       tips: ["Pro 模式搜索更深入", "可限定搜索范围（学术、新闻等）", "支持上传文件分析"],
       links: [{ label: "Perplexity 官网", url: "https://www.perplexity.ai/" }],
+      freeQuota: {
+        models: ["Perplexity 模型"],
+        quota: "标准搜索无限 + 每日约 5 次 Pro 搜索",
+        period: "每日（Pro 搜索）",
+        refresh: "每日刷新",
+      },
     },
   },
 
@@ -325,6 +421,12 @@ const TOOLS_DATA = [
       intro: "Runway 是领先的 AI 视频生成与编辑平台，支持文本生成视频、图片生成视频。提供 Gen-3 等先进模型，效果出色，被广泛应用于影视制作、广告创作等领域。",
       features: ["文生视频/图生视频", "Gen-3 先进模型", "视频编辑工具", "专业级输出质量"],
       links: [{ label: "Runway 官网", url: "https://runwayml.com/" }],
+      freeQuota: {
+        models: ["Gen-4 Turbo", "Gen-3 Alpha"],
+        quota: "注册赠送 125 积分（约 25 秒视频）",
+        period: "一次性",
+        refresh: "不刷新（用完即止）",
+      },
     },
   },
   {
@@ -340,6 +442,12 @@ const TOOLS_DATA = [
       intro: "可灵 AI 是快手推出的视频生成工具，支持文本生成视频、图片生成视频。效果出色且对中文用户友好，免费额度充足，是目前最实用的国产 AI 视频工具之一。",
       features: ["文生视频/图生视频", "国产顶流效果", "免费额度充足", "中文友好"],
       links: [{ label: "可灵 AI 官网", url: "https://klingai.kuaishou.com/" }],
+      freeQuota: {
+        models: ["可灵视频/图像模型"],
+        quota: "每日 66 积分",
+        period: "每日",
+        refresh: "每日刷新（不累积）",
+      },
     },
   },
   {
@@ -358,6 +466,12 @@ const TOOLS_DATA = [
         { title: "创建歌曲", code: "访问 suno.ai 输入风格描述或歌词要求", lang: "bash" },
       ],
       links: [{ label: "Suno AI 官网", url: "https://suno.ai/" }],
+      freeQuota: {
+        models: ["Suno 音乐模型"],
+        quota: "每日 50 积分（约 10 首歌曲）",
+        period: "每日",
+        refresh: "每日刷新（不累积）",
+      },
     },
   },
 
@@ -375,6 +489,12 @@ const TOOLS_DATA = [
       intro: "Coze 扣子是字节跳动推出的 AI 智能体开发平台，无需编程即可创建 AI Bot。支持知识库、插件、工作流，可一键发布到豆包、飞书、微信等平台。",
       features: ["无代码创建 AI Bot", "知识库与插件系统", "多平台一键发布", "免费使用"],
       links: [{ label: "Coze 官网", url: "https://www.coze.cn/" }],
+      freeQuota: {
+        models: ["多种 LLM（豆包等）"],
+        quota: "基础版免费使用，有日频率限制",
+        period: "每日",
+        refresh: "每日刷新",
+      },
     },
   },
   {
@@ -393,6 +513,12 @@ const TOOLS_DATA = [
         { title: "Docker 部署", code: "git clone https://github.com/langgenius/dify && cd dify/docker && docker compose up -d", lang: "bash" },
       ],
       links: [{ label: "Dify 官网", url: "https://dify.ai/" }, { label: "GitHub", url: "https://github.com/langgenius/dify" }],
+      freeQuota: {
+        models: ["接入 OpenAI、Claude 等多模型"],
+        quota: "沙盒版：200 条消息/月，每日 500 条请求上限",
+        period: "每月",
+        refresh: "每月刷新",
+      },
     },
   },
 
