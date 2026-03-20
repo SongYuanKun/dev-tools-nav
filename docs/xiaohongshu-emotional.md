@@ -82,7 +82,7 @@
 也许一开始没什么人看，
 但只要你坚持更新，总会有收获。
 
-**项目地址：tools.songyuankun.top**
+**项目地址：https://tools.songyuankun.top/**
 
 欢迎来逛逛，就算只是为了解锁那个彩蛋 😊
 
