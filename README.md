@@ -1,6 +1,6 @@
 # Koen's 工具箱 · 开发者工具导航站
 
-> 精选 30+ 款开发 & 建站管理常用工具，纯静态实现，可直接部署到 GitHub Pages 或 1Panel。
+> 精选 **60+** 款开发 & 建站管理常用工具，纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以页面实际展示为准。
 
 ## 预览
 
@@ -28,20 +28,31 @@
 | 🎨 设计资源 | 7 | Figma、Iconify、Coolors、Google Fonts |
 | 🔑 激活工具 | 2 | KMS 激活、JRebel 激活 |
 
+> 上表为概览，条目数会随 `data/tools.js` 更新而变化。
+
 ## 文件结构
 
 ```
 dev-tools-nav/
-├── index.html          # 主页（导航 + 工具卡片列表）
-├── css/
-│   └── style.css       # 样式（CSS 变量、暗色模式、响应式）
+├── index.html              # 主页（导航 + 工具卡片列表）
+├── favicon.ico / favicon.svg
+├── css/style.css           # 样式（CSS 变量、暗色模式、响应式）
 ├── js/
-│   └── main.js         # 搜索过滤、分类切换、暗色模式切换
+│   ├── main.js             # 搜索过滤、分类、彩蛋、侧栏等
+│   └── base.js             # 全站共用（如统计）
 ├── pages/
-│   └── template.html   # 工具详情页（通过 ?id=xxx 参数动态渲染）
+│   ├── template.html       # 工具详情页（?id=xxx）
+│   ├── about.html 等       # 其他静态页
 ├── data/
-│   └── tools.js        # 工具数据（JS 对象，方便扩展）
-└── README.md
+│   ├── tools.js            # 工具数据 TOOLS_DATA
+│   ├── articles.js         # 首页「最新动态」文章区
+│   └── servers.json        # JRebel 等（可由 Actions 同步更新）
+├── assets/                 # 图片、Logo
+├── docs/                   # 部署说明等（不随 Pages 发布，见 docs/README.md）
+├── deploy.sh               # 同步到 1Panel 的本地脚本
+└── .github/workflows/
+    ├── deploy-pages.yml    # GitHub Pages 自动发布
+    └── sync-jrebel.yml     # 定时同步 JRebel 配置
 ```
 
 ## 本地运行
@@ -61,24 +72,23 @@ npx serve .
 
 ## 部署到 GitHub Pages
 
-仓库已包含 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)，推送到 `main` 后会自动构建并发布。
+仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后自动打包静态资源并发布（与 `deploy.sh` 排除规则一致，不包含 `docs/`、`.github` 等）。
 
-1. **首次启用（只需一次）**  
-   打开仓库 **Settings → Pages**，在 **Build and deployment → Source** 中选择 **GitHub Actions**（不要选 “Deploy from a branch” 与工作流重复）。
+| 步骤 | 说明 |
+|------|------|
+| 日常发布 | `git push origin main` → 打开 **Actions** → **Deploy GitHub Pages** 成功即可 |
+| 首次 Fork / 新仓库 | 在 **Settings → Pages → Source** 选择 **GitHub Actions**；工作流里已设 `enablement: true`，多数情况下会自动启用 Pages |
+| 线上地址 | **<https://songyuankun.github.io/dev-tools-nav/>** |
 
-2. 推送 `main` 后，在 **Actions** 里查看 **Deploy GitHub Pages** 是否成功；绿勾后约 1～2 分钟生效。
+**费用**：本仓库为 **Public** 时，标准 GitHub Actions 用量对公开仓库通常 **不单独计费**；私有仓库有每月分钟数额度，详见 [GitHub Actions 计费](https://docs.github.com/zh/billing/concepts/product-billing/github-actions)。
 
-3. 访问地址：**<https://songyuankun.github.io/dev-tools-nav/>**（用户名大小写不敏感）
-
-> 若你更想用「分支发布」而不走 Actions：在 Pages 里选 **Deploy from a branch** → `main` → `/ (root)` 即可，无需本工作流。
+> 可选：若不用 Actions，可在 Pages 中选 **Deploy from a branch** → `main` → `/ (root)`，与本工作流二选一即可。
 
 ## 部署到 1Panel
 
-1. 将代码推送到 Git 仓库
-2. 在 1Panel 中创建静态网站
-3. 配置 Git 部署，填入仓库地址
-4. 设置网站目录为根目录
-5. 配置域名和 SSL 证书
+自建服务器可使用 1Panel 托管，与 GitHub Pages 无冲突。详细目录、`rsync` 与 `./deploy.sh` 说明见 **[docs/deploy-1panel.md](docs/deploy-1panel.md)**。
+
+简要步骤：在 1Panel 创建静态网站 → 配置 Git 或手动同步仓库根目录下的 `index.html`、`css/`、`js/`、`data/`、`pages/`、`assets/` 等 → 绑定域名与 SSL。
 
 ## 添加新工具
 
@@ -133,7 +143,7 @@ npx serve .
 
 ### 更多信息
 
-详细说明请查看：[彩蛋系统文档](./EGG_README.md)
+解锁逻辑与持久化见源码 **`js/main.js`**（搜索「彩蛋」相关注释）。
 
 解锁后会显示：
 - 🎊 撒花动画
@@ -149,8 +159,8 @@ MIT
 
 ## 📁 相关文档
 
-- [彩蛋系统详细说明](./EGG_README.md) - 所有解锁方式的详细指南
-- [彩蛋系统设计文档](./EGG_DESIGN.md) - 设计理念和技术实现
-- [彩蛋系统测试指南](./EGG_TESTING.md) - 测试清单和验证方法
-- [项目完成总结](./FINAL_SUMMARY.md) - 项目总结和成就
-- [交付清单](./DELIVERABLE.md) - 完整的交付物清单
+- **[docs/README.md](docs/README.md)** — 文档索引  
+- **[docs/deploy-1panel.md](docs/deploy-1panel.md)** — 1Panel / 本机 `rsync` 部署  
+- **[docs/xiaohongshu-emotional.md](docs/xiaohongshu-emotional.md)** — 小红书文案参考（外宣）  
+- **[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)** — GitHub Pages CI  
+- **[.github/workflows/sync-jrebel.yml](.github/workflows/sync-jrebel.yml)** — JRebel 地址定时同步
