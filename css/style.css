@@ -577,6 +577,84 @@ img {
   margin: 0 auto;
 }
 
+/* Hero 内层：窄屏纵向；宽屏横向两栏 */
+.hero-main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.hero-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .hero-main {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 28px 48px;
+  }
+
+  .hero-intro {
+    align-items: flex-start;
+    text-align: left;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hero-aside {
+    flex-shrink: 0;
+    width: min(100%, 340px);
+    align-items: stretch;
+  }
+
+  .trust-bar {
+    margin-top: 0;
+  }
+
+  .hero-mirror {
+    margin-top: 0;
+    padding: 0;
+    align-items: flex-start;
+    max-width: none;
+    width: 100%;
+  }
+
+  .hero-mirror-title {
+    text-align: left;
+    width: 100%;
+  }
+
+  .hero-mirror-links {
+    justify-content: flex-start;
+  }
+
+  .hero-subtitle {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 38rem;
+  }
+}
+
 .hero-scroll-hint {
   margin-top: 10px;
   font-size: 13px;
