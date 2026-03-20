@@ -61,10 +61,16 @@ npx serve .
 
 ## 部署到 GitHub Pages
 
-1. 将代码推送到 GitHub 仓库
-2. 进入仓库 **Settings → Pages**
-3. Source 选择 `main` 分支，目录选 `/ (root)`
-4. 保存后等待几分钟，访问 `https://your-username.github.io/dev-tools-nav/`
+仓库已包含 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)，推送到 `main` 后会自动构建并发布。
+
+1. **首次启用（只需一次）**  
+   打开仓库 **Settings → Pages**，在 **Build and deployment → Source** 中选择 **GitHub Actions**（不要选 “Deploy from a branch” 与工作流重复）。
+
+2. 推送 `main` 后，在 **Actions** 里查看 **Deploy GitHub Pages** 是否成功；绿勾后约 1～2 分钟生效。
+
+3. 访问地址：**<https://songyuankun.github.io/dev-tools-nav/>**（用户名大小写不敏感）
+
+> 若你更想用「分支发布」而不走 Actions：在 Pages 里选 **Deploy from a branch** → `main` → `/ (root)` 即可，无需本工作流。
 
 ## 部署到 1Panel
 
