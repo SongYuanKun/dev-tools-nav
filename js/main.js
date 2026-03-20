@@ -698,6 +698,19 @@ function animateCounter(el, target) {
   }, 50);
 }
 
+/** 双线路引流：高亮当前访问域名对应的入口 */
+function initHeroMirror() {
+  const host = window.location.hostname;
+  document.querySelectorAll(".hero-mirror-link").forEach((a) => {
+    try {
+      if (new URL(a.href).hostname === host) {
+        a.classList.add("hero-mirror-link--current");
+        a.setAttribute("aria-current", "page");
+      }
+    } catch (_) { /* ignore */ }
+  });
+}
+
 // ============================================================
 // 侧边面板
 // ============================================================
@@ -812,6 +825,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderTools();
   initArticles();
   initTrustBar();
+  initHeroMirror();
   initBackToTop();
   initKeyboard();
   EasterEgg.init();
