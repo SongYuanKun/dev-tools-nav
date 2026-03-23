@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="" />
+  <meta property="og:title" content="工具详情 · Koen的工具箱" />
+  <meta property="og:description" content="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="../assets/avatar.jpg" />
   <title>工具详情 · Koen的工具箱</title>
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../css/style.css" />
@@ -89,11 +94,11 @@
         return CATEGORIES.find((c) => c.id === categoryId) || { label: categoryId, icon: "🔧" };
       }
 
-      function escapeHtml(str) {
+      const escapeHtml = window.escapeHtml || function (str) {
         const div = document.createElement("div");
         div.appendChild(document.createTextNode(str));
         return div.innerHTML;
-      }
+      };
 
       function renderContentSections(tool) {
         const c = tool.content;
@@ -103,26 +108,26 @@
 
         if (c.freeQuota) {
           const q = c.freeQuota;
-          const modelsHtml = Array.isArray(q.models) ? q.models.join("、") : escapeHtml(q.models || "—");
+          const modelsHtml = Array.isArray(q.models) ? q.models.map(m => escapeHtml(m)).join("、") : escapeHtml(q.models || "—");
           html += `
           <div class="detail-section">
             <h2>🆓 免费额度</h2>
-            <table style="width:100%; border-collapse:collapse; font-size:14px;">
-              <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:10px 0; color:var(--text-muted); width:120px;">可用模型</td>
-                <td style="padding:10px 0; color:var(--text-primary);">${modelsHtml}</td>
+            <table class="detail-info-table">
+              <tr class="detail-info-row">
+                <td class="detail-info-label" style="width:120px;">可用模型</td>
+                <td class="detail-info-value">${modelsHtml}</td>
               </tr>
-              <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:10px 0; color:var(--text-muted);">免费额度</td>
-                <td style="padding:10px 0; color:var(--text-primary);">${escapeHtml(q.quota)}</td>
+              <tr class="detail-info-row">
+                <td class="detail-info-label">免费额度</td>
+                <td class="detail-info-value">${escapeHtml(q.quota)}</td>
               </tr>
-              <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:10px 0; color:var(--text-muted);">使用周期</td>
-                <td style="padding:10px 0; color:var(--text-primary);">${escapeHtml(q.period)}</td>
+              <tr class="detail-info-row">
+                <td class="detail-info-label">使用周期</td>
+                <td class="detail-info-value">${escapeHtml(q.period)}</td>
               </tr>
               <tr>
-                <td style="padding:10px 0; color:var(--text-muted);">刷新周期</td>
-                <td style="padding:10px 0; color:var(--text-primary);">${escapeHtml(q.refresh)}</td>
+                <td class="detail-info-label">刷新周期</td>
+                <td class="detail-info-value">${escapeHtml(q.refresh)}</td>
               </tr>
             </table>
           </div>`;
@@ -199,12 +204,25 @@
       }
 
       function renderDetail(tool) {
-        document.title = `${tool.name} · DevTools Nav`;
+        const siteTitle = "Koen的工具箱";
+        document.title = `${tool.name} · ${siteTitle}`;
+
+        const pageDesc = (tool.content && tool.content.intro) ? tool.content.intro : tool.description;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute("content", pageDesc);
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) ogTitle.setAttribute("content", `${tool.name} · ${siteTitle}`);
+        const ogDesc = document.querySelector('meta[property="og:description"]');
+        if (ogDesc) ogDesc.setAttribute("content", pageDesc);
 
         const cat = getCategoryInfo(tool.category);
         const tagsHtml = tool.tags
-          .map((t) => `<span class="tag">${t}</span>`)
+          .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
           .join("");
+
+        const introHtml = (tool.content && tool.content.intro)
+          ? `<div class="detail-section"><h2>工具简介</h2><p>${escapeHtml(tool.content.intro)}</p></div>`
+          : "";
 
         document.getElementById("detailContent").innerHTML = `
           <div class="detail-header">
@@ -212,11 +230,11 @@
               <span style="font-size:36px;">${cat.icon}</span>
             </div>
             <div class="detail-meta">
-              <h1 class="detail-name">${tool.name}</h1>
-              <p class="detail-desc">${tool.description}</p>
+              <h1 class="detail-name">${escapeHtml(tool.name)}</h1>
+              <p class="detail-desc">${escapeHtml(tool.description)}</p>
               <div class="detail-tags">${tagsHtml}</div>
               <a
-                href="${tool.url}"
+                href="${escapeHtml(tool.url)}"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="detail-visit-btn"
@@ -231,30 +249,26 @@
             </div>
           </div>
 
-          <div class="detail-section">
-            <h2>工具简介</h2>
-            <p>${tool.description}</p>
-          </div>
+          ${introHtml}
 
           <div class="detail-section">
             <h2>基本信息</h2>
-            <table style="width:100%; border-collapse:collapse; font-size:14px;">
-              <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:10px 0; color:var(--text-muted); width:100px;">分类</td>
-                <td style="padding:10px 0; color:var(--text-primary);">${cat.icon} ${cat.label}</td>
+            <table class="detail-info-table">
+              <tr class="detail-info-row">
+                <td class="detail-info-label">分类</td>
+                <td class="detail-info-value">${cat.icon} ${cat.label}</td>
               </tr>
-              <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:10px 0; color:var(--text-muted);">官网</td>
-                <td style="padding:10px 0;">
-                  <a href="${tool.url}" target="_blank" rel="noopener noreferrer"
-                     style="color:var(--color-primary); word-break:break-all;">
-                    ${tool.url}
+              <tr class="detail-info-row">
+                <td class="detail-info-label">官网</td>
+                <td class="detail-info-value">
+                  <a href="${escapeHtml(tool.url)}" target="_blank" rel="noopener noreferrer" class="detail-info-link">
+                    ${escapeHtml(tool.url)}
                   </a>
                 </td>
               </tr>
               <tr>
-                <td style="padding:10px 0; color:var(--text-muted);">标签</td>
-                <td style="padding:10px 0; color:var(--text-primary);">${tool.tags.join(" · ")}</td>
+                <td class="detail-info-label">标签</td>
+                <td class="detail-info-value">${tool.tags.map(t => escapeHtml(t)).join(" · ")}</td>
               </tr>
             </table>
           </div>
@@ -278,6 +292,32 @@
         }
       }
 
+      function loadRelatedIcon(tool, container) {
+        if (!tool.icon) return;
+        const isEmoji = tool.icon.length <= 2 && !tool.icon.startsWith("http") && !tool.icon.startsWith("/");
+        if (isEmoji) {
+          const fb = container.querySelector(".card-icon-fallback");
+          if (fb) fb.textContent = tool.icon;
+          return;
+        }
+        const fallbackMap = { dev:"🛠️", hosting:"🌐", security:"🔒", ops:"📊", design:"🎨", ai:"🤖", activate:"🔑" };
+        const img = document.createElement("img");
+        img.alt = tool.name;
+        img.onload = () => { container.innerHTML = ""; container.appendChild(img); };
+        img.onerror = () => {
+          const fb = container.querySelector(".card-icon-fallback");
+          if (fb) fb.textContent = fallbackMap[tool.category] || "🔧";
+        };
+        if ("IntersectionObserver" in window) {
+          const obs = new IntersectionObserver((entries, o) => {
+            if (entries[0].isIntersecting) { img.src = tool.icon; o.disconnect(); }
+          }, { rootMargin: "120px" });
+          obs.observe(container);
+        } else {
+          img.src = tool.icon;
+        }
+      }
+
       function renderRelated(tool) {
         if (typeof TOOLS_DATA === "undefined") return;
         const related = TOOLS_DATA
@@ -287,27 +327,39 @@
         if (related.length === 0) return;
 
         const cat = getCategoryInfo(tool.category);
-        const cardsHtml = related.map((t) => `
-          <a href="template.html?id=${t.id}" class="tool-card" style="text-decoration:none; display:flex; flex-direction:column; gap:10px;">
+        const section = document.getElementById("relatedSection");
+
+        const grid = document.createElement("div");
+        grid.className = "tools-grid";
+        grid.style.marginTop = "16px";
+
+        related.forEach((t) => {
+          const card = document.createElement("a");
+          card.href = `template.html?id=${t.id}`;
+          card.className = "tool-card";
+          card.style.cssText = "text-decoration:none; display:flex; flex-direction:column; gap:10px;";
+          card.innerHTML = `
             <div class="card-header">
-              <div class="card-icon">
+              <div class="card-icon" id="related-icon-${t.id}">
                 <span class="card-icon-fallback">${cat.icon}</span>
               </div>
               <div>
-                <div class="card-title">${t.name}</div>
-                <div class="card-category-label">${cat.icon} ${cat.label}</div>
+                <div class="card-title">${escapeHtml(t.name)}</div>
+                <div class="card-category-label">${cat.icon} ${escapeHtml(cat.label)}</div>
               </div>
             </div>
-            <p class="card-desc">${t.description}</p>
-          </a>
-        `).join("");
+            <p class="card-desc">${escapeHtml(t.description)}</p>
+          `;
+          grid.appendChild(card);
+          loadRelatedIcon(t, card.querySelector(`#related-icon-${t.id}`));
+        });
 
-        document.getElementById("relatedSection").innerHTML = `
-          <div class="detail-section">
-            <h2>同类工具推荐</h2>
-            <div class="tools-grid" style="margin-top:16px;">${cardsHtml}</div>
-          </div>
-        `;
+        section.innerHTML = "";
+        const wrapper = document.createElement("div");
+        wrapper.className = "detail-section";
+        wrapper.innerHTML = "<h2>同类工具推荐</h2>";
+        wrapper.appendChild(grid);
+        section.appendChild(wrapper);
       }
 
       function renderNotFound() {

@@ -2490,3 +2490,38 @@ img {
   }
 }
 
+/* ============================================================
+   详情页信息表格（替代内联 style）
+   ============================================================ */
+.detail-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.detail-info-row td {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.detail-info-label {
+  padding: 10px 0;
+  color: var(--text-muted);
+  width: 100px;
+  vertical-align: top;
+}
+
+.detail-info-value {
+  padding: 10px 0;
+  color: var(--text-primary);
+}
+
+.detail-info-link {
+  color: var(--color-primary);
+  word-break: break-all;
+  text-decoration: none;
+}
+
+.detail-info-link:hover {
+  text-decoration: underline;
+}
+

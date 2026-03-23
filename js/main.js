@@ -120,6 +120,7 @@ const EasterEgg = {
     this.showToast("🎉 恭喜！发现隐藏分类！");
     this.revealSecretCategory();
     this.addSecretConfetti();
+    window.umami?.track?.("easter_egg_unlocked");
   },
 
   // 显示提示（完整版，用于解锁成功等场景）
@@ -298,51 +299,51 @@ const EasterEgg = {
       });
     }
 
-  // 5. Konami 代码
-  const konamiSequence = [
-    "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
-    "b", "a"
-  ];
-  let konamiIndex = 0;
+    // 5. Konami 代码
+    const konamiSequence = [
+      "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+      "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+      "b", "a"
+    ];
+    let konamiIndex = 0;
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === konamiSequence[konamiIndex]) {
-      konamiIndex++;
-      if (konamiIndex === konamiSequence.length) {
-        this.unlock();
+    document.addEventListener("keydown", (e) => {
+      if (e.key === konamiSequence[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiSequence.length) {
+          this.unlock();
+          konamiIndex = 0;
+        }
+      } else {
         konamiIndex = 0;
       }
-    } else {
-      konamiIndex = 0;
-    }
-  });
-
-  // 6. 页脚神秘问号
-  const footerHint = document.querySelector(".footer-secret-hint");
-  if (footerHint) {
-    let hintClickCount = 0;
-    footerHint.addEventListener("click", () => {
-      hintClickCount++;
-      const hints = [
-        "🔮 秘密藏在暗处...",
-        "✨ 有时候，答案就在眼前...",
-        "🎯 尝试点击 Logo？",
-        "🎮 还记得 Konami 代码吗？",
-        "🔑 URL 参数也能解锁秘密...",
-        "🎨 Ctrl+Shift+A 可能会有惊喜...",
-        "🎉 再点一次试试？"
-      ];
-
-      if (hintClickCount < hints.length) {
-        this.showToast(hints[hintClickCount - 1]);
-      } else {
-        this.unlock();
-        hintClickCount = 0;
-      }
     });
-  }
-  }
+
+    // 6. 页脚神秘问号
+    const footerHint = document.querySelector(".footer-secret-hint");
+    if (footerHint) {
+      let hintClickCount = 0;
+      footerHint.addEventListener("click", () => {
+        hintClickCount++;
+        const hints = [
+          "🔮 秘密藏在暗处...",
+          "✨ 有时候，答案就在眼前...",
+          "🎯 尝试点击 Logo？",
+          "🎮 还记得 Konami 代码吗？",
+          "🔑 URL 参数也能解锁秘密...",
+          "🎨 Ctrl+Shift+A 可能会有惊喜...",
+          "🎉 再点一次试试？"
+        ];
+
+        if (hintClickCount < hints.length) {
+          this.showToast(hints[hintClickCount - 1]);
+        } else {
+          this.unlock();
+          hintClickCount = 0;
+        }
+      });
+    }
+  },
 };
 
 // ============================================================
@@ -499,44 +500,43 @@ function createToolCard(tool) {
   return card;
 }
 
+const ICON_FALLBACK_MAP = {
+  dev: "🛠️", hosting: "🌐", security: "🔒",
+  ops: "📊", design: "🎨", ai: "🤖", activate: "🔑",
+};
+
 function loadIcon(tool, container) {
   if (!tool.icon) return;
-  
-  // 检查是否是 emoji（单个字符且不是 URL）
-  const isEmoji = tool.icon.length <= 2 && !tool.icon.startsWith('http') && !tool.icon.startsWith('/');
-  
+
+  const isEmoji = tool.icon.length <= 2 && !tool.icon.startsWith("http") && !tool.icon.startsWith("/");
   if (isEmoji) {
-    // 如果是 emoji，直接显示
     const fallback = container.querySelector(".card-icon-fallback");
-    if (fallback) {
-      fallback.textContent = tool.icon;
-    }
+    if (fallback) fallback.textContent = tool.icon;
     return;
   }
-  
-  // 否则作为图片 URL 加载
+
   const img = document.createElement("img");
   img.alt = tool.name;
-  // 移除懒加载，图标应该立即显示
   img.onload = () => {
     container.innerHTML = "";
     container.appendChild(img);
   };
   img.onerror = () => {
-    // 保持 fallback，根据分类显示不同 emoji
-    const fallbackMap = {
-      dev: "🛠️",
-      hosting: "🌐",
-      security: "🔒",
-      ops: "📊",
-      design: "🎨",
-      ai: "🤖",
-      activate: "🔑",
-    };
     const fallback = container.querySelector(".card-icon-fallback");
-    if (fallback) fallback.textContent = fallbackMap[tool.category] || "🔧";
+    if (fallback) fallback.textContent = ICON_FALLBACK_MAP[tool.category] || "🔧";
   };
-  img.src = tool.icon;
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      if (entries[0].isIntersecting) {
+        img.src = tool.icon;
+        obs.disconnect();
+      }
+    }, { rootMargin: "120px" });
+    observer.observe(container);
+  } else {
+    img.src = tool.icon;
+  }
 }
 
 function isCategoryHidden(categoryId) {
@@ -566,11 +566,13 @@ function filterTools() {
     const matchCategory =
       isSpecialTab || state.currentCategory === "all" || tool.category === state.currentCategory;
     const q = state.searchQuery;
-    const matchSearch =
-      !q ||
-      tool.name.toLowerCase().includes(q) ||
-      tool.description.toLowerCase().includes(q) ||
-      tool.tags.some((tag) => tag.toLowerCase().includes(q));
+    const matchSearch = !q || (() => {
+      const words = q.split(/\s+/).filter(Boolean);
+      const name = tool.name.toLowerCase();
+      const desc = tool.description.toLowerCase();
+      const tags = tool.tags.map((t) => t.toLowerCase());
+      return words.every((w) => name.includes(w) || desc.includes(w) || tags.some((t) => t.includes(w)));
+    })();
     return matchCategory && matchSearch;
   });
 }
@@ -620,9 +622,9 @@ function renderTools() {
         return 0;
       });
 
-  sorted.forEach((tool) => {
-    grid.appendChild(createToolCard(tool));
-  });
+  const fragment = document.createDocumentFragment();
+  sorted.forEach((tool) => fragment.appendChild(createToolCard(tool)));
+  grid.appendChild(fragment);
 }
 
 // ============================================================
@@ -675,7 +677,7 @@ function initTrustBar() {
   const heroCountEl = document.getElementById("heroToolCount");
 
   if (typeof TOOLS_DATA !== "undefined") {
-    const count = TOOLS_DATA.filter((t) => !t.hidden).length;
+    const count = TOOLS_DATA.filter((t) => !t.hidden && !isCategoryHidden(t.category)).length;
     if (toolCountEl) animateCounter(toolCountEl, count);
     if (heroCountEl) heroCountEl.textContent = count + "+";
   }
@@ -835,3 +837,4 @@ document.addEventListener("DOMContentLoaded", () => {
 // 暴露给详情页使用
 window.ThemeManager = ThemeManager;
 window.TOOLS_DATA = typeof TOOLS_DATA !== "undefined" ? TOOLS_DATA : [];
+window.escapeHtml = escapeHtml;
