@@ -28,6 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Generate dynamic sitemap
+        run: node scripts/generate-sitemap.mjs
+
       - name: Assemble site
         run: |
           mkdir -p _site
