@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://songyuankun.github.io/dev-tools-nav/sitemap.xml

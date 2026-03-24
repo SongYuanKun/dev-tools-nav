@@ -3,11 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
   <meta name="description" content="" />
   <meta property="og:title" content="工具详情 · Koen的工具箱" />
   <meta property="og:description" content="" />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/template.html" />
   <meta property="og:image" content="../assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="工具详情 · Koen的工具箱" />
+  <meta name="twitter:description" content="" />
+  <meta name="twitter:image" content="https://songyuankun.github.io/dev-tools-nav/assets/avatar.jpg" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/template.html" />
   <title>工具详情 · Koen的工具箱</title>
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../css/style.css" />
@@ -208,12 +215,21 @@
         document.title = `${tool.name} · ${siteTitle}`;
 
         const pageDesc = (tool.content && tool.content.intro) ? tool.content.intro : tool.description;
+        const detailUrl = `https://songyuankun.github.io/dev-tools-nav/pages/template.html?id=${encodeURIComponent(tool.id)}`;
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) metaDesc.setAttribute("content", pageDesc);
         const ogTitle = document.querySelector('meta[property="og:title"]');
         if (ogTitle) ogTitle.setAttribute("content", `${tool.name} · ${siteTitle}`);
         const ogDesc = document.querySelector('meta[property="og:description"]');
         if (ogDesc) ogDesc.setAttribute("content", pageDesc);
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.setAttribute("content", detailUrl);
+        const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+        if (twitterTitle) twitterTitle.setAttribute("content", `${tool.name} · ${siteTitle}`);
+        const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+        if (twitterDesc) twitterDesc.setAttribute("content", pageDesc);
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) canonical.setAttribute("href", detailUrl);
 
         const cat = getCategoryInfo(tool.category);
         const tagsHtml = tool.tags
