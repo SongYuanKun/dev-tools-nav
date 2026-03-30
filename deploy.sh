@@ -16,6 +16,9 @@ rsync -av --delete \
   --exclude='README.md' \
   --exclude='.gitignore' \
   --exclude='docs' \
+  --exclude='package.json' \
+  --exclude='package-lock.json' \
+  --exclude='node_modules' \
   --exclude='deploy.sh' \
   ./ "$ROOT/"
 
