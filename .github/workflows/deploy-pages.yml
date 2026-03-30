@@ -45,6 +45,8 @@ jobs:
             --exclude='README.md' \
             --exclude='.gitignore' \
             --exclude='docs' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
             --exclude='deploy.sh' \
             --exclude='logs' \
             --exclude='*.bak' \
