@@ -1,0 +1,166 @@
+{
+  "updatedAt": "2026-03-30T08:33:23Z",
+  "source": "https://blog.csdn.net/syk123839070/rss/list",
+  "items": [
+    {
+      "title": "搭建Jenkins服务-2025更新",
+      "description": "仍在同一页配置（对应文中的 Jenkins Location）。源码管理可以指定你的项目版本依赖于哪里，我们使用的是svn。build下可以指定需要执行的pom文件（在聚合项目中会修改，单pom文件不需要修改）。service的搭建参见我另一篇文章（这篇文章还没写，大家先百度吧）。选择左边的按钮会自动安装一些插件，右边的需要之后手动去下载插件。输入任务名称，选择任务类型，类型根据你安装的插件数量…",
+      "url": "https://blog.csdn.net/syk123839070/article/details/159350674",
+      "date": "2026-03-22",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "windows操作",
+      "description": "这是一个简单的教程，如何打开cmd，可以用于执行命令。3、按回车执行代码，会新起一行文字。",
+      "url": "https://blog.csdn.net/syk123839070/article/details/151272295",
+      "date": "2025-09-07",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "LongAdder源码分析",
+      "description": "LongAdder",
+      "url": "https://blog.csdn.net/syk123839070/article/details/146295861",
+      "date": "2025-03-16",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "MySQL的replication是如何做到读写分离的",
+      "description": "如果有好的相关文档请留言给我，希望能得到一个比较完整的答案分享给大家引言环境说明我的疑问结论写在前面问题1 数据库读写分离获取连接肯定是不同的，这个连接的选择是druid做的还是MySQLDriver做的？问题2 主/从连接是什么时候进行的选择？流程分析初始化线程池执行一个SQL（这里没有看全，只针对主从选择大致看了一下）总结 引言 最近在排查数据库连接问题的时候，突然发现jdbcurl使用的是…",
+      "url": "https://blog.csdn.net/syk123839070/article/details/119880973",
+      "date": "2021-08-24",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "Git与软开云的使用样例",
+      "description": "说明 提供开发新功能或修改bug的样例 开发新功能步骤 clone项目到本地 点击仓库URL复制仓库地址 打开IDE将仓库clone到本地 从dev新建一个分支 1.检出dev分支 2.切换至dev分支 以dev为基础创建一个新的分支进行开发工作 分支命名为参见git分支命名规范 1.找到工作项的编号 2.创建新的本地分支 3.在...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/82563848",
+      "date": "2018-09-09",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "sourceTree使用教程",
+      "description": "为何使用sourceTree 1.免费 2.有中文版 3.界面友好，易于操作 使用sourceTree 1.下载安装包 官网提供下载地址sourcetree官网地址 2.安装 在安装过程中需要注册账户，可以注册atlassian账号进行登录，或在网上找教程跳过登录步骤，晋鹏提供的跳过注册教程。 2.1安装过程 2.1.1.下载好安装包后双击打开，直接下一步 2.1....",
+      "url": "https://blog.csdn.net/syk123839070/article/details/82534968",
+      "date": "2018-09-09",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "Git使用手记",
+      "description": "Git基本命令介绍 clone 将++远程仓库++复制到++本地仓库++ fetch 将++远程仓库++的更新复制到++本地仓库++ pull 将++远程仓库++复制到++工作空间++ checkout 将++本地仓库++检出到++工作空间++ add 将++工作空间++的修修改添加到++暂存区++ commit 将++暂存区++的修改提交到++...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/82432250",
+      "date": "2018-09-05",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "华为云Devcloud将本地代码提交到代码托管的步骤",
+      "description": "说明： 需要电脑中安装git，下载地址 https://git-scm.com/ 版本必须在2.9.2以上！！ 1.首先创建仓库 2.设置ssh秘钥 新建页面下有生成和设置密钥的操作方式 3.在项目根目录打开GitBash 4. 本地git仓库初始化 git命令行中执行 git init 5.添加远程仓库地...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/80276792",
+      "date": "2018-05-11",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "form表单上传文件+接口中转至oss",
+      "description": "1、说明 现有上传逻辑为：表单上传文件到服务器本地存储路径，支持断点续传，由服务器文件再转发至oss。 本博客上传逻辑为：表单上传接收到文件流，将文件流直接上传至oss。2.实现 /** * 上传文件 */ @Override public void doPost(HttpServletRequest request, HttpServlet...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79697583",
+      "date": "2018-03-26",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "华为devcloud使用华为maven仓库及上传jar到华为私服",
+      "description": "1.说明 华为本身支持代码检查，也支持检查其引用jar包有没有已知bug。要达到这个要求就需要使用华为的maven服务。代码检查界面支持多种语言规则，可自定义使用规则，可自定义规则。2、配置华为maven环境 找到如图页面，点击立即使用可按照提示进行设置，或直接下载配置文件附上本人使用的相关配置部分 &lt;servers&gt; &lt;server&gt; &lt;id...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79546760",
+      "date": "2018-03-13",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "华为devcloud工作项与代码提交版本绑定",
+      "description": "1.说明 我们在升级项目的时候，时间周期长了之后总会忘记自己提交的这个版本到底是增加或者修复了哪些功能，华为devcloud对此给出了解决方案。2.官方说明工作项随意点击一个工作项末尾会有代码提交记录提交后结果显示...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79546528",
+      "date": "2018-03-13",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "华为devcloud代码托管教程",
+      "description": "1、说明 需要本地有安装有git，从官网下载https://git-scm.com/downloads选择对应系统版本。2、配置本地的git 打开git Bash生成新的密钥，email可以为任何email地址ssh-keygen -t rsa -C \"您的email\"复制秘钥Windows:clip &lt; ~/.ssh/id_rsa.pubMac:pbcopy &lt; ~/.s...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79540271",
+      "date": "2018-03-13",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "maven+sonar进行代码分析",
+      "description": "1、说明 需要有 sonar service 服务，本文不包含 sonar service 的搭建。 需要安装maven3。2、使用maven命令进行代码分析 只需在maven命令中输入sonar:sonar -Dsonar.host.url=http://192.168.0.208:9000-Dsonar.host.url的值为sonarservice的地址；或者在mave...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79537949",
+      "date": "2018-03-13",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "使用idea创建一个web项目",
+      "description": "1、新建web项目 1.1点击file--》new--》project 1.2选择Java，勾选Java EE，下一步 1.3没有特殊的要求只需填写项目名，finish 提示框显示，你创建了一个新的项目想如何打开它？本窗口（打开的项目会关闭，然后打开你的新项目）；新窗口（idea会新出来一个新窗口）。随意选一个即可。 1.4项目目录。 1.5我们会发现没...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79519148",
+      "date": "2018-03-11",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "学习新技术的学习思路",
+      "description": "1.前言公司内部开始有分享技术的会。会上同事对自己所研究的技术做了总结和分享。让我对学习新技术的方法方式上有了些想法。2.官方网站 官方网站一般都有该技术的相关文档教程。好的官方文档基本上就已经把你能遇到的问题都列出来并告知解决方案了。 但是也有一些官方文档写的并不是很人性化。我在学习angular的时候发现其官方中文文档跟不上官方最新版的更新速度，其英文文档又过于冗长，我迫不得已转向...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79500069",
+      "date": "2018-03-09",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "搭建Jenkins服务",
+      "description": "1、环境 centos6.5； jdk1.8；需要配置环境变量 tomcat8； maven3；需要配置环境变量2、Jenkins服务安装 去Jenkins官网下载https://jenkins.io/download/，下载war包即可。将下载好的war包放入tomcat中，启动tomcat。日志中会显示一串密码浏览器打开http://ip:端口号/jenkins将...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79488105",
+      "date": "2018-03-09",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "Jenkins+sonarqube+sonar-scanner持续集成遇到的问题",
+      "description": "1、在Jenkins中使用sonar-scanner出现报错。 报错信息 java.lang.IllegalStateException: No files nor directories matching 'target/' 在网上找到的很多资料都将配置文件配置错了。附上本人的sonar-project.propertiessonar.projectKey=project sonar...",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79483873",
+      "date": "2018-03-08",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "Nexus Repository OSS3.x搭建步骤",
+      "description": "1.环境oss3.x版本需要jdk1.8及以上版本作为运行环境1.安装1.首先在官网下载运行文件2.将下载好的文件放入到服务器的目录并解压tar xvzf /usr/nexus-3.9.0-01-unix.tar.gz解压后的文件列表2.启动2.1.解压后进入nexus的目录并执行启动命令bin/nexus startWARNING: ******************************…",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79454172",
+      "date": "2018-03-06",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "idea界面说明",
+      "description": "1、idea 中没有工作空间在 IntelliJ IDEA 中 Project 是最顶级的级别，次级别是 Module。一个 Project 可以有多个 Module。目前主流的大型项目结构都是类似这种多 Module 结构，这类项目一般是这样划分的，比如：core Module、web Module、plugin Module、solr Module 等等，模块之间彼此可以相互依赖。通过这些 …",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79408948",
+      "date": "2018-03-01",
+      "platform": "CSDN",
+      "tags": []
+    },
+    {
+      "title": "mongodb索引优化",
+      "description": "MongoDB建立索引前后对比 MongoDB没有添加索引的压力测试数据测试+A+A1:K46测试接口点并发数循环次数吞吐量/sec错误率平均响应时长/sCPU占有率内存占有率数据库CPU占有率检索文稿检索-文稿数量为5100020269.30.14%12100%50020358.20%890%文稿检索-文稿数量为106100050错误率太高，数据不可信99.00%95%100%80050错误率…",
+      "url": "https://blog.csdn.net/syk123839070/article/details/79408887",
+      "date": "2018-03-01",
+      "platform": "CSDN",
+      "tags": []
+    }
+  ]
+}

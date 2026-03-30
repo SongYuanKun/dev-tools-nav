@@ -637,31 +637,48 @@ function escapeHtml(str) {
 }
 
 // ============================================================
-// 最新动态渲染
+// 最新动态渲染（优先 fetch data/csdn-articles.json，由 CI 从 CSDN RSS 生成）
 // ============================================================
-function initArticles() {
+async function initArticles() {
   const section = document.getElementById("articlesSection");
   const grid = document.getElementById("articlesGrid");
-  if (!section || !grid || typeof ARTICLES_DATA === "undefined") return;
+  if (!section || !grid) return;
 
-  const articles = ARTICLES_DATA.slice(0, 3);
+  let articles = [];
+  try {
+    const res = await fetch("data/csdn-articles.json", { cache: "default" });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.items)) {
+        articles = data.items.slice(0, 3);
+      }
+    }
+  } catch {
+    /* file:// 或网络失败时走下方兜底 */
+  }
+
+  if (articles.length === 0 && typeof ARTICLES_DATA !== "undefined") {
+    articles = ARTICLES_DATA.slice(0, 3);
+  }
+
   if (articles.length === 0) return;
 
   section.style.display = "";
 
   grid.innerHTML = articles.map((a) => {
-    const tagsHtml = a.tags
-      .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
-      .join("");
+    const tags = Array.isArray(a.tags) ? a.tags : [];
+    const tagsHtml = tags.map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("");
+    const platform = a.platform || "CSDN";
+    const dateStr = a.date || "";
 
     return `
       <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" class="article-card">
         <div class="article-meta">
-          <span class="article-platform">${escapeHtml(a.platform)}</span>
-          <span>${escapeHtml(a.date)}</span>
+          <span class="article-platform">${escapeHtml(platform)}</span>
+          <span>${escapeHtml(dateStr)}</span>
         </div>
         <h3 class="article-card-title">${escapeHtml(a.title)}</h3>
-        <p class="article-card-desc">${escapeHtml(a.description)}</p>
+        <p class="article-card-desc">${escapeHtml(a.description || "")}</p>
         <div class="article-card-tags">${tagsHtml}</div>
       </a>
     `;
@@ -825,7 +842,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCategories();
   initSearch();
   renderTools();
-  initArticles();
+  void initArticles();
   initTrustBar();
   initHeroMirror();
   initBackToTop();

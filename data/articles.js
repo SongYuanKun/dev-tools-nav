@@ -1,5 +1,5 @@
 /**
- * 文章/动态数据
+ * 文章/动态数据（静态兜底：首页与关于页优先加载 data/csdn-articles.json，由 CI 从 CSDN RSS 生成）
  * platform: CSDN | 掘金 | GitHub | 博客 | Bilibili
  */
 const ARTICLES_DATA = [

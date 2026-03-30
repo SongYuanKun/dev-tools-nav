@@ -31,6 +31,11 @@ jobs:
       - name: Generate dynamic sitemap
         run: node scripts/generate-sitemap.mjs
 
+      - name: Refresh CSDN articles from RSS
+        env:
+          CSDN_RSS_URL: https://blog.csdn.net/syk123839070/rss/list
+        run: python3 scripts/sync-csdn-rss.py
+
       - name: Assemble site
         run: |
           mkdir -p _site

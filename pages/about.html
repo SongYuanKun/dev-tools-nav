@@ -281,30 +281,51 @@
         `).join("");
       }
 
-      function renderArticles() {
+      async function renderArticles() {
         const grid = document.getElementById("articlesGrid");
-        if (!grid || typeof ARTICLES_DATA === "undefined" || ARTICLES_DATA.length === 0) {
-          if (grid) grid.innerHTML = '<p style="text-align: center; color: var(--text-muted);">暂无文章</p>';
+        if (!grid) return;
+
+        let articles = [];
+        try {
+          const res = await fetch("../data/csdn-articles.json", { cache: "default" });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && Array.isArray(data.items)) {
+              articles = data.items.slice(0, 4);
+            }
+          }
+        } catch {
+          /* ignore */
+        }
+
+        if (articles.length === 0 && typeof ARTICLES_DATA !== "undefined") {
+          articles = ARTICLES_DATA.slice(0, 4);
+        }
+
+        if (articles.length === 0) {
+          grid.innerHTML = '<p style="text-align: center; color: var(--text-muted);">暂无文章</p>';
           return;
         }
 
-        // 只显示前4篇
-        const articles = ARTICLES_DATA.slice(0, 4);
-        
-        grid.innerHTML = articles.map((a) => `
+        grid.innerHTML = articles.map((a) => {
+          const tags = Array.isArray(a.tags) ? a.tags : [];
+          const platform = a.platform || "CSDN";
+          const dateStr = a.date || "";
+          return `
           <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" class="article-card">
             <div class="article-meta">
-              <span class="article-platform">${escapeHtml(a.platform)}</span>
-              <span class="article-date">${escapeHtml(a.date)}</span>
+              <span class="article-platform">${escapeHtml(platform)}</span>
+              <span class="article-date">${escapeHtml(dateStr)}</span>
             </div>
             <h3 class="article-title">${escapeHtml(a.title)}</h3>
-            <p class="article-desc">${escapeHtml(a.description)}</p>
+            <p class="article-desc">${escapeHtml(a.description || "")}</p>
             <div class="article-tags">
-              ${a.tags.slice(0, 3).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("")}
+              ${tags.slice(0, 3).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("")}
             </div>
             ${a.views ? `<span class="article-views">👁 ${a.views} 阅读</span>` : ""}
           </a>
-        `).join("");
+        `;
+        }).join("");
       }
 
       function renderNumbers() {
@@ -338,7 +359,7 @@
         renderTechStack();
         renderTimeline();
         renderProjects();
-        renderArticles();
+        void renderArticles();
         renderNumbers();
       });
     })();
