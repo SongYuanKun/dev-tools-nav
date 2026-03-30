@@ -10,7 +10,7 @@ if [[ ! -d "$ROOT" ]]; then
   exit 1
 fi
 
-rsync -av --delete \
+rsync -av --delete --delete-excluded \
   --exclude='.git' \
   --exclude='.github' \
   --exclude='README.md' \
