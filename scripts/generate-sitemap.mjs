@@ -54,6 +54,7 @@ function main() {
     { loc: `${BASE_URL}/pages/products.html`, changefreq: "monthly", priority: "0.6" },
     { loc: `${BASE_URL}/pages/blog/index.html`, changefreq: "weekly", priority: "0.9" },
     { loc: `${BASE_URL}/pages/blog/why-build-dev-tools-nav.html`, changefreq: "monthly", priority: "0.7" },
+    { loc: `${BASE_URL}/pages/blog/ai-free-tokens-handbook.html`, changefreq: "monthly", priority: "0.75" },
     { loc: `${BASE_URL}/pages/tools/json.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/timestamp.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/cron.html`, changefreq: "monthly", priority: "0.8" },

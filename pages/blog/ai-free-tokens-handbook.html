@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="各平台免费 Token、试用额度与限流怎么区分；绑卡与踩坑提醒；适合小白与初体验程序员。整理于 2026 年 3 月。" />
+  <meta name="keywords" content="AI,免费API,OpenAI,Gemini,Claude,DeepSeek,Groq,薅羊毛,开发者" />
+  <meta property="og:title" content="AI 免费 Token / 额度薅羊毛手册 · Koen的工具箱" />
+  <meta property="og:description" content="免费体验大模型 API：平台盘点、人话扫盲与常见坑。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <meta property="article:published_time" content="2026-03-30" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI 免费 Token / 额度薅羊毛手册" />
+  <meta name="twitter:description" content="各平台免费额度与踩坑备忘，小白向长文。" />
+  <link rel="canonical" href="https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html" />
+  <title>AI 免费 Token / 额度薅羊毛手册 · Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script>
+    (function(){var t=localStorage.getItem('dev-tools-theme');if(t){document.documentElement.setAttribute('data-theme',t)}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}})();
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "AI 免费 Token / 额度薅羊毛手册",
+      "description": "各平台免费额度、限流与绑卡说明，及常见踩坑备忘。",
+      "inLanguage": "zh-CN",
+      "datePublished": "2026-03-30",
+      "dateModified": "2026-03-30",
+      "author": { "@type": "Person", "name": "Koen", "url": "https://tools.songyuankun.top/pages/about.html" },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Koen's 工具箱",
+        "logo": { "@type": "ImageObject", "url": "https://tools.songyuankun.top/assets/logo.svg" }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html"
+      },
+      "image": ["https://tools.songyuankun.top/assets/avatar.jpg"],
+      "articleSection": "AI 实践"
+    }
+  </script>
+  <script defer src="../../js/base.js"></script>
+  <style>
+    .blog-post-page { max-width: 720px; margin: 0 auto; padding: 24px 24px 80px; }
+    .blog-post-header { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color); }
+    .blog-post-header .blog-post-kicker {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--color-primary); margin-bottom: 10px;
+    }
+    .blog-post-header h1 {
+      font-size: clamp(1.25rem, 4vw, 1.75rem); font-weight: 800; color: var(--text-primary);
+      line-height: 1.35; margin-bottom: 14px;
+    }
+    .blog-post-meta { display: flex; flex-wrap: wrap; gap: 10px 16px; font-size: 14px; color: var(--text-muted); align-items: center; }
+    .blog-post-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .blog-post-tags .tag {
+      display: inline-block; padding: 4px 12px; border-radius: var(--radius-full);
+      background: var(--color-primary-light); color: var(--color-primary); font-size: 12px; font-weight: 600;
+    }
+    .blog-post-content { font-size: 16px; color: var(--text-secondary); line-height: 1.85; }
+    .blog-post-content > section { margin-bottom: 2.25rem; }
+    .blog-post-content h2 {
+      font-size: 1.2rem; font-weight: 700; color: var(--text-primary);
+      margin: 0 0 0.85rem; padding-top: 0.25rem;
+    }
+    .blog-post-content p { margin: 0 0 1rem; }
+    .blog-post-content p:last-child { margin-bottom: 0; }
+    .blog-post-content ul, .blog-post-content ol { margin: 0 0 1rem; padding-left: 1.35rem; }
+    .blog-post-content li { margin-bottom: 0.45rem; }
+    .blog-post-content li::marker { color: var(--color-primary); }
+    .blog-post-content strong { color: var(--text-primary); font-weight: 600; }
+    .blog-post-content blockquote {
+      margin: 1.25rem 0; padding: 14px 18px; border-left: 4px solid var(--color-primary);
+      background: var(--bg-tag); border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      color: var(--text-primary); font-size: 0.95em;
+    }
+    .blog-post-content code {
+      font-family: var(--font-mono); font-size: 0.9em; padding: 2px 6px; border-radius: var(--radius-sm);
+      background: var(--bg-tag); color: var(--text-primary);
+    }
+    .blog-post-content a { color: var(--color-primary); text-decoration: underline; text-underline-offset: 2px; }
+    .blog-post-content a:hover { opacity: 0.9; }
+    .blog-author-card {
+      display: flex; gap: 18px; align-items: flex-start; margin-top: 40px; padding: 24px;
+      background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+    .blog-author-card img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primary); flex-shrink: 0; }
+    .blog-author-card h3 { font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .blog-author-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin: 0; }
+    .blog-related { margin-top: 32px; }
+    .blog-related h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; }
+    .blog-related-list { display: flex; flex-direction: column; gap: 10px; }
+    .blog-related-list a {
+      display: block; padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: var(--radius-md); color: var(--text-primary); font-size: 15px; font-weight: 600;
+      text-decoration: none; transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .blog-related-list a:hover { border-color: var(--color-primary); box-shadow: var(--shadow-card-hover); }
+    .blog-related-list a span { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 4px; }
+    @media (max-width: 640px) {
+      .blog-post-page { padding: 16px 16px 64px; }
+      .blog-author-card { flex-direction: column; align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="../tools/json.html" class="nav-link">在线工具</a>
+          <a href="index.html" class="nav-link active">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="about-page blog-post-page">
+    <article>
+      <header class="blog-post-header">
+        <p class="blog-post-kicker">自托管首发 · AI 实践</p>
+        <h1>AI 免费 Token / 额度薅羊毛手册</h1>
+        <div class="blog-post-meta">
+          <time datetime="2026-03-30">整理于 2026 年 3 月</time>
+          <span>作者 Koen</span>
+          <span>约 12 分钟阅读</span>
+        </div>
+        <div class="blog-post-tags" aria-label="文章标签">
+          <span class="tag">AI</span>
+          <span class="tag">API</span>
+          <span class="tag">新手向</span>
+        </div>
+      </header>
+
+      <div class="about-section blog-post-content">
+        <section>
+          <p>这篇写得比较长，是<strong>故意啰嗦</strong>的：方便<strong>完全不懂代码、也没做过网站</strong>的读者，也能大致明白「免费体验 AI」这件事在说什么、坑在哪里。如果你自己会做网站、会调接口，可以跳着看小标题。</p>
+          <p>各家的免费额度、要不要绑信用卡、能用哪些「型号」的 AI，经常会变；下面只能当<strong>指路用的笔记</strong>。真要注册、尤其是要绑卡之前，一定要自己打开官网，看当前页面上的说明，别只信转载文章里的数字。</p>
+          <p><strong>给想少花钱、又想试试「把 AI 接进自己的东西里」的人看的</strong>——「自己的东西」可以是一个小网站、一个小程序、一个作业演示，甚至只是你想先<strong>免费玩玩</strong>、感受一下不同平台差别。不一定要马上充很多钱，很多平台都有免费层或者送一点试用金。</p>
+          <p>如果你要把这篇转到别的群、公众号里发，文末我留了自己的工具导航链接；<strong>你发的时候换成你自己的链接就行</strong>，免得给别人导流。</p>
+        </section>
+
+        <section>
+          <h2>读前扫盲：三个词先搞懂，后面就不晕</h2>
+          <p><strong>1. API（可以粗俗理解成「饭店点菜窗口」）</strong><br />你不用管厨房怎么炒菜，只要在窗口按菜单<strong>下单</strong>，厨房做好了把菜递出来。对 AI 来说：你的程序（或网站）往对方的「窗口」发一段文字，对方把 AI 的回答发回来。很多「免费 token」说的就是：<strong>这个窗口允许你免费试多少次、或免费试多少字</strong>。</p>
+          <p><strong>2. Token（代币 / 字数的一种计费方式）</strong><br />你不用算得很精确，只要知道：平台不是按「你发了几个字」死板计费，而是按自己的规则拆成很多小段来算钱或算额度。<strong>免费额度用完</strong>，往往就是「这个月或这次试用能用的量用完了」，不是说你电脑坏了。</p>
+          <p><strong>3. 密钥 / API Key（像一把临时门禁卡）</strong><br />注册以后平台会给你一串密码一样的东西。谁拿到这串东西，谁就能<strong>冒充你的账号</strong>去用额度、花你的钱。所以：<strong>不要把它发在群里、不要截图带密钥、不要贴在公开网页上</strong>。后面说的「进仓库」「泄露」，指的就是这把「门禁卡」被别人抄走了。</p>
+        </section>
+
+        <section>
+          <h2>先分清你在薅的是哪一种（很多人在这里搞混）</h2>
+          <p><strong>第一种：送你一点「余额」</strong><br />就像话费：账户里有一点美元或人民币（或等价点数），你每用一次 AI，就扣一点，<strong>扣完为止</strong>。有的平台扣得慢，你会觉得「怎么用了好久还在免费」；有的用得凶，一两天就没了。</p>
+          <p><strong>第二种：不收你钱，但限制你「多快能用一次」</strong><br />你可以把它想成游乐园<strong>免门票但限流</strong>：进去不要钱，但每分钟、每天只允许你玩几次。技术上常写成 RPM（每分钟几次）、RPD（每天几次）、TPM（每分钟能用多少字量）——你不需要背英文，只要知道：<strong>不是坏了，是人家怕你一口气把免费资源打爆</strong>。如果你看到报错里写着 <strong>429</strong>，多半就是「太快了，等一下再试」。</p>
+          <p><strong>第三种：根本不是给网站用的那种「接口」</strong><br />比如 <strong>Cursor、GitHub Copilot、Codeium</strong> 这类，是装在<strong>写代码的软件里</strong>的助手。你在软件里跟 AI 聊天、让它改文件，用的是<strong>这个软件套餐</strong>里的次数或时长。</p>
+          <p>这跟「我做一个网站，<strong>别人</strong>打开我的网页，点一下按钮，让我的服务器去叫 AI，再把结果给访客看」<strong>完全是两回事</strong>。<br />用人话说：<strong>你在编辑器里用得爽，只代表你个人写东西方便；不代表你的网站已经自动接好了 AI，也不代表你的网站访客能免费蹭到同一份额度。</strong> 要做网站、做产品给陌生人用，一般要再走「第一种或第二种」那种正规 API，该绑卡绑卡，该限额限额。</p>
+        </section>
+
+        <section>
+          <h2>免绑卡或几乎不用绑信用卡（适合先伸手试试）</h2>
+          <p><strong>Google AI Studio / Gemini</strong><br />用 Google 账号打开 <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">AI Studio</a>，按提示申请一把 API Key（就是上面说的「门禁卡」）。我印象里<strong>很多时候不用绑信用卡就能玩</strong>，但以你注册那一刻网页上写的为准。<br />它家 Flash 系列往往<strong>一次能塞进去很长</strong>的材料：一大段文字、日志、PDF、截图，想试试「一口气丢给 AI」可以玩这个；更厉害的 Pro 在免费档往往卡得更严。<br />另外：免费档你的内容会不会被拿去训练、能不能拿来做生意，要看<strong>用户协议</strong>，别只看别人总结的「二手结论」。</p>
+          <p><strong>Groq</strong><br />注册以后一般就能调，具体能多用快、每天用多少，看 <a href="https://console.groq.com/docs/rate-limits" target="_blank" rel="noopener noreferrer">官方 rate limits</a>。<br />它家给人的直观感受往往是<strong>快</strong>：你一点，字很快就一行行出来，适合你想做一个「像聊天一样打字出来」的小演示。上面多是 Llama 一类偏开源路线的模型，<strong>别拿它跟各家最贵的、不公开细节的模型比「谁更聪明」</strong>——你可以把它当成：<strong>先免费把流程跑顺、把界面做漂亮</strong>，再决定要不要花钱换更强的。</p>
+          <p><strong>Hugging Face</strong><br />免费注册能试很多模型，但要<strong>排队</strong>，有时候也不稳定，适合学生、爱好者<strong>学习、对照教程</strong>，不适合当成「我唯一依赖的生产线」。</p>
+          <p><strong>国内各种「兼容 OpenAI」的第三方</strong><br />很多会送一点注册金，把连接地址改成它们提供的就行（懂技术的人会改一个叫 <code>base_url</code> 的配置）。<br />对非技术读者的提醒：<strong>不要把重要账号的密钥随便填进你不认识的小网站</strong>。真有那种情况：别人后台能看到你调用了什么、用了多少——轻则隐私难看，重则额度被人滥用。正经生意尽量走<strong>官方</strong>或你<strong>信得过的大供应商</strong>。</p>
+        </section>
+
+        <section>
+          <h2>一般要绑信用卡才会给「试用金」</h2>
+          <p>绑卡不等于马上扣款，但很多平台是「<strong>先登记一张卡，才给你试用额度</strong>」。一定要看清楚：试用期过了、额度用完了之后，<strong>会不会自动按正价扣钱</strong>。不懂就宁可先问客服、先看帮助页，别闭着眼睛点「下一步」。</p>
+          <p><strong>OpenAI</strong><br />新账号过去常会送一点试用额度，<strong>具体送多少、送多久，以你账户里的账单/余额页面为准</strong>，别信网上互相抄的数字。还有面向研究、创业等的申请，额度更大，材料也更麻烦，需要的话去 <a href="https://help.openai.com/" target="_blank" rel="noopener noreferrer">help.openai.com</a> 自己翻。<br />文档多、例子多，很多程序员第一次接 AI 会从这里抄示例；里面的 <code>chat/completions</code> 可以理解为一种<strong>标准的「点菜句式」</strong>，你不需要现在就懂，只要知道「这是人家文档里的常用叫法」。</p>
+          <p><strong>Anthropic（Claude）</strong><br />在 Console 注册后，不少账号会有一点试用金（多少、何时过期看账户页）。很多人感觉它写长文、改稿子、听话程度不错，但<strong>计费和 OpenAI 不是同一套规则</strong>。别一上来就疯狂点、开很多窗口同时刷，<strong>试用金可能瞬间烧光</strong>。</p>
+          <p><strong>DeepSeek</strong><br />国内手机号等注册，在控制台创建密钥。新用户送 token 或余额的活动有过，<strong>以当下控制台为准</strong>。中文写需求、补代码，很多人觉得很划算。官方会调价、会限流、会下线某个旧名字——如果你以后找人做网站，记得提醒对方：<strong>别把「模型名字」和「单价」写死在程序里好几年不更新</strong>。</p>
+        </section>
+
+        <section>
+          <h2>云厂商送的几百美元试用券（门槛更高，别当「白送零花钱」）</h2>
+          <p>像 GCP、AWS、Azure 这类大公司，新用户有时会给<strong>带期限的抵扣金</strong>，一般<strong>必须绑信用卡</strong>。<strong>用超了、或者试用期结束后资源没关，会真扣钱</strong>，而且不一定是一笔小钱。</p>
+          <p>它们可以把多家 AI 挂在同一张「云账单」上，适合<strong>公司、团队</strong>要考虑内网、权限、审计的时候。<br />普通人最容易踩的坑是：<strong>以为免费期一过就什么都不扣了</strong>，其实机器还在空转、服务还在后台跑，下个月信用卡账单出来才傻眼。所以人家提供的「预算告警」（budget alert，就是快花钱了给你发邮件提醒）——<strong>该开就开，不是摆设</strong>。</p>
+        </section>
+
+        <section>
+          <h2>写代码软件里自带的 AI（Cursor / Copilot / Codeium 等）</h2>
+          <p>你可以把它们想成：<strong>Word 里自带的助手</strong>，只不过对象是「写程序的文件」。一般是免费档加一点试用，按月算次数，或者某些高级功能单独限。</p>
+          <p>再强调一遍跟前面的区别：</p>
+          <ul>
+            <li><strong>这些</strong>：主要服务<strong>你自己</strong>在这个软件里干活。</li>
+            <li><strong>网站 / App 给陌生人用</strong>：通常要在<strong>你自己的服务器</strong>（或云函数）上接<strong>官方或正规供应商</strong>的 AI，再把你网站用户的提问转过去。</li>
+          </ul>
+          <p><strong>不能</strong>把「我买 Copilot 了」理解成「我网站的访客也能无限免费用同一个 AI」——<strong>两套收费、两套规则，中间没有自动桥梁。</strong></p>
+        </section>
+
+        <section>
+          <h2>我踩过或看别人踩过的坑</h2>
+          <p><strong>试用金烧完以后还在扣钱</strong><br />有人没关「自动续费 / 自动按量付费」，或者以为「余额没了就会自动停」，结果第二天请求还在发，<strong>按正价一笔笔扣</strong>。所以绑卡那天，把<strong>消费上限、邮件/短信提醒</strong>能开的都开；别等银行短信来了才第一次打开账单。</p>
+          <p><strong>密钥泄露（门禁卡被别人抄走）</strong><br />不懂技术的读者只要记住：<strong>那一长串 Key，性质像银行卡密码</strong>。有人把它贴在公开网页、发在 GitHub 公开仓库、或者打包进手机 App 里，会被机器人扫到，<strong>几小时花掉惊人额度</strong>的新闻每年都有。<br />如果你雇人做网站，可以提醒对方：密钥放在服务器配置里，不要写进给用户下载的文件里。</p>
+          <p><strong>一直点、一直刷，被封或一直报错</strong><br />免费层往往限流。脚本拼命重试、或者用户狂点按钮，又不「等几秒再试」，轻则一直失败，重则账号被风控。看到类似 <strong>429</strong> 的提示，先<strong>慢下来</strong>。</p>
+          <p><strong>写死「模型名字」</strong><br />平台把某个试用型号下线或改名，程序里没改，可能直接报错，或者悄悄用到<strong>更贵</strong>的默认型号。外行可以这么理解：<strong>菜单换了，你还按旧菜名点菜，要么点不上，要么被默认成最贵的套餐。</strong> 做维护的人应该把「菜名」放在配置里，改起来方便。</p>
+          <p><strong>只依赖一家小第三方</strong><br />对方改价、改规则、证书过期甚至不干了，你的页面就全挂。自己玩可以，正经生意最好有<strong>备用方案</strong>。</p>
+          <p><strong>云试用结束忘了关机器</strong><br />为了演示开了一台很贵的云服务器，以为「我不用就不花钱」，其实很多是按<strong>开机时间</strong>算的。演示完：<strong>该关机关机关，该删删。</strong></p>
+        </section>
+
+        <section>
+          <h2>几个顺手习惯（给会动手的人，外行可以跳过）</h2>
+          <p>每个项目用<strong>单独一把密钥</strong>，哪把泄露了只影响这一件事。隔一段时间打开「用量」或「账单」看一眼，你常会突然发现：<strong>一直是某一个选项在悄悄花钱</strong>——很多人第一次看账单才意识到自己一直在用最贵那一档。</p>
+        </section>
+
+        <section>
+          <h2>还不知道选哪个？先这么试（主观，不保证最适合你）</h2>
+          <p>想先做一个<strong>字一条条往外蹦</strong>的小演示，图个爽快：可以试试 Groq 和 Gemini Flash。<br />手里有一大段字、长文档，想试试谁吃得下：可以在 <strong>Gemini</strong>（看免费限额）和 <strong>Claude</strong>（看版本和限额）里<strong>同一段文字各试一次</strong>，哪个顺手用哪个。<br />第一次接「网站调 AI」、想对着说明书一步步抄：很多人从 <strong>OpenAI</strong> 或<strong>兼容 OpenAI 写法</strong>的正规供应商开始。<br />中文需求多、想省一点：<strong>DeepSeek 官方</strong>或你验证过的国内线路。<br />已经是公司行为、要讲合规、要进内网审计：云厂商试用券 + 预算告警，比到处攒零散密钥<strong>更像个正经工程</strong>。</p>
+        </section>
+
+        <section>
+          <h2>工具导航与镜像</h2>
+          <p>网站太多、收藏太散，我自己整理了一个<strong>开发者工具导航</strong>，AI、命令行、运维相关都会往里丢，省得书签栏长草：</p>
+          <p><a href="https://tools.songyuankun.top" target="_blank" rel="noopener noreferrer">https://tools.songyuankun.top</a><br /><a href="https://songyuankun.github.io/dev-tools-nav/" target="_blank" rel="noopener noreferrer">https://songyuankun.github.io/dev-tools-nav/</a></p>
+          <p>如果你会用 GitHub：仓库在 GitHub 上也会更新，觉得有用可以点个 <strong>Star</strong>（相当于收藏 + 给作者一点反馈），我写起来更有劲。完全不用 GitHub 的读者，把链接<strong>加到微信收藏</strong>也一样。</p>
+        </section>
+
+        <section>
+          <h2>官方入口</h2>
+          <ul>
+            <li><a href="https://ai.google.dev/" target="_blank" rel="noopener noreferrer">Google AI（Gemini）</a></li>
+            <li><a href="https://platform.openai.com/" target="_blank" rel="noopener noreferrer">OpenAI Platform</a></li>
+            <li><a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">Anthropic Console</a></li>
+            <li><a href="https://platform.deepseek.com/" target="_blank" rel="noopener noreferrer">DeepSeek</a></li>
+            <li><a href="https://console.groq.com/" target="_blank" rel="noopener noreferrer">Groq Console</a></li>
+          </ul>
+          <p>政策以各站<strong>当前页面</strong>为准。</p>
+        </section>
+      </div>
+
+      <div class="blog-author-card">
+        <img src="../../assets/avatar.jpg" alt="Koen 头像" width="72" height="72" />
+        <div>
+          <h3>Koen</h3>
+          <p>本文仅供学习交流，额度与条款以各平台官网为准。仓库内 <code>docs/ai-free-tokens-handbook.md</code> 为同源 Markdown，便于复制编辑。</p>
+        </div>
+      </div>
+
+      <section class="blog-related" aria-label="相关阅读">
+        <h2>相关文章</h2>
+        <div class="blog-related-list">
+          <a href="index.html">← 返回技术博客列表<span>站内文章与外链索引</span></a>
+          <a href="why-build-dev-tools-nav.html">为什么一个程序员，会花3天做一个导航站？<span>独立开发 · 自托管</span></a>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" title="CSDN 博客">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="../tools/json.html">在线工具</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      function initTheme() {
+        var saved = localStorage.getItem("dev-tools-theme");
+        var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+        var btn = document.getElementById("themeToggle");
+        if (btn) {
+          btn.textContent = theme === "dark" ? "☀️" : "🌙";
+          btn.title = theme === "dark" ? "切换到亮色模式" : "切换到暗色模式";
+          btn.addEventListener("click", function () {
+            var cur = document.documentElement.getAttribute("data-theme");
+            var next = cur === "dark" ? "light" : "dark";
+            localStorage.setItem("dev-tools-theme", next);
+            document.documentElement.setAttribute("data-theme", next);
+            btn.textContent = next === "dark" ? "☀️" : "🌙";
+            btn.title = next === "dark" ? "切换到亮色模式" : "切换到暗色模式";
+          });
+        }
+      }
+      document.addEventListener("DOMContentLoaded", initTheme);
+    })();
+  </script>
+</body>
+</html>

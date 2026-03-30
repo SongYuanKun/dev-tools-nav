@@ -1,5 +1,7 @@
 # AI 免费 Token / 额度薅羊毛手册
 
+> **站内阅读（随站部署）：** [tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html](https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html) · `docs/` 下本文与网页内容需自行同步更新。
+
 整理于 2026 年 3 月。
 
 这篇写得比较长，是**故意啰嗦**的：方便**完全不懂代码、也没做过网站**的读者，也能大致明白「免费体验 AI」这件事在说什么、坑在哪里。如果你自己会做网站、会调接口，可以跳着看小标题。

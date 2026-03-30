@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="description" content="Koen 的数字产品与服务：即将上线的电子书与模板、异步技术咨询、GitHub Sponsors 支持。" />
+  <meta name="description" content="Koen 的数字产品与服务：即将上线的电子书与模板、异步技术咨询；支持作者可通过微信与支付宝收款码。" />
   <meta property="og:title" content="数字产品与服务 · Koen的工具箱" />
-  <meta property="og:description" content="技术深度 × 实战经验 = 可复用的知识产品。咨询、产品与赞助入口。" />
+  <meta property="og:description" content="技术深度 × 实战经验 = 可复用的知识产品。咨询与产品入口。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tools.songyuankun.top/pages/products.html" />
   <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
@@ -24,7 +24,7 @@
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "数字产品与服务",
-      "description": "电子书、脚手架与模板筹备中；Java 后端异步技术咨询；GitHub Sponsors。",
+      "description": "电子书、脚手架与模板筹备中；Java 后端异步技术咨询。",
       "url": "https://tools.songyuankun.top/pages/products.html",
       "inLanguage": "zh-CN"
     }
@@ -106,25 +106,33 @@
       color: var(--text-secondary);
       line-height: 1.8;
     }
-    .sponsor-box .btn-row {
-      margin-top: 18px;
+    .sponsor-qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 22px;
+      max-width: 520px;
     }
-    .btn-sponsor {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 22px;
+    .sponsor-qr-item {
+      text-align: center;
+    }
+    .sponsor-qr-item img {
+      display: block;
+      margin: 0 auto;
+      max-width: 220px;
+      width: 100%;
+      height: auto;
       border-radius: var(--radius-md);
-      background: var(--color-primary);
-      color: var(--text-on-primary) !important;
-      font-weight: 600;
-      font-size: 14px;
-      text-decoration: none !important;
-      transition: background var(--transition), transform var(--transition);
+      border: 1px solid var(--border-color);
+      background: #fff;
+      padding: 8px;
+      box-sizing: border-box;
     }
-    .btn-sponsor:hover {
-      background: var(--color-primary-hover);
-      transform: translateY(-1px);
+    .sponsor-qr-item figcaption {
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
     }
   </style>
 </head>
@@ -194,12 +202,17 @@
     <section class="about-section">
       <h2 class="about-section-title">请我喝杯咖啡</h2>
       <div class="about-story sponsor-box">
-        <p>如果这个工具箱、博客或未来的小产品对你有帮助，可以通过 <strong>GitHub Sponsors</strong> 表示支持。赞助将用于域名、统计服务与内容制作时间，也会成为我继续输出技术内容的动力。</p>
-        <div class="btn-row">
-          <a href="https://github.com/sponsors/SongYuanKun" class="btn-sponsor" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            在 GitHub 上赞助
-          </a>
+        <p>如果这个工具箱、博客或未来的小产品对你有帮助，可以用<strong>微信</strong>或<strong>支付宝</strong>扫下方个人收款码随意支持。金额随意，备注留空或写「咖啡」即可。赞助将用于域名、统计服务与内容制作时间，也会成为我继续输出技术内容的动力。</p>
+        <!-- 维护：收款码图片为 assets/sponsor-wechat.jpg、sponsor-alipay.jpg（或改为 .png 并同步修改 src） -->
+        <div class="sponsor-qr-grid" role="group" aria-label="微信与支付宝收款码">
+          <figure class="sponsor-qr-item">
+            <img src="../assets/sponsor-wechat.jpg" alt="微信收款码" width="220" height="220" loading="lazy" decoding="async" />
+            <figcaption>微信支付</figcaption>
+          </figure>
+          <figure class="sponsor-qr-item">
+            <img src="../assets/sponsor-alipay.jpg" alt="支付宝收款码" width="220" height="220" loading="lazy" decoding="async" />
+            <figcaption>支付宝</figcaption>
+          </figure>
         </div>
       </div>
     </section>

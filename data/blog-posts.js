@@ -5,6 +5,17 @@
  */
 const BLOG_POSTS = [
   {
+    id: "ai-free-tokens-handbook",
+    title: "AI 免费 Token / 额度薅羊毛手册",
+    description: "各平台免费额度、限流与绑卡说明，人话扫盲 + 常见踩坑；适合小白与初体验程序员。",
+    date: "2026-03-30",
+    tags: ["AI", "API", "新手向"],
+    category: "AI 实践",
+    readTime: 12,
+    status: "published",
+    url: "ai-free-tokens-handbook.html",
+  },
+  {
     id: "why-build-dev-tools-nav",
     title: "为什么一个程序员，会花3天做一个导航站？",
     description: "从想法到实现，从功能到体验，记录 Dev Tools Nav 的诞生过程和独立开发的思考。",
@@ -52,6 +63,7 @@ const BLOG_POSTS = [
 
 const BLOG_CATEGORIES = [
   { id: "all", label: "全部文章" },
+  { id: "AI 实践", label: "AI 实践" },
   { id: "独立开发", label: "独立开发" },
   { id: "Java 深度", label: "Java 深度" },
   { id: "数据库", label: "数据库" },
