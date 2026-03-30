@@ -51,6 +51,14 @@ function main() {
     { loc: `${BASE_URL}/pages/about.html`, changefreq: "weekly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/kms.html`, changefreq: "weekly", priority: "0.6" },
     { loc: `${BASE_URL}/pages/jrebel.html`, changefreq: "daily", priority: "0.7" },
+    { loc: `${BASE_URL}/pages/products.html`, changefreq: "monthly", priority: "0.6" },
+    { loc: `${BASE_URL}/pages/blog/index.html`, changefreq: "weekly", priority: "0.9" },
+    { loc: `${BASE_URL}/pages/blog/why-build-dev-tools-nav.html`, changefreq: "monthly", priority: "0.7" },
+    { loc: `${BASE_URL}/pages/tools/json.html`, changefreq: "monthly", priority: "0.8" },
+    { loc: `${BASE_URL}/pages/tools/timestamp.html`, changefreq: "monthly", priority: "0.8" },
+    { loc: `${BASE_URL}/pages/tools/cron.html`, changefreq: "monthly", priority: "0.8" },
+    { loc: `${BASE_URL}/pages/tools/base64.html`, changefreq: "monthly", priority: "0.8" },
+    { loc: `${BASE_URL}/pages/tools/jwt.html`, changefreq: "monthly", priority: "0.8" },
   ];
 
   const toolUrls = tools

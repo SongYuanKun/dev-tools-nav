@@ -461,8 +461,8 @@ function createToolCard(tool) {
     <div class="card-footer">
       ${tool.content
         ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn" data-tool-id="${tool.id}">📖 教程</a>`
-        : tool.category === "activate"
-          ? `<a href="${tool.url}" class="visit-btn" data-tool-id="${tool.id}">📖 访问</a>`
+        : (tool.category === "activate" || tool.category === "online-tools")
+          ? `<a href="${tool.url}" class="visit-btn" data-tool-id="${tool.id}">${tool.category === "online-tools" ? "🧰 使用" : "📖 访问"}</a>`
           : `<a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="visit-btn" data-tool-id="${tool.id}">
             ↗ 访问
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -472,7 +472,7 @@ function createToolCard(tool) {
             </svg>
           </a>`
       }
-      <a href="${tool.category === "activate" ? tool.url : `pages/template.html?id=${tool.id}`}" class="detail-link" data-tool-id="${tool.id}">详情 →</a>
+      <a href="${(tool.category === "activate" || tool.category === "online-tools") ? tool.url : `pages/template.html?id=${tool.id}`}" class="detail-link" data-tool-id="${tool.id}">${tool.category === "online-tools" ? "打开 →" : "详情 →"}</a>
     </div>
   `;
 
@@ -503,6 +503,7 @@ function createToolCard(tool) {
 const ICON_FALLBACK_MAP = {
   dev: "🛠️", hosting: "🌐", security: "🔒",
   ops: "📊", design: "🎨", ai: "🤖", activate: "🔑",
+  "online-tools": "🧰",
 };
 
 function loadIcon(tool, container) {

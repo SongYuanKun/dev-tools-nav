@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="免费在线生成与解析 Cron 五段式表达式，支持常用预设、中文语义说明、未来 5 次执行时间预览与一键复制，适用于 Linux crontab 与定时任务配置。" />
+  <meta name="keywords" content="Cron,crontab,定时任务,表达式生成器,在线工具,Linux" />
+  <meta property="og:title" content="在线 Cron 表达式生成器 - 定时任务表达式工具 | Koen的工具箱" />
+  <meta property="og:description" content="可视化生成 Cron 表达式，中文说明与执行时间预览，支持解析粘贴。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/tools/cron.html" />
+  <meta property="og:image" content="https://songyuankun.github.io/dev-tools-nav/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="在线 Cron 表达式生成器 | Koen的工具箱" />
+  <meta name="twitter:description" content="可视化生成 Cron 表达式，中文说明与执行时间预览。" />
+  <meta name="twitter:image" content="https://songyuankun.github.io/dev-tools-nav/assets/avatar.jpg" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/tools/cron.html" />
+  <title>在线 Cron 表达式生成器 - 定时任务表达式工具 | Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/tools.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "在线 Cron 表达式生成器",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "zh-CN",
+      "description": "免费在线生成与解析 Linux 风格五段式 Cron 表达式，提供中文语义说明、常用预设与未来执行时间预览。",
+      "url": "https://songyuankun.github.io/dev-tools-nav/pages/tools/cron.html",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Koen"
+      }
+    }
+  </script>
+  <script>
+    (function () {
+      var t = localStorage.getItem("dev-tools-theme");
+      if (t === "dark" || t === "light") {
+        document.documentElement.setAttribute("data-theme", t);
+      }
+    })();
+  </script>
+  <script defer src="../../js/base.js"></script>
+  <style>
+    .cron-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .cron-field-row {
+      display: grid;
+      grid-template-columns: 88px 1fr 1fr;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+    .cron-field-row .cron-part-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding-bottom: 10px;
+    }
+    .cron-field-row .tool-select,
+    .cron-field-row .tool-input {
+      width: 100%;
+    }
+    .cron-preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .cron-preset-bar .tool-btn {
+      font-size: 12px;
+      padding: 7px 12px;
+    }
+    .cron-desc-box {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-primary);
+    }
+    .cron-next-list {
+      margin: 0;
+      padding-left: 1.2em;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .cron-next-list li {
+      margin-bottom: 6px;
+    }
+    .cron-parse-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .cron-parse-row .tool-input {
+      flex: 1;
+      min-width: 200px;
+    }
+    @media (max-width: 768px) {
+      .cron-field-row {
+        grid-template-columns: 1fr;
+      }
+      .cron-field-row .cron-part-label {
+        padding-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="javascript:void(0)" class="nav-link active" aria-current="page">在线工具</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button
+          type="button"
+          id="themeToggle"
+          class="theme-toggle"
+          aria-label="切换明暗主题"
+          title="切换主题"
+        >🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="tool-page">
+    <header class="tool-page-header">
+      <h1>在线 Cron 表达式生成器</h1>
+      <p>通过五段式字段组合或粘贴已有表达式，生成适用于 Linux crontab 等环境的 Cron；查看中文说明与接下来 5 次触发时间（按本地时区估算）。星期域使用 0–6（0 为周日）。</p>
+    </header>
+
+    <section class="tool-panel" aria-labelledby="cron-display-heading">
+      <h2 id="cron-display-heading" class="tool-panel-title">当前表达式</h2>
+      <div id="cronDisplay" class="cron-display" role="status" aria-live="polite">* * * * *</div>
+      <div class="cron-toolbar">
+        <button type="button" id="btnCopy" class="tool-btn tool-btn-primary">复制表达式</button>
+        <span id="copyHint" class="tool-label" style="margin:0;color:var(--text-muted);"></span>
+      </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="fields-heading">
+      <h2 id="fields-heading" class="tool-panel-title">字段配置</h2>
+      <p class="tool-label" style="margin-bottom:14px;">依次为：分钟 (0–59)、小时 (0–23)、日 (1–31)、月 (1–12)、星期 (0–6)。选择规则类型后在右侧填写参数（任意类型无需填写）。</p>
+
+      <div id="cronFields"></div>
+
+      <div style="margin-top:20px;">
+        <span class="tool-label">常用预设</span>
+        <div class="cron-preset-bar tool-actions" style="margin-top:8px;">
+          <button type="button" class="tool-btn" data-preset="every_min">每分钟</button>
+          <button type="button" class="tool-btn" data-preset="every_hour">每小时</button>
+          <button type="button" class="tool-btn" data-preset="daily_midnight">每天零点</button>
+          <button type="button" class="tool-btn" data-preset="weekly_mon">每周一</button>
+          <button type="button" class="tool-btn" data-preset="monthly_first">每月1号</button>
+          <button type="button" class="tool-btn" data-preset="weekdays">工作日</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="parse-heading">
+      <h2 id="parse-heading" class="tool-panel-title">解析已有表达式</h2>
+      <div class="cron-parse-row">
+        <input type="text" id="parseInput" class="tool-input" placeholder="粘贴五段式，例如：0 0 * * *" autocomplete="off" spellcheck="false" aria-label="Cron 表达式" />
+        <button type="button" id="btnParse" class="tool-btn tool-btn-primary">解析并应用到表单</button>
+      </div>
+      <p id="parseMsg" class="tool-label" style="margin-top:10px;color:var(--text-muted);"></p>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="desc-heading">
+      <h2 id="desc-heading" class="tool-panel-title">语义说明</h2>
+      <div id="humanDesc" class="cron-desc-box tool-result" style="min-height:auto;font-family:var(--font-sans);">在每分钟执行一次。</div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="next-heading">
+      <h2 id="next-heading" class="tool-panel-title">接下来 5 次执行时间（本地时区）</h2>
+      <ul id="nextRuns" class="cron-next-list"></ul>
+      <p id="nextRunsNote" class="tool-label" style="margin-top:12px;color:var(--text-muted);"></p>
+    </section>
+
+    <nav class="tool-footer-nav" aria-label="相关工具">
+      <h3>相关页面</h3>
+      <div class="tool-footer-links">
+        <a href="../../index.html" class="tool-footer-link">工具导航</a>
+        <a href="../kms.html" class="tool-footer-link">KMS 激活</a>
+        <a href="../jrebel.html" class="tool-footer-link">JRebel 说明</a>
+        <a href="../about.html" class="tool-footer-link">关于我</a>
+      </div>
+    </nav>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+        <span class="footer-divider">|</span>
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var THEME_KEY = "dev-tools-theme";
+
+      function themeApply(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        var btn = document.getElementById("themeToggle");
+        if (btn) {
+          btn.textContent = theme === "dark" ? "☀️" : "🌙";
+          btn.setAttribute("title", theme === "dark" ? "切换到亮色模式" : "切换到暗色模式");
+          btn.setAttribute("aria-label", theme === "dark" ? "切换到亮色模式" : "切换到暗色模式");
+        }
+      }
+
+      function themeInit() {
+        var saved = localStorage.getItem(THEME_KEY);
+        if (saved === "dark" || saved === "light") {
+          themeApply(saved);
+        } else {
+          var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+          themeApply(prefersDark ? "dark" : "light");
+        }
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+          if (!localStorage.getItem(THEME_KEY)) {
+            themeApply(e.matches ? "dark" : "light");
+          }
+        });
+      }
+
+      function themeToggle() {
+        var cur = document.documentElement.getAttribute("data-theme") || "light";
+        var next = cur === "dark" ? "light" : "dark";
+        localStorage.setItem(THEME_KEY, next);
+        themeApply(next);
+      }
+
+      document.getElementById("themeToggle").addEventListener("click", themeToggle);
+      themeInit();
+
+      var FIELD_META = [
+        { id: "min", label: "分钟", min: 0, max: 59, ph: "如 0,30 或 9-17 或 5（配合类型）" },
+        { id: "hour", label: "小时", min: 0, max: 23, ph: "如 0,12 或 8-18" },
+        { id: "dom", label: "日", min: 1, max: 31, ph: "如 1,15 或 1-5" },
+        { id: "mon", label: "月", min: 1, max: 12, ph: "如 1,6,12" },
+        { id: "dow", label: "星期", min: 0, max: 6, ph: "0=周日，1=周一…" }
+      ];
+
+      var MODE_OPTIONS = [
+        { value: "any", text: "任意（*）" },
+        { value: "every", text: "每 X（*/X）" },
+        { value: "list", text: "指定值" },
+        { value: "range", text: "范围（A-B）" },
+        { value: "step", text: "间隔（*/N）" }
+      ];
+
+      var presets = {
+        every_min: ["*", "*", "*", "*", "*"],
+        every_hour: ["0", "*", "*", "*", "*"],
+        daily_midnight: ["0", "0", "*", "*", "*"],
+        weekly_mon: ["0", "0", "*", "*", "1"],
+        monthly_first: ["0", "0", "1", "*", "*"],
+        weekdays: ["0", "0", "*", "*", "1-5"]
+      };
+
+      var fieldsRoot = document.getElementById("cronFields");
+      var selects = [];
+      var inputs = [];
+
+      FIELD_META.forEach(function (meta, i) {
+        var row = document.createElement("div");
+        row.className = "cron-field-row";
+        row.innerHTML =
+          '<div class="cron-part-label">' + meta.label + "<br><span style=\"font-weight:400;font-size:11px;color:var(--text-muted);\">" + meta.min + "–" + meta.max + "</span></div>";
+        var sel = document.createElement("select");
+        sel.className = "tool-select";
+        sel.setAttribute("aria-label", meta.label + " 规则类型");
+        MODE_OPTIONS.forEach(function (opt) {
+          var o = document.createElement("option");
+          o.value = opt.value;
+          o.textContent = opt.text;
+          sel.appendChild(o);
+        });
+        var inp = document.createElement("input");
+        inp.type = "text";
+        inp.className = "tool-input";
+        inp.placeholder = meta.ph;
+        inp.setAttribute("aria-label", meta.label + " 参数");
+        row.appendChild(sel);
+        row.appendChild(inp);
+        fieldsRoot.appendChild(row);
+        selects.push(sel);
+        inputs.push(inp);
+      });
+
+      function partFromMode(mode, raw, meta) {
+        raw = (raw || "").trim();
+        if (mode === "any") return "*";
+        if (mode === "every" || mode === "step") {
+          var n = parseInt(raw, 10);
+          if (!raw || isNaN(n) || n <= 0) return "*";
+          return "*/" + n;
+        }
+        if (mode === "range") {
+          if (!raw) return "*";
+          var m = raw.match(/^(\d+)\s*-\s*(\d+)$/);
+          if (!m) return "*";
+          var a = parseInt(m[1], 10);
+          var b = parseInt(m[2], 10);
+          if (isNaN(a) || isNaN(b)) return "*";
+          if (a < meta.min || b > meta.max || a > b) return "*";
+          return a + "-" + b;
+        }
+        if (mode === "list") {
+          if (!raw) return "*";
+          return raw.replace(/\s+/g, "");
+        }
+        return "*";
+      }
+
+      function buildExpression() {
+        var parts = [];
+        for (var i = 0; i < 5; i++) {
+          parts.push(partFromMode(selects[i].value, inputs[i].value, FIELD_META[i]));
+        }
+        return parts.join(" ");
+      }
+
+      function inferModeAndValue(part, meta) {
+        part = (part || "").trim();
+        if (part === "*" || part === "?") {
+          return { mode: "any", val: "" };
+        }
+        if (/^\*\/\d+$/.test(part)) {
+          var n = part.slice(2);
+          return { mode: "every", val: n };
+        }
+        if (/^\d+\s*-\s*\d+$/.test(part)) {
+          return { mode: "range", val: part.replace(/\s/g, "") };
+        }
+        if (part.indexOf(",") !== -1 || /^\d+$/.test(part)) {
+          return { mode: "list", val: part };
+        }
+        return { mode: "list", val: part };
+      }
+
+      function applyParts(parts) {
+        if (!parts || parts.length !== 5) return false;
+        for (var i = 0; i < 5; i++) {
+          var iv = inferModeAndValue(parts[i], FIELD_META[i]);
+          selects[i].value = iv.mode === "step" ? "every" : iv.mode;
+          inputs[i].value = iv.val;
+        }
+        return true;
+      }
+
+      function syncFromExpression(expr) {
+        var p = expr.trim().split(/\s+/);
+        if (p.length !== 5) return false;
+        return applyParts(p);
+      }
+
+      /* ---- Cron match & next runs (classic 5-field, DOM/DOW OR when both set) ---- */
+
+      function numInDowSpec(spec, wd) {
+        var n = parseInt(spec, 10);
+        if (isNaN(n)) return false;
+        if (n === 7) n = 0;
+        return wd === n;
+      }
+
+      function valueMatchesPart(part, value, min, max, isDow) {
+        part = (part || "").trim();
+        if (part === "*" || part === "?") return true;
+        if (part.indexOf("/") !== -1) {
+          var segs = part.split("/");
+          var base = segs[0];
+          var step = parseInt(segs[1], 10);
+          if (isNaN(step) || step <= 0) return false;
+          var vals;
+          if (base === "*") {
+            return (value - min) % step === 0;
+          }
+          if (base.indexOf("-") !== -1) {
+            var ab = base.split("-");
+            var lo = parseInt(ab[0], 10);
+            var hi = parseInt(ab[1], 10);
+            if (value < lo || value > hi) return false;
+            return (value - lo) % step === 0;
+          }
+          var start = parseInt(base, 10);
+          if (isNaN(start)) return false;
+          return value >= start && (value - start) % step === 0;
+        }
+        var subs = part.split(",");
+        for (var s = 0; s < subs.length; s++) {
+          var sub = subs[s].trim();
+          if (!sub) continue;
+          if (sub.indexOf("-") !== -1) {
+            var range = sub.split("-");
+            var a = parseInt(range[0], 10);
+            var b = parseInt(range[1], 10);
+            if (isDow && a === 7) a = 0;
+            if (isDow && b === 7) b = 0;
+            if (!isNaN(a) && !isNaN(b) && value >= a && value <= b) return true;
+          } else {
+            if (isDow && numInDowSpec(sub, value)) return true;
+            if (!isDow && parseInt(sub, 10) === value) return true;
+          }
+        }
+        return false;
+      }
+
+      function dayMatches(domPart, dowPart, d) {
+        var domStar = domPart === "*" || domPart === "?";
+        var dowStar = dowPart === "*" || dowPart === "?";
+        var md = d.getDate();
+        var wd = d.getDay();
+        var domOk = domStar || valueMatchesPart(domPart, md, 1, 31, false);
+        var dowOk = dowStar || valueMatchesPart(dowPart, wd, 0, 6, true);
+        if (domStar && dowStar) return true;
+        if (domStar && !dowStar) return dowOk;
+        if (!domStar && dowStar) return domOk;
+        return domOk || dowOk;
+      }
+
+      function matchesCron(parts, date) {
+        if (!parts || parts.length !== 5) return false;
+        var min = date.getMinutes();
+        var hour = date.getHours();
+        var mon = date.getMonth() + 1;
+        if (!valueMatchesPart(parts[0], min, 0, 59, false)) return false;
+        if (!valueMatchesPart(parts[1], hour, 0, 23, false)) return false;
+        if (!valueMatchesPart(parts[3], mon, 1, 12, false)) return false;
+        if (!dayMatches(parts[2], parts[4], date)) return false;
+        return true;
+      }
+
+      function nextRuns(expr, count, from) {
+        var parts = expr.trim().split(/\s+/);
+        if (parts.length !== 5) return { ok: false, runs: [], note: "表达式须为五段。" };
+        for (var t = 0; t < 5; t++) {
+          if (!parts[t]) return { ok: false, runs: [], note: "字段不能为空。" };
+        }
+        var d = new Date(from.getTime());
+        d.setSeconds(0, 0);
+        d.setMinutes(d.getMinutes() + 1);
+        var out = [];
+        var iter = 0;
+        var MAX = 250000;
+        while (out.length < count && iter < MAX) {
+          if (matchesCron(parts, d)) {
+            out.push(new Date(d.getTime()));
+          }
+          d.setMinutes(d.getMinutes() + 1);
+          iter++;
+        }
+        var note = "";
+        if (out.length < count) {
+          note = "在约 " + Math.floor(MAX / 1440) + " 天内未凑满 5 次，可能为稀疏规则或无法匹配的表达式。";
+        }
+        return { ok: true, runs: out, note: note };
+      }
+
+      /* ---- Human-readable (Chinese) ---- */
+
+      function describePart(name, part, meta) {
+        part = (part || "").trim();
+        if (part === "*" || part === "?") return name + "为任意";
+        if (/^\*\/(\d+)$/.test(part)) {
+          var n = RegExp.$1;
+          if (meta.id === "min") return "每隔 " + n + " 分钟";
+          if (meta.id === "hour") return "每隔 " + n + " 小时";
+          if (meta.id === "dom") return "每隔 " + n + " 天（日字段步进）";
+          if (meta.id === "mon") return "每隔 " + n + " 个月";
+          if (meta.id === "dow") return "每隔 " + n + " 天（周字段步进）";
+        }
+        if (meta.id === "dow") {
+          var map = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+          if (/^\d+$/.test(part)) {
+            var di = parseInt(part, 10) % 7;
+            return "星期为 " + map[di];
+          }
+          return "星期为 " + part;
+        }
+        if (meta.id === "dom" && part === "1") return "每月 1 日";
+        if (meta.id === "hour" && part === "0") return "0 点（午夜）";
+        if (meta.id === "min" && part === "0") return "0 分";
+        return name + "为 " + part;
+      }
+
+      function describeCron(expr) {
+        var parts = expr.trim().split(/\s+/);
+        if (parts.length !== 5) return "无法识别：需要恰好五个字段。";
+        var a = describePart("分钟", parts[0], FIELD_META[0]);
+        var b = describePart("小时", parts[1], FIELD_META[1]);
+        var c = describePart("日", parts[2], FIELD_META[2]);
+        var d = describePart("月", parts[3], FIELD_META[3]);
+        var e = describePart("星期", parts[4], FIELD_META[4]);
+        var bits = [a, b, c, d, e];
+        if (expr.replace(/\s+/g, " ") === "* * * * *") return "每一分钟执行一次。";
+        if (expr.replace(/\s+/g, " ") === "0 * * * *") return "每小时的第 0 分钟执行一次。";
+        if (expr.replace(/\s+/g, " ") === "0 0 * * *") return "每天 0 点 0 分执行一次。";
+        if (expr.replace(/\s+/g, " ") === "0 0 * * 1") return "每周一 0 点执行一次。";
+        if (expr.replace(/\s+/g, " ") === "0 0 1 * *") return "每月 1 号 0 点执行一次。";
+        if (expr.replace(/\s+/g, " ") === "0 0 * * 1-5") return "每个工作日（周一至周五）0 点执行一次。";
+        return "在满足以下条件时执行：" + bits.join("；") + "。（日与星期同时限制时，按常见 crontab 规则取「日匹配或星期匹配」）";
+      }
+
+      function refreshUI() {
+        var expr = buildExpression();
+        document.getElementById("cronDisplay").textContent = expr;
+        document.getElementById("humanDesc").textContent = describeCron(expr);
+        var nr = nextRuns(expr, 5, new Date());
+        var ul = document.getElementById("nextRuns");
+        ul.innerHTML = "";
+        if (!nr.ok) {
+          var li = document.createElement("li");
+          li.textContent = nr.note || "解析失败";
+          ul.appendChild(li);
+        } else if (nr.runs.length === 0) {
+          var li2 = document.createElement("li");
+          li2.textContent = "未找到即将到来的执行时间。";
+          ul.appendChild(li2);
+        } else {
+          nr.runs.forEach(function (dt) {
+            var li = document.createElement("li");
+            li.textContent = dt.toLocaleString("zh-CN", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: false
+            });
+            ul.appendChild(li);
+          });
+        }
+        document.getElementById("nextRunsNote").textContent = nr.note || "";
+      }
+
+      for (var i = 0; i < 5; i++) {
+        selects[i].addEventListener("change", refreshUI);
+        inputs[i].addEventListener("input", refreshUI);
+      }
+
+      document.querySelectorAll("[data-preset]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var key = btn.getAttribute("data-preset");
+          var pr = presets[key];
+          if (pr) {
+            applyParts(pr);
+            refreshUI();
+          }
+        });
+      });
+
+      document.getElementById("btnParse").addEventListener("click", function () {
+        var raw = document.getElementById("parseInput").value;
+        var msg = document.getElementById("parseMsg");
+        if (syncFromExpression(raw)) {
+          msg.textContent = "已应用到上方字段。";
+          msg.style.color = "var(--color-primary)";
+          refreshUI();
+        } else {
+          msg.textContent = "请输入有效的五段式表达式（空格分隔）。";
+          msg.style.color = "#ef4444";
+        }
+      });
+
+      document.getElementById("btnCopy").addEventListener("click", function () {
+        var text = document.getElementById("cronDisplay").textContent;
+        var hint = document.getElementById("copyHint");
+        navigator.clipboard.writeText(text).then(function () {
+          hint.textContent = "已复制到剪贴板";
+          setTimeout(function () { hint.textContent = ""; }, 2000);
+        }).catch(function () {
+          hint.textContent = "复制失败，请手动选择复制";
+        });
+      });
+
+      refreshUI();
+    })();
+  </script>
+</body>
+</html>

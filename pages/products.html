@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="Koen 的数字产品与服务：即将上线的电子书与模板、异步技术咨询、GitHub Sponsors 支持。" />
+  <meta property="og:title" content="数字产品与服务 · Koen的工具箱" />
+  <meta property="og:description" content="技术深度 × 实战经验 = 可复用的知识产品。咨询、产品与赞助入口。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/pages/products.html" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://tools.songyuankun.top/pages/products.html" />
+  <title>数字产品与服务 · Koen的工具箱</title>
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script>
+    (function(){var t=localStorage.getItem('dev-tools-theme');if(t){document.documentElement.setAttribute('data-theme',t)}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}})();
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "数字产品与服务",
+      "description": "电子书、脚手架与模板筹备中；Java 后端异步技术咨询；GitHub Sponsors。",
+      "url": "https://tools.songyuankun.top/pages/products.html",
+      "inLanguage": "zh-CN"
+    }
+  </script>
+  <script defer src="../js/base.js"></script>
+  <style>
+    .products-hero {
+      text-align: center;
+      padding: 40px 0 8px;
+    }
+    .products-hero h1 {
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .products-hero .products-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+    .product-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .product-card {
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--bg-page);
+    }
+    .product-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .product-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .product-status {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg-tag);
+      color: var(--text-tag);
+    }
+    .product-status.writing { color: var(--color-primary); background: var(--color-primary-light); }
+    .consult-list {
+      margin-top: 12px;
+      padding-left: 1.2rem;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+    .consult-list li::marker { color: var(--color-primary); }
+    .products-contact {
+      margin-top: 16px;
+      font-size: 15px;
+    }
+    .products-contact a {
+      color: var(--color-primary);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .products-contact a:hover { color: var(--color-primary-hover); }
+    .sponsor-box {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    .sponsor-box .btn-row {
+      margin-top: 18px;
+    }
+    .btn-sponsor {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: var(--radius-md);
+      background: var(--color-primary);
+      color: var(--text-on-primary) !important;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none !important;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .btn-sponsor:hover {
+      background: var(--color-primary-hover);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../index.html" class="nav-link">工具导航</a>
+          <a href="tools/json.html" class="nav-link">在线工具</a>
+          <a href="blog/index.html" class="nav-link">技术博客</a>
+          <a href="about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="about-page">
+    <div class="products-hero">
+      <h1>数字产品与服务</h1>
+      <p class="products-subtitle">技术深度 × 实战经验 = 可复用的知识产品</p>
+    </div>
+
+    <section class="about-section">
+      <h2 class="about-section-title">即将上线</h2>
+      <p class="about-story" style="margin-bottom: 18px;">以下为早期规划，发布时间与形式可能调整；欢迎通过邮箱或 GitHub 关注进展。</p>
+      <div class="product-card-list">
+        <div class="product-card">
+          <h3>Java 并发编程源码精解</h3>
+          <p>电子书 / PDF，面向希望从源码层面理解 <code>j.u.c</code> 与 JVM 并发模型的读者。</p>
+          <span class="product-status writing">编写中</span>
+        </div>
+        <div class="product-card">
+          <h3>Spring Boot 项目脚手架</h3>
+          <p>可复用的代码模板：分层结构、常用配置与最佳实践起点，减少从零搭项目的重复劳动。</p>
+          <span class="product-status">规划中</span>
+        </div>
+        <div class="product-card">
+          <h3>技术面试准备清单</h3>
+          <p>Notion 模板，梳理知识点、项目亮点与模拟问答，适合系统性备战后端岗位。</p>
+          <span class="product-status">规划中</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2 class="about-section-title">技术咨询</h2>
+      <div class="about-story">
+        <p><strong>7 年 Java 后端经验</strong>，提供<strong>异步技术咨询</strong>：你通过邮件描述背景、问题与期望产出，我在约定时间内给出书面分析与建议（非实时陪跑，适合架构评审、方案把关与排障思路）。</p>
+        <p><strong>可覆盖方向：</strong></p>
+        <ul class="consult-list">
+          <li>Java 架构设计与模块划分</li>
+          <li>MySQL 调优与常见问题排查</li>
+          <li>微服务部署与协作边界</li>
+          <li>Docker / 容器化与交付流程</li>
+        </ul>
+        <p class="products-contact">联系邮箱：<a href="mailto:syk123839070@163.com">syk123839070@163.com</a>（请在主题注明「技术咨询」并尽量附上上下文）。</p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2 class="about-section-title">请我喝杯咖啡</h2>
+      <div class="about-story sponsor-box">
+        <p>如果这个工具箱、博客或未来的小产品对你有帮助，可以通过 <strong>GitHub Sponsors</strong> 表示支持。赞助将用于域名、统计服务与内容制作时间，也会成为我继续输出技术内容的动力。</p>
+        <div class="btn-row">
+          <a href="https://github.com/sponsors/SongYuanKun" class="btn-sponsor" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            在 GitHub 上赞助
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" title="CSDN 博客">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="tools/json.html">在线工具</a>
+        <span class="footer-divider">|</span>
+        <a href="blog/index.html">技术博客</a>
+        <span class="footer-divider">|</span>
+        <a href="about.html">关于我</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      function initTheme() {
+        var saved = localStorage.getItem("dev-tools-theme");
+        var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+        var btn = document.getElementById("themeToggle");
+        if (btn) {
+          btn.textContent = theme === "dark" ? "☀️" : "🌙";
+          btn.title = theme === "dark" ? "切换到亮色模式" : "切换到暗色模式";
+          btn.addEventListener("click", function () {
+            var cur = document.documentElement.getAttribute("data-theme");
+            var next = cur === "dark" ? "light" : "dark";
+            localStorage.setItem("dev-tools-theme", next);
+            document.documentElement.setAttribute("data-theme", next);
+            btn.textContent = next === "dark" ? "☀️" : "🌙";
+            btn.title = next === "dark" ? "切换到亮色模式" : "切换到暗色模式";
+          });
+        }
+      }
+      document.addEventListener("DOMContentLoaded", initTheme);
+    })();
+  </script>
+</body>
+</html>

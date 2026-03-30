@@ -6,3 +6,4 @@ logs/
 # 已核对：本仓库 Git 历史中从未出现 .cursor/ 下文件，无需为该项做历史重写。
 # 若曾在其他分支误提交敏感路径，需用 git filter-repo（或等价工具）从全历史移除后再 force-push。
 .cursor/skills/deploy-dev-tools-nav-internal-srv/
+.cursor/plans/
