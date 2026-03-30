@@ -2,5 +2,7 @@
 logs/
 *.log
 
-# 个人服务器部署等工作流 skill，仅本机保留，不入库
+# 个人服务器部署等工作流 skill（可能含 SSH 别名、公网入口等），仅本机保留、勿提交。
+# 已核对：本仓库 Git 历史中从未出现 .cursor/ 下文件，无需为该项做历史重写。
+# 若曾在其他分支误提交敏感路径，需用 git filter-repo（或等价工具）从全历史移除后再 force-push。
 .cursor/skills/deploy-dev-tools-nav-internal-srv/
