@@ -1,3 +1,6 @@
 .DS_Store
 logs/
 *.log
+
+# 个人服务器部署等工作流 skill，仅本机保留，不入库
+.cursor/skills/deploy-dev-tools-nav-internal-srv/
