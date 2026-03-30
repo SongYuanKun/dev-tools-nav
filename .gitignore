@@ -7,3 +7,6 @@ logs/
 # 若曾在其他分支误提交敏感路径，需用 git filter-repo（或等价工具）从全历史移除后再 force-push。
 .cursor/skills/deploy-dev-tools-nav-internal-srv/
 .cursor/plans/
+
+baidu_verify_codeva-TByQYpVHM2.html
+googleb710668c9aa28d4e.html
