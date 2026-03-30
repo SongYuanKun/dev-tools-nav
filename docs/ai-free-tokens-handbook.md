@@ -97,7 +97,7 @@
 
 ---
 
-## 我踩过或看别人踩过的坑（用人话版）
+## 我踩过或看别人踩过的坑
 
 **试用金烧完以后还在扣钱**  
 有人没关「自动续费 / 自动按量付费」，或者以为「余额没了就会自动停」，结果第二天请求还在发，**按正价一笔笔扣**。所以绑卡那天，把**消费上限、邮件/短信提醒**能开的都开；别等银行短信来了才第一次打开账单。
@@ -136,17 +136,16 @@
 
 ---
 
-## 引流用结尾（可改成你的）
-
 网站太多、收藏太散，我自己整理了一个**开发者工具导航**，AI、命令行、运维相关都会往里丢，省得书签栏长草：
 
 https://tools.songyuankun.top
+https://songyuankun.github.io/dev-tools-nav/
 
 如果你会用 GitHub：仓库在 GitHub 上也会更新，觉得有用可以点个 **Star**（相当于收藏 + 给作者一点反馈），我写起来更有劲。完全不用 GitHub 的读者，把链接**加到微信收藏**也一样。
 
 ---
 
-## 官方入口（自己点开核对）
+## 官方入口
 
 - [Google AI（Gemini）](https://ai.google.dev/)  
 - [OpenAI Platform](https://platform.openai.com/)  
@@ -154,4 +153,4 @@ https://tools.songyuankun.top
 - [DeepSeek](https://platform.deepseek.com/)  
 - [Groq Console](https://console.groq.com/)  
 
-政策以各站**当前页面**为准。别人转载时，带上一句「整理于 2026 年 3 月，请以官网为准」即可。
+政策以各站**当前页面**为准。
