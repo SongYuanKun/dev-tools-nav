@@ -60,6 +60,8 @@ function main() {
     { loc: `${BASE_URL}/pages/tools/cron.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/base64.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/jwt.html`, changefreq: "monthly", priority: "0.8" },
+    { loc: `${BASE_URL}/pages/tools/sql-formatter.html`, changefreq: "monthly", priority: "0.8" },
+    { loc: `${BASE_URL}/pages/tools/regex.html`, changefreq: "monthly", priority: "0.8" },
   ];
 
   const toolUrls = tools

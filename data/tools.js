@@ -1222,6 +1222,28 @@ const TOOLS_DATA = [
     featured: false,
     content: null,
   },
+  {
+    id: "online-sql",
+    name: "SQL 格式化",
+    description: "在线 SQL 格式化与美化工具，关键字大写、智能换行缩进，支持 SELECT/INSERT/UPDATE/DELETE/CREATE。",
+    category: "online-tools",
+    tags: ["SQL", "格式化", "美化"],
+    url: "pages/tools/sql-formatter.html",
+    icon: "🗃️",
+    featured: false,
+    content: null,
+  },
+  {
+    id: "online-regex",
+    name: "正则测试",
+    description: "在线正则表达式测试工具，实时高亮匹配结果，显示捕获组，支持 g/i/m/s 标志，内置 12 款常用模板。",
+    category: "online-tools",
+    tags: ["正则表达式", "Regex", "匹配"],
+    url: "pages/tools/regex.html",
+    icon: "🔍",
+    featured: false,
+    content: null,
+  },
 
   // ==================== 🔑 激活工具（隐藏，不展示在首页） ====================
   {

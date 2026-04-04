@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="免费在线正则表达式测试工具。实时高亮匹配结果，显示捕获组，支持 g/i/m/s 标志，内置常用正则模板，数据仅在浏览器本地处理。" />
+  <meta name="keywords" content="正则表达式,正则测试,regex,在线正则,正则匹配,开发者工具,正则表达式生成" />
+  <meta property="og:title" content="在线正则表达式测试工具 - 实时匹配高亮 | Koen的工具箱" />
+  <meta property="og:description" content="在浏览器中实时测试正则表达式，高亮显示匹配结果与捕获组，支持 g/i/m/s 标志，内置常用正则模板。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/tools/regex.html" />
+  <meta property="og:image" content="https://songyuankun.github.io/dev-tools-nav/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="在线正则表达式测试工具 - 实时匹配高亮 | Koen的工具箱" />
+  <meta name="twitter:description" content="在浏览器中实时测试正则表达式，高亮匹配结果与捕获组，内置常用正则模板。" />
+  <meta name="twitter:image" content="https://songyuankun.github.io/dev-tools-nav/assets/avatar.jpg" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/tools/regex.html" />
+  <title>在线正则表达式测试工具 - 实时匹配高亮 | Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/tools.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "在线正则表达式测试工具",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "description": "在浏览器中实时测试正则表达式，高亮显示匹配结果与捕获组，支持 g/i/m/s 标志，内置常用正则模板，本地处理不上传。",
+      "url": "https://songyuankun.github.io/dev-tools-nav/pages/tools/regex.html",
+      "author": {
+        "@type": "Person",
+        "name": "Koen"
+      },
+      "inLanguage": "zh-CN"
+    }
+  </script>
+  <script defer src="../../js/base.js"></script>
+  <style>
+    /* 正则工具专属样式 */
+    .regex-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .regex-input-row:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+    .regex-slash {
+      padding: 0 10px;
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: var(--color-primary);
+      user-select: none;
+      line-height: 42px;
+    }
+    .regex-pattern-input {
+      flex: 1;
+      height: 42px;
+      padding: 0 8px;
+      background: transparent;
+      border: none;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--text-primary);
+      outline: none;
+    }
+    .regex-flags-input {
+      width: 80px;
+      height: 42px;
+      padding: 0 8px;
+      background: transparent;
+      border-left: 1px solid var(--border-color);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--color-primary);
+      outline: none;
+    }
+    .regex-flags-help {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .regex-result-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      min-height: 80px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    .regex-match {
+      background: rgba(99, 102, 241, 0.25);
+      border-radius: 2px;
+      outline: 2px solid rgba(99, 102, 241, 0.5);
+    }
+    [data-theme="dark"] .regex-match {
+      background: rgba(99, 102, 241, 0.35);
+    }
+    .match-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .match-item {
+      background: var(--bg-page);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+    .match-item-header {
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
+    }
+    .match-group-row {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      flex-wrap: wrap;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+    .match-group-label {
+      color: var(--text-muted);
+    }
+    .match-group-value {
+      color: var(--text-primary);
+      background: var(--bg-tag);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+    .template-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .template-btn {
+      padding: 5px 12px;
+      font-size: 12px;
+      background: var(--bg-tag);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-sans);
+    }
+    .template-btn:hover {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    .replace-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .replace-input {
+      flex: 1;
+      min-width: 160px;
+      height: 38px;
+      padding: 0 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .replace-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== 顶部导航 ========== -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="javascript:void(0)" class="nav-link active" aria-current="page">在线工具</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button
+          type="button"
+          id="themeToggle"
+          class="theme-toggle"
+          aria-label="切换暗色模式"
+          title="切换暗色模式"
+        >🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="tool-page" id="main">
+    <header class="tool-page-header">
+      <h1>在线正则表达式测试</h1>
+      <p>
+        实时测试正则表达式，高亮显示所有匹配结果与捕获组。支持 <code>g</code> <code>i</code> <code>m</code> <code>s</code> 标志，内置常用正则模板，数据不会上传到服务器。
+      </p>
+    </header>
+
+    <!-- 正则输入 -->
+    <section class="tool-panel" aria-labelledby="pattern-heading">
+      <h2 id="pattern-heading" class="tool-panel-title">正则表达式</h2>
+      <div class="regex-input-row" role="group" aria-label="正则表达式输入">
+        <span class="regex-slash" aria-hidden="true">/</span>
+        <input
+          type="text"
+          id="regexPattern"
+          class="regex-pattern-input"
+          placeholder="输入正则表达式，例如：\d{3}-\d{4}"
+          spellcheck="false"
+          autocomplete="off"
+          aria-label="正则表达式模式"
+        />
+        <span class="regex-slash" aria-hidden="true">/</span>
+        <input
+          type="text"
+          id="regexFlags"
+          class="regex-flags-input"
+          value="g"
+          placeholder="flags"
+          maxlength="10"
+          spellcheck="false"
+          autocomplete="off"
+          aria-label="正则标志"
+        />
+      </div>
+      <p class="regex-flags-help">
+        标志：<code>g</code> 全局 &nbsp; <code>i</code> 忽略大小写 &nbsp; <code>m</code> 多行 &nbsp; <code>s</code> 点号匹配换行
+      </p>
+      <div id="patternError" class="tool-status tool-status-error" role="alert" style="display:none; margin-top:8px;"></div>
+    </section>
+
+    <!-- 测试字符串 -->
+    <section class="tool-panel" aria-labelledby="test-heading">
+      <h2 id="test-heading" class="tool-panel-title">测试字符串</h2>
+      <div id="highlightBox" class="regex-result-box" aria-live="polite" aria-label="匹配结果高亮显示"></div>
+      <textarea
+        id="testInput"
+        class="tool-textarea"
+        style="min-height:120px; margin-top:10px;"
+        spellcheck="false"
+        autocomplete="off"
+        placeholder="在此输入要测试的文本…"
+        aria-label="测试文本"
+      ></textarea>
+      <div id="matchStats" class="tool-status tool-status-info" role="status" style="margin-top:8px;">
+        就绪：输入正则表达式和测试字符串。
+      </div>
+    </section>
+
+    <!-- 替换 -->
+    <section class="tool-panel" aria-labelledby="replace-heading">
+      <h2 id="replace-heading" class="tool-panel-title">替换</h2>
+      <div class="replace-row">
+        <input
+          type="text"
+          id="replaceWith"
+          class="replace-input"
+          placeholder="替换为（支持 $1 $2 引用捕获组）"
+          spellcheck="false"
+          autocomplete="off"
+          aria-label="替换字符串"
+        />
+        <button type="button" class="tool-btn tool-btn-primary" id="btnReplace">执行替换</button>
+        <button type="button" class="tool-btn" id="btnCopyReplace">复制结果</button>
+      </div>
+      <pre id="replaceOutput" class="tool-result" style="margin-top:12px; min-height:60px;" tabindex="0" aria-readonly="true"></pre>
+    </section>
+
+    <!-- 匹配详情 -->
+    <section class="tool-panel" aria-labelledby="detail-heading" id="matchDetailSection" style="display:none;">
+      <h2 id="detail-heading" class="tool-panel-title">匹配详情</h2>
+      <ul class="match-list" id="matchList"></ul>
+    </section>
+
+    <!-- 常用模板 -->
+    <section class="tool-panel" aria-labelledby="tpl-heading">
+      <h2 id="tpl-heading" class="tool-panel-title">常用模板</h2>
+      <div class="template-grid" id="templateGrid"></div>
+    </section>
+
+    <nav class="tool-footer-nav" aria-label="相关在线工具">
+      <h3>相关在线工具</h3>
+      <div class="tool-footer-links">
+        <a class="tool-footer-link" href="./json.html">JSON 格式化</a>
+        <a class="tool-footer-link" href="./sql-formatter.html">SQL 格式化</a>
+        <a class="tool-footer-link" href="./base64.html">Base64 编解码</a>
+        <a class="tool-footer-link" href="./jwt.html">JWT 解码器</a>
+        <a class="tool-footer-link" href="./cron.html">Cron 生成器</a>
+        <a class="tool-footer-link" href="./timestamp.html">时间戳转换</a>
+        <a class="tool-footer-link" href="../../index.html">← 返回首页</a>
+      </div>
+    </nav>
+  </main>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" title="CSDN 博客">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+        <span class="footer-secret-hint" title="🔮 有些东西藏在暗处...">?</span>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // ============================================================
+      // 暗色模式
+      // ============================================================
+      var ThemeManager = {
+        STORAGE_KEY: "dev-tools-theme",
+        init: function () {
+          var saved = localStorage.getItem(this.STORAGE_KEY);
+          if (saved) { this.apply(saved); }
+          else { this.apply(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); }
+          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+            if (!localStorage.getItem(ThemeManager.STORAGE_KEY)) ThemeManager.apply(e.matches ? "dark" : "light");
+          });
+        },
+        apply: function (theme) {
+          document.documentElement.setAttribute("data-theme", theme);
+          var btn = document.getElementById("themeToggle");
+          if (btn) {
+            btn.textContent = theme === "dark" ? "☀️" : "🌙";
+            btn.setAttribute("title", theme === "dark" ? "切换到亮色模式" : "切换到暗色模式");
+          }
+        },
+        toggle: function () {
+          var cur = document.documentElement.getAttribute("data-theme");
+          var next = cur === "dark" ? "light" : "dark";
+          localStorage.setItem(this.STORAGE_KEY, next);
+          this.apply(next);
+        }
+      };
+
+      // ============================================================
+      // 常用正则模板
+      // ============================================================
+      var TEMPLATES = [
+        { label: "手机号", pattern: "1[3-9]\\d{9}", flags: "g", sample: "联系方式：13812345678 或 15987654321" },
+        { label: "邮箱", pattern: "[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}", flags: "gi", sample: "发送到 hello@example.com 或 support@koen.top" },
+        { label: "URL", pattern: "https?://[^\\s/$.?#].[^\\s]*", flags: "gi", sample: "访问 https://tools.songyuankun.top 或 http://example.com/path?q=1" },
+        { label: "IPv4", pattern: "\\b(?:(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\b", flags: "g", sample: "服务器 IP：192.168.1.1 和 10.0.0.255" },
+        { label: "日期 YYYY-MM-DD", pattern: "\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])", flags: "g", sample: "日期：2024-01-15 至 2024-12-31" },
+        { label: "身份证号", pattern: "[1-9]\\d{5}(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[0-9Xx]", flags: "g", sample: "证件号：110101199003077890" },
+        { label: "中文字符", pattern: "[\\u4e00-\\u9fa5]+", flags: "g", sample: "Hello 世界 World 你好" },
+        { label: "十六进制颜色", pattern: "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\\b", flags: "gi", sample: "颜色：#6366f1 #fff #FF0000" },
+        { label: "整数", pattern: "-?\\d+", flags: "g", sample: "数字 42，-100，0，9999" },
+        { label: "空行", pattern: "^\\s*$", flags: "gm", sample: "第一行\n\n\n第四行\n\n末尾" },
+        { label: "HTML 标签", pattern: "<[^>]+>", flags: "g", sample: "<div class=\"box\"><p>内容</p></div>" },
+        { label: "Java 包名", pattern: "[a-z][a-z0-9]*(\\.[a-z][a-z0-9]*)+", flags: "g", sample: "import com.example.service.UserService;" },
+      ];
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      // ============================================================
+      // 核心匹配逻辑
+      // ============================================================
+      function getRegex() {
+        var pattern = document.getElementById("regexPattern").value;
+        var flags = document.getElementById("regexFlags").value.replace(/[^gimsuy]/g, "");
+        if (!pattern) return null;
+        try {
+          return new RegExp(pattern, flags);
+        } catch (e) {
+          return { error: e.message };
+        }
+      }
+
+      function run() {
+        var patternError = document.getElementById("patternError");
+        var highlightBox = document.getElementById("highlightBox");
+        var matchStats = document.getElementById("matchStats");
+        var matchDetailSection = document.getElementById("matchDetailSection");
+        var matchList = document.getElementById("matchList");
+
+        var re = getRegex();
+        var text = document.getElementById("testInput").value;
+
+        // 清空旧结果
+        highlightBox.innerHTML = "";
+        matchList.innerHTML = "";
+        matchDetailSection.style.display = "none";
+
+        if (!re) {
+          highlightBox.textContent = text;
+          matchStats.className = "tool-status tool-status-info";
+          matchStats.textContent = "就绪：输入正则表达式和测试字符串。";
+          patternError.style.display = "none";
+          return;
+        }
+
+        if (re.error) {
+          patternError.style.display = "";
+          patternError.textContent = "正则错误：" + re.error;
+          highlightBox.textContent = text;
+          matchStats.className = "tool-status tool-status-error";
+          matchStats.textContent = "正则表达式有误，请检查。";
+          return;
+        }
+
+        patternError.style.display = "none";
+
+        if (!text) {
+          matchStats.className = "tool-status tool-status-info";
+          matchStats.textContent = "请在下方输入测试字符串。";
+          return;
+        }
+
+        // 收集所有匹配
+        var matches = [];
+        var isGlobal = re.flags.includes("g") || re.flags.includes("y");
+
+        if (isGlobal) {
+          var m;
+          re.lastIndex = 0;
+          while ((m = re.exec(text)) !== null) {
+            matches.push({ index: m.index, length: m[0].length, value: m[0], groups: Array.from(m) });
+            if (m[0].length === 0) re.lastIndex++; // 防止零宽匹配死循环
+          }
+        } else {
+          var m = re.exec(text);
+          if (m) matches.push({ index: m.index, length: m[0].length, value: m[0], groups: Array.from(m) });
+        }
+
+        // 高亮渲染
+        if (matches.length === 0) {
+          highlightBox.textContent = text;
+          matchStats.className = "tool-status tool-status-error";
+          matchStats.textContent = "未找到匹配项。";
+          return;
+        }
+
+        var html = "";
+        var last = 0;
+        matches.forEach(function (m) {
+          html += escapeHtml(text.slice(last, m.index));
+          html += '<mark class="regex-match">' + escapeHtml(text.slice(m.index, m.index + m.length)) + "</mark>";
+          last = m.index + m.length;
+        });
+        html += escapeHtml(text.slice(last));
+        highlightBox.innerHTML = html;
+
+        matchStats.className = "tool-status tool-status-success";
+        matchStats.textContent = "共找到 " + matches.length + " 个匹配项。";
+
+        // 详情列表
+        matchDetailSection.style.display = "";
+        matches.slice(0, 50).forEach(function (m, idx) {
+          var li = document.createElement("li");
+          li.className = "match-item";
+          var headerDiv = document.createElement("div");
+          headerDiv.className = "match-item-header";
+          headerDiv.textContent = "匹配 " + (idx + 1) + "：「" + m.value + "」（位置 " + m.index + " – " + (m.index + m.length) + "）";
+          li.appendChild(headerDiv);
+
+          if (m.groups.length > 1) {
+            m.groups.slice(1).forEach(function (g, gi) {
+              var row = document.createElement("div");
+              row.className = "match-group-row";
+              row.innerHTML = '<span class="match-group-label">捕获组 $' + (gi + 1) + '：</span>'
+                + '<span class="match-group-value">' + (g !== undefined ? escapeHtml(g) : '<em>undefined</em>') + "</span>";
+              li.appendChild(row);
+            });
+          }
+          matchList.appendChild(li);
+        });
+
+        if (matches.length > 50) {
+          var li = document.createElement("li");
+          li.className = "match-item";
+          li.style.color = "var(--text-muted)";
+          li.textContent = "… 还有 " + (matches.length - 50) + " 个匹配项未显示";
+          matchList.appendChild(li);
+        }
+      }
+
+      // ============================================================
+      // 替换功能
+      // ============================================================
+      document.getElementById("btnReplace").addEventListener("click", function () {
+        var re = getRegex();
+        var text = document.getElementById("testInput").value;
+        var replaceWith = document.getElementById("replaceWith").value;
+        var out = document.getElementById("replaceOutput");
+
+        if (!re || re.error) {
+          out.textContent = "正则表达式有误，无法替换。";
+          return;
+        }
+        if (!text) {
+          out.textContent = "请先输入测试字符串。";
+          return;
+        }
+        try {
+          var result = text.replace(re, replaceWith);
+          out.textContent = result;
+        } catch (e) {
+          out.textContent = "替换出错：" + e.message;
+        }
+      });
+
+      document.getElementById("btnCopyReplace").addEventListener("click", function () {
+        var text = document.getElementById("replaceOutput").textContent;
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(function () {
+          var stats = document.getElementById("matchStats");
+          var prev = stats.textContent;
+          stats.textContent = "替换结果已复制！";
+          setTimeout(function () { stats.textContent = prev; }, 2000);
+        });
+      });
+
+      // ============================================================
+      // 模板渲染
+      // ============================================================
+      var grid = document.getElementById("templateGrid");
+      TEMPLATES.forEach(function (tpl) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "template-btn";
+        btn.textContent = tpl.label;
+        btn.title = "/" + tpl.pattern + "/" + tpl.flags;
+        btn.addEventListener("click", function () {
+          document.getElementById("regexPattern").value = tpl.pattern;
+          document.getElementById("regexFlags").value = tpl.flags;
+          if (tpl.sample && !document.getElementById("testInput").value) {
+            document.getElementById("testInput").value = tpl.sample;
+          }
+          run();
+        });
+        grid.appendChild(btn);
+      });
+
+      // ============================================================
+      // 实时运行（防抖）
+      // ============================================================
+      var timer;
+      function debounceRun() {
+        clearTimeout(timer);
+        timer = setTimeout(run, 150);
+      }
+
+      document.getElementById("regexPattern").addEventListener("input", debounceRun);
+      document.getElementById("regexFlags").addEventListener("input", debounceRun);
+      document.getElementById("testInput").addEventListener("input", debounceRun);
+
+      // ============================================================
+      // 初始化
+      // ============================================================
+      ThemeManager.init();
+      document.getElementById("themeToggle").addEventListener("click", function () {
+        ThemeManager.toggle();
+      });
+    })();
+  </script>
+</body>
+</html>

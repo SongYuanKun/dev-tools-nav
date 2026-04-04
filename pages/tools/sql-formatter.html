@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="免费在线 SQL 格式化工具。自动美化 SQL 语句，关键字大写、智能缩进、换行对齐，支持 SELECT/INSERT/UPDATE/DELETE/CREATE，数据仅在浏览器本地处理。" />
+  <meta name="keywords" content="SQL格式化,SQL美化,SQL在线工具,SQL格式化工具,SQL美化工具,开发者工具" />
+  <meta property="og:title" content="在线 SQL 格式化工具 - SQL 美化与整理 | Koen的工具箱" />
+  <meta property="og:description" content="在浏览器中一键格式化 SQL 语句，关键字大写、智能换行与缩进，不上传服务器，安全快捷。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/tools/sql-formatter.html" />
+  <meta property="og:image" content="https://songyuankun.github.io/dev-tools-nav/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="在线 SQL 格式化工具 - SQL 美化与整理 | Koen的工具箱" />
+  <meta name="twitter:description" content="在浏览器中一键格式化 SQL 语句，关键字大写、智能换行与缩进。" />
+  <meta name="twitter:image" content="https://songyuankun.github.io/dev-tools-nav/assets/avatar.jpg" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/tools/sql-formatter.html" />
+  <title>在线 SQL 格式化工具 - SQL 美化与整理 | Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/tools.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "在线 SQL 格式化工具",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "description": "免费在线 SQL 格式化工具，自动美化 SQL 语句，关键字大写、智能缩进与换行，支持 SELECT/INSERT/UPDATE/DELETE/CREATE，本地处理不上传。",
+      "url": "https://songyuankun.github.io/dev-tools-nav/pages/tools/sql-formatter.html",
+      "author": {
+        "@type": "Person",
+        "name": "Koen"
+      },
+      "inLanguage": "zh-CN"
+    }
+  </script>
+  <script defer src="../../js/base.js"></script>
+</head>
+<body>
+
+  <!-- ========== 顶部导航 ========== -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="javascript:void(0)" class="nav-link active" aria-current="page">在线工具</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button
+          type="button"
+          id="themeToggle"
+          class="theme-toggle"
+          aria-label="切换暗色模式"
+          title="切换暗色模式"
+        >🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="tool-page" id="main">
+    <header class="tool-page-header">
+      <h1>在线 SQL 格式化</h1>
+      <p>
+        自动美化 SQL 语句：关键字大写、智能换行与缩进，支持 SELECT / INSERT / UPDATE / DELETE / CREATE 等常见语句。数据不会上传到服务器。
+      </p>
+    </header>
+
+    <section class="tool-panel" aria-labelledby="input-heading">
+      <h2 id="input-heading" class="tool-panel-title">输入</h2>
+      <label class="tool-label" for="sqlInput">原始 SQL 语句</label>
+      <textarea
+        id="sqlInput"
+        class="tool-textarea"
+        style="min-height:180px;"
+        spellcheck="false"
+        autocomplete="off"
+        placeholder="例如：select u.id,u.name,o.amount from users u left join orders o on u.id=o.user_id where u.status=1 order by o.amount desc limit 10"
+        aria-describedby="statusMsg"
+      ></textarea>
+      <div class="tool-row" style="margin-top:12px; align-items:center; flex-wrap:wrap; gap:16px;">
+        <label class="tool-label" style="margin:0; display:flex; align-items:center; gap:6px; cursor:pointer; font-weight:400;">
+          <input type="checkbox" id="upperKeywords" checked style="width:15px;height:15px;accent-color:var(--color-primary);" />
+          关键字大写
+        </label>
+        <label class="tool-label" style="margin:0; display:flex; align-items:center; gap:6px; cursor:pointer; font-weight:400;">
+          <input type="checkbox" id="indentSubquery" checked style="width:15px;height:15px;accent-color:var(--color-primary);" />
+          子查询缩进
+        </label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <label class="tool-label" style="margin:0;" for="indentSize">缩进</label>
+          <select id="indentSize" class="tool-select" aria-label="缩进空格数" style="width:auto;">
+            <option value="2">2 空格</option>
+            <option value="4" selected>4 空格</option>
+          </select>
+        </div>
+      </div>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn tool-btn-primary" id="btnFormat">格式化</button>
+        <button type="button" class="tool-btn" id="btnMinify">压缩（单行）</button>
+        <button type="button" class="tool-btn" id="btnCopy">复制结果</button>
+        <button type="button" class="tool-btn tool-btn-danger" id="btnClear">清空</button>
+      </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="output-heading">
+      <h2 id="output-heading" class="tool-panel-title">输出</h2>
+      <div id="statusMsg" class="tool-status tool-status-info" role="status">
+        <span>就绪：请输入 SQL 语句后点击格式化。</span>
+      </div>
+      <label class="tool-label" for="sqlOutput">结果</label>
+      <pre id="sqlOutput" class="tool-result" tabindex="0" aria-readonly="true" style="min-height:120px;"></pre>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="examples-heading">
+      <h2 id="examples-heading" class="tool-panel-title">快速示例</h2>
+      <div class="tool-row" style="flex-wrap:wrap; gap:8px;">
+        <button type="button" class="tool-btn tool-btn-sm" data-example="select">SELECT 查询</button>
+        <button type="button" class="tool-btn tool-btn-sm" data-example="join">JOIN 联表</button>
+        <button type="button" class="tool-btn tool-btn-sm" data-example="insert">INSERT</button>
+        <button type="button" class="tool-btn tool-btn-sm" data-example="update">UPDATE</button>
+        <button type="button" class="tool-btn tool-btn-sm" data-example="create">CREATE TABLE</button>
+      </div>
+    </section>
+
+    <nav class="tool-footer-nav" aria-label="相关在线工具">
+      <h3>相关在线工具</h3>
+      <div class="tool-footer-links">
+        <a class="tool-footer-link" href="./json.html">JSON 格式化</a>
+        <a class="tool-footer-link" href="./regex.html">正则测试</a>
+        <a class="tool-footer-link" href="./jwt.html">JWT 解码器</a>
+        <a class="tool-footer-link" href="./base64.html">Base64 编解码</a>
+        <a class="tool-footer-link" href="./timestamp.html">时间戳转换</a>
+        <a class="tool-footer-link" href="../../index.html">← 返回首页</a>
+      </div>
+    </nav>
+  </main>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" title="CSDN 博客">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+        <span class="footer-secret-hint" title="🔮 有些东西藏在暗处...">?</span>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // ============================================================
+      // 暗色模式
+      // ============================================================
+      var ThemeManager = {
+        STORAGE_KEY: "dev-tools-theme",
+        init: function () {
+          var saved = localStorage.getItem(this.STORAGE_KEY);
+          if (saved) {
+            this.apply(saved);
+          } else {
+            this.apply(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          }
+          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+            if (!localStorage.getItem(ThemeManager.STORAGE_KEY)) ThemeManager.apply(e.matches ? "dark" : "light");
+          });
+        },
+        apply: function (theme) {
+          document.documentElement.setAttribute("data-theme", theme);
+          var btn = document.getElementById("themeToggle");
+          if (btn) {
+            btn.textContent = theme === "dark" ? "☀️" : "🌙";
+            btn.setAttribute("title", theme === "dark" ? "切换到亮色模式" : "切换到暗色模式");
+          }
+        },
+        toggle: function () {
+          var cur = document.documentElement.getAttribute("data-theme");
+          var next = cur === "dark" ? "light" : "dark";
+          localStorage.setItem(this.STORAGE_KEY, next);
+          this.apply(next);
+        }
+      };
+
+      // ============================================================
+      // SQL 格式化核心逻辑
+      // ============================================================
+
+      // 需要独占一行（前后换行）的顶级关键字
+      var NEWLINE_KEYWORDS = [
+        "SELECT", "FROM", "WHERE", "GROUP BY", "HAVING", "ORDER BY", "LIMIT",
+        "OFFSET", "UNION ALL", "UNION", "INTERSECT", "EXCEPT",
+        "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN", "INNER JOIN", "CROSS JOIN",
+        "LEFT OUTER JOIN", "RIGHT OUTER JOIN", "JOIN",
+        "INSERT INTO", "VALUES",
+        "UPDATE", "SET",
+        "DELETE FROM", "DELETE",
+        "CREATE TABLE", "CREATE INDEX", "CREATE VIEW", "CREATE OR REPLACE VIEW",
+        "ALTER TABLE", "DROP TABLE", "DROP INDEX",
+        "ON", "AND", "OR",
+        "CASE", "WHEN", "THEN", "ELSE", "END",
+        "WITH",
+      ];
+
+      // 所有关键字（用于大写转换）
+      var ALL_KEYWORDS = NEWLINE_KEYWORDS.concat([
+        "AS", "IN", "NOT IN", "IS NULL", "IS NOT NULL", "NOT", "BETWEEN",
+        "LIKE", "ILIKE", "EXISTS", "NOT EXISTS", "DISTINCT", "ALL", "ANY",
+        "ASC", "DESC", "NULLS FIRST", "NULLS LAST",
+        "PRIMARY KEY", "FOREIGN KEY", "REFERENCES", "NOT NULL", "UNIQUE",
+        "DEFAULT", "AUTO_INCREMENT", "AUTOINCREMENT",
+        "INT", "INTEGER", "BIGINT", "VARCHAR", "TEXT", "CHAR", "BOOLEAN",
+        "FLOAT", "DOUBLE", "DECIMAL", "DATE", "DATETIME", "TIMESTAMP",
+        "IF NOT EXISTS", "IF EXISTS",
+        "COUNT", "SUM", "AVG", "MAX", "MIN", "COALESCE", "NULLIF", "CAST",
+        "CONCAT", "LENGTH", "TRIM", "UPPER", "LOWER", "SUBSTRING", "NOW",
+        "TRUE", "FALSE", "NULL",
+        "BY", "INTO", "TABLE", "INDEX", "VIEW",
+      ]);
+
+      // 按关键字长度降序排序，确保先匹配较长的组合关键字
+      ALL_KEYWORDS.sort(function (a, b) { return b.length - a.length; });
+      NEWLINE_KEYWORDS.sort(function (a, b) { return b.length - a.length; });
+
+      /**
+       * 将 SQL 文本分割为 token 列表
+       * token 类型：keyword | string | comment | number | whitespace | other
+       */
+      function tokenize(sql) {
+        var tokens = [];
+        var i = 0;
+        var len = sql.length;
+
+        while (i < len) {
+          // 单行注释 --
+          if (sql[i] === "-" && sql[i + 1] === "-") {
+            var j = i;
+            while (j < len && sql[j] !== "\n") j++;
+            tokens.push({ type: "comment", value: sql.slice(i, j) });
+            i = j;
+            continue;
+          }
+          // 块注释 /* ... */
+          if (sql[i] === "/" && sql[i + 1] === "*") {
+            var end = sql.indexOf("*/", i + 2);
+            if (end === -1) end = len - 2;
+            tokens.push({ type: "comment", value: sql.slice(i, end + 2) });
+            i = end + 2;
+            continue;
+          }
+          // 字符串 '...' 或 "..."
+          if (sql[i] === "'" || sql[i] === '"' || sql[i] === "`") {
+            var quote = sql[i];
+            var j = i + 1;
+            while (j < len) {
+              if (sql[j] === "\\" ) { j += 2; continue; }
+              if (sql[j] === quote) { j++; break; }
+              j++;
+            }
+            tokens.push({ type: "string", value: sql.slice(i, j) });
+            i = j;
+            continue;
+          }
+          // 空白
+          if (/\s/.test(sql[i])) {
+            var j = i;
+            while (j < len && /\s/.test(sql[j])) j++;
+            tokens.push({ type: "whitespace", value: sql.slice(i, j) });
+            i = j;
+            continue;
+          }
+          // 数字
+          if (/[0-9]/.test(sql[i]) || (sql[i] === "." && /[0-9]/.test(sql[i + 1] || ""))) {
+            var j = i;
+            while (j < len && /[0-9.]/.test(sql[j])) j++;
+            tokens.push({ type: "number", value: sql.slice(i, j) });
+            i = j;
+            continue;
+          }
+          // 尝试匹配关键字（word boundary）
+          var matched = false;
+          for (var k = 0; k < ALL_KEYWORDS.length; k++) {
+            var kw = ALL_KEYWORDS[k];
+            var slice = sql.slice(i, i + kw.length);
+            if (slice.toUpperCase() === kw) {
+              // 确认前后是单词边界
+              var before = i > 0 ? sql[i - 1] : " ";
+              var after = sql[i + kw.length] || " ";
+              var isBoundBefore = !/[a-zA-Z0-9_]/.test(before);
+              var isBoundAfter = !/[a-zA-Z0-9_]/.test(after);
+              if (isBoundBefore && isBoundAfter) {
+                tokens.push({ type: "keyword", value: slice, keyword: kw });
+                i += kw.length;
+                matched = true;
+                break;
+              }
+            }
+          }
+          if (matched) continue;
+          // 标识符或其他字符
+          var j = i;
+          while (j < len && /[a-zA-Z0-9_.$]/.test(sql[j])) j++;
+          if (j > i) {
+            tokens.push({ type: "ident", value: sql.slice(i, j) });
+            i = j;
+          } else {
+            tokens.push({ type: "other", value: sql[i] });
+            i++;
+          }
+        }
+        return tokens;
+      }
+
+      function formatSQL(sql, opts) {
+        var upperKw = opts.upperKeywords;
+        var indent = opts.indent; // 缩进字符串
+        var indentSubquery = opts.indentSubquery;
+
+        var tokens = tokenize(sql);
+        var result = "";
+        var depth = 0;
+        var lineStart = true;
+
+        // 过滤掉空白 token（我们自己控制空白）
+        var meaningful = tokens.filter(function (t) { return t.type !== "whitespace"; });
+
+        for (var i = 0; i < meaningful.length; i++) {
+          var tok = meaningful[i];
+
+          if (tok.type === "other" && tok.value === "(") {
+            if (indentSubquery) depth++;
+            result += "(";
+            lineStart = false;
+            continue;
+          }
+          if (tok.type === "other" && tok.value === ")") {
+            if (indentSubquery && depth > 0) depth--;
+            result += ")";
+            lineStart = false;
+            continue;
+          }
+
+          if (tok.type === "keyword") {
+            var kw = tok.keyword;
+            var display = upperKw ? kw : tok.value;
+
+            // 判断是否是换行关键字
+            var isNewline = false;
+            for (var n = 0; n < NEWLINE_KEYWORDS.length; n++) {
+              if (NEWLINE_KEYWORDS[n] === kw) { isNewline = true; break; }
+            }
+
+            if (isNewline) {
+              // 不是第一个 token 时，前面加换行
+              if (result.length > 0) {
+                result += "\n";
+                for (var d = 0; d < depth; d++) result += indent;
+              }
+              result += display;
+              result += " ";
+              lineStart = false;
+              continue;
+            }
+
+            result += display + " ";
+            lineStart = false;
+            continue;
+          }
+
+          if (tok.type === "comment") {
+            if (result.length > 0 && !lineStart) result += "\n";
+            for (var d = 0; d < depth; d++) result += indent;
+            result += tok.value + "\n";
+            lineStart = true;
+            continue;
+          }
+
+          if (tok.type === "other" && tok.value === ",") {
+            // 逗号后不换行，保留在当前行（SELECT 字段列表）
+            result = result.trimEnd();
+            result += ", ";
+            lineStart = false;
+            continue;
+          }
+
+          if (tok.type === "other" && tok.value === ";") {
+            result = result.trimEnd();
+            result += ";\n";
+            lineStart = true;
+            continue;
+          }
+
+          result += tok.value;
+          if (tok.type !== "other") result += " ";
+          lineStart = false;
+        }
+
+        return result.trim();
+      }
+
+      function minifySQL(sql) {
+        var tokens = tokenize(sql);
+        var parts = [];
+        for (var i = 0; i < tokens.length; i++) {
+          var t = tokens[i];
+          if (t.type === "comment") continue;
+          if (t.type === "whitespace") {
+            parts.push(" ");
+          } else {
+            parts.push(t.value);
+          }
+        }
+        return parts.join("").replace(/\s+/g, " ").trim();
+      }
+
+      // ============================================================
+      // 示例数据
+      // ============================================================
+      var EXAMPLES = {
+        "select": "select u.id, u.name, u.email, count(o.id) as order_count from users u left join orders o on u.id = o.user_id where u.status = 1 and u.created_at >= '2024-01-01' group by u.id, u.name, u.email having count(o.id) > 0 order by order_count desc limit 20",
+        "join": "select p.id, p.title, c.name as category, a.username as author from posts p inner join categories c on p.category_id = c.id inner join users a on p.author_id = a.id left join post_tags pt on p.id = pt.post_id left join tags t on pt.tag_id = t.id where p.status = 'published' and p.deleted_at is null order by p.created_at desc",
+        "insert": "insert into orders (user_id, product_id, quantity, amount, status, created_at) values (1001, 2003, 2, 199.00, 'pending', now())",
+        "update": "update products set stock = stock - 1, updated_at = now() where id = 2003 and stock > 0 and status = 'on_sale'",
+        "create": "create table if not exists users (id bigint primary key auto_increment, username varchar(64) not null unique, email varchar(128) not null unique, password_hash varchar(255) not null, status tinyint not null default 1, created_at datetime not null default now(), updated_at datetime not null default now())"
+      };
+
+      // ============================================================
+      // UI 交互
+      // ============================================================
+      function getOpts() {
+        var indentSize = parseInt(document.getElementById("indentSize").value, 10) || 4;
+        return {
+          upperKeywords: document.getElementById("upperKeywords").checked,
+          indentSubquery: document.getElementById("indentSubquery").checked,
+          indent: " ".repeat(indentSize),
+        };
+      }
+
+      function getInput() {
+        return (document.getElementById("sqlInput").value || "").trim();
+      }
+
+      function setOutput(text) {
+        var out = document.getElementById("sqlOutput");
+        if (out) out.textContent = text;
+      }
+
+      function setStatus(kind, text) {
+        var el = document.getElementById("statusMsg");
+        if (!el) return;
+        el.className = "tool-status";
+        if (kind === "ok") el.classList.add("tool-status-success");
+        else if (kind === "err") el.classList.add("tool-status-error");
+        else el.classList.add("tool-status-info");
+        el.textContent = text;
+      }
+
+      document.getElementById("btnFormat").addEventListener("click", function () {
+        var sql = getInput();
+        if (!sql) { setStatus("err", "请先输入 SQL 语句。"); return; }
+        var opts = getOpts();
+        var result = formatSQL(sql, opts);
+        setOutput(result);
+        setStatus("ok", "格式化完成。");
+      });
+
+      document.getElementById("btnMinify").addEventListener("click", function () {
+        var sql = getInput();
+        if (!sql) { setStatus("err", "请先输入 SQL 语句。"); return; }
+        var result = minifySQL(sql);
+        setOutput(result);
+        setStatus("ok", "已压缩为单行。");
+      });
+
+      document.getElementById("btnCopy").addEventListener("click", function () {
+        var out = document.getElementById("sqlOutput");
+        var text = out ? out.textContent : "";
+        if (!text) { setStatus("err", "输出为空，无法复制。"); return; }
+        navigator.clipboard.writeText(text).then(function () {
+          setStatus("ok", "已复制到剪贴板！");
+        }).catch(function () {
+          setStatus("err", "复制失败，请手动选中复制。");
+        });
+      });
+
+      document.getElementById("btnClear").addEventListener("click", function () {
+        document.getElementById("sqlInput").value = "";
+        setOutput("");
+        setStatus("info", "就绪：请输入 SQL 语句后点击格式化。");
+      });
+
+      // 示例按钮
+      document.querySelectorAll("[data-example]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var key = btn.getAttribute("data-example");
+          var sql = EXAMPLES[key];
+          if (sql) {
+            document.getElementById("sqlInput").value = sql;
+            setStatus("info", "示例已填入，点击「格式化」查看效果。");
+            setOutput("");
+          }
+        });
+      });
+
+      // 初始化
+      ThemeManager.init();
+      document.getElementById("themeToggle").addEventListener("click", function () {
+        ThemeManager.toggle();
+      });
+
+      // 自动格式化（输入防抖）
+      var debounceTimer;
+      document.getElementById("sqlInput").addEventListener("input", function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () {
+          var sql = (document.getElementById("sqlInput").value || "").trim();
+          if (!sql) { setOutput(""); setStatus("info", "就绪：请输入 SQL 语句后点击格式化。"); return; }
+          var result = formatSQL(sql, getOpts());
+          setOutput(result);
+          setStatus("ok", "格式化完成。");
+        }, 300);
+      });
+    })();
+  </script>
+
+  <style>
+    .tool-btn-sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+  </style>
+</body>
+</html>
