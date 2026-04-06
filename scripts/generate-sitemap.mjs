@@ -3,7 +3,7 @@ import path from "node:path";
 import vm from "node:vm";
 
 const ROOT = process.cwd();
-const BASE_URL = "https://songyuankun.github.io/dev-tools-nav";
+const BASE_URL = "https://tools.songyuankun.top";
 
 function readToolsData() {
   const filePath = path.join(ROOT, "data", "tools.js");
@@ -46,6 +46,18 @@ function main() {
   );
   const now = new Date().toISOString().slice(0, 10);
 
+  // 自动扫描 pages/blog/ 下的所有 HTML 文章（除 index.html）
+  const blogDir = path.join(ROOT, "pages", "blog");
+  const blogUrls = fs.existsSync(blogDir)
+    ? fs.readdirSync(blogDir)
+        .filter((f) => f.endsWith(".html") && f !== "index.html")
+        .map((f) => ({
+          loc: `${BASE_URL}/pages/blog/${f}`,
+          changefreq: "monthly",
+          priority: "0.75",
+        }))
+    : [];
+
   const staticUrls = [
     { loc: `${BASE_URL}/`, changefreq: "daily", priority: "1.0" },
     { loc: `${BASE_URL}/pages/about.html`, changefreq: "weekly", priority: "0.8" },
@@ -53,8 +65,7 @@ function main() {
     { loc: `${BASE_URL}/pages/jrebel.html`, changefreq: "daily", priority: "0.7" },
     { loc: `${BASE_URL}/pages/products.html`, changefreq: "monthly", priority: "0.6" },
     { loc: `${BASE_URL}/pages/blog/index.html`, changefreq: "weekly", priority: "0.9" },
-    { loc: `${BASE_URL}/pages/blog/why-build-dev-tools-nav.html`, changefreq: "monthly", priority: "0.7" },
-    { loc: `${BASE_URL}/pages/blog/ai-free-tokens-handbook.html`, changefreq: "monthly", priority: "0.75" },
+    ...blogUrls,
     { loc: `${BASE_URL}/pages/tools/json.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/timestamp.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/cron.html`, changefreq: "monthly", priority: "0.8" },

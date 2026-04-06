@@ -28,6 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Build blog posts from Markdown
+        run: node scripts/build-blog.mjs
+
       - name: Generate dynamic sitemap
         run: node scripts/generate-sitemap.mjs
 
@@ -45,6 +48,7 @@ jobs:
             --exclude='README.md' \
             --exclude='.gitignore' \
             --exclude='docs' \
+            --exclude='content' \
             --exclude='package.json' \
             --exclude='package-lock.json' \
             --exclude='deploy.sh' \
