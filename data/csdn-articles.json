@@ -1,7 +1,15 @@
 {
-  "updatedAt": "2026-04-07T02:33:47Z",
+  "updatedAt": "2026-04-07T13:22:13Z",
   "source": "https://blog.csdn.net/syk123839070/rss/list",
   "items": [
+    {
+      "title": "没有最强的 LLM 了：把 Claude 4.6、GPT-5.4、Gemini 3.1 Pro 放进一个路由器",
+      "description": "2026年，三大前沿AI模型（Claude 4.6、GPT-5.4、Gemini 3.1 Pro）在各自领域展现出差异化优势：Claude擅长代码质量，GPT-5.4在Agent执行上领先，Gemini在推理和长上下文表现突出。文章提出基于任务类型、上下文长度、预算和延迟需求的路由策略，并提供了Python实现示例。建议开发者根据业务场景特点建立模型组合，而非依赖单一模型，以优化成本和质量。同时…",
+      "url": "https://blog.csdn.net/syk123839070/article/details/159929639",
+      "date": "2026-04-07",
+      "platform": "CSDN",
+      "tags": []
+    },
     {
       "title": "状态驱动的图计算架构解析",
       "description": "通过上述拆解，该工作流的核心算法逻辑可概括为“基于类型化状态的、由条件路由函数控制的、模块化节点图”。可维护性：业务逻辑被分解为独立的节点，修改不会影响。路由逻辑集中，流程一目了然。可观测性：所有状态变更都记录在中，结合和 LangSmith 等工具，可以完整追溯每次调用的执行路径和中间状态。可扩展性：新增一个业务场景（如“优惠券查询”），只需：1) 在状态中增加字段（可选）；2) 实现新的节点…",
@@ -151,14 +159,6 @@
       "description": "1、在Jenkins中使用sonar-scanner出现报错。 报错信息 java.lang.IllegalStateException: No files nor directories matching 'target/' 在网上找到的很多资料都将配置文件配置错了。附上本人的sonar-project.propertiessonar.projectKey=project sonar...",
       "url": "https://blog.csdn.net/syk123839070/article/details/79483873",
       "date": "2018-03-08",
-      "platform": "CSDN",
-      "tags": []
-    },
-    {
-      "title": "Nexus Repository OSS3.x搭建步骤",
-      "description": "1.环境oss3.x版本需要jdk1.8及以上版本作为运行环境1.安装1.首先在官网下载运行文件2.将下载好的文件放入到服务器的目录并解压tar xvzf /usr/nexus-3.9.0-01-unix.tar.gz解压后的文件列表2.启动2.1.解压后进入nexus的目录并执行启动命令bin/nexus startWARNING: ******************************…",
-      "url": "https://blog.csdn.net/syk123839070/article/details/79454172",
-      "date": "2018-03-06",
       "platform": "CSDN",
       "tags": []
     }
