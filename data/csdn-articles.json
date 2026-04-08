@@ -1,7 +1,15 @@
 {
-  "updatedAt": "2026-04-08T02:34:16Z",
+  "updatedAt": "2026-04-08T13:23:12Z",
   "source": "https://blog.csdn.net/syk123839070/rss/list",
   "items": [
+    {
+      "title": "GLM-5.1 涨价：国产大模型告别“白菜价“，开发者该怎么选？",
+      "description": "国产大模型GLM-5.1发布并涨价10%，累计涨幅超80%，标志着国产AI从低价补贴转向价值定价。该模型采用MoE架构和华为昇腾芯片，编程能力全球第三，支持8小时持续Agent任务。虽然官方定价仍低于海外竞品，但企业级价格已接近国际水平。同期DeepSeek等厂商保持低价策略，显示国产模型市场开始分层。涨价反映算力成本上升、技术能力提升和目标客户转向企业市场。开发者需根据项目需求，在高端性能与性…",
+      "url": "https://blog.csdn.net/syk123839070/article/details/159966067",
+      "date": "2026-04-08",
+      "platform": "CSDN",
+      "tags": []
+    },
     {
       "title": "没有最强的 LLM 了：把 Claude 4.6、GPT-5.4、Gemini 3.1 Pro 放进一个路由器",
       "description": "2026年，三大前沿AI模型（Claude 4.6、GPT-5.4、Gemini 3.1 Pro）在各自领域展现出差异化优势：Claude擅长代码质量，GPT-5.4在Agent执行上领先，Gemini在推理和长上下文表现突出。文章提出基于任务类型、上下文长度、预算和延迟需求的路由策略，并提供了Python实现示例。建议开发者根据业务场景特点建立模型组合，而非依赖单一模型，以优化成本和质量。同时…",
@@ -151,14 +159,6 @@
       "description": "1、环境 centos6.5； jdk1.8；需要配置环境变量 tomcat8； maven3；需要配置环境变量2、Jenkins服务安装 去Jenkins官网下载https://jenkins.io/download/，下载war包即可。将下载好的war包放入tomcat中，启动tomcat。日志中会显示一串密码浏览器打开http://ip:端口号/jenkins将...",
       "url": "https://blog.csdn.net/syk123839070/article/details/79488105",
       "date": "2018-03-09",
-      "platform": "CSDN",
-      "tags": []
-    },
-    {
-      "title": "Jenkins+sonarqube+sonar-scanner持续集成遇到的问题",
-      "description": "1、在Jenkins中使用sonar-scanner出现报错。 报错信息 java.lang.IllegalStateException: No files nor directories matching 'target/' 在网上找到的很多资料都将配置文件配置错了。附上本人的sonar-project.propertiessonar.projectKey=project sonar...",
-      "url": "https://blog.csdn.net/syk123839070/article/details/79483873",
-      "date": "2018-03-08",
       "platform": "CSDN",
       "tags": []
     }
