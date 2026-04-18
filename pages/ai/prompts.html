@@ -178,7 +178,7 @@
             p.tools.forEach((toolId) => {
               const info = AI_TOOL_INFO[toolId];
               if (info) {
-                html += `<span class="prompt-tool-badge">${info.icon} ${escapeHtml(info.name)}</span>`;
+                html += `<span class="prompt-tool-badge"><img src="${info.icon}" alt="${escapeHtml(info.name)}" class="tool-favicon-xs" loading="lazy" /> ${escapeHtml(info.name)}</span>`;
               }
             });
             html += `</div>`;

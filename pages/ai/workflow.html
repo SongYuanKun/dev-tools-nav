@@ -134,7 +134,7 @@
             step.tools.forEach((toolId) => {
               const info = AI_TOOL_INFO[toolId];
               if (!info) return;
-              html += `<a href="../../index.html" class="workflow-tool-tag">${info.icon} ${escapeHtml(info.name)}</a>`;
+              html += `<a href="../../index.html" class="workflow-tool-tag"><img src="${info.icon}" alt="${escapeHtml(info.name)}" class="tool-favicon-sm" loading="lazy" /> ${escapeHtml(info.name)}</a>`;
             });
             html += `</div>`;
 

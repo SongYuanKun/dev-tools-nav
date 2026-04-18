@@ -143,7 +143,7 @@
               const color = getScoreColor(score);
 
               html += `<div class="compare-score-row">`;
-              html += `<span class="compare-score-name"><span class="tool-emoji">${info.icon}</span> ${escapeHtml(info.name)}</span>`;
+              html += `<span class="compare-score-name"><img src="${info.icon}" alt="${escapeHtml(info.name)}" class="tool-favicon" loading="lazy" /> ${escapeHtml(info.name)}</span>`;
               html += `<div class="compare-score-bar-bg"><div class="compare-score-bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
               html += `<span class="compare-score-value" style="color:${color}">${score}</span>`;
               html += `</div>`;

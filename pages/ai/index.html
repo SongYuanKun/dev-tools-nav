@@ -230,7 +230,7 @@
 
         AI_PRICING_DATA.forEach((item) => {
           html += `<tr>
-            <td class="pricing-name">${item.icon} ${escapeHtml(item.name)}</td>
+            <td class="pricing-name"><img src="${item.icon}" alt="${escapeHtml(item.name)}" class="tool-favicon-sm" loading="lazy" /> ${escapeHtml(item.name)}</td>
             <td class="pricing-free">${escapeHtml(item.free)}</td>
             <td class="pricing-paid">${escapeHtml(item.paid)}</td>
             <td class="pricing-highlight">${escapeHtml(item.highlight)}</td>

@@ -207,11 +207,36 @@
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .compare-score-name .tool-emoji {
   font-size: 16px;
+}
+
+/* 品牌 Favicon 图标 */
+.tool-favicon {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.tool-favicon-sm {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.tool-favicon-xs {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  vertical-align: middle;
+  flex-shrink: 0;
 }
 
 .compare-score-bar-bg {
@@ -369,7 +394,7 @@
 .workflow-tool-tag {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 500;
@@ -630,6 +655,9 @@
 .pricing-name {
   font-weight: 600;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .pricing-free {
