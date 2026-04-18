@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="AI 专题 - 深度横评、场景工作流、Prompt模板库、新手入门，帮你选出最适合的 AI 工具" />
+  <meta property="og:title" content="AI 专题 · Koen的工具箱" />
+  <meta property="og:description" content="主流 AI 工具深度横评、场景化工作流、Prompt 模板库、新手入门指南" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/ai/index.html" />
+  <meta property="og:image" content="https://songyuankun.github.io/dev-tools-nav/assets/avatar.jpg" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/ai/index.html" />
+  <title>AI 专题 · Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/ai-topic.css" />
+  <script defer src="../../js/base.js"></script>
+</head>
+<body>
+
+  <!-- ========== 顶部导航 ========== -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="index.html" class="nav-link active">AI 专题</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== 主内容 ========== -->
+  <main class="main-content">
+
+    <!-- 面包屑 -->
+    <nav class="ai-page-nav" aria-label="面包屑">
+      <a href="../../index.html">首页</a>
+      <span class="separator">›</span>
+      <span class="current">AI 专题</span>
+    </nav>
+
+    <!-- Hero -->
+    <section class="ai-hero">
+      <span class="ai-hero-icon">🤖</span>
+      <h1 class="ai-hero-title">AI 专题</h1>
+      <p class="ai-hero-desc">不止罗列工具，更有深度横评、场景工作流、Prompt 模板库和新手入门指南。帮你选出最适合的 AI 工具，用最高效的方式完成工作。</p>
+    </section>
+
+    <!-- ========== 专题入口卡片 ========== -->
+    <section>
+      <h2 style="font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:20px;">探索专题</h2>
+      <div class="ai-topic-grid" id="topicGrid">
+        <!-- 由 JS 渲染 -->
+      </div>
+    </section>
+
+    <!-- ========== AI 工具速查表 ========== -->
+    <section style="margin-top:32px;">
+      <h2 style="font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:8px;">🔍 场景速查：我该用哪个 AI？</h2>
+      <p style="color:var(--text-secondary);margin-bottom:16px;font-size:14px;">不知道选什么？根据你的场景直接查表</p>
+      <div class="ai-lookup-grid" id="lookupGrid"></div>
+    </section>
+
+    <!-- ========== AI 价格一览 ========== -->
+    <section style="margin-top:32px;">
+      <h2 style="font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:8px;">💰 AI 工具价格一览</h2>
+      <p style="color:var(--text-secondary);margin-bottom:16px;font-size:14px;">数据整理自各工具官网，价格可能变动，仅供参考</p>
+      <div class="pricing-table-wrap">
+        <table class="pricing-table" id="pricingTable">
+          <!-- 由 JS 渲染 -->
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== 如何选择 AI 工具 ========== -->
+    <section class="about-section" style="margin-top:32px;">
+      <h2 class="about-section-title">如何选择 AI 工具？</h2>
+      <div class="about-story">
+        <p>市面上 AI 工具越来越多，选择困难症犯了？记住这三个原则：</p>
+        <p><strong>1. 先明确场景</strong> — 你是要写代码、写文章、还是做设计？不同场景的最佳工具完全不同。看上面的速查表就行。</p>
+        <p><strong>2. 先免费后付费</strong> — DeepSeek 免费无限用，先把免费工具的能力摸透，再考虑是否需要付费升级。别一上来就花 $20/月。</p>
+        <p><strong>3. 工具组合 > 单一神器</strong> — 没有"万能 AI"。写代码用 Cursor，写长文用 Claude，做设计用 Midjourney，组合使用效果最好。</p>
+        <p style="margin-top:12px;font-size:13px;color:var(--text-secondary);">💡 完全零基础？先看 <a href="beginner.html" style="color:var(--color-primary);">AI 新手入门指南</a></p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="index.html">AI 专题</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../../data/ai-compare.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>
+    (function () {
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      // ====== 专题卡片 ======
+      function renderTopics() {
+        const grid = document.getElementById("topicGrid");
+        if (!grid) return;
+
+        const topics = [
+          {
+            icon: "⚖️",
+            title: "AI 工具横评对比",
+            desc: "6 大类 AI 工具深度对比：对话模型、编程工具、绘图、搜索、视频、翻译，按真实场景打分，用数据帮你做选择。",
+            href: "compare.html",
+            badges: ["6组横评", "DeepSeek", "ChatGPT", "Claude", "Cursor", "Midjourney"],
+          },
+          {
+            icon: "🗺️",
+            title: "场景化工作流",
+            desc: "6 大场景的 AI 工具组合方案：独立开发、内容创作、日常效率、设计、数据分析、学术研究。含实战 Prompt 模板。",
+            href: "workflow.html",
+            badges: ["6个场景", "独立开发", "内容创作", "数据分析"],
+          },
+          {
+            icon: "📋",
+            title: "Prompt 模板库",
+            desc: "精选 20+ 高质量 Prompt 模板，覆盖编程、写作、设计、数据分析等场景。一键复制，直接粘贴到任何 AI 使用。",
+            href: "prompts.html",
+            badges: ["20+ 模板", "一键复制", "6 大分类"],
+          },
+          {
+            icon: "🌱",
+            title: "AI 新手入门",
+            desc: "零基础？4 步上手 AI 工具。基础概念速通 + 避坑指南 + 按身份推荐学习路径，30 分钟从零到会用。",
+            href: "beginner.html",
+            badges: ["4步上手", "避坑指南", "6条路径"],
+          },
+        ];
+
+        grid.innerHTML = topics
+          .map(
+            (t) => `
+          <a href="${t.href}" class="ai-topic-card">
+            <span class="ai-topic-icon">${t.icon}</span>
+            <h3 class="ai-topic-title">${escapeHtml(t.title)}</h3>
+            <p class="ai-topic-desc">${escapeHtml(t.desc)}</p>
+            <div class="ai-topic-meta">
+              <div class="ai-topic-tools">
+                ${t.badges.map((b) => `<span class="ai-topic-tool-badge">${escapeHtml(b)}</span>`).join("")}
+              </div>
+              <span class="ai-topic-arrow">→</span>
+            </div>
+          </a>
+        `
+          )
+          .join("");
+      }
+
+      // ====== 场景速查 ======
+      function renderLookup() {
+        const grid = document.getElementById("lookupGrid");
+        if (!grid) return;
+
+        const lookupData = [
+          { scene: "写代码", icon: "💻", best: "DeepSeek + Cursor", reason: "DeepSeek 推理强 + Cursor 项目理解强", free: "DeepSeek 免费" },
+          { scene: "写文章", icon: "📝", best: "Claude + DeepSeek", reason: "Claude 文笔自然 + DeepSeek 技术分析专业", free: "DeepSeek 免费" },
+          { scene: "做设计", icon: "🎨", best: "Midjourney + Ideogram", reason: "Midjourney 画质顶 + Ideogram 文字渲染准", free: "Ideogram 有免费额度" },
+          { scene: "搜资料", icon: "🔍", best: "Perplexity + Kimi", reason: "Perplexity 来源严谨 + Kimi 中文搜索好", free: "Kimi 免费" },
+          { scene: "做视频", icon: "🎬", best: "可灵 + Runway", reason: "可灵中文友好 + Runway 控制专业", free: "可灵有免费体验" },
+          { scene: "翻译文档", icon: "🌐", best: "DeepSeek + 沉浸式翻译", reason: "DeepSeek 技术翻译准 + 沉浸式网页翻译方便", free: "都免费" },
+          { scene: "学技术", icon: "🎓", best: "DeepSeek + Claude", reason: "DeepSeek 讲解清晰 + Claude 擅长长文梳理", free: "DeepSeek 免费" },
+          { scene: "做PPT", icon: "📊", best: "ChatGPT + Gamma", reason: "ChatGPT 生成大纲 + Gamma AI 排版出图", free: "Gamma 有免费版" },
+        ];
+
+        grid.innerHTML = lookupData
+          .map(
+            (item) => `
+          <div class="ai-lookup-card">
+            <div class="ai-lookup-header">
+              <span class="ai-lookup-icon">${item.icon}</span>
+              <span class="ai-lookup-scene">${escapeHtml(item.scene)}</span>
+            </div>
+            <div class="ai-lookup-best">${escapeHtml(item.best)}</div>
+            <div class="ai-lookup-reason">${escapeHtml(item.reason)}</div>
+            <div class="ai-lookup-free">🎁 ${escapeHtml(item.free)}</div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      // ====== 价格表 ======
+      function renderPricing() {
+        const table = document.getElementById("pricingTable");
+        if (!table || typeof AI_PRICING_DATA === "undefined") return;
+
+        let html = `<thead><tr>
+          <th>工具</th>
+          <th>免费方案</th>
+          <th>付费方案</th>
+          <th>参考价</th>
+        </tr></thead><tbody>`;
+
+        AI_PRICING_DATA.forEach((item) => {
+          html += `<tr>
+            <td class="pricing-name">${item.icon} ${escapeHtml(item.name)}</td>
+            <td class="pricing-free">${escapeHtml(item.free)}</td>
+            <td class="pricing-paid">${escapeHtml(item.paid)}</td>
+            <td class="pricing-highlight">${escapeHtml(item.highlight)}</td>
+          </tr>`;
+        });
+
+        html += `</tbody>`;
+        table.innerHTML = html;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        renderTopics();
+        renderLookup();
+        renderPricing();
+      });
+    })();
+  </script>
+</body>
+</html>

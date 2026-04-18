@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="AI 工具横评对比 - 主流 AI 工具深度对比分析，按代码生成、中文理解、逻辑推理等维度打分" />
+  <meta property="og:title" content="AI 工具横评 · Koen的工具箱" />
+  <meta property="og:description" content="主流 AI 工具深度横评，用数据帮你做选择" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/ai/compare.html" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/ai/compare.html" />
+  <title>AI 工具横评 · Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/ai-topic.css" />
+  <script defer src="../../js/base.js"></script>
+</head>
+<body>
+
+  <!-- ========== 顶部导航 ========== -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="../tools/json.html" class="nav-link">在线工具</a>
+          <a href="index.html" class="nav-link active">AI 专题</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== 主内容 ========== -->
+  <main class="main-content">
+
+    <!-- 面包屑 -->
+    <nav class="ai-page-nav" aria-label="面包屑">
+      <a href="../../index.html">首页</a>
+      <span class="separator">›</span>
+      <a href="index.html">AI 专题</a>
+      <span class="separator">›</span>
+      <span class="current">横评对比</span>
+    </nav>
+
+    <!-- Hero -->
+    <section class="ai-hero">
+      <span class="ai-hero-icon">⚖️</span>
+      <h1 class="ai-hero-title">AI 工具横评对比</h1>
+      <p class="ai-hero-desc">不是简单列参数，而是按真实场景打分。每个维度都给出具体结论，帮你快速找到最适合的工具。</p>
+    </section>
+
+    <!-- 快速跳转 -->
+    <div class="ai-quick-nav" id="quickNav"></div>
+
+    <!-- 对比内容 -->
+    <div id="compareContent"></div>
+
+  </main>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="index.html">AI 专题</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../../data/ai-compare.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>
+    (function () {
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      function getScoreColor(score) {
+        if (score >= 9) return "#10b981";
+        if (score >= 8) return "#6366f1";
+        if (score >= 7) return "#f59e0b";
+        return "#94a3b8";
+      }
+
+      function renderQuickNav() {
+        const nav = document.getElementById("quickNav");
+        if (!nav || typeof AI_COMPARE_DATA === "undefined") return;
+
+        nav.innerHTML = AI_COMPARE_DATA.map((c) =>
+          `<a href="#compare-${c.id}" class="ai-quick-nav-btn">${c.icon} ${escapeHtml(c.title)}</a>`
+        ).join("");
+      }
+
+      function renderCompare() {
+        const container = document.getElementById("compareContent");
+        if (!container || typeof AI_COMPARE_DATA === "undefined") return;
+
+        let html = "";
+
+        AI_COMPARE_DATA.forEach((compare) => {
+          html += `<section class="compare-section" id="compare-${compare.id}">`;
+          html += `<h2 class="compare-section-title">${compare.icon} ${escapeHtml(compare.title)}</h2>`;
+          html += `<p class="compare-section-desc">${escapeHtml(compare.description)}</p>`;
+
+          compare.dimensions.forEach((dim) => {
+            html += `<div class="compare-dimension">`;
+            html += `<div class="compare-dimension-header">`;
+            html += `<span class="compare-dimension-icon">${dim.icon}</span>`;
+            html += `<span class="compare-dimension-name">${escapeHtml(dim.name)}</span>`;
+            html += `<span class="compare-dimension-desc">${escapeHtml(dim.description)}</span>`;
+            html += `</div>`;
+
+            html += `<div class="compare-scores">`;
+            compare.tools.forEach((toolId) => {
+              const info = AI_TOOL_INFO[toolId];
+              const score = dim.scores[toolId];
+              if (!info || score === undefined) return;
+
+              const pct = (score / 10) * 100;
+              const color = getScoreColor(score);
+
+              html += `<div class="compare-score-row">`;
+              html += `<span class="compare-score-name"><span class="tool-emoji">${info.icon}</span> ${escapeHtml(info.name)}</span>`;
+              html += `<div class="compare-score-bar-bg"><div class="compare-score-bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
+              html += `<span class="compare-score-value" style="color:${color}">${score}</span>`;
+              html += `</div>`;
+            });
+            html += `</div>`;
+
+            html += `<div class="compare-dimension-verdict">${escapeHtml(dim.verdict)}</div>`;
+            html += `</div>`;
+          });
+
+          // 总结
+          html += `<div class="compare-summary">`;
+          html += `<div class="compare-summary-label">🎯 结论</div>`;
+          html += `<div class="compare-summary-text">${escapeHtml(compare.summary)}</div>`;
+          html += `<div class="compare-updated">评分更新于 ${escapeHtml(compare.updatedAt)}</div>`;
+          html += `</div>`;
+
+          html += `</section>`;
+        });
+
+        container.innerHTML = html;
+
+        // 动画：延迟加载评分条
+        requestAnimationFrame(() => {
+          document.querySelectorAll(".compare-score-bar-fill").forEach((bar) => {
+            const targetWidth = bar.style.width;
+            bar.style.width = "0";
+            requestAnimationFrame(() => {
+              bar.style.width = targetWidth;
+            });
+          });
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        renderQuickNav();
+        renderCompare();
+      });
+    })();
+  </script>
+</body>
+</html>

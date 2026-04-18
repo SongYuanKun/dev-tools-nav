@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="AI Prompt 模板库 - 精选 Prompt 模板，覆盖编程、写作、设计、数据分析等场景，一键复制直接用" />
+  <meta property="og:title" content="AI Prompt 模板库 · Koen的工具箱" />
+  <meta property="og:description" content="精选 AI Prompt 模板，一键复制直接用" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/ai/prompts.html" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/ai/prompts.html" />
+  <title>AI Prompt 模板库 · Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/ai-topic.css" />
+  <script defer src="../../js/base.js"></script>
+</head>
+<body>
+
+  <!-- ========== 顶部导航 ========== -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="index.html" class="nav-link active">AI 专题</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== 主内容 ========== -->
+  <main class="main-content">
+
+    <!-- 面包屑 -->
+    <nav class="ai-page-nav" aria-label="面包屑">
+      <a href="../../index.html">首页</a>
+      <span class="separator">›</span>
+      <a href="index.html">AI 专题</a>
+      <span class="separator">›</span>
+      <span class="current">Prompt 模板库</span>
+    </nav>
+
+    <!-- Hero -->
+    <section class="ai-hero">
+      <span class="ai-hero-icon">📋</span>
+      <h1 class="ai-hero-title">AI Prompt 模板库</h1>
+      <p class="ai-hero-desc">精选高质量 Prompt 模板，覆盖编程、写作、设计、数据分析等场景。一键复制，直接粘贴到任何 AI 工具中使用。</p>
+    </section>
+
+    <!-- Prompt 技巧 -->
+    <section class="prompt-tips-section">
+      <h2 class="compare-section-title">🎯 Prompt 写作公式</h2>
+      <div class="prompt-formula-grid">
+        <div class="prompt-formula-card">
+          <div class="prompt-formula-title">万能公式</div>
+          <div class="prompt-formula-content">
+            <span class="formula-part">角色</span>
+            <span class="formula-plus">+</span>
+            <span class="formula-part">任务</span>
+            <span class="formula-plus">+</span>
+            <span class="formula-part">背景</span>
+            <span class="formula-plus">+</span>
+            <span class="formula-part">格式要求</span>
+          </div>
+          <div class="prompt-formula-example">例："你是一个资深 Python 开发者（角色），请帮我写一个爬虫脚本（任务），目标是新闻网站（背景），输出可运行的代码（格式）"</div>
+        </div>
+        <div class="prompt-formula-card">
+          <div class="prompt-formula-title">进阶技巧</div>
+          <div class="prompt-formula-list">
+            <div class="prompt-formula-item">📌 <strong>给示例</strong> — 给 AI 一个期望输出的样例，比描述 100 句话都管用</div>
+            <div class="prompt-formula-item">📌 <strong>分步走</strong> — 复杂任务拆成多步，每步确认后再进行下一步</div>
+            <div class="prompt-formula-item">📌 <strong>设约束</strong> — 明确告诉 AI 不该做什么，比如"不要使用第三方库"</div>
+            <div class="prompt-formula-item">📌 <strong>要思考</strong> — 加一句"请先分析思路再给出答案"，输出质量显著提升</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 分类筛选 -->
+    <div class="ai-quick-nav" id="promptCategoryNav"></div>
+
+    <!-- Prompt 列表 -->
+    <div id="promptContent"></div>
+
+  </main>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="index.html">AI 专题</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../../data/ai-compare.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>
+    (function () {
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      let currentCategory = "all";
+
+      function renderCategoryNav() {
+        const nav = document.getElementById("promptCategoryNav");
+        if (!nav || typeof AI_PROMPT_DATA === "undefined") return;
+
+        const categories = [
+          { id: "all", icon: "📋", name: "全部" },
+          ...AI_PROMPT_DATA.map((c) => ({ id: c.category, icon: c.icon, name: c.category })),
+        ];
+
+        nav.innerHTML = categories
+          .map(
+            (c) =>
+              `<button class="ai-quick-nav-btn${c.id === currentCategory ? " active" : ""}" data-category="${c.id}">${c.icon} ${escapeHtml(c.name)}</button>`
+          )
+          .join("");
+
+        nav.querySelectorAll("button").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            currentCategory = btn.dataset.category;
+            nav.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderPrompts();
+          });
+        });
+      }
+
+      function renderPrompts() {
+        const container = document.getElementById("promptContent");
+        if (!container || typeof AI_PROMPT_DATA === "undefined") return;
+
+        const filtered = currentCategory === "all"
+          ? AI_PROMPT_DATA
+          : AI_PROMPT_DATA.filter((c) => c.category === currentCategory);
+
+        let html = "";
+
+        filtered.forEach((cat) => {
+          html += `<section class="prompt-category-section">`;
+          html += `<h2 class="compare-section-title">${cat.icon} ${escapeHtml(cat.category)}</h2>`;
+
+          html += `<div class="prompt-grid">`;
+          cat.prompts.forEach((p, idx) => {
+            const promptId = `prompt-${cat.category}-${idx}`;
+            html += `<div class="prompt-card">`;
+            html += `<div class="prompt-card-header">`;
+            html += `<h3 class="prompt-card-title">${escapeHtml(p.title)}</h3>`;
+            html += `<div class="prompt-card-tools">`;
+            p.tools.forEach((toolId) => {
+              const info = AI_TOOL_INFO[toolId];
+              if (info) {
+                html += `<span class="prompt-tool-badge">${info.icon} ${escapeHtml(info.name)}</span>`;
+              }
+            });
+            html += `</div>`;
+            html += `</div>`;
+            html += `<p class="prompt-card-desc">${escapeHtml(p.description)}</p>`;
+            html += `<div class="prompt-card-template" id="${promptId}">${escapeHtml(p.template)}</div>`;
+            html += `<button class="workflow-prompt-copy" data-target="${promptId}">📋 复制 Prompt</button>`;
+            html += `</div>`;
+          });
+          html += `</div>`;
+
+          html += `</section>`;
+        });
+
+        container.innerHTML = html;
+
+        // 绑定复制按钮
+        container.querySelectorAll(".workflow-prompt-copy").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const targetId = btn.dataset.target;
+            const textEl = document.getElementById(targetId);
+            if (!textEl) return;
+
+            navigator.clipboard.writeText(textEl.textContent).then(() => {
+              btn.textContent = "✅ 已复制";
+              btn.classList.add("copied");
+              setTimeout(() => {
+                btn.textContent = "📋 复制 Prompt";
+                btn.classList.remove("copied");
+              }, 2000);
+            }).catch(() => {
+              const range = document.createRange();
+              range.selectNodeContents(textEl);
+              const sel = window.getSelection();
+              sel.removeAllRanges();
+              sel.addRange(range);
+              document.execCommand("copy");
+              sel.removeAllRanges();
+              btn.textContent = "✅ 已复制";
+              btn.classList.add("copied");
+              setTimeout(() => {
+                btn.textContent = "📋 复制 Prompt";
+                btn.classList.remove("copied");
+              }, 2000);
+            });
+          });
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        renderCategoryNav();
+        renderPrompts();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -2311,6 +2311,76 @@ img {
 }
 
 /* ============================================================
+   AI 专题横幅
+   ============================================================ */
+.ai-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.06));
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+}
+
+.ai-banner:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .ai-banner {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12), rgba(236, 72, 153, 0.08));
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.ai-banner-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.ai-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ai-banner-text strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ai-banner-text span {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .ai-banner {
+    padding: 12px 16px;
+  }
+  .ai-banner-icon {
+    font-size: 22px;
+  }
+}
+
+/* ============================================================
    彩蛋系统样式
    ============================================================ */
 

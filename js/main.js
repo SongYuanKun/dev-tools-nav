@@ -588,6 +588,13 @@ function renderTools() {
 
   if (statsCount) statsCount.textContent = filtered.length;
 
+  // AI 专题横幅：选中 AI 分类或全部时显示
+  const aiBanner = document.getElementById("aiBanner");
+  if (aiBanner) {
+    const showBanner = state.currentCategory === "ai" || state.currentCategory === "all";
+    aiBanner.style.display = showBanner ? "flex" : "none";
+  }
+
   grid.innerHTML = "";
 
   if (filtered.length === 0) {
