@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="开发者向：AI 网页聊天、API Key、编程助手（Cursor/Copilot）与低代码平台的选型说明" />
+  <meta property="og:title" content="开发者：API 与编程助手 · Koen的工具箱" />
+  <meta property="og:description" content="网页 vs API vs IDE 助手，如何分工与选型" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/ai/dev-api.html" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/ai/dev-api.html" />
+  <title>开发者：API 与编程助手 · Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/ai-topic.css" />
+  <script defer src="../../js/base.js"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="index.html" class="nav-link active">AI 专题</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <nav class="ai-subnav" aria-label="AI 专题内导航">
+    <div class="ai-subnav-inner">
+      <a href="index.html" class="ai-subnav-link">专题首页</a>
+      <a href="beginner.html" class="ai-subnav-link">入门</a>
+      <a href="glossary.html" class="ai-subnav-link">术语</a>
+      <a href="safety.html" class="ai-subnav-link">安全</a>
+      <a href="dev-api.html" class="ai-subnav-link ai-subnav-current">开发者</a>
+      <a href="compare.html" class="ai-subnav-link">横评</a>
+      <a href="workflow.html" class="ai-subnav-link">工作流</a>
+      <a href="prompts.html" class="ai-subnav-link">Prompt</a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <nav class="ai-page-nav" aria-label="面包屑">
+      <a href="../../index.html">首页</a>
+      <span class="separator">›</span>
+      <a href="index.html">AI 专题</a>
+      <span class="separator">›</span>
+      <span class="current">开发者</span>
+    </nav>
+
+    <section class="ai-hero">
+      <span class="ai-hero-icon">👨‍💻</span>
+      <h1 class="ai-hero-title">开发者：API 与编程助手</h1>
+      <p class="ai-hero-desc">做产品或脚本时，你会遇到三类能力：浏览器里聊天、IDE 里的代码助手、以及自己 HTTP 调用的 API。下面用选型视角串起来，并链到本站工具详情与横评。</p>
+    </section>
+
+    <section class="about-section">
+      <h2 class="about-section-title">1. 三种常见形态</h2>
+      <div class="about-story">
+        <p><strong>网页 / App 聊天</strong>：适合探索、写文案草稿、问零散问题。账号与额度由官方托管，你<strong>不直接管</strong> API Key（除非去开发者后台开）。</p>
+        <p><strong>IDE 编程助手</strong>（如 Cursor、GitHub Copilot）：在编辑器里补全、改文件、跑命令流。计费通常跟「席位 / 订阅」走，和「自建服务调模型」不是一回事。</p>
+        <p><strong>HTTP API</strong>：你的后端或脚本带 Key 调官方接口，适合<strong>自动化流水线</strong>、站内机器人、批处理。要自己处理密钥、重试、限流与账单。</p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2 class="about-section-title">2. 什么时候该上 API？</h2>
+      <div class="about-story">
+        <p>出现下面任一情况，就可以认真评估 API 方案（或低代码编排）：</p>
+        <ul style="margin:12px 0;padding-left:20px;color:var(--text-secondary);line-height:1.75;">
+          <li>需要<strong>服务器端</strong>在无人登录浏览器时调用模型</li>
+          <li>要把同一套 Prompt <strong>批量</strong>跑在成百上千条数据上</li>
+          <li>要和现有业务数据库 / 工单系统<strong>硬集成</strong></li>
+        </ul>
+        <p>若只是个人写代码辅助，多数时候 <strong>IDE 助手 + 网页模型</strong> 就够用。</p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2 class="about-section-title">3. 与「AI 编程」横评的关系</h2>
+      <div class="about-story">
+        <p>专题里 <a href="compare.html#compare-ai-coding">AI 编程工具横评</a> 对比的是 <strong>Cursor、Copilot、Windsurf、Trae</strong> 等在编辑器内的体验；本文强调的 API 更偏 <strong>OpenAI / DeepSeek / 通义</strong> 等平台提供的开发者接口。两者可<strong>组合</strong>：IDE 负责改仓库，脚本负责批处理与运维自动化。</p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2 class="about-section-title">4. 主站工具详情（节选）</h2>
+      <div class="about-story">
+        <p>下列条目跳转到本站工具详情页（含官网链接与说明）：</p>
+        <ul class="dev-api-tool-list">
+          <li><a href="../../pages/template.html?id=deepseek">DeepSeek</a> — 对话 + API 性价比高，适合中文技术问答与脚本</li>
+          <li><a href="../../pages/template.html?id=cursor">Cursor</a> — AI 原生编辑器，项目级理解强</li>
+          <li><a href="../../pages/template.html?id=github-copilot">GitHub Copilot</a> — 插件式，适合不想换 IDE 的团队</li>
+          <li><a href="../../pages/template.html?id=coze">Coze</a> — 可视化编排与 Bot 发布</li>
+          <li><a href="../../pages/template.html?id=dify">Dify</a> — 开源应用编排、RAG 与工作流</li>
+        </ul>
+        <p style="margin-top:12px;font-size:14px;color:var(--text-secondary);">更多 AI 类工具可在 <a href="../../index.html">工具导航</a> 筛选「AI 工具」分类浏览。</p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2 class="about-section-title">5. 安全与合规提醒</h2>
+      <div class="about-story">
+        <p>API Key 等同生产密码：勿进仓库、勿进前端暴露。完整清单见 <a href="safety.html">隐私与安全</a>；免费额度与绑卡注意见博客 <a href="../blog/ai-free-tokens-handbook.html">AI 免费 Token / 额度手册</a>。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="index.html">AI 专题</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../../data/ai-compare.js"></script>
+  <script src="../../js/main.js"></script>
+</body>
+</html>

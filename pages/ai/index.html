@@ -39,6 +39,19 @@
     </nav>
   </header>
 
+  <nav class="ai-subnav" aria-label="AI 专题内导航">
+    <div class="ai-subnav-inner">
+      <a href="index.html" class="ai-subnav-link ai-subnav-current">专题首页</a>
+      <a href="beginner.html" class="ai-subnav-link">入门</a>
+      <a href="glossary.html" class="ai-subnav-link">术语</a>
+      <a href="safety.html" class="ai-subnav-link">安全</a>
+      <a href="dev-api.html" class="ai-subnav-link">开发者</a>
+      <a href="compare.html" class="ai-subnav-link">横评</a>
+      <a href="workflow.html" class="ai-subnav-link">工作流</a>
+      <a href="prompts.html" class="ai-subnav-link">Prompt</a>
+    </div>
+  </nav>
+
   <!-- ========== 主内容 ========== -->
   <main class="main-content">
 
@@ -74,6 +87,12 @@
       <div class="ai-glossary-preview-body" id="glossaryPreviewBody"></div>
       <p class="ai-glossary-preview-more"><a href="glossary.html">完整术语与选型思路 →</a> · <a href="safety.html">隐私与安全清单 →</a></p>
     </details>
+
+    <!-- 近期更新 -->
+    <section class="ai-changelog-section" id="changelog-ai" aria-labelledby="changelogTitle">
+      <h2 id="changelogTitle" class="ai-changelog-title">📌 近期更新</h2>
+      <ul class="ai-changelog-list" id="changelogList"></ul>
+    </section>
 
     <!-- ========== 专题入口卡片 ========== -->
     <section>
@@ -186,6 +205,15 @@
           .join("");
       }
 
+      function renderChangelog() {
+        const list = document.getElementById("changelogList");
+        if (!list || typeof AI_TOPIC_CHANGELOG === "undefined") return;
+        list.innerHTML = AI_TOPIC_CHANGELOG.map(
+          (row) =>
+            `<li class="ai-changelog-item"><time class="ai-changelog-date">${escapeHtml(row.date)}</time><span class="ai-changelog-head">${escapeHtml(row.title)}</span><p class="ai-changelog-detail">${escapeHtml(row.detail)}</p></li>`
+        ).join("");
+      }
+
       function renderTopics() {
         const grid = document.getElementById("topicGrid");
         if (!grid) return;
@@ -204,6 +232,13 @@
             desc: "哪些内容不宜进公网模型？脱敏、密钥管理、输出责任——自检清单。",
             href: "safety.html",
             badges: ["脱敏", "密钥", "职场"],
+          },
+          {
+            icon: "👨‍💻",
+            title: "开发者：API 与编程助手",
+            desc: "网页聊天和 API Key 有何不同？Cursor / Copilot 和「自己调接口」怎么分工？链到主站工具详情。",
+            href: "dev-api.html",
+            badges: ["API", "Cursor", "Dify"],
           },
           {
             icon: "⚖️",
@@ -260,19 +295,25 @@
         if (!grid) return;
 
         const lookupData = [
-          { scene: "写代码", icon: "💻", best: "DeepSeek + Cursor", reason: "DeepSeek 推理强 + Cursor 项目理解强", free: "DeepSeek 免费" },
-          { scene: "写文章", icon: "📝", best: "Claude + DeepSeek", reason: "Claude 文笔自然 + DeepSeek 技术分析专业", free: "DeepSeek 免费" },
-          { scene: "做设计", icon: "🎨", best: "Midjourney + Ideogram", reason: "Midjourney 画质顶 + Ideogram 文字渲染准", free: "Ideogram 有免费额度" },
-          { scene: "搜资料", icon: "🔍", best: "Perplexity + Kimi", reason: "Perplexity 来源严谨 + Kimi 中文搜索好", free: "Kimi 免费" },
-          { scene: "做视频", icon: "🎬", best: "可灵 + Runway", reason: "可灵中文友好 + Runway 控制专业", free: "可灵有免费体验" },
-          { scene: "翻译文档", icon: "🌐", best: "DeepSeek + 沉浸式翻译", reason: "DeepSeek 技术翻译准 + 沉浸式网页翻译方便", free: "都免费" },
-          { scene: "学技术", icon: "🎓", best: "DeepSeek + Claude", reason: "DeepSeek 讲解清晰 + Claude 擅长长文梳理", free: "DeepSeek 免费" },
-          { scene: "做PPT", icon: "📊", best: "ChatGPT + Gamma", reason: "ChatGPT 生成大纲 + Gamma AI 排版出图", free: "Gamma 有免费版" },
+          { scene: "写代码", icon: "💻", best: "DeepSeek + Cursor", reason: "DeepSeek 推理强 + Cursor 项目理解强", free: "DeepSeek 免费", workflowHref: "workflow.html#workflow-indie-dev", promptHref: "prompts.html#prompt-dev", compareHref: "compare.html#compare-ai-coding" },
+          { scene: "写文章", icon: "📝", best: "Claude + DeepSeek", reason: "Claude 文笔自然 + DeepSeek 技术分析专业", free: "DeepSeek 免费", workflowHref: "workflow.html#workflow-content-creator", promptHref: "prompts.html#prompt-writing", compareHref: "compare.html#compare-llm-chat" },
+          { scene: "做设计", icon: "🎨", best: "Midjourney + Ideogram", reason: "Midjourney 画质顶 + Ideogram 文字渲染准", free: "Ideogram 有免费额度", workflowHref: "workflow.html#workflow-ai-art-design", promptHref: "prompts.html#prompt-design", compareHref: "compare.html#compare-ai-image" },
+          { scene: "搜资料", icon: "🔍", best: "Perplexity + Kimi", reason: "Perplexity 来源严谨 + Kimi 中文搜索好", free: "Kimi 免费", workflowHref: "workflow.html#workflow-student-research", promptHref: "prompts.html#prompt-study", compareHref: "compare.html#compare-ai-search" },
+          { scene: "做视频", icon: "🎬", best: "可灵 + Runway", reason: "可灵中文友好 + Runway 控制专业", free: "可灵有免费体验", workflowHref: "", promptHref: "prompts.html#prompt-design", compareHref: "compare.html#compare-ai-video" },
+          { scene: "翻译文档", icon: "🌐", best: "DeepSeek + 沉浸式翻译", reason: "DeepSeek 技术翻译准 + 沉浸式网页翻译方便", free: "都免费", workflowHref: "workflow.html#workflow-daily-efficiency", promptHref: "prompts.html#prompt-writing", compareHref: "compare.html#compare-ai-translate" },
+          { scene: "学技术", icon: "🎓", best: "DeepSeek + Claude", reason: "DeepSeek 讲解清晰 + Claude 擅长长文梳理", free: "DeepSeek 免费", workflowHref: "workflow.html#workflow-student-research", promptHref: "prompts.html#prompt-study", compareHref: "compare.html#compare-llm-chat" },
+          { scene: "做PPT", icon: "📊", best: "ChatGPT + Gamma", reason: "ChatGPT 生成大纲 + Gamma AI 排版出图", free: "Gamma 有免费版", workflowHref: "workflow.html#workflow-content-creator", promptHref: "prompts.html#prompt-writing", compareHref: "compare.html#compare-llm-chat" },
         ];
 
         grid.innerHTML = lookupData
           .map(
-            (item) => `
+            (item) => {
+              const links = [];
+              if (item.workflowHref) links.push(`<a class="ai-lookup-link" href="${item.workflowHref}">工作流</a>`);
+              if (item.promptHref) links.push(`<a class="ai-lookup-link" href="${item.promptHref}">Prompt</a>`);
+              if (item.compareHref) links.push(`<a class="ai-lookup-link" href="${item.compareHref}">横评</a>`);
+              const linkRow = links.length ? `<div class="ai-lookup-links">${links.join("")}</div>` : "";
+              return `
           <div class="ai-lookup-card">
             <div class="ai-lookup-header">
               <span class="ai-lookup-icon">${item.icon}</span>
@@ -281,8 +322,10 @@
             <div class="ai-lookup-best">${escapeHtml(item.best)}</div>
             <div class="ai-lookup-reason">${escapeHtml(item.reason)}</div>
             <div class="ai-lookup-free">🎁 ${escapeHtml(item.free)}</div>
+            ${linkRow}
           </div>
-        `
+        `;
+            }
           )
           .join("");
       }
@@ -315,6 +358,7 @@
       document.addEventListener("DOMContentLoaded", () => {
         renderLearnPath();
         renderGlossaryPreview();
+        renderChangelog();
         renderTopics();
         renderLookup();
         renderPricing();

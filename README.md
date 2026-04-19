@@ -43,7 +43,7 @@ dev-tools-nav/
 │   └── base.js             # 全站共用（如统计）
 ├── pages/
 │   ├── template.html       # 工具详情页（?id=xxx）
-│   ├── ai/                 # AI 专题：index、compare、workflow、prompts、beginner、glossary、safety
+│   ├── ai/                 # AI 专题：index、compare、workflow、prompts、beginner、glossary、safety、dev-api
 │   ├── about.html 等       # 其他静态页
 ├── data/
 │   ├── tools.js            # 工具数据 TOOLS_DATA
@@ -66,15 +66,16 @@ dev-tools-nav/
 
 | 模块 | 说明 |
 |------|------|
-| **专题首页** `pages/ai/index.html` | Hero + 链到术语/安全；**推荐学习路径**时间线（`AI_LEARN_PATH_STEPS`）；**术语折叠预览**（`AI_GLOSSARY_DATA` 前 4 条）；探索专题入口卡片（含术语页、安全页、横评等；工具名徽章匹配 `AI_TOOL_INFO` 时展示 favicon）；场景速查表；价格锚点 `id="pricing-ai"`；选型短文 |
+| **专题首页** `pages/ai/index.html` | Hero + 术语/安全链；**推荐学习路径** 5 步；**术语折叠预览**；**近期更新**（`AI_TOPIC_CHANGELOG`）；**场景速查内链**；探索专题卡（含 dev-api；工具名徽章 favicon）；价格 `id="pricing-ai"`；选型短文；**专题内导航条** |
+| **开发者向** `pages/ai/dev-api.html` | 网页 vs API vs IDE 助手、何时用 API、链主站 `template.html` 与编程横评 |
 | **术语与选型** `pages/ai/glossary.html` | 三条选型原则（`AI_SELECTION_PRINCIPLES`）+ 可展开术语表（`AI_GLOSSARY_DATA`） |
 | **隐私与安全** `pages/ai/safety.html` | 清单式章节（`AI_SAFETY_DATA`） |
 | **横评对比** `pages/ai/compare.html` | 6 组横评（对话 / 编程 / 绘图 / 搜索 / 视频 / 翻译），维度评分与结论 |
 | **场景工作流** `pages/ai/workflow.html` | 多场景步骤 + 工具标签 + Prompt 片段 |
-| **Prompt 模板库** `pages/ai/prompts.html` | 按分类筛选、复制模板 |
+| **Prompt 模板库** `pages/ai/prompts.html` | 按分类筛选、复制模板；分类 section 设 `id="prompt-*"`，URL hash 可定位并自动筛分类 |
 | **新手入门** `pages/ai/beginner.html` | 基础概念、上手步骤、误区、学习路径 |
-| **数据与映射** `data/ai-compare.js` | 上列外加 `AI_LEARN_PATH_STEPS`、`AI_GLOSSARY_DATA`、`AI_SELECTION_PRINCIPLES`、`AI_SAFETY_DATA`；以及 `AI_COMPARE_DATA`、`AI_WORKFLOW_DATA` 等 |
-| **专题样式** `css/ai-topic.css` | 横评/工作流/Prompt/新手/价格表等布局；外链 favicon 在 flex/grid 下避免被全局 `img{max-width:100%}` 压成 0 宽；专题卡品牌徽章样式 |
+| **数据与映射** `data/ai-compare.js` | 上列外加 `AI_TOPIC_CHANGELOG`、`AI_LEARN_PATH_STEPS`、`AI_GLOSSARY_DATA`、`AI_SELECTION_PRINCIPLES`、`AI_SAFETY_DATA`；以及 `AI_COMPARE_DATA`、`AI_WORKFLOW_DATA` 等 |
+| **专题样式** `css/ai-topic.css` | 含 `ai-subnav`、changelog、场景速查内链、横评/工作流等各页布局；favicon 与徽章样式 |
 | **全站入口** | `index.html` 导航「AI 专题」、AI 分类下横幅等（与 `js/main.js` 联动） |
 | **SEO** | `scripts/generate-sitemap.mjs` 生成 `sitemap.xml` 时扫描 `pages/ai/*.html` 并写入 URL（CI 部署前执行） |
 
@@ -84,25 +85,27 @@ dev-tools-nav/
 
 - [x] **术语与选型**：独立页 `glossary.html` + 首页 `<details>` 折叠预览 + Hero 快捷链
 - [x] **隐私与安全清单**：独立页 `safety.html` + 首页与选型文末互链
-- [x] **学习路径时间线**：专题首页 Hero 下，数据 `AI_LEARN_PATH_STEPS`（入门 → 工作流 → 横评 → 本页价格锚点）
+- [x] **学习路径时间线**：专题首页 Hero 下，`AI_LEARN_PATH_STEPS`（入门 → 工作流 → Prompt → 横评 → 本页价格锚点）
 
-**P1（增值、略增维护）**
+**P1 — 已完成（2026-04）**
 
-- [ ] **开发者向**：API / 编程助手选型短文（与横评「AI 编程」呼应，可链到 `tools.js` 已有工具）
-- [ ] **更新说明**：最近 3～5 条「评分/价格/文案」变更记录（与横评 `updatedAt` 等字段一致思路，不承诺日更）
-- [ ] **场景速查 → 内链**：每张速查卡增加「相关工作流 / Prompt 分类」跳转，减少断点
-- [ ] **学习路径微调**：第 2 步是否并列链到 `prompts.html` 或增加一步「Prompt 模板」；锚点文案与数据字段对齐
+- [x] **开发者向**：`pages/ai/dev-api.html` + 专题入口卡片 + glossary 延伸阅读链
+- [x] **更新说明**：首页 `AI_TOPIC_CHANGELOG`（人工维护最近条目，不承诺日更）
+- [x] **场景速查 → 内链**：每张卡链到对应 `workflow#…`、`prompts#prompt-*`、`compare#compare-*`（「做视频」无单独工作流则仅链横评 + Prompt）
+- [x] **学习路径微调**：拆为 5 步（入门 → 工作流 → **Prompt** → 横评 → 价格）
+- [x] **专题内导航条**：各 AI 子页 header 下 `ai-subnav`（与 README 原「顶栏二级」等价落地为专题内条）
 
 **P2（可选）**
 
-- [ ] **按角色推荐组合**：产品 / 设计 / 研发等工具组合 + 链到 workflow
-- [ ] **专题内推荐阅读**：在 glossary/safety 外更多子页底部统一「推荐阅读」组件（链博客、主站 AI 分类）
+- [ ] **按角色推荐组合**：产品 / 设计 / 研发等工具组合 + 链到 workflow（与 beginner 路径卡部分重叠，可做精简版首页条）
+- [ ] **专题内推荐阅读**：统一底部组件（链博客、主站 AI 分类）；compare/workflow 页补充「延伸阅读」块
 - [ ] **轻量交互**：纯前端按场景筛选高亮工具（数据来自 `AI_TOOL_INFO`）
-- [ ] **术语增强**：中英对照、外链权威定义（可选）；glossary 内锚点目录（长页 TOC）
+- [ ] **术语增强**：中英对照、外链权威定义；glossary 页内 TOC 目录
+- [ ] **更新说明自动化**：CI 或脚本从 git log /  front matter 生成 CHANGELOG（当前为手写数组）
 
 **信息架构（可选）**
 
-- [ ] 顶栏「AI 专题」下二级导航：入门 | 横评 | 工作流 | Prompt | 术语 | 安全（或仅在有空间时展示）
+- [ ] 全站顶栏（`index.html` 根导航）下拉展示 AI 子页（当前为专题内 `ai-subnav` 已覆盖子页跳转）
 
 **刻意不做（备忘）**
 

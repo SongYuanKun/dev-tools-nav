@@ -41,7 +41,7 @@ rsync -av --delete \
 
 ### 方式三：1Panel 文件管理
 
-在 1Panel 里打开「文件」→ 进入 `/opt/1panel/www/sites/tools.songyuankun.top/index`，手动上传或粘贴 `index.html`、`css/`（含 `ai-topic.css`）、`js/`、`pages/`（含 `pages/ai/`：index、compare、workflow、prompts、beginner、**glossary**、**safety** 等）、`data/`（含 `ai-compare.js`）、`assets/` 等。
+在 1Panel 里打开「文件」→ 进入 `/opt/1panel/www/sites/tools.songyuankun.top/index`，手动上传或粘贴 `index.html`、`css/`（含 `ai-topic.css`）、`js/`、`pages/`（含 `pages/ai/`：index、compare、workflow、prompts、beginner、glossary、safety、**dev-api** 等）、`data/`（含 `ai-compare.js`）、`assets/` 等。
 
 ## AI 专题与同步范围
 

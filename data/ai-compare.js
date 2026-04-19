@@ -876,9 +876,29 @@ const AI_TOOL_INFO = {
 // ==================== 专题首页：学习路径时间线 ====================
 const AI_LEARN_PATH_STEPS = [
   { n: 1, label: "入门", title: "概念与避坑", href: "beginner.html", hint: "约 15 分钟" },
-  { n: 2, label: "套路", title: "工作流 + Prompt", href: "workflow.html", hint: "按场景抄作业" },
-  { n: 3, label: "对比", title: "横评与结论", href: "compare.html", hint: "用数据选型" },
-  { n: 4, label: "预算", title: "价格与免费档", href: "index.html#pricing-ai", hint: "对表看付费" },
+  { n: 2, label: "场景", title: "工作流抄作业", href: "workflow.html", hint: "6 大场景分步" },
+  { n: 3, label: "模板", title: "Prompt 模板库", href: "prompts.html", hint: "一键复制套用" },
+  { n: 4, label: "对比", title: "横评与结论", href: "compare.html", hint: "用数据选型" },
+  { n: 5, label: "预算", title: "价格与免费档", href: "index.html#pricing-ai", hint: "对表看付费" },
+];
+
+// ==================== 专题更新记录（首页「近期更新」）====================
+const AI_TOPIC_CHANGELOG = [
+  {
+    date: "2026-04-20",
+    title: "P1：开发者向、更新记录、场景内链、学习路径拆步",
+    detail: "新增 dev-api 页；场景速查卡片链到工作流 / Prompt 锚点 / 横评；Prompt 分类支持 hash 定位；学习路径拆为 5 步。",
+  },
+  {
+    date: "2026-04-20",
+    title: "P0：术语表、隐私安全、学习路径",
+    detail: "新增 glossary / safety；首页时间线与术语折叠预览；数据集中在 ai-compare.js。",
+  },
+  {
+    date: "2026-04-18",
+    title: "AI 专题首版",
+    detail: "6 组横评、6 条工作流、Prompt 库、新手入门、首页速查与价格表上线。",
+  },
 ];
 
 // ==================== 术语与选型（glossary.html + 首页折叠预览）====================

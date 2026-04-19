@@ -29,6 +29,7 @@
   - `pages/ai/glossary.html` - 术语与选型（AI_GLOSSARY_DATA + AI_SELECTION_PRINCIPLES）
   - `pages/ai/safety.html` - 隐私与安全清单（AI_SAFETY_DATA）
   - 专题首页含学习路径时间线（AI_LEARN_PATH_STEPS）、术语折叠预览
+  - `pages/ai/dev-api.html` — 开发者 API / 编程助手说明；全 AI 子页 `ai-subnav` 内导航；首页场景速查内链、AI_TOPIC_CHANGELOG；Prompt 页 hash 锚点
 - **横评数据**: LLM对话(5款)、AI编程(4款)、AI绘图(5款)、AI搜索(5款)、AI视频(5款)、AI翻译(5款)
 - **工作流**: 独立开发者(6步)、内容创作者(4步)、日常效率(3步)、设计师(4步)、数据分析(3步)、学术研究(3步)
 - **入口**: 导航栏"🤖 AI 专题" + 首页 AI 横幅（选中AI分类时显示）

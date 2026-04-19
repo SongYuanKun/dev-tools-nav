@@ -38,6 +38,19 @@
     </nav>
   </header>
 
+  <nav class="ai-subnav" aria-label="AI 专题内导航">
+    <div class="ai-subnav-inner">
+      <a href="index.html" class="ai-subnav-link">专题首页</a>
+      <a href="beginner.html" class="ai-subnav-link">入门</a>
+      <a href="glossary.html" class="ai-subnav-link">术语</a>
+      <a href="safety.html" class="ai-subnav-link">安全</a>
+      <a href="dev-api.html" class="ai-subnav-link">开发者</a>
+      <a href="compare.html" class="ai-subnav-link">横评</a>
+      <a href="workflow.html" class="ai-subnav-link">工作流</a>
+      <a href="prompts.html" class="ai-subnav-link ai-subnav-current">Prompt</a>
+    </div>
+  </nav>
+
   <!-- ========== 主内容 ========== -->
   <main class="main-content">
 
@@ -128,6 +141,22 @@
 
       let currentCategory = "all";
 
+      const PROMPT_SECTION_IDS = {
+        编程开发: "prompt-dev",
+        写作创作: "prompt-writing",
+        设计创意: "prompt-design",
+        数据分析: "prompt-data",
+        学习研究: "prompt-study",
+        日常效率: "prompt-daily",
+      };
+
+      function initCategoryFromHash() {
+        const h = location.hash.replace(/^#/, "");
+        if (!h || !h.startsWith("prompt-")) return;
+        const cat = Object.keys(PROMPT_SECTION_IDS).find((k) => PROMPT_SECTION_IDS[k] === h);
+        if (cat) currentCategory = cat;
+      }
+
       function renderCategoryNav() {
         const nav = document.getElementById("promptCategoryNav");
         if (!nav || typeof AI_PROMPT_DATA === "undefined") return;
@@ -165,7 +194,9 @@
         let html = "";
 
         filtered.forEach((cat) => {
-          html += `<section class="prompt-category-section">`;
+          const secId = PROMPT_SECTION_IDS[cat.category] || "";
+          const idAttr = secId ? ` id="${secId}"` : "";
+          html += `<section class="prompt-category-section"${idAttr}>`;
           html += `<h2 class="compare-section-title">${cat.icon} ${escapeHtml(cat.category)}</h2>`;
 
           html += `<div class="prompt-grid">`;
@@ -229,8 +260,15 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
+        initCategoryFromHash();
         renderCategoryNav();
         renderPrompts();
+        if (location.hash) {
+          requestAnimationFrame(() => {
+            const el = document.getElementById(location.hash.replace(/^#/, ""));
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        }
       });
     })();
   </script>
