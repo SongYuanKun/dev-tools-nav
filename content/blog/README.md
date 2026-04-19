@@ -23,3 +23,7 @@ slug: custom-url-slug（可选，默认用文件名）
 - 生成的 HTML 输出到 `pages/blog/`
 - 手写的 `pages/blog/*.html` 不受影响
 - 每篇文章必须有 `title` 和 `date`
+
+## 与 AI 专题的衔接
+
+涉及工具选型、免费额度、Prompt 实践的长文，可在正文或文末链到站内 **AI 专题**（`/pages/ai/index.html` 及子页：横评、工作流、Prompt 库、新手入门等）。专题与全站的 **路线图 / 待办** 统一记在仓库根目录 **[README.md](../../README.md)** 的 **「AI 专题规划」** 一节，避免文档分叉。

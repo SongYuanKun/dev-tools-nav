@@ -58,6 +58,18 @@ function main() {
         }))
     : [];
 
+  const aiDir = path.join(ROOT, "pages", "ai");
+  const aiUrls = fs.existsSync(aiDir)
+    ? fs
+        .readdirSync(aiDir)
+        .filter((f) => f.endsWith(".html"))
+        .map((f) => ({
+          loc: `${BASE_URL}/pages/ai/${f}`,
+          changefreq: "weekly",
+          priority: "0.85",
+        }))
+    : [];
+
   const staticUrls = [
     { loc: `${BASE_URL}/`, changefreq: "daily", priority: "1.0" },
     { loc: `${BASE_URL}/pages/about.html`, changefreq: "weekly", priority: "0.8" },
@@ -66,6 +78,7 @@ function main() {
     { loc: `${BASE_URL}/pages/products.html`, changefreq: "monthly", priority: "0.6" },
     { loc: `${BASE_URL}/pages/blog/index.html`, changefreq: "weekly", priority: "0.9" },
     ...blogUrls,
+    ...aiUrls,
     { loc: `${BASE_URL}/pages/tools/json.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/timestamp.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/cron.html`, changefreq: "monthly", priority: "0.8" },

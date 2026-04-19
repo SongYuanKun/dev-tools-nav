@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="AI 术语与选型 — Token、上下文、RAG、Agent 等人话解释，附选型思路与专题内链" />
+  <meta property="og:title" content="AI 术语与选型 · Koen的工具箱" />
+  <meta property="og:description" content="用人话读懂常见 AI 术语，再决定选什么工具" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://songyuankun.github.io/dev-tools-nav/pages/ai/glossary.html" />
+  <link rel="canonical" href="https://songyuankun.github.io/dev-tools-nav/pages/ai/glossary.html" />
+  <title>AI 术语与选型 · Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/ai-topic.css" />
+  <script defer src="../../js/base.js"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="index.html" class="nav-link active">AI 专题</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <nav class="ai-page-nav" aria-label="面包屑">
+      <a href="../../index.html">首页</a>
+      <span class="separator">›</span>
+      <a href="index.html">AI 专题</a>
+      <span class="separator">›</span>
+      <span class="current">术语与选型</span>
+    </nav>
+
+    <section class="ai-hero">
+      <span class="ai-hero-icon">📖</span>
+      <h1 class="ai-hero-title">术语与选型</h1>
+      <p class="ai-hero-desc">先搞懂几个高频词，再看横评与价格表，会轻松很多。以下为通俗解释，不替代官方技术定义。</p>
+    </section>
+
+    <section class="glossary-principles" id="principlesSection"></section>
+    <section class="glossary-list" id="glossaryListSection"></section>
+
+    <section class="about-section" style="margin-top:28px;">
+      <h2 class="about-section-title">延伸阅读</h2>
+      <div class="about-story">
+        <p><a href="beginner.html">AI 新手入门</a> · <a href="compare.html">工具横评</a> · <a href="index.html#pricing-ai">价格一览</a> · <a href="prompts.html">Prompt 模板库</a></p>
+        <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">免费额度与 API 注意事项可参考博客：<a href="../blog/ai-free-tokens-handbook.html">AI 免费 Token / 额度手册</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="index.html">AI 专题</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../../data/ai-compare.js"></script>
+  <script src="../../js/main.js"></script>
+  <script>
+    (function () {
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      function renderPrinciples() {
+        const el = document.getElementById("principlesSection");
+        if (!el || typeof AI_SELECTION_PRINCIPLES === "undefined") return;
+        let html = `<h2 class="compare-section-title">🎯 选型思路（三条就够）</h2><div class="glossary-principle-grid">`;
+        AI_SELECTION_PRINCIPLES.forEach((p) => {
+          html += `<div class="glossary-principle-card"><h3 class="glossary-principle-title">${escapeHtml(p.title)}</h3><p class="glossary-principle-text">${escapeHtml(p.text)}</p></div>`;
+        });
+        html += `</div>`;
+        el.innerHTML = html;
+      }
+
+      function renderGlossary() {
+        const el = document.getElementById("glossaryListSection");
+        if (!el || typeof AI_GLOSSARY_DATA === "undefined") return;
+        let html = `<h2 class="compare-section-title">📚 术语表</h2><p class="compare-section-desc">点击条目展开更多说明</p><div class="glossary-accordion">`;
+        AI_GLOSSARY_DATA.forEach((item, idx) => {
+          const id = `gloss-${idx}`;
+          html += `<details class="glossary-item" id="${id}">`;
+          html += `<summary><span class="glossary-term">${escapeHtml(item.term)}</span><span class="glossary-one-liner">${escapeHtml(item.summary)}</span></summary>`;
+          html += `<div class="glossary-detail">${escapeHtml(item.detail || item.summary)}</div>`;
+          html += `</details>`;
+        });
+        html += `</div>`;
+        el.innerHTML = html;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        renderPrinciples();
+        renderGlossary();
+      });
+    })();
+  </script>
+</body>
+</html>

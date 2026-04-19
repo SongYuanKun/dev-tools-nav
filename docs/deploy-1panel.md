@@ -41,4 +41,10 @@ rsync -av --delete \
 
 ### 方式三：1Panel 文件管理
 
-在 1Panel 里打开「文件」→ 进入 `/opt/1panel/www/sites/tools.songyuankun.top/index`，手动上传或粘贴 `index.html`、`css/`、`js/`、`pages/`、`data/` 等。
+在 1Panel 里打开「文件」→ 进入 `/opt/1panel/www/sites/tools.songyuankun.top/index`，手动上传或粘贴 `index.html`、`css/`（含 `ai-topic.css`）、`js/`、`pages/`（含 `pages/ai/`：index、compare、workflow、prompts、beginner、**glossary**、**safety** 等）、`data/`（含 `ai-compare.js`）、`assets/` 等。
+
+## AI 专题与同步范围
+
+AI 专题静态页位于 `pages/ai/`，样式为 `css/ai-topic.css`，数据集中在 `data/ai-compare.js`。`./deploy.sh` 与上文 **rsync** 会随仓库一并同步（排除项仅含 `docs/`、`.github` 等，与 AI 资源无关）。
+
+**专题内容路线图（已完成 / 待办）** 与仓库根目录 [README.md](../README.md) 中的 **「AI 专题规划」** 一节保持同步；改需求时优先改 README 清单，再改页面与数据。

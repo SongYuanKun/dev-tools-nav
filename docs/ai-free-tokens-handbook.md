@@ -1,6 +1,7 @@
 # AI 免费 Token / 额度薅羊毛手册
 
-> **站内阅读（随站部署）：** [tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html](https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html) · `docs/` 下本文与网页内容需自行同步更新。
+> **站内阅读（随站部署）：** [tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html](https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html) · `docs/` 下本文与网页内容需自行同步更新。  
+> **相关站内专题：** [AI 专题首页](https://tools.songyuankun.top/pages/ai/index.html)（价格一览、场景速查、入门与横评子页；GitHub Pages 同路径 `/pages/ai/index.html`）。专题路线图见仓库根目录 README「AI 专题规划」。
 
 整理于 2026 年 3 月。
 

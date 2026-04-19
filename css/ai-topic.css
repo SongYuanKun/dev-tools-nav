@@ -1168,4 +1168,261 @@
     align-items: center;
     text-align: center;
   }
+
+  .ai-learn-path-track {
+    flex-direction: column;
+  }
+
+  .ai-learn-step {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+/* ==================== 专题首页：学习路径时间线 ==================== */
+.ai-learn-path-section {
+  margin-bottom: 28px;
+}
+
+.ai-learn-path-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.ai-learn-path-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.ai-learn-path-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.ai-learn-step {
+  flex: 1 1 140px;
+  min-width: 140px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ai-learn-step:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.ai-learn-step-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+}
+
+.ai-learn-step-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.ai-learn-step-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ai-learn-step-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: auto;
+}
+
+/* 首页：术语折叠预览 */
+.ai-glossary-preview {
+  margin-bottom: 28px;
+  padding: 0 4px;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+}
+
+.ai-glossary-preview > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 16px;
+  color: var(--text-primary);
+  list-style: none;
+}
+
+.ai-glossary-preview > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ai-glossary-preview[open] > summary {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ai-glossary-preview-body {
+  padding: 12px 16px 0;
+}
+
+.ai-glossary-preview-row {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+
+.ai-glossary-preview-row strong {
+  color: var(--text-primary);
+  margin-right: 6px;
+}
+
+.ai-glossary-preview-more {
+  padding: 0 16px 14px;
+  font-size: 13px;
+  margin: 0;
+}
+
+.ai-glossary-preview-more a {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* 术语页 */
+.glossary-principle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.glossary-principle-card {
+  padding: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.glossary-principle-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.glossary-principle-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.glossary-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.glossary-item {
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  padding: 0;
+}
+
+.glossary-item > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.glossary-item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.glossary-term {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.glossary-one-liner {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.glossary-detail {
+  padding: 0 14px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  border-top: 1px solid var(--border-color);
+  margin-top: 0;
+  padding-top: 12px;
+}
+
+/* 安全页 */
+.safety-intro {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.safety-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.safety-block {
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--color-primary);
+  box-shadow: var(--shadow-card);
+}
+
+.safety-block-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.safety-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.safety-list li {
+  margin-bottom: 6px;
 }

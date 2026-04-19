@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="description" content="AI 专题 - 深度横评、场景工作流、Prompt模板库、新手入门，帮你选出最适合的 AI 工具" />
+  <meta name="description" content="AI 专题 - 学习路径、术语与选型、隐私安全、横评、工作流、Prompt 与新手入门，帮你选出最适合的 AI 工具" />
   <meta property="og:title" content="AI 专题 · Koen的工具箱" />
   <meta property="og:description" content="主流 AI 工具深度横评、场景化工作流、Prompt 模板库、新手入门指南" />
   <meta property="og:type" content="website" />
@@ -53,8 +53,27 @@
     <section class="ai-hero">
       <span class="ai-hero-icon">🤖</span>
       <h1 class="ai-hero-title">AI 专题</h1>
-      <p class="ai-hero-desc">不止罗列工具，更有深度横评、场景工作流、Prompt 模板库和新手入门指南。帮你选出最适合的 AI 工具，用最高效的方式完成工作。</p>
+      <p class="ai-hero-desc">不止罗列工具，更有学习路径、术语与安全、深度横评、场景工作流、Prompt 模板库和新手入门指南。帮你选出最适合的 AI 工具，用最高效的方式完成工作。</p>
+      <p style="margin-top:14px;font-size:14px;">
+        <a href="glossary.html" style="color:var(--color-primary);font-weight:500;">术语与选型</a>
+        <span style="color:var(--text-muted);margin:0 8px;">·</span>
+        <a href="safety.html" style="color:var(--color-primary);font-weight:500;">隐私与安全</a>
+      </p>
     </section>
+
+    <!-- 学习路径时间线 -->
+    <section class="ai-learn-path-section" aria-labelledby="learnPathTitle">
+      <h2 id="learnPathTitle" class="ai-learn-path-title">🧭 推荐学习路径</h2>
+      <p class="ai-learn-path-desc">按顺序走一遍：从入门 → 实战套路 → 数据化对比 → 对照预算</p>
+      <div class="ai-learn-path-track" id="learnPathTrack"></div>
+    </section>
+
+    <!-- 首页折叠：术语速览 -->
+    <details class="ai-glossary-preview" id="glossaryPreview">
+      <summary>📖 快速扫一眼：常用术语（点击展开）</summary>
+      <div class="ai-glossary-preview-body" id="glossaryPreviewBody"></div>
+      <p class="ai-glossary-preview-more"><a href="glossary.html">完整术语与选型思路 →</a> · <a href="safety.html">隐私与安全清单 →</a></p>
+    </details>
 
     <!-- ========== 专题入口卡片 ========== -->
     <section>
@@ -72,7 +91,7 @@
     </section>
 
     <!-- ========== AI 价格一览 ========== -->
-    <section style="margin-top:32px;">
+    <section style="margin-top:32px;" id="pricing-ai">
       <h2 style="font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:8px;">💰 AI 工具价格一览</h2>
       <p style="color:var(--text-secondary);margin-bottom:16px;font-size:14px;">数据整理自各工具官网，价格可能变动，仅供参考</p>
       <div class="pricing-table-wrap">
@@ -90,7 +109,7 @@
         <p><strong>1. 先明确场景</strong> — 你是要写代码、写文章、还是做设计？不同场景的最佳工具完全不同。看上面的速查表就行。</p>
         <p><strong>2. 先免费后付费</strong> — DeepSeek 免费无限用，先把免费工具的能力摸透，再考虑是否需要付费升级。别一上来就花 $20/月。</p>
         <p><strong>3. 工具组合 > 单一神器</strong> — 没有"万能 AI"。写代码用 Cursor，写长文用 Claude，做设计用 Midjourney，组合使用效果最好。</p>
-        <p style="margin-top:12px;font-size:13px;color:var(--text-secondary);">💡 完全零基础？先看 <a href="beginner.html" style="color:var(--color-primary);">AI 新手入门指南</a></p>
+        <p style="margin-top:12px;font-size:13px;color:var(--text-secondary);">💡 完全零基础？先看 <a href="beginner.html" style="color:var(--color-primary);">AI 新手入门指南</a> · 术语见 <a href="glossary.html" style="color:var(--color-primary);">术语与选型</a> · 数据注意见 <a href="safety.html" style="color:var(--color-primary);">隐私与安全</a></p>
       </div>
     </section>
 
@@ -141,11 +160,51 @@
         return `<span class="ai-topic-tool-badge">${escapeHtml(label)}</span>`;
       }
 
+      function renderLearnPath() {
+        const track = document.getElementById("learnPathTrack");
+        if (!track || typeof AI_LEARN_PATH_STEPS === "undefined") return;
+        track.innerHTML = AI_LEARN_PATH_STEPS.map(
+          (s) => `
+          <a href="${escapeHtml(s.href)}" class="ai-learn-step">
+            <span class="ai-learn-step-num">第 ${s.n} 步</span>
+            <span class="ai-learn-step-label">${escapeHtml(s.label)}</span>
+            <span class="ai-learn-step-title">${escapeHtml(s.title)}</span>
+            <span class="ai-learn-step-hint">${escapeHtml(s.hint)}</span>
+          </a>`
+        ).join("");
+      }
+
+      function renderGlossaryPreview() {
+        const body = document.getElementById("glossaryPreviewBody");
+        if (!body || typeof AI_GLOSSARY_DATA === "undefined") return;
+        const slice = AI_GLOSSARY_DATA.slice(0, 4);
+        body.innerHTML = slice
+          .map(
+            (item) =>
+              `<div class="ai-glossary-preview-row"><strong>${escapeHtml(item.term)}</strong>${escapeHtml(item.summary)}</div>`
+          )
+          .join("");
+      }
+
       function renderTopics() {
         const grid = document.getElementById("topicGrid");
         if (!grid) return;
 
         const topics = [
+          {
+            icon: "📖",
+            title: "术语与选型",
+            desc: "Token、上下文、RAG、Agent……用人话读一遍，附三条选型思路，再链到横评与价格表。",
+            href: "glossary.html",
+            badges: ["人话解释", "选型思路", "链到进阶"],
+          },
+          {
+            icon: "🔒",
+            title: "隐私与安全清单",
+            desc: "哪些内容不宜进公网模型？脱敏、密钥管理、输出责任——自检清单。",
+            href: "safety.html",
+            badges: ["脱敏", "密钥", "职场"],
+          },
           {
             icon: "⚖️",
             title: "AI 工具横评对比",
@@ -254,6 +313,8 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
+        renderLearnPath();
+        renderGlossaryPreview();
         renderTopics();
         renderLookup();
         renderPricing();
