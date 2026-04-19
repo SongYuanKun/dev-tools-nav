@@ -120,6 +120,21 @@
   font-weight: 500;
 }
 
+.ai-topic-tool-badge--brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ai-topic-badge-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  max-width: none;
+  object-fit: contain;
+}
+
 .ai-topic-arrow {
   font-size: 14px;
   color: var(--text-muted);
@@ -208,6 +223,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  /* 避免在 grid 窄列中与全局 img{max-width:100%} 形成循环尺寸，导致子项宽度塌成 0 */
+  min-width: 0;
 }
 
 .compare-score-name .tool-emoji {
@@ -221,6 +238,8 @@
   border-radius: 3px;
   vertical-align: middle;
   flex-shrink: 0;
+  max-width: none;
+  object-fit: contain;
 }
 
 .tool-favicon-sm {
@@ -229,6 +248,8 @@
   border-radius: 2px;
   vertical-align: middle;
   flex-shrink: 0;
+  max-width: none;
+  object-fit: contain;
 }
 
 .tool-favicon-xs {
@@ -237,6 +258,8 @@
   border-radius: 2px;
   vertical-align: middle;
   flex-shrink: 0;
+  max-width: none;
+  object-fit: contain;
 }
 
 .compare-score-bar-bg {
@@ -658,6 +681,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .pricing-free {
@@ -793,6 +817,9 @@
 }
 
 .prompt-tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
   padding: 2px 8px;
   background: var(--color-primary-light);

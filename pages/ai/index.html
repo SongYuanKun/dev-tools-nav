@@ -129,6 +129,18 @@
       }
 
       // ====== 专题卡片 ======
+      function renderTopicBadge(label) {
+        let iconUrl = "";
+        if (typeof AI_TOOL_INFO !== "undefined") {
+          const hit = Object.values(AI_TOOL_INFO).find((info) => info.name === label);
+          if (hit && hit.icon) iconUrl = hit.icon;
+        }
+        if (iconUrl) {
+          return `<span class="ai-topic-tool-badge ai-topic-tool-badge--brand"><img src="${iconUrl}" alt="" class="ai-topic-badge-icon" width="14" height="14" loading="lazy" decoding="async" />${escapeHtml(label)}</span>`;
+        }
+        return `<span class="ai-topic-tool-badge">${escapeHtml(label)}</span>`;
+      }
+
       function renderTopics() {
         const grid = document.getElementById("topicGrid");
         if (!grid) return;
@@ -173,7 +185,7 @@
             <p class="ai-topic-desc">${escapeHtml(t.desc)}</p>
             <div class="ai-topic-meta">
               <div class="ai-topic-tools">
-                ${t.badges.map((b) => `<span class="ai-topic-tool-badge">${escapeHtml(b)}</span>`).join("")}
+                ${t.badges.map((b) => renderTopicBadge(b)).join("")}
               </div>
               <span class="ai-topic-arrow">→</span>
             </div>
