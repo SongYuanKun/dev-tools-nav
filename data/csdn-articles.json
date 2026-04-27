@@ -1,7 +1,15 @@
 {
-  "updatedAt": "2026-04-26T13:10:06Z",
+  "updatedAt": "2026-04-27T02:54:31Z",
   "source": "https://blog.csdn.net/syk123839070/rss/list",
   "items": [
+    {
+      "title": "DeepSeek V4 脱离 CUDA 全栈国产化：1.6T MoE 架构拆解 + 昇腾迁移数据",
+      "description": "DeepSeek V4 成为全球首个脱离 CUDA、全面迁移至国产昇腾算力的万亿参数大模型，采用 1.6T MoE 架构，支持 1M 上下文窗口。",
+      "url": "https://blog.csdn.net/syk123839070/article/details/160538120",
+      "date": "2026-04-27",
+      "platform": "CSDN",
+      "tags": []
+    },
     {
       "title": "GLM-5.1 涨价：国产大模型告别“白菜价“，开发者该怎么选？",
       "description": "国产大模型GLM-5.1发布并涨价10%，累计涨幅超80%，标志着国产AI从低价补贴转向价值定价。该模型采用MoE架构和华为昇腾芯片，编程能力全球第三，支持8小时持续Agent任务。虽然官方定价仍低于海外竞品，但企业级价格已接近国际水平。同期DeepSeek等厂商保持低价策略，显示国产模型市场开始分层。涨价反映算力成本上升、技术能力提升和目标客户转向企业市场。开发者需根据项目需求，在高端性能与性…",
@@ -150,14 +158,6 @@
       "title": "学习新技术的学习思路",
       "description": "1.前言公司内部开始有分享技术的会。会上同事对自己所研究的技术做了总结和分享。让我对学习新技术的方法方式上有了些想法。2.官方网站 官方网站一般都有该技术的相关文档教程。好的官方文档基本上就已经把你能遇到的问题都列出来并告知解决方案了。 但是也有一些官方文档写的并不是很人性化。我在学习angular的时候发现其官方中文文档跟不上官方最新版的更新速度，其英文文档又过于冗长，我迫不得已转向...",
       "url": "https://blog.csdn.net/syk123839070/article/details/79500069",
-      "date": "2018-03-09",
-      "platform": "CSDN",
-      "tags": []
-    },
-    {
-      "title": "搭建Jenkins服务",
-      "description": "1、环境 centos6.5； jdk1.8；需要配置环境变量 tomcat8； maven3；需要配置环境变量2、Jenkins服务安装 去Jenkins官网下载https://jenkins.io/download/，下载war包即可。将下载好的war包放入tomcat中，启动tomcat。日志中会显示一串密码浏览器打开http://ip:端口号/jenkins将...",
-      "url": "https://blog.csdn.net/syk123839070/article/details/79488105",
       "date": "2018-03-09",
       "platform": "CSDN",
       "tags": []
