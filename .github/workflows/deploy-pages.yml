@@ -27,12 +27,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Build blog posts from Markdown
         run: node scripts/build-blog.mjs
 
       - name: Generate dynamic sitemap
         run: node scripts/generate-sitemap.mjs
+
+      - name: Generate AI topic changelog
+        run: node scripts/generate-ai-changelog.mjs
 
       - name: Refresh CSDN articles from RSS
         env:

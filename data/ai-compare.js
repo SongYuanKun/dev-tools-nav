@@ -297,6 +297,103 @@ const AI_COMPARE_DATA = [
   },
 ];
 
+/** 横评页顶部：非测评机构声明（计划 3.1 / 信任） */
+const AI_COMPARE_PAGE_DISCLAIMER = {
+  title: "阅读前说明",
+  paragraphs: [
+    "本页分数与结论为站长主观体验与公开信息整理，用于个人学习与交流，不代表第三方检测机构或厂商官方立场。",
+    "模型能力、定价与地区策略变化极快；若与官网、控制台展示不一致，请以各产品官方页面为准。",
+  ],
+};
+
+/** 各横评组：评估方法、局限、依据类型（计划 3.1 / 5） */
+const AI_COMPARE_META = {
+  "llm-chat": {
+    evidenceBasis: "依据类型：主观体验 + 公开产品说明；未跑标准化 benchmark。",
+    methodology: [
+      "按「日常可用场景」维度主观打分（0–10），侧重个人写代码、中文长文与多模态试用感受。",
+      "未统一控制模型版本与温度等参数；不同账号档位可能影响体验。",
+    ],
+    limitations: [
+      "未覆盖全部国产与开源模型；未测企业私有化部署版本。",
+      "未在固定硬件与时延条件下做可重复压测。",
+    ],
+  },
+  "ai-coding": {
+    evidenceBasis: "依据类型：主观体验 + IDE 内试用；非厂商送测。",
+    methodology: [
+      "在中小型真实仓库中试用补全、对话改码、跨文件引用等能力后打分。",
+      "价格维度以公开订阅页为准，未计入教育折扣或企业协议价。",
+    ],
+    limitations: [
+      "未覆盖 JetBrains 等全部 IDE 组合；Trae 等产品迭代快，分数易过期。",
+      "未测严格安全审计与合规场景。",
+    ],
+  },
+  "ai-image": {
+    evidenceBasis: "依据类型：主观审美与公开样例；非画质实验室指标。",
+    methodology: [
+      "以同一类提示词在可访问的产品界面试生成，对比清晰度、风格与中文提示效果。",
+    ],
+    limitations: [
+      "未统一种子与分辨率；不同套餐可能影响出图质量。",
+      "Stable Diffusion 本地部署差异极大，此处以「典型云端/社区方案」粗评。",
+    ],
+  },
+  "ai-search": {
+    evidenceBasis: "依据类型：主观检索体验；未做大规模检索准确率统计。",
+    methodology: [
+      "以中文技术问题、新闻追踪与引用展示习惯为主进行主观对比。",
+    ],
+    limitations: [
+      "网络环境与账号地区对结果影响大；未覆盖所有地区节点。",
+    ],
+  },
+  "ai-video": {
+    evidenceBasis: "依据类型：公开 demo 与有限试用；部分产品开放度变化快。",
+    methodology: [
+      "以画质主观观感、中文提示、获取门槛等维度打分；未做帧级客观指标。",
+    ],
+    limitations: [
+      "Sora 等开放范围受限，分数仅代表当时可获取体验。",
+    ],
+  },
+  "ai-translate": {
+    evidenceBasis: "依据类型：主观试译 + 常见技术文档场景。",
+    methodology: [
+      "以技术段落、界面文案与网页翻译体验为主；未做 BLEU 等自动评测。",
+    ],
+    limitations: [
+      "未覆盖小语种与专业垂直领域（医疗/法律等）全量场景。",
+    ],
+  },
+};
+
+/** 延伸阅读区块底部：利益相关一句话（计划 5） */
+const AI_TRUST_STATEMENT =
+  "利益相关：本站工具与专题页面无厂商付费排名；若未来存在联盟营销或赞助，将在页脚与本文附近显著标注。";
+
+/** 各 AI 子页底部「延伸阅读」链接（相对 pages/ai/） */
+const AI_RELATED_READS_LINKS = [
+  { href: "../blog/ai-free-tokens-handbook.html", label: "博客：AI 免费 Token / 额度手册" },
+  { href: "../blog/why-build-dev-tools-nav.html", label: "博客：为什么做这座工具箱" },
+  { href: "../../index.html", label: "工具导航（含 AI 工具分类）" },
+  { href: "index.html", label: "AI 专题首页" },
+  { href: "glossary.html", label: "术语与选型" },
+  { href: "safety.html", label: "隐私与安全清单" },
+];
+
+/** 首页价格表：数据快照日期（计划 3.2） */
+const AI_PRICING_SNAPSHOT_DATE = "2026-04-20";
+
+/** 首页：按角色快选（README P2） */
+const AI_ROLE_QUICK_PICK = [
+  { role: "开发者", hint: "写代码 + 项目理解", combo: "DeepSeek + Cursor", href: "workflow.html#workflow-indie-dev" },
+  { role: "内容创作者", hint: "长文 + 配图", combo: "Claude + Midjourney", href: "workflow.html#workflow-content-creator" },
+  { role: "学生 / 研究", hint: "文献与检索", combo: "Perplexity + DeepSeek", href: "workflow.html#workflow-student-research" },
+  { role: "职场效率", hint: "邮件与纪要", combo: "ChatGPT + 沉浸式翻译", href: "workflow.html#workflow-daily-efficiency" },
+];
+
 // ==================== 场景工作流数据 ====================
 const AI_WORKFLOW_DATA = [
   {
@@ -873,6 +970,106 @@ const AI_TOOL_INFO = {
   "immersive-translate": { name: "沉浸式翻译", icon: "https://icon.horse/icon/immersivetranslate.com", color: "#6366F1", url: "https://immersivetranslate.com/" },
 };
 
+// ==================== 场景速查（专题首页，与 AI_TOOL_INFO key 对齐） ====================
+const AI_LOOKUP_SCENES = [
+  {
+    id: "code",
+    scene: "写代码",
+    icon: "💻",
+    best: "DeepSeek + Cursor",
+    reason: "DeepSeek 推理强 + Cursor 项目理解强",
+    free: "DeepSeek 免费",
+    workflowHref: "workflow.html#workflow-indie-dev",
+    promptHref: "prompts.html#prompt-dev",
+    compareHref: "compare.html#compare-ai-coding",
+    toolIds: ["deepseek", "cursor"],
+  },
+  {
+    id: "writing",
+    scene: "写文章",
+    icon: "📝",
+    best: "Claude + DeepSeek",
+    reason: "Claude 文笔自然 + DeepSeek 技术分析专业",
+    free: "DeepSeek 免费",
+    workflowHref: "workflow.html#workflow-content-creator",
+    promptHref: "prompts.html#prompt-writing",
+    compareHref: "compare.html#compare-llm-chat",
+    toolIds: ["claude", "deepseek"],
+  },
+  {
+    id: "design",
+    scene: "做设计",
+    icon: "🎨",
+    best: "Midjourney + Ideogram",
+    reason: "Midjourney 画质顶 + Ideogram 文字渲染准",
+    free: "Ideogram 有免费额度",
+    workflowHref: "workflow.html#workflow-ai-art-design",
+    promptHref: "prompts.html#prompt-design",
+    compareHref: "compare.html#compare-ai-image",
+    toolIds: ["midjourney", "ideogram"],
+  },
+  {
+    id: "search",
+    scene: "搜资料",
+    icon: "🔍",
+    best: "Perplexity + Kimi",
+    reason: "Perplexity 来源严谨 + Kimi 中文搜索好",
+    free: "Kimi 免费",
+    workflowHref: "workflow.html#workflow-student-research",
+    promptHref: "prompts.html#prompt-study",
+    compareHref: "compare.html#compare-ai-search",
+    toolIds: ["perplexity", "kimi"],
+  },
+  {
+    id: "video",
+    scene: "做视频",
+    icon: "🎬",
+    best: "可灵 + Runway",
+    reason: "可灵中文友好 + Runway 控制专业",
+    free: "可灵有免费体验",
+    workflowHref: "",
+    promptHref: "prompts.html#prompt-design",
+    compareHref: "compare.html#compare-ai-video",
+    toolIds: ["kling", "runway"],
+  },
+  {
+    id: "translate",
+    scene: "翻译文档",
+    icon: "🌐",
+    best: "DeepSeek + 沉浸式翻译",
+    reason: "DeepSeek 技术翻译准 + 沉浸式网页翻译方便",
+    free: "都免费",
+    workflowHref: "workflow.html#workflow-daily-efficiency",
+    promptHref: "prompts.html#prompt-writing",
+    compareHref: "compare.html#compare-ai-translate",
+    toolIds: ["deepseek", "immersive-translate"],
+  },
+  {
+    id: "study",
+    scene: "学技术",
+    icon: "🎓",
+    best: "DeepSeek + Claude",
+    reason: "DeepSeek 讲解清晰 + Claude 擅长长文梳理",
+    free: "DeepSeek 免费",
+    workflowHref: "workflow.html#workflow-student-research",
+    promptHref: "prompts.html#prompt-study",
+    compareHref: "compare.html#compare-llm-chat",
+    toolIds: ["deepseek", "claude"],
+  },
+  {
+    id: "ppt",
+    scene: "做PPT",
+    icon: "📊",
+    best: "ChatGPT + Gamma",
+    reason: "ChatGPT 生成大纲 + Gamma AI 排版出图",
+    free: "Gamma 有免费版",
+    workflowHref: "workflow.html#workflow-content-creator",
+    promptHref: "prompts.html#prompt-writing",
+    compareHref: "compare.html#compare-llm-chat",
+    toolIds: ["chatgpt"],
+  },
+];
+
 // ==================== 专题首页：学习路径时间线 ====================
 const AI_LEARN_PATH_STEPS = [
   { n: 1, label: "入门", title: "概念与避坑", href: "beginner.html", hint: "约 15 分钟" },
@@ -886,70 +1083,111 @@ const AI_LEARN_PATH_STEPS = [
 const AI_TOPIC_CHANGELOG = [
   {
     date: "2026-04-20",
-    title: "P1：开发者向、更新记录、场景内链、学习路径拆步",
-    detail: "新增 dev-api 页；场景速查卡片链到工作流 / Prompt 锚点 / 横评；Prompt 分类支持 hash 定位；学习路径拆为 5 步。",
-  },
-  {
-    date: "2026-04-20",
-    title: "P0：术语表、隐私安全、学习路径",
-    detail: "新增 glossary / safety；首页时间线与术语折叠预览；数据集中在 ai-compare.js。",
+    title: "P1 开发者页、更新记录、场景内链、子导航与 Prom…等 1 项；修复 1 项",
+    detail: "P1 开发者页、更新记录、场景内链、子导航与 Prompt 锚点；P0 术语页、安全页、学习路径与文档同步；修复 专题卡徽章品牌图标与 favicon 布局",
   },
   {
     date: "2026-04-18",
-    title: "AI 专题首版",
-    detail: "6 组横评、6 条工作流、Prompt 库、新手入门、首页速查与价格表上线。",
-  },
+    title: "新增 AI 专题模块 - 6组横评+6个工作流+Prompt模板库+新手入门；修复 1 项",
+    detail: "新增 AI 专题模块 - 6组横评+6个工作流+Prompt模板库+新手入门；修复 AI专题图标从emoji替换为品牌favicon(icon.horse)",
+  }
 ];
 
 // ==================== 术语与选型（glossary.html + 首页折叠预览）====================
 const AI_GLOSSARY_DATA = [
   {
     term: "Token",
+    termEn: "Token",
+    seeAlso: {
+      label: "OpenAI 文档：理解 token 与计数",
+      href: "https://platform.openai.com/docs/advanced-usage/token-counting",
+    },
     summary: "模型计费与上下文长度的常用计量单位，可粗理解为「拆碎后的字数」，各家拆分规则不同，不必手算。",
     detail: "免费额度、API 账单里写的「消耗了多少 token」指的就是它。上下文窗口也是按 token 上限算——超长文档会被截断或摘要，而不是无限塞入。",
   },
   {
     term: "上下文（Context）",
+    termEn: "Context / context window",
+    seeAlso: {
+      label: "Wikipedia：Context window（上下文窗口）",
+      href: "https://en.wikipedia.org/wiki/Context_window",
+    },
     summary: "模型「当前这一轮对话里能看到的」文字总量上限，包含你的指令、上传文件、历史轮次等。",
     detail: "窗口越大，越适合长文、整库代码分析；但成本与延迟通常更高。选型时先看你的典型任务有多长。",
   },
   {
     term: "Prompt",
+    termEn: "Prompt",
+    seeAlso: {
+      label: "OpenAI 指南：Prompt engineering",
+      href: "https://platform.openai.com/docs/guides/prompt-engineering",
+    },
     summary: "你给模型的指令文本。写清楚角色、任务、背景、输出格式，往往比堆形容词更有效。",
     detail: "专题内「Prompt 模板库」可直接复制；新手入门里也有万能公式。",
   },
   {
     term: "大语言模型（LLM）",
+    termEn: "Large language model (LLM)",
+    seeAlso: {
+      label: "Wikipedia：Large language model",
+      href: "https://en.wikipedia.org/wiki/Large_language_model",
+    },
     summary: "以文本为主训练、能续写与对话的模型族；多模态 LLM 还能看图/听音等。",
     detail: "不必纠结「是不是 AGI」——对你而言，把它当成可反复试错的写作/编程/检索助手即可。",
   },
   {
     term: "RAG（检索增强生成）",
+    termEn: "Retrieval-augmented generation (RAG)",
+    seeAlso: {
+      label: "Wikipedia：Retrieval-augmented generation",
+      href: "https://en.wikipedia.org/wiki/Retrieval-augmented_generation",
+    },
     summary: "先在你的文档/知识库里检索相关片段，再让模型基于片段回答，减少「胡编」并便于溯源。",
     detail: "适合企业知识库、产品手册问答。个人用户若只用网页聊天，接触较少，知道概念即可。",
   },
   {
     term: "Agent（智能体）",
+    termEn: "Agent",
+    seeAlso: {
+      label: "Wikipedia：Intelligent agent",
+      href: "https://en.wikipedia.org/wiki/Intelligent_agent",
+    },
     summary: "能多步调用工具（搜索、执行代码、读写文件等）完成目标的系统，不只是「一问一答」。",
     detail: "与单次聊天比，更自动化也更难调试。选型时看产品是否暴露「用了哪些工具」与撤销机制。",
   },
   {
     term: "多模态",
+    termEn: "Multimodal",
+    seeAlso: {
+      label: "Wikipedia：Multimodal learning",
+      href: "https://en.wikipedia.org/wiki/Multimodal_learning",
+    },
     summary: "除文字外还支持图像、音频、视频等输入或输出。",
     detail: "做设计参考、读截图、视频摘要时会用到。纯写代码/写文档时未必刚需。",
   },
   {
     term: "推理模型",
+    termEn: "Reasoning model",
     summary: "显式强化「先想后答」的一类模型，适合数学、逻辑、复杂决策；日常闲聊可能偏慢。",
     detail: "若任务以代码推理、证明为主可优先；若偏创意写作，不必强行上推理档。",
   },
   {
     term: "温度（Temperature）",
+    termEn: "Temperature",
+    seeAlso: {
+      label: "OpenAI API 参考：temperature 参数",
+      href: "https://platform.openai.com/docs/api-reference/chat/create",
+    },
     summary: "调高则更发散、有创意；调低则更稳、更「照本宣科」。多数产品用默认即可。",
     detail: "API 用户会常见此参数；网页端聊天一般隐藏，由产品预设。",
   },
   {
     term: "系统提示（System Prompt）",
+    termEn: "System prompt",
+    seeAlso: {
+      label: "OpenAI API 参考：messages / system role",
+      href: "https://platform.openai.com/docs/api-reference/chat/create",
+    },
     summary: "藏在对话背后的「人设与规则」，用户往往看不见但会影响风格与安全边界。",
     detail: "自建应用时要写好 system prompt；只用官网产品时了解即可。",
   },

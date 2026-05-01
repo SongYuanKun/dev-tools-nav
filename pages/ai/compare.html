@@ -77,6 +77,8 @@
     <!-- 对比内容 -->
     <div id="compareContent"></div>
 
+    <section class="ai-related-reads" id="aiRelatedReads" aria-label="延伸阅读"></section>
+
   </main>
 
   <!-- ========== 页脚 ========== -->
@@ -103,6 +105,7 @@
 
   <script src="../../data/ai-compare.js"></script>
   <script src="../../js/main.js"></script>
+  <script defer src="../../js/ai-related-reads.js"></script>
   <script>
     (function () {
       function escapeHtml(str) {
@@ -133,10 +136,43 @@
 
         let html = "";
 
+        if (typeof AI_COMPARE_PAGE_DISCLAIMER !== "undefined") {
+          const d = AI_COMPARE_PAGE_DISCLAIMER;
+          html += `<aside class="compare-page-disclaimer" role="note">`;
+          html += `<h2 class="compare-page-disclaimer-title">${escapeHtml(d.title)}</h2>`;
+          (d.paragraphs || []).forEach((para) => {
+            html += `<p class="compare-page-disclaimer-p">${escapeHtml(para)}</p>`;
+          });
+          html += `</aside>`;
+        }
+
         AI_COMPARE_DATA.forEach((compare) => {
           html += `<section class="compare-section" id="compare-${compare.id}">`;
           html += `<h2 class="compare-section-title">${compare.icon} ${escapeHtml(compare.title)}</h2>`;
           html += `<p class="compare-section-desc">${escapeHtml(compare.description)}</p>`;
+
+          const meta = typeof AI_COMPARE_META !== "undefined" ? AI_COMPARE_META[compare.id] : null;
+          if (meta) {
+            html += `<details class="compare-meta-box"><summary>本组评分说明与局限</summary>`;
+            if (meta.evidenceBasis) {
+              html += `<p class="compare-meta-lead">${escapeHtml(meta.evidenceBasis)}</p>`;
+            }
+            if (meta.methodology && meta.methodology.length) {
+              html += `<h3 class="compare-meta-subtitle">评估方法</h3><ul class="compare-meta-list">`;
+              meta.methodology.forEach((line) => {
+                html += `<li>${escapeHtml(line)}</li>`;
+              });
+              html += `</ul>`;
+            }
+            if (meta.limitations && meta.limitations.length) {
+              html += `<h3 class="compare-meta-subtitle">局限与未覆盖</h3><ul class="compare-meta-list">`;
+              meta.limitations.forEach((line) => {
+                html += `<li>${escapeHtml(line)}</li>`;
+              });
+              html += `</ul>`;
+            }
+            html += `</details>`;
+          }
 
           compare.dimensions.forEach((dim) => {
             html += `<div class="compare-dimension">`;

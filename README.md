@@ -40,6 +40,7 @@ dev-tools-nav/
 ├── css/ai-topic.css        # AI 专题页样式
 ├── js/
 │   ├── main.js             # 搜索过滤、分类、彩蛋、侧栏等
+│   ├── ai-related-reads.js # AI 子页底部「延伸阅读」注入
 │   └── base.js             # 全站共用（如统计）
 ├── pages/
 │   ├── template.html       # 工具详情页（?id=xxx）
@@ -66,15 +67,16 @@ dev-tools-nav/
 
 | 模块 | 说明 |
 |------|------|
-| **专题首页** `pages/ai/index.html` | Hero + 术语/安全链；**推荐学习路径** 5 步；**术语折叠预览**；**近期更新**（`AI_TOPIC_CHANGELOG`）；**场景速查内链**；探索专题卡（含 dev-api；工具名徽章 favicon）；价格 `id="pricing-ai"`；选型短文；**专题内导航条** |
+| **专题首页** `pages/ai/index.html` | Hero + 术语/安全链；**推荐学习路径** 5 步；**术语折叠预览**；**近期更新**（`AI_TOPIC_CHANGELOG`）；**按角色快选**（`AI_ROLE_QUICK_PICK`）；**场景速查内链**；探索专题卡（含 dev-api；工具名徽章 favicon）；价格 `id="pricing-ai"` + **快照日期**（`AI_PRICING_SNAPSHOT_DATE`）；选型短文；**专题内导航条**；底部 **延伸阅读**（`js/ai-related-reads.js`） |
 | **开发者向** `pages/ai/dev-api.html` | 网页 vs API vs IDE 助手、何时用 API、链主站 `template.html` 与编程横评 |
-| **术语与选型** `pages/ai/glossary.html` | 三条选型原则（`AI_SELECTION_PRINCIPLES`）+ 可展开术语表（`AI_GLOSSARY_DATA`） |
+| **术语与选型** `pages/ai/glossary.html` | 三条选型原则（`AI_SELECTION_PRINCIPLES`）+ 可展开术语表（`AI_GLOSSARY_DATA`）+ **页内术语目录（TOC）** |
 | **隐私与安全** `pages/ai/safety.html` | 清单式章节（`AI_SAFETY_DATA`） |
-| **横评对比** `pages/ai/compare.html` | 6 组横评（对话 / 编程 / 绘图 / 搜索 / 视频 / 翻译），维度评分与结论 |
+| **横评对比** `pages/ai/compare.html` | 6 组横评（对话 / 编程 / 绘图 / 搜索 / 视频 / 翻译），维度评分与结论；**页顶声明**（`AI_COMPARE_PAGE_DISCLAIMER`）；每组 **方法/局限**（`AI_COMPARE_META`） |
 | **场景工作流** `pages/ai/workflow.html` | 多场景步骤 + 工具标签 + Prompt 片段 |
 | **Prompt 模板库** `pages/ai/prompts.html` | 按分类筛选、复制模板；分类 section 设 `id="prompt-*"`，URL hash 可定位并自动筛分类 |
 | **新手入门** `pages/ai/beginner.html` | 基础概念、上手步骤、误区、学习路径 |
-| **数据与映射** `data/ai-compare.js` | 上列外加 `AI_TOPIC_CHANGELOG`、`AI_LEARN_PATH_STEPS`、`AI_GLOSSARY_DATA`、`AI_SELECTION_PRINCIPLES`、`AI_SAFETY_DATA`；以及 `AI_COMPARE_DATA`、`AI_WORKFLOW_DATA` 等 |
+| **数据与映射** `data/ai-compare.js` | 上列外加 `AI_TOPIC_CHANGELOG`、`AI_LEARN_PATH_STEPS`、`AI_GLOSSARY_DATA`、`AI_SELECTION_PRINCIPLES`、`AI_SAFETY_DATA`；以及 `AI_COMPARE_DATA`、`AI_COMPARE_META`、`AI_COMPARE_PAGE_DISCLAIMER`、`AI_WORKFLOW_DATA`、`AI_LOOKUP_SCENES`（场景速查 + `toolIds`）、`AI_RELATED_READS_LINKS`、`AI_TRUST_STATEMENT`、`AI_PRICING_SNAPSHOT_DATE`、`AI_ROLE_QUICK_PICK` 等；术语条目支持可选 `termEn` / `seeAlso` |
+| **Changelog 自动化** `scripts/generate-ai-changelog.mjs` | CI 部署前从 git log 提取 AI 专题 commit，按日期分组，智能生成 title/detail，自动写入 `data/ai-compare.js` |
 | **专题样式** `css/ai-topic.css` | 含 `ai-subnav`、changelog、场景速查内链、横评/工作流等各页布局；favicon 与徽章样式 |
 | **全站入口** | `index.html` 导航「AI 专题」、AI 分类下横幅等（与 `js/main.js` 联动） |
 | **SEO** | `scripts/generate-sitemap.mjs` 生成 `sitemap.xml` 时扫描 `pages/ai/*.html` 并写入 URL（CI 部署前执行） |
@@ -97,11 +99,11 @@ dev-tools-nav/
 
 **P2（可选）**
 
-- [ ] **按角色推荐组合**：产品 / 设计 / 研发等工具组合 + 链到 workflow（与 beginner 路径卡部分重叠，可做精简版首页条）
-- [ ] **专题内推荐阅读**：统一底部组件（链博客、主站 AI 分类）；compare/workflow 页补充「延伸阅读」块
-- [ ] **轻量交互**：纯前端按场景筛选高亮工具（数据来自 `AI_TOOL_INFO`）
-- [ ] **术语增强**：中英对照、外链权威定义；glossary 页内 TOC 目录
-- [ ] **更新说明自动化**：CI 或脚本从 git log /  front matter 生成 CHANGELOG（当前为手写数组）
+- [x] **按角色推荐组合**：首页「按角色快选」卡片（`AI_ROLE_QUICK_PICK`）链到 workflow 锚点
+- [x] **专题内推荐阅读**：`js/ai-related-reads.js` + `AI_RELATED_READS_LINKS` / `AI_TRUST_STATEMENT`，各 AI 子页底部统一块
+- [x] **轻量交互**：专题首页「场景速查」——`AI_LOOKUP_SCENES` + 顶部筛选按钮；卡片内 **`AI_TOOL_INFO` 外链 chips**（`pages/ai/index.html` + [`css/ai-topic.css`](css/ai-topic.css)）
+- [x] **术语增强（首期）**：`AI_GLOSSARY_DATA` 增加可选 **`termEn` / `seeAlso`**，glossary 页展开区延伸阅读；首页折叠预览以小字展示 `termEn`（页内 TOC 已有）
+- [x] **更新说明自动化**：CI 部署前 `scripts/generate-ai-changelog.mjs` 从 git log 自动生成 `AI_TOPIC_CHANGELOG` 并写入 `data/ai-compare.js`
 
 **信息架构（可选）**
 

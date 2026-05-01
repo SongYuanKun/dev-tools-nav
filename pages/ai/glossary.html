@@ -67,13 +67,7 @@
     <section class="glossary-principles" id="principlesSection"></section>
     <section class="glossary-list" id="glossaryListSection"></section>
 
-    <section class="about-section" style="margin-top:28px;">
-      <h2 class="about-section-title">延伸阅读</h2>
-      <div class="about-story">
-        <p><a href="beginner.html">AI 新手入门</a> · <a href="dev-api.html">开发者 API 与编程助手</a> · <a href="compare.html">工具横评</a> · <a href="index.html#pricing-ai">价格一览</a> · <a href="prompts.html">Prompt 模板库</a></p>
-        <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">免费额度与 API 注意事项可参考博客：<a href="../blog/ai-free-tokens-handbook.html">AI 免费 Token / 额度手册</a></p>
-      </div>
-    </section>
+    <section class="ai-related-reads" id="aiRelatedReads" aria-label="延伸阅读"></section>
   </main>
 
   <footer class="footer">
@@ -99,6 +93,7 @@
 
   <script src="../../data/ai-compare.js"></script>
   <script src="../../js/main.js"></script>
+  <script defer src="../../js/ai-related-reads.js"></script>
   <script>
     (function () {
       function escapeHtml(str) {
@@ -121,12 +116,26 @@
       function renderGlossary() {
         const el = document.getElementById("glossaryListSection");
         if (!el || typeof AI_GLOSSARY_DATA === "undefined") return;
-        let html = `<h2 class="compare-section-title">📚 术语表</h2><p class="compare-section-desc">点击条目展开更多说明</p><div class="glossary-accordion">`;
+        const tocLinks = AI_GLOSSARY_DATA.map((item, idx) => {
+          const id = `gloss-${idx}`;
+          return `<a href="#${id}" class="glossary-toc-link">${escapeHtml(item.term)}</a>`;
+        }).join("");
+        let html = `<h2 class="compare-section-title">📚 术语表</h2><p class="compare-section-desc">点击条目展开更多说明</p>`;
+        html += `<nav class="glossary-toc" aria-label="术语目录">${tocLinks}</nav>`;
+        html += `<div class="glossary-accordion">`;
         AI_GLOSSARY_DATA.forEach((item, idx) => {
           const id = `gloss-${idx}`;
+          const termEn = item.termEn
+            ? `<span class="glossary-term-en" lang="en">${escapeHtml(item.termEn)}</span>`
+            : "";
           html += `<details class="glossary-item" id="${id}">`;
-          html += `<summary><span class="glossary-term">${escapeHtml(item.term)}</span><span class="glossary-one-liner">${escapeHtml(item.summary)}</span></summary>`;
-          html += `<div class="glossary-detail">${escapeHtml(item.detail || item.summary)}</div>`;
+          html += `<summary><span class="glossary-term-row"><span class="glossary-term">${escapeHtml(item.term)}</span>${termEn}</span><span class="glossary-one-liner">${escapeHtml(item.summary)}</span></summary>`;
+          html += `<div class="glossary-detail">${escapeHtml(item.detail || item.summary)}`;
+          if (item.seeAlso && item.seeAlso.href) {
+            const lab = item.seeAlso.label || "延伸阅读";
+            html += `<p class="glossary-see-also">延伸阅读：<a href="${escapeHtml(item.seeAlso.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(lab)}</a></p>`;
+          }
+          html += `</div>`;
           html += `</details>`;
         });
         html += `</div>`;
