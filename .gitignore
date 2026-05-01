@@ -9,6 +9,9 @@ logs/
 .cursor/skills/deploy-dev-tools-nav-internal-srv/
 .cursor/plans/
 
+# 本地工作区辅助（如会话/记忆），勿提交
+.workbuddy/
+
 # 个人战略与执行计划（仅本机保留，不提交 GitHub）
 docs/plan-personal-ip-and-site-evolution.md
 
