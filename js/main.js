@@ -379,6 +379,7 @@ function createCategoryBtn(cat, container) {
     document.querySelectorAll(".category-btn").forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     renderTools();
+    window.umami?.track?.("category_switch", { category: cat.id });
   });
   return btn;
 }
@@ -400,6 +401,14 @@ function initSearch() {
     debounceTimer = setTimeout(() => {
       state.searchQuery = e.target.value.trim().toLowerCase();
       renderTools();
+      if (state.searchQuery.length > 1) {
+        const results = filterTools();
+        window.umami?.track?.("search", {
+          query: state.searchQuery,
+          results_count: results.length,
+          has_results: results.length > 0,
+        });
+      }
     }, 200);
   });
 
@@ -481,6 +490,11 @@ function createToolCard(tool) {
   card.querySelector(".fav-btn").addEventListener("click", (e) => {
     e.stopPropagation();
     const added = Favorites.toggle(tool.id);
+    window.umami?.track?.("favorite_toggle", {
+      tool_id: tool.id,
+      tool_name: tool.name,
+      action: added ? "add" : "remove",
+    });
     if (!added && state.currentCategory === "favorites") {
       renderTools();
       return;
@@ -492,9 +506,17 @@ function createToolCard(tool) {
     card.classList.toggle("favorited", added);
   });
 
-  // 记录访问
+  // 记录访问 + 埋点
   card.querySelectorAll("[data-tool-id]").forEach((link) => {
-    link.addEventListener("click", () => RecentVisits.add(tool.id));
+    link.addEventListener("click", () => {
+      RecentVisits.add(tool.id);
+      window.umami?.track?.("tool_click", {
+        tool_id: tool.id,
+        tool_name: tool.name,
+        category: tool.category,
+        action: link.classList.contains("visit-btn") ? "visit" : "detail",
+      });
+    });
   });
 
   return card;

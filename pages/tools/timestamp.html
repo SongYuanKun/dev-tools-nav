@@ -409,7 +409,7 @@
         var dt = document.getElementById("dtLocal");
         if (dt) dt.value = toDatetimeLocalValue(new Date());
 
-        document.getElementById("tsConvertBtn").addEventListener("click", runTsToDate);
+        document.getElementById("tsConvertBtn").addEventListener("click", function () { runTsToDate(); window.umami?.track?.("tool_used", { tool: "timestamp", action: "ts_to_date" }); });
         document.getElementById("tsInput").addEventListener("keydown", function (e) {
           if (e.key === "Enter") runTsToDate();
         });
@@ -419,7 +419,7 @@
           showError(document.getElementById("ts2dateError"), "");
         });
 
-        document.getElementById("dtConvertBtn").addEventListener("click", runDateToTs);
+        document.getElementById("dtConvertBtn").addEventListener("click", function () { runDateToTs(); window.umami?.track?.("tool_used", { tool: "timestamp", action: "date_to_ts" }); });
 
         document.querySelectorAll("[data-quick]").forEach(function (b) {
           b.addEventListener("click", function () {

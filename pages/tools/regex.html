@@ -544,6 +544,7 @@
       // 替换功能
       // ============================================================
       document.getElementById("btnReplace").addEventListener("click", function () {
+        window.umami?.track?.("tool_used", { tool: "regex", action: "replace" });
         var re = getRegex();
         var text = document.getElementById("testInput").value;
         var replaceWith = document.getElementById("replaceWith").value;

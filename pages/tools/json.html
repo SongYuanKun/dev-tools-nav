@@ -363,9 +363,9 @@
           });
         }
 
-        document.getElementById("btnFormat").addEventListener("click", doFormat);
-        document.getElementById("btnMinify").addEventListener("click", doMinify);
-        document.getElementById("btnValidate").addEventListener("click", doValidate);
+        document.getElementById("btnFormat").addEventListener("click", function () { doFormat(); window.umami?.track?.("tool_used", { tool: "json", action: "format" }); });
+        document.getElementById("btnMinify").addEventListener("click", function () { doMinify(); window.umami?.track?.("tool_used", { tool: "json", action: "minify" }); });
+        document.getElementById("btnValidate").addEventListener("click", function () { doValidate(); window.umami?.track?.("tool_used", { tool: "json", action: "validate" }); });
         document.getElementById("btnCopy").addEventListener("click", doCopy);
         document.getElementById("btnClear").addEventListener("click", doClear);
 

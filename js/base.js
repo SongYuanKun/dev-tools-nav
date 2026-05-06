@@ -71,4 +71,20 @@
       if (doc.readyState === "complete") trackPageview();
     });
   }
+
+  // JS 错误追踪
+  window.addEventListener("error", function (e) {
+    send({ website: WEBSITE_ID, hostname: location.hostname, screen: screen, language: language, title: doc.title, url: currentUrl, referrer: currentRef, name: "js_error", data: { message: e.message, source: (e.filename || "").split("/").pop(), line: e.lineno } });
+  });
+
+  // LCP 性能采集
+  if ("PerformanceObserver" in window) {
+    try {
+      new PerformanceObserver(function (list) {
+        var entries = list.getEntries();
+        var last = entries[entries.length - 1];
+        if (last) send({ website: WEBSITE_ID, hostname: location.hostname, screen: screen, language: language, title: doc.title, url: currentUrl, referrer: currentRef, name: "perf_lcp", data: { value: Math.round(last.startTime) } });
+      }).observe({ type: "largest-contentful-paint", buffered: true });
+    } catch (_) {}
+  }
 })();

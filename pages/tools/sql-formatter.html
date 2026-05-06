@@ -492,6 +492,7 @@
         var result = formatSQL(sql, opts);
         setOutput(result);
         setStatus("ok", "格式化完成。");
+        window.umami?.track?.("tool_used", { tool: "sql_formatter", action: "format" });
       });
 
       document.getElementById("btnMinify").addEventListener("click", function () {

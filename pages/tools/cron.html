@@ -592,6 +592,7 @@
       });
 
       document.getElementById("btnParse").addEventListener("click", function () {
+        window.umami?.track?.("tool_used", { tool: "cron", action: "parse" });
         var raw = document.getElementById("parseInput").value;
         var msg = document.getElementById("parseMsg");
         if (syncFromExpression(raw)) {
