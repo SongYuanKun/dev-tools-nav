@@ -1,0 +1,67 @@
+name: "Deploy to 1Panel (SSH + rsync)"
+
+"on":
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      ONEPANEL_HOST: ${{ secrets.ONEPANEL_HOST }}
+      ONEPANEL_USER: ${{ secrets.ONEPANEL_USER }}
+      ONEPANEL_PATH: ${{ secrets.ONEPANEL_PATH }}
+      ONEPANEL_PORT: ${{ secrets.ONEPANEL_PORT }}
+      ONEPANEL_SSH_KEY: ${{ secrets.ONEPANEL_SSH_KEY }}
+      DEPLOY_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check deploy config
+        run: |
+          if [[ -z "$ONEPANEL_HOST" || -z "$ONEPANEL_USER" || -z "$ONEPANEL_PATH" || -z "$ONEPANEL_SSH_KEY" ]]; then
+            echo "Deploy skipped: missing ONEPANEL_* secrets." 
+            echo "DEPLOY_ENABLED=false" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          echo "DEPLOY_ENABLED=true" >> "$GITHUB_ENV"
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        if: env.DEPLOY_ENABLED == 'true'
+        with:
+          ssh-private-key: ${{ env.ONEPANEL_SSH_KEY }}
+
+      - name: Trust host key
+        if: env.DEPLOY_ENABLED == 'true'
+        run: |
+          mkdir -p ~/.ssh
+          PORT="${ONEPANEL_PORT:-22}"
+          ssh-keyscan -p "$PORT" -H "$ONEPANEL_HOST" >> ~/.ssh/known_hosts
+
+      - name: Sync site
+        if: env.DEPLOY_ENABLED == 'true'
+        run: |
+          PORT="${ONEPANEL_PORT:-22}"
+          rsync -az --delete --delete-excluded \
+            -e "ssh -p $PORT" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='README.md' \
+            --exclude='.gitignore' \
+            --exclude='docs' \
+            --exclude='content' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='node_modules' \
+            --exclude='deploy.sh' \
+            --exclude='logs' \
+            --exclude='*.bak' \
+            --exclude='.DS_Store' \
+            ./ "$ONEPANEL_USER@$ONEPANEL_HOST:$ONEPANEL_PATH/"
