@@ -10,8 +10,6 @@ const state = {
   currentCategory: "all",
   searchQuery: "",
   secretUnlocked: false,
-  clickSequence: [],
-  konamiCode: [],
 };
 
 // ============================================================
@@ -19,23 +17,31 @@ const state = {
 // ============================================================
 const Favorites = {
   STORAGE_KEY: "devtools-favorites",
+  _set: null,
+
+  _load() {
+    if (this._set) return;
+    try {
+      this._set = new Set(JSON.parse(localStorage.getItem(this.STORAGE_KEY)) || []);
+    } catch { this._set = new Set(); }
+  },
 
   getAll() {
-    try {
-      return JSON.parse(localStorage.getItem(this.STORAGE_KEY)) || [];
-    } catch { return []; }
+    this._load();
+    return [...this._set];
   },
 
   has(id) {
-    return this.getAll().includes(id);
+    this._load();
+    return this._set.has(id);
   },
 
   toggle(id) {
-    const favs = this.getAll();
-    const idx = favs.indexOf(id);
-    if (idx === -1) { favs.push(id); } else { favs.splice(idx, 1); }
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(favs));
-    return idx === -1;
+    this._load();
+    const existed = this._set.has(id);
+    if (existed) { this._set.delete(id); } else { this._set.add(id); }
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify([...this._set]));
+    return !existed;
   },
 };
 
@@ -191,8 +197,7 @@ const EasterEgg = {
     btn.innerHTML = `<span>${activateCat.icon}</span><span>${activateCat.label}</span>`;
     btn.addEventListener("click", () => {
       state.currentCategory = "activate";
-      document.querySelectorAll(".category-btn").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
+      activateCategoryBtn(btn);
       renderTools();
     });
 
@@ -238,57 +243,47 @@ const EasterEgg = {
     }
 
     // 3. Logo 点击序列（兼容单击回首页）
-    let clickTimer = null;
-    let navTimer = null;
-    let clickCount = 0;
-    let toastEl = null;
+    const logoClick = { timer: null, navTimer: null, count: 0, toast: null };
     const NAV_DELAY = 300;
 
     const logo = document.querySelector(".logo");
     if (logo) {
       logo.addEventListener("click", (e) => {
         e.preventDefault();
-        clearTimeout(clickTimer);
-        clearTimeout(navTimer);
-        clickCount++;
+        clearTimeout(logoClick.timer);
+        clearTimeout(logoClick.navTimer);
+        logoClick.count++;
 
-        if (clickCount === 1) {
-          // 首次点击：等一小段时间，没有后续点击就正常跳转
-          navTimer = setTimeout(() => {
-            clickCount = 0;
+        if (logoClick.count === 1) {
+          logoClick.navTimer = setTimeout(() => {
+            logoClick.count = 0;
             window.location.href = logo.href;
           }, NAV_DELAY);
           return;
         }
 
-        // 第 2 次及之后进入彩蛋流程
-        const remaining = this.SECRET_CLICKS - clickCount;
-        const messages = {
-          2: "🤔 继续点击...",
-          4: `🔍 还需要 ${remaining} 次...`,
-          6: "✨ 最后一击！"
-        };
-
-        if (messages[clickCount]) {
-          toastEl = this.showLightToast(messages[clickCount], toastEl);
+        const remaining = this.SECRET_CLICKS - logoClick.count;
+        const messages = { 2: "🤔 继续点击...", 4: `🔍 还需要 ${remaining} 次...`, 6: "✨ 最后一击！" };
+        if (messages[logoClick.count]) {
+          logoClick.toast = this.showLightToast(messages[logoClick.count], logoClick.toast);
         }
 
-        if (clickCount >= this.SECRET_CLICKS) {
-          clickCount = 0;
-          if (toastEl) { toastEl.remove(); toastEl = null; }
+        if (logoClick.count >= this.SECRET_CLICKS) {
+          logoClick.count = 0;
+          if (logoClick.toast) { logoClick.toast.remove(); logoClick.toast = null; }
           this.unlock();
           return;
         }
 
-        clickTimer = setTimeout(() => {
-          clickCount = 0;
-          if (toastEl) { toastEl.remove(); toastEl = null; }
+        logoClick.timer = setTimeout(() => {
+          logoClick.count = 0;
+          if (logoClick.toast) { logoClick.toast.remove(); logoClick.toast = null; }
         }, 1500);
       });
     }
 
     // 4. 搜索框密钥
-    const searchInput = document.getElementById("searchInput");
+    const searchInput = getDom("searchInput");
     if (searchInput) {
       searchInput.addEventListener("keydown", (e) => {
         // Ctrl+Shift+A 或 Cmd+Shift+A
@@ -369,6 +364,11 @@ function initCategories() {
   });
 }
 
+function activateCategoryBtn(btn) {
+  document.querySelectorAll(".category-btn").forEach((b) => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
 function createCategoryBtn(cat, container) {
   const btn = document.createElement("button");
   btn.className = "category-btn";
@@ -376,8 +376,7 @@ function createCategoryBtn(cat, container) {
   btn.innerHTML = `<span>${cat.icon}</span><span>${cat.label}</span>`;
   btn.addEventListener("click", () => {
     state.currentCategory = cat.id;
-    document.querySelectorAll(".category-btn").forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
+    activateCategoryBtn(btn);
     renderTools();
     window.umami?.track?.("category_switch", { category: cat.id });
   });
@@ -388,25 +387,20 @@ function createCategoryBtn(cat, container) {
 // 搜索
 // ============================================================
 function initSearch() {
-  const input = document.getElementById("searchInput");
+  const input = getDom("searchInput");
   if (!input) return;
-
-  if (window.innerWidth <= 768) {
-    input.placeholder = "搜索工具…";
-  }
 
   let debounceTimer;
   input.addEventListener("input", (e) => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       state.searchQuery = e.target.value.trim().toLowerCase();
-      renderTools();
+      const count = renderTools();
       if (state.searchQuery.length > 1) {
-        const results = filterTools();
         window.umami?.track?.("search", {
           query: state.searchQuery,
-          results_count: results.length,
-          has_results: results.length > 0,
+          results_count: count,
+          has_results: count > 0,
         });
       }
     }, 200);
@@ -440,7 +434,8 @@ function getDomain(url) {
 function createToolCard(tool) {
   const card = document.createElement("article");
   card.className = "tool-card" + (tool.featured ? " featured" : "");
-  if (Favorites.has(tool.id)) card.classList.add("favorited");
+  const isFav = Favorites.has(tool.id);
+  if (isFav) card.classList.add("favorited");
   card.dataset.id = tool.id;
 
   const tagsHtml = tool.tags
@@ -449,7 +444,6 @@ function createToolCard(tool) {
 
   const domain = tool.url.startsWith("http") ? getDomain(tool.url) : "";
   const domainHtml = domain ? `<span class="card-domain">${domain}</span>` : "";
-  const isFav = Favorites.has(tool.id);
 
   card.innerHTML = `
     ${tool.featured ? '<span class="featured-badge">精选</span>' : ""}
@@ -528,6 +522,20 @@ const ICON_FALLBACK_MAP = {
   "online-tools": "🧰",
 };
 
+// 共享单个懒加载 observer，避免每个图标创建新实例
+const _iconPending = new WeakMap();
+const _iconObserver = "IntersectionObserver" in window
+  ? new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const pending = _iconPending.get(entry.target);
+        if (pending) pending.img.src = pending.src;
+        _iconObserver.unobserve(entry.target);
+        _iconPending.delete(entry.target);
+      });
+    }, { rootMargin: "120px" })
+  : null;
+
 function loadIcon(tool, container) {
   if (!tool.icon) return;
 
@@ -549,61 +557,78 @@ function loadIcon(tool, container) {
     if (fallback) fallback.textContent = ICON_FALLBACK_MAP[tool.category] || "🔧";
   };
 
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver((entries, obs) => {
-      if (entries[0].isIntersecting) {
-        img.src = tool.icon;
-        obs.disconnect();
-      }
-    }, { rootMargin: "120px" });
-    observer.observe(container);
+  if (_iconObserver) {
+    _iconPending.set(container, { img, src: tool.icon });
+    _iconObserver.observe(container);
   } else {
     img.src = tool.icon;
   }
 }
 
+// 预计算隐藏分类 Set，O(1) 查找替代每次 O(n) 线性扫描
+function getHiddenCategoryIds() {
+  if (!getHiddenCategoryIds._cache && typeof CATEGORIES !== "undefined") {
+    getHiddenCategoryIds._cache = new Set(CATEGORIES.filter((c) => c.hidden).map((c) => c.id));
+  }
+  return getHiddenCategoryIds._cache || new Set();
+}
+
 function isCategoryHidden(categoryId) {
-  if (typeof CATEGORIES === "undefined") return false;
-  const cat = CATEGORIES.find((c) => c.id === categoryId);
-  return cat && cat.hidden === true;
+  return getHiddenCategoryIds().has(categoryId);
+}
+
+// O(1) 查找索引，避免 O(n²) 的 find 循环
+function getToolsIndex() {
+  if (typeof TOOLS_DATA === "undefined") return new Map();
+  if (!getToolsIndex._cache) {
+    getToolsIndex._cache = new Map(TOOLS_DATA.map((t) => [t.id, t]));
+  }
+  return getToolsIndex._cache;
 }
 
 function filterTools() {
   if (typeof TOOLS_DATA === "undefined") return [];
 
-  let pool = TOOLS_DATA;
+  const isSecretCategory = state.currentCategory === "activate";
+  const isSpecialTab = state.currentCategory === "favorites" || state.currentCategory === "recent";
+  const index = getToolsIndex();
 
+  let pool;
   if (state.currentCategory === "favorites") {
-    const favIds = Favorites.getAll();
-    pool = favIds.map((id) => TOOLS_DATA.find((t) => t.id === id)).filter(Boolean);
+    pool = Favorites.getAll().map((id) => index.get(id)).filter(Boolean);
   } else if (state.currentCategory === "recent") {
-    const recentIds = RecentVisits.getAll();
-    pool = recentIds.map((id) => TOOLS_DATA.find((t) => t.id === id)).filter(Boolean);
+    pool = RecentVisits.getAll().map((id) => index.get(id)).filter(Boolean);
+  } else {
+    pool = TOOLS_DATA;
   }
 
+  const q = state.searchQuery;
+  const words = q ? q.split(/\s+/).filter(Boolean) : [];
+
   return pool.filter((tool) => {
-    const isSecretCategory = state.currentCategory === "activate";
-    const isSpecialTab = state.currentCategory === "favorites" || state.currentCategory === "recent";
     if (!isSecretCategory && !isSpecialTab && tool.hidden === true) return false;
     if (!isSecretCategory && !isSpecialTab && isCategoryHidden(tool.category)) return false;
-    const matchCategory =
-      isSpecialTab || state.currentCategory === "all" || tool.category === state.currentCategory;
-    const q = state.searchQuery;
-    const matchSearch = !q || (() => {
-      const words = q.split(/\s+/).filter(Boolean);
-      const name = tool.name.toLowerCase();
-      const desc = tool.description.toLowerCase();
-      const tags = tool.tags.map((t) => t.toLowerCase());
-      return words.every((w) => name.includes(w) || desc.includes(w) || tags.some((t) => t.includes(w)));
-    })();
-    return matchCategory && matchSearch;
+    const matchCategory = isSpecialTab || state.currentCategory === "all" || tool.category === state.currentCategory;
+    if (!matchCategory) return false;
+    if (!words.length) return true;
+    const name = tool.name.toLowerCase();
+    const desc = tool.description.toLowerCase();
+    const tags = tool.tags.map((t) => t.toLowerCase());
+    return words.every((w) => name.includes(w) || desc.includes(w) || tags.some((t) => t.includes(w)));
   });
 }
 
+// 缓存频繁访问的 DOM 元素
+const _dom = {};
+function getDom(id) {
+  if (!_dom[id]) _dom[id] = document.getElementById(id);
+  return _dom[id];
+}
+
 function renderTools() {
-  const grid = document.getElementById("toolsGrid");
-  const emptyState = document.getElementById("emptyState");
-  const statsCount = document.getElementById("statsCount");
+  const grid = getDom("toolsGrid");
+  const emptyState = getDom("emptyState");
+  const statsCount = getDom("statsCount");
   if (!grid) return;
 
   const filtered = filterTools();
@@ -611,7 +636,7 @@ function renderTools() {
   if (statsCount) statsCount.textContent = filtered.length;
 
   // AI 专题横幅：选中 AI 分类或全部时显示
-  const aiBanner = document.getElementById("aiBanner");
+  const aiBanner = getDom("aiBanner");
   if (aiBanner) {
     const showBanner = state.currentCategory === "ai" || state.currentCategory === "all";
     aiBanner.style.display = showBanner ? "flex" : "none";
@@ -655,15 +680,15 @@ function renderTools() {
   const fragment = document.createDocumentFragment();
   sorted.forEach((tool) => fragment.appendChild(createToolCard(tool)));
   grid.appendChild(fragment);
+  return filtered.length;
 }
 
 // ============================================================
 // 工具函数
 // ============================================================
+const _escapeMap = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.appendChild(document.createTextNode(str));
-  return div.innerHTML;
+  return String(str).replace(/[&<>"']/g, (c) => _escapeMap[c]);
 }
 
 // ============================================================
@@ -700,9 +725,11 @@ async function initArticles() {
     const tagsHtml = tags.map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("");
     const platform = a.platform || "CSDN";
     const dateStr = a.date || "";
+    let safeUrl = "#";
+    try { const u = new URL(a.url); if (u.protocol === "https:" || u.protocol === "http:") safeUrl = a.url; } catch (_) {}
 
     return `
-      <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer" class="article-card">
+      <a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="article-card">
         <div class="article-meta">
           <span class="article-platform">${escapeHtml(platform)}</span>
           <span>${escapeHtml(dateStr)}</span>
@@ -817,41 +844,42 @@ function initBackToTop() {
 // 键盘快捷键
 // ============================================================
 function initKeyboard() {
+  let _categoryBtns = null;
+  const getCategoryBtns = () => {
+    if (!_categoryBtns) _categoryBtns = Array.from(document.querySelectorAll(".category-btn:not(.secret-category)"));
+    return _categoryBtns;
+  };
+  // 分类按钮变化时（如彩蛋解锁新增按钮）清除缓存
+  const categoryBar = document.getElementById("categoryBar");
+  if (categoryBar) new MutationObserver(() => { _categoryBtns = null; }).observe(categoryBar, { childList: true });
+
+  const searchInput = getDom("searchInput");
+
   document.addEventListener("keydown", (e) => {
     const active = document.activeElement;
     const isInput = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.isContentEditable);
 
-    // / 聚焦搜索框（不在输入框时）
     if (e.key === "/" && !isInput) {
       e.preventDefault();
-      const input = document.getElementById("searchInput");
-      if (input) input.focus();
+      if (searchInput) searchInput.focus();
       return;
     }
 
-    // Esc 清空搜索并失焦
-    if (e.key === "Escape" && isInput) {
-      const input = document.getElementById("searchInput");
-      if (input && active === input) {
-        input.value = "";
-        state.searchQuery = "";
-        renderTools();
-        input.blur();
-      }
+    if (e.key === "Escape" && isInput && active === searchInput) {
+      searchInput.value = "";
+      state.searchQuery = "";
+      renderTools();
+      searchInput.blur();
       return;
     }
 
-    // 左右方向键切换分类（不在输入框时）
     if (!isInput && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
-      const btns = Array.from(document.querySelectorAll(".category-btn:not(.secret-category)"));
+      const btns = getCategoryBtns();
       if (btns.length === 0) return;
       const currentIdx = btns.findIndex((b) => b.classList.contains("active"));
-      let nextIdx;
-      if (e.key === "ArrowLeft") {
-        nextIdx = currentIdx <= 0 ? btns.length - 1 : currentIdx - 1;
-      } else {
-        nextIdx = currentIdx >= btns.length - 1 ? 0 : currentIdx + 1;
-      }
+      const nextIdx = e.key === "ArrowLeft"
+        ? (currentIdx <= 0 ? btns.length - 1 : currentIdx - 1)
+        : (currentIdx >= btns.length - 1 ? 0 : currentIdx + 1);
       btns[nextIdx].click();
       btns[nextIdx].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
     }
