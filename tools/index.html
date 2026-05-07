@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="在线工具中心：搜索、筛选、最近/收藏，快速找到你要用的工具。" />
+  <title>在线工具 · Koen的工具箱</title>
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/tools.css" />
+  <script defer src="../js/base.js"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../index.html" class="nav-link">工具导航</a>
+          <a href="../pages/about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="tools-hub" aria-label="在线工具">
+    <div class="tools-hub-header">
+      <div>
+        <div class="tools-hub-title">在线工具</div>
+        <div class="tools-hub-subtitle">更好找、更好用、更一致。按 <kbd>/</kbd> 快速聚焦搜索，按 <kbd>Esc</kbd> 清空。</div>
+      </div>
+    </div>
+
+    <div class="tools-hub-toolbar">
+      <div class="tools-search-row">
+        <input id="toolsSearch" class="tools-search" type="search" placeholder="搜索：JSON / 时间戳 / JWT / SQL / 正则…" autocomplete="off" />
+        <div class="tools-pillbar" aria-label="视图">
+          <button id="tabAll" type="button" class="tools-segment">全部</button>
+          <button id="tabFav" type="button" class="tools-segment">收藏</button>
+          <button id="tabRecent" type="button" class="tools-segment">最近</button>
+        </div>
+      </div>
+      <div class="tools-chips" id="categoryChips" aria-label="分类"></div>
+      <div class="tools-chips" id="tagChips" aria-label="标签"></div>
+    </div>
+
+    <div class="tools-summary">
+      <div id="resultsSummary">加载中…</div>
+      <label>
+        <select id="sortSelect" class="tools-sort" aria-label="排序">
+          <option value="popular">常用优先</option>
+          <option value="alpha">字母序</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="toolsList"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="../pages/about.html">关于我</a>
+        <span class="footer-divider">|</span>
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+      <p class="footer-copyright">Made with ❤️ by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../data/tools.js"></script>
+  <script src="../js/theme-mini.js"></script>
+  <script src="../js/tools-prefs.js"></script>
+  <script src="../js/tools-hub.js"></script>
+</body>
+</html>
+
