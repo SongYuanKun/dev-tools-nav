@@ -205,14 +205,24 @@ img {
 }
 
 .nav-link {
-  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 10px 14px;
   border-radius: var(--radius-full);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
   transition: all var(--transition);
   white-space: nowrap;
+}
+
+.nav-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+  background: var(--color-primary-light);
 }
 
 .nav-link:hover {
@@ -228,8 +238,8 @@ img {
 /* 暗色模式切换按钮 */
 .theme-toggle {
   flex-shrink: 0;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   background: var(--bg-card);
@@ -240,6 +250,12 @@ img {
   font-size: 18px;
   transition: background var(--transition), border-color var(--transition), transform var(--transition);
   color: var(--text-primary);
+}
+
+.theme-toggle:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
 }
 
 .theme-toggle:hover {
@@ -2594,4 +2610,3 @@ img {
 .detail-info-link:hover {
   text-decoration: underline;
 }
-
