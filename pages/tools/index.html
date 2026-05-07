@@ -29,6 +29,30 @@
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="../../css/tools.css" />
   <script defer src="../../js/base.js"></script>
+  <style>
+    /* 工具汇总页专属 */
+    .tool-index-intro {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .tool-index-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tools-count {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+  </style>
 </head>
 <body>
 
@@ -58,94 +82,133 @@
 
   <main class="tool-page" id="main">
     <header class="tool-page-header">
-      <h1>在线开发者工具</h1>
-      <p>无需安装、无需登录，浏览器直接使用。所有工具均在本地运行，数据不会上传至服务器。</p>
+      <div class="tool-index-intro">
+        <span class="tool-index-badge">🧰 在线工具</span>
+        <span class="tools-count">7 款工具 · 本地运行 · 免登录</span>
+      </div>
+      <h1>开发者工具集</h1>
+      <p>无需安装、无需登录，直接在浏览器中使用。所有运算均在本地完成，数据不会离开你的设备。</p>
     </header>
 
     <div class="tool-index-grid">
 
-      <a class="tool-index-card" href="./json.html">
-        <div class="tool-index-icon">📋</div>
-        <div class="tool-index-name">JSON 格式化</div>
-        <p class="tool-index-desc">格式化、压缩、校验 JSON，支持语法错误定位和自定义缩进。</p>
-        <div class="tool-index-tags">
-          <span class="tag">JSON</span>
-          <span class="tag">格式化</span>
-          <span class="tag">校验</span>
+      <!-- JSON 格式化 — 蓝 -->
+      <a class="tool-index-card" href="./json.html"
+         style="--t-color:#3b82f6;--t-bg:rgba(59,130,246,.1)">
+        <div class="tool-index-body">
+          <div class="tool-index-icon-wrap">📋</div>
+          <div class="tool-index-name">JSON 格式化</div>
+          <p class="tool-index-desc">格式化、压缩、校验 JSON，支持语法错误定位与自定义缩进。</p>
+          <div class="tool-index-footer">
+            <div class="tool-index-tags">
+              <span class="tag">格式化</span>
+              <span class="tag">校验</span>
+            </div>
+            <span class="tool-index-cta">使用 →</span>
+          </div>
         </div>
-        <span class="tool-index-cta">使用工具 →</span>
       </a>
 
-      <a class="tool-index-card" href="./timestamp.html">
-        <div class="tool-index-icon">⏱️</div>
-        <div class="tool-index-name">时间戳转换</div>
-        <p class="tool-index-desc">Unix 时间戳与日期互转，秒/毫秒自动识别，实时显示当前时间戳。</p>
-        <div class="tool-index-tags">
-          <span class="tag">时间戳</span>
-          <span class="tag">Unix</span>
-          <span class="tag">日期</span>
+      <!-- 时间戳 — 绿 -->
+      <a class="tool-index-card" href="./timestamp.html"
+         style="--t-color:#10b981;--t-bg:rgba(16,185,129,.1)">
+        <div class="tool-index-body">
+          <div class="tool-index-icon-wrap">⏱️</div>
+          <div class="tool-index-name">时间戳转换</div>
+          <p class="tool-index-desc">Unix 时间戳与日期互转，秒/毫秒自动识别，实时显示当前时间戳。</p>
+          <div class="tool-index-footer">
+            <div class="tool-index-tags">
+              <span class="tag">Unix</span>
+              <span class="tag">日期</span>
+            </div>
+            <span class="tool-index-cta">使用 →</span>
+          </div>
         </div>
-        <span class="tool-index-cta">使用工具 →</span>
       </a>
 
-      <a class="tool-index-card" href="./cron.html">
-        <div class="tool-index-icon">⏰</div>
-        <div class="tool-index-name">Cron 生成器</div>
-        <p class="tool-index-desc">可视化 Cron 表达式生成器，中文说明，支持预设模板和执行时间预览。</p>
-        <div class="tool-index-tags">
-          <span class="tag">Cron</span>
-          <span class="tag">定时任务</span>
-          <span class="tag">生成器</span>
+      <!-- Cron — 橙 -->
+      <a class="tool-index-card" href="./cron.html"
+         style="--t-color:#f59e0b;--t-bg:rgba(245,158,11,.1)">
+        <div class="tool-index-body">
+          <div class="tool-index-icon-wrap">⏰</div>
+          <div class="tool-index-name">Cron 生成器</div>
+          <p class="tool-index-desc">可视化 Cron 表达式生成，中文说明，支持预设模板与执行时间预览。</p>
+          <div class="tool-index-footer">
+            <div class="tool-index-tags">
+              <span class="tag">定时任务</span>
+              <span class="tag">Linux</span>
+            </div>
+            <span class="tool-index-cta">使用 →</span>
+          </div>
         </div>
-        <span class="tool-index-cta">使用工具 →</span>
       </a>
 
-      <a class="tool-index-card" href="./base64.html">
-        <div class="tool-index-icon">🔄</div>
-        <div class="tool-index-name">Base64 编解码</div>
-        <p class="tool-index-desc">Base64、URL 编码、Unicode、HTML 实体编解码，多种格式一键转换。</p>
-        <div class="tool-index-tags">
-          <span class="tag">Base64</span>
-          <span class="tag">URL 编码</span>
-          <span class="tag">编解码</span>
+      <!-- Base64 — 紫 -->
+      <a class="tool-index-card" href="./base64.html"
+         style="--t-color:#8b5cf6;--t-bg:rgba(139,92,246,.1)">
+        <div class="tool-index-body">
+          <div class="tool-index-icon-wrap">🔄</div>
+          <div class="tool-index-name">Base64 编解码</div>
+          <p class="tool-index-desc">Base64、URL、Unicode、HTML 实体编解码，多种格式一键互转。</p>
+          <div class="tool-index-footer">
+            <div class="tool-index-tags">
+              <span class="tag">Base64</span>
+              <span class="tag">URL 编码</span>
+            </div>
+            <span class="tool-index-cta">使用 →</span>
+          </div>
         </div>
-        <span class="tool-index-cta">使用工具 →</span>
       </a>
 
-      <a class="tool-index-card" href="./jwt.html">
-        <div class="tool-index-icon">🔐</div>
-        <div class="tool-index-name">JWT 解码器</div>
-        <p class="tool-index-desc">在线解析 JSON Web Token，实时显示 Header / Payload，检测过期状态。</p>
-        <div class="tool-index-tags">
-          <span class="tag">JWT</span>
-          <span class="tag">Token</span>
-          <span class="tag">解码</span>
+      <!-- JWT — 玫红 -->
+      <a class="tool-index-card" href="./jwt.html"
+         style="--t-color:#f43f5e;--t-bg:rgba(244,63,94,.1)">
+        <div class="tool-index-body">
+          <div class="tool-index-icon-wrap">🔐</div>
+          <div class="tool-index-name">JWT 解码器</div>
+          <p class="tool-index-desc">在线解析 JSON Web Token，分段展示 Header / Payload，检测过期状态。</p>
+          <div class="tool-index-footer">
+            <div class="tool-index-tags">
+              <span class="tag">JWT</span>
+              <span class="tag">Token</span>
+            </div>
+            <span class="tool-index-cta">使用 →</span>
+          </div>
         </div>
-        <span class="tool-index-cta">使用工具 →</span>
       </a>
 
-      <a class="tool-index-card" href="./sql-formatter.html">
-        <div class="tool-index-icon">🗃️</div>
-        <div class="tool-index-name">SQL 格式化</div>
-        <p class="tool-index-desc">SQL 格式化与美化，关键字大写、智能换行缩进，支持常用 DML/DDL 语句。</p>
-        <div class="tool-index-tags">
-          <span class="tag">SQL</span>
-          <span class="tag">格式化</span>
-          <span class="tag">美化</span>
+      <!-- SQL — 青 -->
+      <a class="tool-index-card" href="./sql-formatter.html"
+         style="--t-color:#06b6d4;--t-bg:rgba(6,182,212,.1)">
+        <div class="tool-index-body">
+          <div class="tool-index-icon-wrap">🗃️</div>
+          <div class="tool-index-name">SQL 格式化</div>
+          <p class="tool-index-desc">SQL 美化，关键字大写、智能换行缩进，支持常用 DML/DDL 语句。</p>
+          <div class="tool-index-footer">
+            <div class="tool-index-tags">
+              <span class="tag">SQL</span>
+              <span class="tag">美化</span>
+            </div>
+            <span class="tool-index-cta">使用 →</span>
+          </div>
         </div>
-        <span class="tool-index-cta">使用工具 →</span>
       </a>
 
-      <a class="tool-index-card" href="./regex.html">
-        <div class="tool-index-icon">🔍</div>
-        <div class="tool-index-name">正则测试</div>
-        <p class="tool-index-desc">实时正则匹配与高亮，显示捕获组，支持 g/i/m/s 标志，内置常用模板。</p>
-        <div class="tool-index-tags">
-          <span class="tag">正则</span>
-          <span class="tag">Regex</span>
-          <span class="tag">匹配</span>
+      <!-- 正则 — 粉 -->
+      <a class="tool-index-card" href="./regex.html"
+         style="--t-color:#ec4899;--t-bg:rgba(236,72,153,.1)">
+        <div class="tool-index-body">
+          <div class="tool-index-icon-wrap">🔍</div>
+          <div class="tool-index-name">正则测试</div>
+          <p class="tool-index-desc">实时正则匹配与高亮，显示捕获组，支持 g/i/m/s 标志，内置常用模板。</p>
+          <div class="tool-index-footer">
+            <div class="tool-index-tags">
+              <span class="tag">Regex</span>
+              <span class="tag">匹配</span>
+            </div>
+            <span class="tool-index-cta">使用 →</span>
+          </div>
         </div>
-        <span class="tool-index-cta">使用工具 →</span>
       </a>
 
     </div>

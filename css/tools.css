@@ -2,56 +2,109 @@
    在线工具页面共享样式
    ============================================================ */
 .tool-page {
-  max-width: 960px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 32px 24px 80px;
+  padding: 36px 24px 80px;
 }
 
+/* ============================================================
+   工具切换导航条 — Tab / 下划线风格
+   ============================================================ */
+.tool-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tool-nav::-webkit-scrollbar { display: none; }
+
+.tool-nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 15px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  background: transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.tool-nav-item:hover {
+  color: var(--color-primary);
+}
+
+.tool-nav-item.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ============================================================
+   页面标题
+   ============================================================ */
 .tool-page-header {
   margin-bottom: 28px;
 }
 
 .tool-page-header h1 {
-  font-size: clamp(22px, 3vw, 28px);
+  font-size: clamp(20px, 3vw, 26px);
   font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 8px;
+  letter-spacing: -0.3px;
 }
 
 .tool-page-header p {
   font-size: 14px;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.7;
+  max-width: 680px;
 }
 
+/* ============================================================
+   工具面板
+   ============================================================ */
 .tool-panel {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-lg);
   padding: 24px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   box-shadow: var(--shadow-card);
 }
 
 .tool-panel-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
 }
 
+/* ============================================================
+   表单控件
+   ============================================================ */
 .tool-textarea {
   width: 100%;
   min-height: 200px;
-  padding: 16px;
-  background: var(--bg-input);
+  padding: 14px 16px;
+  background: var(--bg-page);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   font-family: var(--font-mono);
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.7;
   color: var(--text-primary);
   resize: vertical;
   outline: none;
@@ -60,7 +113,7 @@
 
 .tool-textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
 .tool-textarea::placeholder {
@@ -69,9 +122,9 @@
 
 .tool-input {
   width: 100%;
-  height: 42px;
+  height: 40px;
   padding: 0 14px;
-  background: var(--bg-input);
+  background: var(--bg-page);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
@@ -83,25 +136,28 @@
 
 .tool-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
+/* ============================================================
+   按钮
+   ============================================================ */
 .tool-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 16px 0;
+  gap: 8px;
+  margin: 14px 0;
 }
 
 .tool-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 9px 18px;
+  padding: 8px 16px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   background: var(--bg-card);
-  color: var(--text-primary);
+  color: var(--text-secondary);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -118,44 +174,44 @@
 .tool-btn-primary {
   background: var(--color-primary);
   border-color: var(--color-primary);
-  color: white;
+  color: #fff;
+  font-weight: 600;
 }
 
 .tool-btn-primary:hover {
   background: var(--color-primary-hover);
   border-color: var(--color-primary-hover);
-  color: white;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
 }
 
 .tool-btn-danger {
   color: #ef4444;
-  border-color: #fecaca;
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 .tool-btn-danger:hover {
-  background: #fef2f2;
+  background: rgba(239, 68, 68, 0.08);
   border-color: #ef4444;
   color: #ef4444;
 }
 
-[data-theme="dark"] .tool-btn-danger:hover {
-  background: rgba(239, 68, 68, 0.15);
-}
-
+/* ============================================================
+   输出区域 & 状态
+   ============================================================ */
 .tool-result {
-  padding: 16px;
+  padding: 14px 16px;
   background: var(--bg-page);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   font-family: var(--font-mono);
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.7;
   color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-all;
   min-height: 60px;
-  max-height: 400px;
+  max-height: 420px;
   overflow-y: auto;
 }
 
@@ -163,30 +219,34 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 9px 14px;
   border-radius: var(--radius-md);
   font-size: 13px;
   margin-bottom: 12px;
+  border-left: 3px solid transparent;
 }
 
 .tool-status-success {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.08);
+  color: #059669;
+  border-left-color: #10b981;
 }
 
 .tool-status-error {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+  border-left-color: #ef4444;
 }
 
 .tool-status-info {
-  background: var(--color-primary-light);
+  background: rgba(99, 102, 241, 0.08);
   color: var(--color-primary);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-left-color: var(--color-primary);
 }
 
+/* ============================================================
+   布局辅助
+   ============================================================ */
 .tool-row {
   display: flex;
   gap: 16px;
@@ -200,44 +260,51 @@
 
 .tool-label {
   display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
   margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .tool-select {
-  height: 42px;
-  padding: 0 14px;
-  background: var(--bg-input);
+  height: 40px;
+  padding: 0 12px;
+  background: var(--bg-page);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-primary);
   outline: none;
   cursor: pointer;
   font-family: var(--font-sans);
+  transition: border-color var(--transition);
 }
 
 .tool-select:focus {
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
 .tool-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 16px;
 }
 
 .tool-separator {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 16px 0;
+  margin: 12px 0;
   color: var(--text-muted);
-  font-size: 20px;
+  font-size: 18px;
 }
 
+/* ============================================================
+   底部相关工具导航
+   ============================================================ */
 .tool-footer-nav {
   margin-top: 40px;
   padding-top: 24px;
@@ -245,26 +312,28 @@
 }
 
 .tool-footer-nav h3 {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 12px;
 }
 
 .tool-footer-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .tool-footer-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+  gap: 5px;
+  padding: 7px 14px;
   background: var(--bg-page);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
   font-size: 13px;
   color: var(--text-secondary);
   text-decoration: none;
@@ -277,7 +346,9 @@
   background: var(--color-primary-light);
 }
 
-/* Cron specific */
+/* ============================================================
+   Cron 专属
+   ============================================================ */
 .cron-part {
   display: flex;
   flex-direction: column;
@@ -286,45 +357,47 @@
 
 .cron-display {
   font-family: var(--font-mono);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--color-primary);
   text-align: center;
-  padding: 16px;
+  padding: 18px;
   background: var(--bg-page);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   word-break: break-all;
 }
 
-/* JWT specific */
+/* ============================================================
+   JWT 专属
+   ============================================================ */
 .jwt-section {
   padding: 12px 16px;
   border-radius: var(--radius-md);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .jwt-header-section {
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.18);
 }
 
 .jwt-payload-section {
-  background: rgba(139, 92, 246, 0.08);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(139, 92, 246, 0.07);
+  border: 1px solid rgba(139, 92, 246, 0.18);
 }
 
 .jwt-signature-section {
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: rgba(16, 185, 129, 0.07);
+  border: 1px solid rgba(16, 185, 129, 0.18);
 }
 
 .jwt-section-title {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   margin-bottom: 8px;
 }
 
@@ -333,79 +406,66 @@
 .jwt-signature-section .jwt-section-title { color: #10b981; }
 
 /* ============================================================
-   工具切换导航条
-   ============================================================ */
-.tool-nav {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-  padding: 10px 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-}
-
-.tool-nav-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 13px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: all var(--transition);
-  white-space: nowrap;
-}
-
-.tool-nav-item:hover {
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  border-color: rgba(99, 102, 241, 0.2);
-}
-
-.tool-nav-item.active {
-  background: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
-}
-
-/* ============================================================
    在线工具汇总页
    ============================================================ */
 .tool-index-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 18px;
-  margin-top: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 4px;
 }
 
+/* 每张卡片通过 CSS 变量注入工具主色 */
 .tool-index-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-lg);
-  padding: 24px 20px 20px;
+  overflow: hidden;
   text-decoration: none;
-  transition: all var(--transition);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   box-shadow: var(--shadow-card);
 }
 
 .tool-index-card:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-card-hover, 0 8px 24px rgba(0,0,0,.12));
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border-color: var(--t-color, var(--color-primary));
+  box-shadow: 0 0 0 1px var(--t-color, var(--color-primary)),
+              0 12px 28px rgba(0, 0, 0, 0.1);
 }
 
-.tool-index-icon {
-  font-size: 30px;
-  margin-bottom: 12px;
-  line-height: 1;
+/* 顶部彩色细条 */
+.tool-index-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--t-color, var(--color-primary));
+}
+
+.tool-index-body {
+  padding: 20px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* 圆角图标容器 */
+.tool-index-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 14px;
+  background: var(--t-bg, rgba(99, 102, 241, 0.1));
+  flex-shrink: 0;
 }
 
 .tool-index-name {
@@ -413,36 +473,49 @@
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 6px;
+  letter-spacing: -0.2px;
 }
 
 .tool-index-desc {
   font-size: 13px;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.65;
   flex: 1;
+}
+
+.tool-index-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
 }
 
 .tool-index-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 14px;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
 .tool-index-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 16px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--t-color, var(--color-primary));
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.2px;
 }
 
-/* Responsive */
+/* ============================================================
+   响应式
+   ============================================================ */
 @media (max-width: 768px) {
   .tool-page {
-    padding: 20px 16px 48px;
+    padding: 20px 16px 56px;
   }
 
   .tool-panel {
@@ -455,6 +528,45 @@
 
   .tool-row {
     flex-direction: column;
+  }
+
+  .tool-nav-item {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .tool-index-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .tool-index-body {
+    padding: 16px 14px 14px;
+  }
+
+  .tool-index-icon-wrap {
+    width: 36px;
+    height: 36px;
+    font-size: 17px;
+    border-radius: 9px;
+  }
+
+  .tool-index-name {
+    font-size: 14px;
+  }
+
+  .tool-index-desc {
+    font-size: 12px;
+  }
+
+  .tool-footer-links {
+    gap: 6px;
+  }
+}
+
+@media (max-width: 420px) {
+  .tool-index-grid {
+    grid-template-columns: 1fr;
   }
 }
 
