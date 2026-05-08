@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Primary Meta -->
+  <title>项目作品集 · Koen的工具箱</title>
+  <meta name="description" content="Koen 的个人项目作品集：开发者工具导航、AI 专题、在线工具集、JRebel 激活服务等独立开发实践。">
+  <meta name="keywords" content="作品集,portfolio,case study,独立开发,个人项目,Koen,开发者工具">
+  <meta name="author" content="Koen">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://tools.songyuankun.top/pages/portfolio.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="项目作品集 · Koen的工具箱">
+  <meta property="og:description" content="Koen 的个人项目作品集：开发者工具导航、AI 专题、在线工具集等独立开发实践。">
+  <meta property="og:url" content="https://tools.songyuankun.top/pages/portfolio.html">
+  <meta property="og:site_name" content="Koen的工具箱">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="项目作品集 · Koen的工具箱">
+  <meta name="twitter:description" content="Koen 的个人项目作品集：开发者工具导航、AI 专题、在线工具集等独立开发实践。">
+  <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "项目作品集 · Koen的工具箱",
+    "description": "Koen 的个人项目作品集：开发者工具导航、AI 专题、在线工具集等独立开发实践。",
+    "url": "https://tools.songyuankun.top/pages/portfolio.html",
+    "author": {
+      "@type": "Person",
+      "name": "Koen",
+      "url": "https://tools.songyuankun.top/pages/about.html"
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": 5,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Koen的工具箱" },
+        { "@type": "ListItem", "position": 2, "name": "在线工具集" },
+        { "@type": "ListItem", "position": 3, "name": "AI 专题系列" },
+        { "@type": "ListItem", "position": 4, "name": "JRebel 激活服务" },
+        { "@type": "ListItem", "position": 5, "name": "技术博客" }
+      ]
+    }
+  }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+  <script defer src="../js/base.js"></script>
+
+  <!-- Page Styles -->
+  <style>
+    /* ============================================
+       CSS 变量体系（亮色模式默认值）
+       ============================================ */
+    :root {
+      /* 颜色 - 基础 */
+      --color-bg-primary: #ffffff;
+      --color-bg-secondary: #f8fafc;
+      --color-bg-tertiary: #f1f5f9;
+      --color-bg-card: #ffffff;
+      --color-border: #e2e8f0;
+      --color-border-hover: #cbd5e1;
+
+      /* 颜色 - 文字 */
+      --color-text-primary: #0f172a;
+      --color-text-secondary: #475569;
+      --color-text-tertiary: #94a3b8;
+      --color-text-inverse: #ffffff;
+
+      /* 颜色 - 品牌/强调 */
+      --color-accent: #6366f1;
+      --color-accent-hover: #4f46e5;
+      --color-accent-light: #eef2ff;
+
+      /* 颜色 - 状态 */
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-info: #6366f1;
+      --color-muted: #6b7280;
+
+      /* 间距 */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4rem;
+
+      /* 圆角 */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-full: 9999px;
+
+      /* 阴影 */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+
+      /* 过渡 */
+      --transition-fast: 150ms ease;
+      --transition-base: 250ms ease;
+      --transition-slow: 350ms ease;
+
+      /* 字体 */
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+
+      /* 布局 */
+      --container-max: 1200px;
+      --nav-height: 64px;
+    }
+
+    /* ============================================
+       暗色模式（data-theme="dark"）
+       ============================================ */
+    [data-theme="dark"] {
+      --color-bg-primary: #0f172a;
+      --color-bg-secondary: #1e293b;
+      --color-bg-tertiary: #334155;
+      --color-bg-card: #1e293b;
+      --color-border: #334155;
+      --color-border-hover: #475569;
+
+      --color-text-primary: #f1f5f9;
+      --color-text-secondary: #cbd5e1;
+      --color-text-tertiary: #64748b;
+      --color-text-inverse: #0f172a;
+
+      --color-accent: #818cf8;
+      --color-accent-hover: #6366f1;
+      --color-accent-light: #1e1b4b;
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ============================================
+       Reset & Base
+       ============================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color var(--transition-base), color var(--transition-base);
+    }
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    a:hover {
+      color: var(--color-accent-hover);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ============================================
+       Navigation
+       ============================================ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      background: var(--color-bg-primary);
+      border-bottom: 1px solid var(--color-border);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .nav__container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--color-text-primary);
+    }
+
+    .nav__logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      list-style: none;
+    }
+
+    .nav__link {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      transition: color var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .nav__link:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-tertiary);
+    }
+
+    .nav__link--active {
+      color: var(--color-accent);
+      background: var(--color-accent-light);
+    }
+
+    .nav__theme-toggle {
+      appearance: none;
+      border: none;
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: background-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .nav__theme-toggle:hover {
+      background: var(--color-border);
+      transform: rotate(15deg);
+    }
+
+    /* Mobile Nav Toggle */
+    .nav__mobile-toggle {
+      display: none;
+      appearance: none;
+      border: none;
+      background: none;
+      color: var(--color-text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: var(--space-xs);
+    }
+
+    /* ============================================
+       Hero Section
+       ============================================ */
+    .hero {
+      padding: var(--space-3xl) var(--space-lg);
+      text-align: center;
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .hero__container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-md);
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-lg);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero__title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: var(--space-md);
+      background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero__subtitle {
+      font-size: 1.125rem;
+      color: var(--color-text-secondary);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       Filter Bar
+       ============================================ */
+    .filter-bar {
+      max-width: var(--container-max);
+      margin: var(--space-xl) auto 0;
+      padding: 0 var(--space-lg);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      justify-content: center;
+    }
+
+    .filter-btn {
+      appearance: none;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-card);
+      color: var(--color-text-secondary);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .filter-btn--active {
+      background: var(--color-accent);
+      color: var(--color-text-inverse);
+      border-color: var(--color-accent);
+    }
+
+    /* ============================================
+       Card Grid
+       ============================================ */
+    .portfolio-section {
+      flex: 1;
+      padding: var(--space-2xl) var(--space-lg);
+    }
+
+    .card-grid {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: var(--space-xl);
+    }
+
+    /* ============================================
+       Project Card
+       ============================================ */
+    .card {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      transition: 
+        transform var(--transition-base),
+        box-shadow var(--transition-base),
+        border-color var(--transition-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--color-border-hover);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    /* Card Header */
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+
+    .card__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      line-height: 1.3;
+    }
+
+    .card__status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: 2px var(--space-sm);
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .card__status--active {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+    }
+
+    .card__status--maintained {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--color-warning);
+    }
+
+    .card__status--beta {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-info);
+    }
+
+    .card__status--archived {
+      background: rgba(107, 114, 128, 0.1);
+      color: var(--color-muted);
+    }
+
+    /* Card Body */
+    .card__category {
+      font-size: 0.8rem;
+      color: var(--color-text-tertiary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .card__description {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    /* Tech Stack Pills */
+    .card__tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px var(--space-sm);
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      transition: background-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .card:hover .pill {
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+    }
+
+    /* Highlights */
+    .card__highlights {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .card__highlights li {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      padding-left: var(--space-md);
+      position: relative;
+    }
+
+    .card__highlights li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--color-success);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    /* Card Footer */
+    .card__footer {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--color-border);
+      margin-top: auto;
+    }
+
+    .card__link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+
+    .card__link--primary {
+      background: var(--color-accent);
+      color: var(--color-text-inverse);
+    }
+
+    .card__link--primary:hover {
+      background: var(--color-accent-hover);
+      color: var(--color-text-inverse);
+    }
+
+    .card__link--secondary {
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-secondary);
+    }
+
+    .card__link--secondary:hover {
+      background: var(--color-border);
+      color: var(--color-text-primary);
+    }
+
+    .card__year {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--color-text-tertiary);
+      font-family: var(--font-mono);
+    }
+
+    /* ============================================
+       Footer
+       ============================================ */
+    .footer {
+      background: var(--color-bg-secondary);
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-xl) var(--space-lg);
+      text-align: center;
+    }
+
+    .footer__text {
+      font-size: 0.85rem;
+      color: var(--color-text-tertiary);
+    }
+
+    .footer__text a {
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    /* ============================================
+       Loading State
+       ============================================ */
+    .loading-skeleton {
+      background: linear-gradient(90deg, var(--color-bg-tertiary) 25%, var(--color-bg-secondary) 50%, var(--color-bg-tertiary) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-md);
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* ============================================
+       Empty State
+       ============================================ */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-3xl);
+      color: var(--color-text-tertiary);
+    }
+
+    .empty-state__icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+    }
+
+    /* ============================================
+       Responsive
+       ============================================ */
+    @media (max-width: 768px) {
+      .nav__links {
+        display: none;
+        position: absolute;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: var(--color-bg-primary);
+        border-bottom: 1px solid var(--color-border);
+        padding: var(--space-md);
+        gap: var(--space-xs);
+      }
+
+      .nav__links--open {
+        display: flex;
+      }
+
+      .nav__mobile-toggle {
+        display: block;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: var(--space-2xl) var(--space-lg);
+      }
+
+      .hero__title {
+        font-size: 1.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: var(--space-lg);
+      }
+
+      .card__footer {
+        flex-wrap: wrap;
+      }
+    }
+
+    /* ============================================
+       Animations
+       ============================================ */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card[data-animate] {
+      animation: fadeInUp 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    /* Staggered delay via inline style --delay */
+    .card[data-animate] {
+      animation-delay: var(--delay, 0ms);
+    }
+
+    /* ============================================
+       Print Styles
+       ============================================ */
+    @media print {
+      .nav, .footer, .nav__theme-toggle, .filter-bar {
+        display: none;
+      }
+
+      .card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== Navigation ========== -->
+  <nav class="nav" role="navigation" aria-label="主导航">
+    <div class="nav__container">
+      <a href="../index.html" class="nav__logo" aria-label="Koen的工具箱 首页">
+        <img src="../assets/logo.svg" alt="K" style="width:32px;height:32px;border-radius:var(--radius-md);">
+        <span>Koen<span style="opacity:.6">'s</span> 工具箱</span>
+      </a>
+
+      <button class="nav__mobile-toggle" aria-label="切换菜单" aria-expanded="false" id="navToggle">
+        ☰
+      </button>
+
+      <ul class="nav__links" id="navLinks" role="menubar">
+        <li role="none"><a href="../index.html" class="nav__link" role="menuitem">工具导航</a></li>
+        <li role="none"><a href="ai/index.html" class="nav__link" role="menuitem">🤖 AI 专题</a></li>
+        <li role="none"><a href="tools/index.html" class="nav__link" role="menuitem">在线工具</a></li>
+        <li role="none"><a href="blog/index.html" class="nav__link" role="menuitem">技术博客</a></li>
+        <li role="none"><a href="portfolio.html" class="nav__link nav__link--active" role="menuitem" aria-current="page">作品集</a></li>
+        <li role="none"><a href="about.html" class="nav__link" role="menuitem">关于我</a></li>
+      </ul>
+
+      <button class="nav__theme-toggle" id="themeToggle" aria-label="切换暗色模式" title="切换主题">
+        🌙
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== Hero Section ========== -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__container">
+      <span class="hero__badge" aria-hidden="true">📂 Portfolio</span>
+      <h1 class="hero__title" id="hero-title">作品集 & Case Study</h1>
+      <p class="hero__subtitle">
+        这里收录了我独立开发的项目作品，每个项目都是技术探索与产品思维的结合。
+        点击查看详情，了解背后的技术选型与实现思路。
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== Filter Bar ========== -->
+  <div class="filter-bar" role="toolbar" aria-label="项目分类筛选">
+    <button class="filter-btn filter-btn--active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="Web 应用">Web 应用</button>
+    <button class="filter-btn" data-filter="效率工具">效率工具</button>
+    <button class="filter-btn" data-filter="DevOps">DevOps</button>
+    <button class="filter-btn" data-filter="内容创作">内容创作</button>
+  </div>
+
+  <!-- ========== Portfolio Grid ========== -->
+  <main class="portfolio-section" id="portfolioSection" aria-label="项目列表">
+    <div class="card-grid" id="cardGrid">
+      <!-- Cards rendered dynamically by JS -->
+    </div>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer" role="contentinfo">
+    <p class="footer__text">
+      Made with ❤️ by <a href="about.html">Koen</a> · 
+      <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a> ·
+      <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer">CSDN 博客</a>
+    </p>
+  </footer>
+
+  <!-- ========== Data File ========== -->
+  <script src="../data/portfolio.js"></script>
+
+  <!-- ========== Render Logic ========== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // === DOM References ===
+      var cardGrid = document.getElementById('cardGrid');
+      var filterBtns = document.querySelectorAll('.filter-btn');
+      var themeToggle = document.getElementById('themeToggle');
+      var navToggle = document.getElementById('navToggle');
+      var navLinks = document.getElementById('navLinks');
+
+      // === Theme Toggle ===
+      function getStoredTheme() {
+        try { return localStorage.getItem('dev-tools-theme'); } catch (e) { return null; }
+      }
+
+      function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        try { localStorage.setItem('dev-tools-theme', theme); } catch (e) {}
+      }
+
+      // Initialize theme
+      var storedTheme = getStoredTheme();
+      if (storedTheme) {
+        setTheme(storedTheme);
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+      }
+
+      themeToggle.addEventListener('click', function () {
+        var current = document.documentElement.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+
+      // === Mobile Nav Toggle ===
+      navToggle.addEventListener('click', function () {
+        var isOpen = navLinks.classList.toggle('nav__links--open');
+        navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        navToggle.textContent = isOpen ? '✕' : '☰';
+      });
+
+      // === Card Rendering ===
+      function createCard(project, index) {
+        var statusInfo = PORTFOLIO_STATUS_MAP[project.status] || PORTFOLIO_STATUS_MAP.active;
+
+        var highlightsHTML = '';
+        if (project.highlights && project.highlights.length > 0) {
+          highlightsHTML = '<ul class="card__highlights">' +
+            project.highlights.map(function (h) {
+              return '<li>' + escapeHTML(h) + '</li>';
+            }).join('') +
+            '</ul>';
+        }
+
+        var linksHTML = '';
+        if (project.liveUrl) {
+          linksHTML += '<a href="' + escapeHTML(project.liveUrl) + '" class="card__link card__link--primary" target="_blank" rel="noopener noreferrer" aria-label="访问 ' + escapeHTML(project.name) + ' 线上版本">🔗 预览</a>';
+        }
+        if (project.sourceUrl) {
+          linksHTML += '<a href="' + escapeHTML(project.sourceUrl) + '" class="card__link card__link--secondary" target="_blank" rel="noopener noreferrer" aria-label="查看 ' + escapeHTML(project.name) + ' 源代码">⌨️ 源码</a>';
+        }
+
+        var techPillsHTML = project.techStack.map(function (tech) {
+          return '<span class="pill">' + escapeHTML(tech) + '</span>';
+        }).join('');
+
+        var cardHTML =
+          '<article class="card" data-animate data-category="' + escapeHTML(project.category) + '" style="--delay: ' + (index * 80) + 'ms">' +
+            '<div class="card__header">' +
+              '<h2 class="card__title">' + escapeHTML(project.name) + '</h2>' +
+              '<span class="card__status card__status--' + project.status + '">' +
+                statusInfo.icon + ' ' + statusInfo.label +
+              '</span>' +
+            '</div>' +
+            '<span class="card__category">' + escapeHTML(project.category) + '</span>' +
+            '<p class="card__description">' + escapeHTML(project.longDesc || project.description) + '</p>' +
+            '<div class="card__tech-stack">' + techPillsHTML + '</div>' +
+            highlightsHTML +
+            '<div class="card__footer">' +
+              linksHTML +
+              '<span class="card__year">' + project.year + '</span>' +
+            '</div>' +
+          '</article>';
+
+        return cardHTML;
+      }
+
+      function escapeHTML(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      function renderCards(filter) {
+        var projects = PORTFOLIO_DATA;
+
+        if (filter && filter !== 'all') {
+          projects = projects.filter(function (p) {
+            return p.category === filter;
+          });
+        }
+
+        if (projects.length === 0) {
+          cardGrid.innerHTML =
+            '<div class="empty-state">' +
+              '<div class="empty-state__icon">📭</div>' +
+              '<p>该分类下暂无项目</p>' +
+            '</div>';
+          return;
+        }
+
+        cardGrid.innerHTML = projects.map(function (project, index) {
+          return createCard(project, index);
+        }).join('');
+      }
+
+      // === Filter Logic ===
+      filterBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          // Update active state
+          filterBtns.forEach(function (b) { b.classList.remove('filter-btn--active'); });
+          btn.classList.add('filter-btn--active');
+
+          // Re-render
+          var filter = btn.getAttribute('data-filter');
+          renderCards(filter);
+        });
+      });
+
+      // === Initial Render ===
+      if (typeof PORTFOLIO_DATA !== 'undefined' && Array.isArray(PORTFOLIO_DATA)) {
+        renderCards('all');
+      } else {
+        cardGrid.innerHTML =
+          '<div class="empty-state">' +
+            '<div class="empty-state__icon">⚠️</div>' +
+            '<p>数据加载失败，请检查 portfolio.js 是否正确引入</p>' +
+          '</div>';
+      }
+
+    })();
+  </script>
+
+</body>
+</html>
