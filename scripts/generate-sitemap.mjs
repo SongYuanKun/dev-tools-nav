@@ -5,8 +5,8 @@ import vm from "node:vm";
 const ROOT = process.cwd();
 const BASE_URL = "https://tools.songyuankun.top";
 
-function readToolsData() {
-  const filePath = path.join(ROOT, "data", "tools.js");
+export function readToolsData(root = ROOT) {
+  const filePath = path.join(root, "data", "tools.js");
   const source = fs.readFileSync(filePath, "utf8");
   const sandbox = {};
   vm.runInNewContext(
@@ -19,7 +19,7 @@ function readToolsData() {
   };
 }
 
-function xmlEscape(value) {
+export function xmlEscape(value) {
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
@@ -28,7 +28,7 @@ function xmlEscape(value) {
     .replaceAll("'", "&apos;");
 }
 
-function buildUrl(loc, changefreq, priority, lastmod) {
+export function buildUrl(loc, changefreq, priority, lastmod) {
   return [
     "  <url>",
     `    <loc>${xmlEscape(loc)}</loc>`,
@@ -39,18 +39,13 @@ function buildUrl(loc, changefreq, priority, lastmod) {
   ].join("\n");
 }
 
-function main() {
-  const { tools, categories } = readToolsData();
-  const hiddenCategories = new Set(
-    categories.filter((c) => c && c.hidden === true).map((c) => c.id),
-  );
-  const now = new Date().toISOString().slice(0, 10);
-
+export function collectStaticUrls(root = ROOT) {
   // 自动扫描 pages/blog/ 下的所有 HTML 文章（除 index.html）
-  const blogDir = path.join(ROOT, "pages", "blog");
+  const blogDir = path.join(root, "pages", "blog");
   const blogUrls = fs.existsSync(blogDir)
     ? fs.readdirSync(blogDir)
-        .filter((f) => f.endsWith(".html") && f !== "index.html")
+        .filter((f) => f.endsWith(".html") && f !== "index.html" && f !== "post.html")
+        .sort()
         .map((f) => ({
           loc: `${BASE_URL}/pages/blog/${f}`,
           changefreq: "monthly",
@@ -58,11 +53,12 @@ function main() {
         }))
     : [];
 
-  const aiDir = path.join(ROOT, "pages", "ai");
+  const aiDir = path.join(root, "pages", "ai");
   const aiUrls = fs.existsSync(aiDir)
     ? fs
         .readdirSync(aiDir)
         .filter((f) => f.endsWith(".html"))
+        .sort()
         .map((f) => ({
           loc: `${BASE_URL}/pages/ai/${f}`,
           changefreq: "weekly",
@@ -70,7 +66,7 @@ function main() {
         }))
     : [];
 
-  const staticUrls = [
+  return [
     { loc: `${BASE_URL}/`, changefreq: "daily", priority: "1.0" },
     { loc: `${BASE_URL}/pages/about.html`, changefreq: "weekly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/kms.html`, changefreq: "weekly", priority: "0.6" },
@@ -87,6 +83,15 @@ function main() {
     { loc: `${BASE_URL}/pages/tools/sql-formatter.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/regex.html`, changefreq: "monthly", priority: "0.8" },
   ];
+}
+
+export function main(root = ROOT) {
+  const { tools, categories } = readToolsData(root);
+  const hiddenCategories = new Set(
+    categories.filter((c) => c && c.hidden === true).map((c) => c.id),
+  );
+  const staticUrls = collectStaticUrls(root);
+  const now = new Date().toISOString().slice(0, 10);
 
   const toolUrls = tools
     .filter((tool) => {
@@ -114,8 +119,10 @@ function main() {
     "",
   ].join("\n");
 
-  fs.writeFileSync(path.join(ROOT, "sitemap.xml"), xml, "utf8");
+  fs.writeFileSync(path.join(root, "sitemap.xml"), xml, "utf8");
   console.log(`sitemap generated: ${allUrls.length} urls`);
 }
 
-main();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}

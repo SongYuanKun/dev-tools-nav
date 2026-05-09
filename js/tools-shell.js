@@ -66,7 +66,9 @@
     var icon = tool.icon || "🧰";
     var legacyUrl = String(tool.legacyUrl || tool.legacy_url || "");
     var basePath = getBasePath();
-    var legacyPath = (basePath + "/" + legacyUrl).replace(/\/+/g, "/");
+    var legacyPath = /^https?:\/\//i.test(legacyUrl)
+      ? legacyUrl
+      : (basePath + "/" + legacyUrl).replace(/\/+/g, "/");
 
     document.title = name + " · 在线工具";
     titleEl.innerHTML = '<span class="tools-card-icon" aria-hidden="true">' + escapeHtml(icon) + '</span><span>' + escapeHtml(name) + '</span>';
@@ -110,4 +112,3 @@
     init();
   }
 })();
-
