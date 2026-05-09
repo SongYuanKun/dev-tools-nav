@@ -159,7 +159,7 @@ npx serve .
   id: "unique-id",           // 唯一标识符（英文、数字、连字符）
   name: "工具名称",
   description: "工具描述，建议 50-100 字。",
-  category: "dev",           // dev | hosting | security | ops | design
+  category: "dev",           // dev | hosting | security | ops | design | online-tools | activate
   tags: ["标签1", "标签2"],
   url: "https://example.com/",
   icon: "https://example.com/favicon.ico",  // 可选，加载失败会显示分类 emoji
