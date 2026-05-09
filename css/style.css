@@ -993,6 +993,16 @@ img {
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
+.panel-link--ghost {
+  background: var(--bg-page);
+  color: var(--color-primary) !important;
+  border: 1px solid var(--border-color);
+}
+
+.is-hidden {
+  display: none !important;
+}
+
 .footer-secret-hint {
   cursor: pointer;
   color: var(--text-muted);

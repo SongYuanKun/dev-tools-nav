@@ -40,7 +40,11 @@ const Favorites = {
     this._load();
     const existed = this._set.has(id);
     if (existed) { this._set.delete(id); } else { this._set.add(id); }
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify([...this._set]));
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify([...this._set]));
+    } catch {
+      /* 忽略配额/隐私模式异常，保持内存态可用 */
+    }
     return !existed;
   },
 };
@@ -62,7 +66,11 @@ const RecentVisits = {
     let list = this.getAll().filter((i) => i !== id);
     list.unshift(id);
     if (list.length > this.MAX) list = list.slice(0, this.MAX);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
+    } catch {
+      /* 忽略配额/隐私模式异常，保持页面功能可用 */
+    }
   },
 };
 
@@ -437,12 +445,17 @@ function createToolCard(tool) {
   const isFav = Favorites.has(tool.id);
   if (isFav) card.classList.add("favorited");
   card.dataset.id = tool.id;
+  const safeName = String(tool.name || "");
+  const safeDescription = String(tool.description || "");
+  const safeCategory = String(tool.category || "");
 
-  const tagsHtml = tool.tags
-    .map((tag) => `<span class="tag">${tag}</span>`)
+  const safeTags = Array.isArray(tool.tags) ? tool.tags : [];
+  const tagsHtml = safeTags
+    .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
     .join("");
 
-  const domain = tool.url.startsWith("http") ? getDomain(tool.url) : "";
+  const safeUrl = typeof tool.url === "string" ? tool.url : "#";
+  const domain = safeUrl.startsWith("http") ? getDomain(safeUrl) : "";
   const domainHtml = domain ? `<span class="card-domain">${domain}</span>` : "";
 
   card.innerHTML = `
@@ -455,18 +468,18 @@ function createToolCard(tool) {
         <span class="card-icon-fallback">🔧</span>
       </div>
       <div>
-        <div class="card-title">${escapeHtml(tool.name)}</div>
-        <div class="card-category-label">${getCategoryLabel(tool.category)}${domainHtml}</div>
+        <div class="card-title">${escapeHtml(safeName)}</div>
+        <div class="card-category-label">${getCategoryLabel(safeCategory)}${domainHtml}</div>
       </div>
     </div>
-    <p class="card-desc">${escapeHtml(tool.description)}</p>
+    <p class="card-desc">${escapeHtml(safeDescription)}</p>
     <div class="card-tags">${tagsHtml}</div>
     <div class="card-footer">
       ${tool.content
         ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn" data-tool-id="${tool.id}">📖 教程</a>`
-        : (tool.category === "activate" || tool.category === "online-tools")
-          ? `<a href="${tool.url}" class="visit-btn" data-tool-id="${tool.id}">${tool.category === "online-tools" ? "🧰 使用" : "📖 访问"}</a>`
-          : `<a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="visit-btn" data-tool-id="${tool.id}">
+        : (safeCategory === "activate" || safeCategory === "online-tools")
+          ? `<a href="${safeUrl}" class="visit-btn" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "🧰 使用" : "📖 访问"}</a>`
+          : `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="visit-btn" data-tool-id="${tool.id}">
             ↗ 访问
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -475,11 +488,12 @@ function createToolCard(tool) {
             </svg>
           </a>`
       }
-      <a href="${(tool.category === "activate" || tool.category === "online-tools") ? tool.url : `pages/template.html?id=${tool.id}`}" class="detail-link" data-tool-id="${tool.id}">${tool.category === "online-tools" ? "打开 →" : "详情 →"}</a>
+      <a href="${(safeCategory === "activate" || safeCategory === "online-tools") ? safeUrl : `pages/template.html?id=${tool.id}`}" class="detail-link" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "打开 →" : "详情 →"}</a>
     </div>
   `;
 
-  loadIcon(tool, card.querySelector(`#icon-${tool.id}`));
+  const iconContainer = card.querySelector(`#icon-${tool.id}`);
+  if (iconContainer) loadIcon(tool, iconContainer);
 
   card.querySelector(".fav-btn").addEventListener("click", (e) => {
     e.stopPropagation();
@@ -537,7 +551,8 @@ const _iconObserver = "IntersectionObserver" in window
   : null;
 
 function loadIcon(tool, container) {
-  if (!tool.icon) return;
+  if (!container) return;
+  if (typeof tool.icon !== "string" || !tool.icon) return;
 
   const isEmoji = tool.icon.length <= 2 && !tool.icon.startsWith("http") && !tool.icon.startsWith("/");
   if (isEmoji) {
@@ -611,9 +626,9 @@ function filterTools() {
     const matchCategory = isSpecialTab || state.currentCategory === "all" || tool.category === state.currentCategory;
     if (!matchCategory) return false;
     if (!words.length) return true;
-    const name = tool.name.toLowerCase();
-    const desc = tool.description.toLowerCase();
-    const tags = tool.tags.map((t) => t.toLowerCase());
+    const name = String(tool.name || "").toLowerCase();
+    const desc = String(tool.description || "").toLowerCase();
+    const tags = (Array.isArray(tool.tags) ? tool.tags : []).map((t) => String(t).toLowerCase());
     return words.every((w) => name.includes(w) || desc.includes(w) || tags.some((t) => t.includes(w)));
   });
 }
@@ -639,7 +654,7 @@ function renderTools() {
   const aiBanner = getDom("aiBanner");
   if (aiBanner) {
     const showBanner = state.currentCategory === "ai" || state.currentCategory === "all";
-    aiBanner.style.display = showBanner ? "flex" : "none";
+    aiBanner.classList.toggle("is-hidden", !showBanner);
   }
 
   grid.innerHTML = "";
@@ -718,7 +733,7 @@ async function initArticles() {
 
   if (articles.length === 0) return;
 
-  section.style.display = "";
+  section.classList.remove("is-hidden");
 
   grid.innerHTML = articles.map((a) => {
     const tags = Array.isArray(a.tags) ? a.tags : [];
