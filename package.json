@@ -2,6 +2,7 @@
   "name": "dev-tools-nav",
   "private": true,
   "scripts": {
+    "test": "node --test scripts/*.test.mjs",
     "capture-screenshots": "node scripts/capture-screenshots.mjs"
   },
   "devDependencies": {

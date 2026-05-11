@@ -238,7 +238,7 @@
           return '<span class="tools-tag">' + escapeHtml(tag) + '</span>';
         }).join("");
         return (
-          '<a class="tools-card" href="' + toolHref(t.slug) + '" data-slug="' + escapeHtml(t.slug) + '">' +
+          '<article class="tools-card" role="link" tabindex="0" data-slug="' + escapeHtml(t.slug) + '" aria-label="打开 ' + escapeHtml(t.name) + '">' +
             '<div class="tools-card-top">' +
               '<div class="tools-card-title">' +
                 '<span class="tools-card-icon">' + escapeHtml(t.icon) + '</span>' +
@@ -248,7 +248,7 @@
             '</div>' +
             '<div class="tools-card-desc">' + highlight(t.description, state.q) + '</div>' +
             '<div class="tools-card-tags">' + tags + '</div>' +
-          '</a>'
+          '</article>'
         );
       }).join("") + '</div>';
     }
@@ -299,6 +299,12 @@
         draw();
         return;
       }
+
+      var card = e.target.closest(".tools-card");
+      if (!card) return;
+      var slug = card.getAttribute("data-slug");
+      if (!slug) return;
+      openTool(slug);
     });
 
     listEl.addEventListener("keydown", function (e) {

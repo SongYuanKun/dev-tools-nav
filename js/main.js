@@ -13,6 +13,27 @@ const state = {
 };
 
 // ============================================================
+// 安全存储（兼容隐私模式/受限环境）
+// ============================================================
+const SafeStorage = {
+  get(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  set(key, value) {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+};
+
+// ============================================================
 // 收藏管理（localStorage）
 // ============================================================
 const Favorites = {
@@ -81,7 +102,7 @@ const ThemeManager = {
   STORAGE_KEY: "dev-tools-theme",
 
   init() {
-    const saved = localStorage.getItem(this.STORAGE_KEY);
+    const saved = SafeStorage.get(this.STORAGE_KEY);
     if (saved) {
       this.apply(saved);
     } else {
@@ -90,7 +111,7 @@ const ThemeManager = {
     }
 
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-      if (!localStorage.getItem(this.STORAGE_KEY)) {
+      if (!SafeStorage.get(this.STORAGE_KEY)) {
         this.apply(e.matches ? "dark" : "light");
       }
     });
@@ -108,7 +129,7 @@ const ThemeManager = {
   toggle() {
     const current = document.documentElement.getAttribute("data-theme");
     const next = current === "dark" ? "light" : "dark";
-    localStorage.setItem(this.STORAGE_KEY, next);
+    SafeStorage.set(this.STORAGE_KEY, next);
     this.apply(next);
   },
 };
@@ -124,13 +145,13 @@ const EasterEgg = {
 
   // 检查是否已解锁
   isUnlocked() {
-    return localStorage.getItem(this.STORAGE_KEY) === "true" || state.secretUnlocked;
+    return SafeStorage.get(this.STORAGE_KEY) === "true" || state.secretUnlocked;
   },
 
   // 解锁彩蛋
   unlock() {
     state.secretUnlocked = true;
-    localStorage.setItem(this.STORAGE_KEY, "true");
+    SafeStorage.set(this.STORAGE_KEY, "true");
     this.showToast("🎉 恭喜！发现隐藏分类！");
     this.revealSecretCategory();
     this.addSecretConfetti();
@@ -422,6 +443,22 @@ function initSearch() {
       renderTools();
     }
   });
+}
+
+/** 与首页 JSON-LD SearchAction 的 ?q= 参数对齐，支持从搜索结果或分享链接带参打开 */
+function initSearchFromUrl() {
+  const input = getDom("searchInput");
+  if (!input) return;
+  let q = "";
+  try {
+    q = new URLSearchParams(window.location.search).get("q") || "";
+  } catch {
+    return;
+  }
+  q = q.trim();
+  if (!q) return;
+  input.value = q;
+  state.searchQuery = q.toLowerCase();
 }
 
 // ============================================================
@@ -914,7 +951,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initCategories();
   initSearch();
-  renderTools();
+  initSearchFromUrl();
+  renderTools(); /* initSearchFromUrl 可能已写入 state.searchQuery */
   void initArticles();
   initTrustBar();
   initHeroMirror();

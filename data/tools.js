@@ -609,7 +609,7 @@ const TOOLS_DATA = [
     icon: "https://icon.horse/icon/regex101.com",
     featured: false,
     content: {
-      intro: "Regex101 提供正则表达式在线编写与调试，支持 PCRE、JavaScript、Python 等引擎，实时高亮匹配与分组，并给出每条部分的解释，便于学习和排错。",
+      intro: "Regex101 提供正则表达式在线编写与调试，支持 PCRE、JavaScript、Python 等引擎，实时高亮匹配与分组，并给出每个部分的解释，便于学习和排错。",
       features: ["多语言引擎（PCRE、JS、Python 等）", "实时匹配高亮与分组说明", "导出代码片段"],
       links: [{ label: "官方说明", url: "https://regex101.com/" }],
     },

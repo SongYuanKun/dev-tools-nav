@@ -92,7 +92,7 @@ dev-tools-nav/
 **P1 — 已完成（2026-04）**
 
 - [x] **开发者向**：`pages/ai/dev-api.html` + 专题入口卡片 + glossary 延伸阅读链
-- [x] **更新说明**：首页 `AI_TOPIC_CHANGELOG`（人工维护最近条目，不承诺日更）
+- [x] **更新说明**：首页展示 `AI_TOPIC_CHANGELOG`（由自动脚本生成，可人工兜底维护，不承诺日更）
 - [x] **场景速查 → 内链**：每张卡链到对应 `workflow#…`、`prompts#prompt-*`、`compare#compare-*`（「做视频」无单独工作流则仅链横评 + Prompt）
 - [x] **学习路径微调**：拆为 5 步（入门 → 工作流 → **Prompt** → 横评 → 价格）
 - [x] **专题内导航条**：各 AI 子页 header 下 `ai-subnav`（与 README 原「顶栏二级」等价落地为专题内条）

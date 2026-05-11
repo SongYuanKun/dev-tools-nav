@@ -833,9 +833,11 @@
   box-shadow: var(--shadow-card);
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
   min-height: 132px;
+  cursor: pointer;
 }
 
-.tools-card:hover {
+.tools-card:hover,
+.tools-card:focus-visible {
   transform: translateY(-2px);
   box-shadow: var(--shadow-card-hover);
   border-color: rgba(99, 102, 241, 0.35);
