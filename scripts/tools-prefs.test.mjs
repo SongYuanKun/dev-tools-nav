@@ -14,6 +14,10 @@ function loadToolsPrefs(localStorage) {
   return sandbox.window.ToolsPrefs;
 }
 
+function toPlain(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 test("ToolsPrefs falls back to memory when storage reads throw", () => {
   const prefs = loadToolsPrefs({
     getItem() {
@@ -24,17 +28,17 @@ test("ToolsPrefs falls back to memory when storage reads throw", () => {
     },
   });
 
-  assert.deepEqual(prefs.load(), { favorites: [], recent: [], lastFilters: {} });
+  assert.deepEqual(toPlain(prefs.load()), { favorites: [], recent: [], lastFilters: {} });
   assert.equal(prefs.hasFavorite("json"), false);
 
   assert.equal(prefs.toggleFavorite("json").added, true);
   assert.equal(prefs.hasFavorite("json"), true);
 
   prefs.addRecent("json");
-  assert.deepEqual(prefs.load().recent, ["json"]);
+  assert.deepEqual(toPlain(prefs.load().recent), ["json"]);
 
   prefs.setLastFilters({ q: "jwt" });
-  assert.deepEqual(prefs.load().lastFilters, { q: "jwt" });
+  assert.deepEqual(toPlain(prefs.load().lastFilters), { q: "jwt" });
 });
 
 test("ToolsPrefs keeps session state when storage writes throw", () => {
@@ -51,5 +55,5 @@ test("ToolsPrefs keeps session state when storage writes throw", () => {
   assert.equal(prefs.hasFavorite("regex"), true);
 
   prefs.addRecent("regex");
-  assert.deepEqual(prefs.load().recent, ["regex"]);
+  assert.deepEqual(toPlain(prefs.load().recent), ["regex"]);
 });
