@@ -1,9 +1,20 @@
 (function () {
   var KEY = "devtools-online-tools-prefs-v1";
   var MAX_RECENT = 20;
+  var memoryOnly = false;
+  var memoryPrefs = normalizePrefs(null);
 
   function safeParse(v) {
     try { return JSON.parse(v); } catch { return null; }
+  }
+
+  function normalizePrefs(prefs) {
+    prefs = prefs && typeof prefs === "object" ? prefs : {};
+    return {
+      favorites: Array.isArray(prefs.favorites) ? prefs.favorites.filter(Boolean) : [],
+      recent: Array.isArray(prefs.recent) ? prefs.recent.filter(Boolean) : [],
+      lastFilters: prefs.lastFilters && typeof prefs.lastFilters === "object" ? Object.assign({}, prefs.lastFilters) : {},
+    };
   }
 
   function normalizeSlug(s) {
@@ -11,17 +22,25 @@
   }
 
   function load() {
-    var raw = safeParse(localStorage.getItem(KEY));
-    var prefs = raw && typeof raw === "object" ? raw : {};
-    return {
-      favorites: Array.isArray(prefs.favorites) ? prefs.favorites.filter(Boolean) : [],
-      recent: Array.isArray(prefs.recent) ? prefs.recent.filter(Boolean) : [],
-      lastFilters: prefs.lastFilters && typeof prefs.lastFilters === "object" ? prefs.lastFilters : {},
-    };
+    if (memoryOnly) return normalizePrefs(memoryPrefs);
+    try {
+      memoryPrefs = normalizePrefs(safeParse(localStorage.getItem(KEY)));
+    } catch {
+      memoryOnly = true;
+    }
+    return normalizePrefs(memoryPrefs);
   }
 
   function save(prefs) {
-    localStorage.setItem(KEY, JSON.stringify(prefs));
+    memoryPrefs = normalizePrefs(prefs);
+    if (memoryOnly) return false;
+    try {
+      localStorage.setItem(KEY, JSON.stringify(memoryPrefs));
+      return true;
+    } catch {
+      memoryOnly = true;
+      return false;
+    }
   }
 
   function hasFavorite(slug) {
