@@ -269,19 +269,19 @@ img {
 
 .nav-menu-panel {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 12px);
   left: 50%;
   width: min(560px, calc(100vw - 32px));
-  padding: 10px;
+  padding: 12px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  gap: 8px;
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(148, 163, 184, 0.22);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14), 0 6px 16px rgba(15, 23, 42, 0.08);
   transform: translateX(-50%);
-  z-index: 120;
+  z-index: 220;
 }
 
 .nav-menu-panel::before {
@@ -326,6 +326,25 @@ img {
   background: var(--color-primary-light);
   transform: translateY(-1px);
 }
+
+.icon-fallback-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: -2px;
+}
+
+.tool-favicon.icon-fallback-chip { width: 18px; height: 18px; }
+.tool-favicon-sm.icon-fallback-chip { width: 14px; height: 14px; font-size: 9px; }
+.tool-favicon-xs.icon-fallback-chip,
+.ai-topic-badge-icon.icon-fallback-chip { width: 12px; height: 12px; font-size: 8px; }
 
 /* 暗色模式切换按钮 */
 .theme-toggle {

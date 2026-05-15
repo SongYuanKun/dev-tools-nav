@@ -4,6 +4,18 @@
  */
 
 // ============================================================
+// 嵌入模式：在线工具被详情页 iframe 调用时，隐藏站点级外壳
+// ============================================================
+(function () {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get("embed") === "1") {
+      document.documentElement.classList.add("is-embed");
+    }
+  } catch (_) {}
+})();
+
+// ============================================================
 // Umami 兼容数据采集（直接调用 /api/send，无需 document.currentScript）
 // ============================================================
 (function () {
