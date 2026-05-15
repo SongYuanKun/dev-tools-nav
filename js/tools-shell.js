@@ -96,10 +96,35 @@
 
     if (window.ToolsPrefs) window.ToolsPrefs.addRecent(slug);
 
-    frame.setAttribute("src", legacyPath);
+    // 详情页内嵌时使用 embed 模式，只展示工具主体，避免 iframe 里再出现一套站点导航。
+    var frameUrl = legacyPath;
+    if (!/^https?:\/\//i.test(frameUrl)) {
+      frameUrl += frameUrl.indexOf("?") === -1 ? "?embed=1" : "&embed=1";
+    }
+
+    function resizeFrame() {
+      try {
+        var doc = frame.contentDocument || frame.contentWindow.document;
+        if (!doc) return;
+        var height = Math.max(
+          doc.body ? doc.body.scrollHeight : 0,
+          doc.documentElement ? doc.documentElement.scrollHeight : 0
+        );
+        if (height > 0) frame.style.height = Math.min(Math.max(height + 24, 560), 1400) + "px";
+      } catch (_) {}
+    }
+
+    frame.setAttribute("src", frameUrl);
     frame.addEventListener("load", function () {
       errorEl.style.display = "none";
+      resizeFrame();
+      setTimeout(resizeFrame, 200);
+      try {
+        var doc = frame.contentDocument || frame.contentWindow.document;
+        if (doc && doc.body) new MutationObserver(resizeFrame).observe(doc.body, { childList: true, subtree: true, attributes: true });
+      } catch (_) {}
     });
+    window.addEventListener("resize", resizeFrame);
 
     frame.addEventListener("error", function () {
       errorEl.style.display = "block";

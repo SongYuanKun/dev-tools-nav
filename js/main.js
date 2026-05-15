@@ -893,6 +893,70 @@ function initBackToTop() {
 }
 
 // ============================================================
+// 全站图片兜底：外部 favicon 服务不可用时不显示破图
+// ============================================================
+function initImageFallbacks() {
+  const handled = new WeakSet();
+
+  const fallbackText = (img) => {
+    const label = (img.alt || img.closest("a, span, td, div")?.textContent || "").trim();
+    if (!label) return "🤖";
+    return /[\u4e00-\u9fa5]/.test(label) ? label.slice(0, 1) : label.slice(0, 1).toUpperCase();
+  };
+
+  const replaceBrokenImg = (img) => {
+    if (!(img instanceof HTMLImageElement) || handled.has(img)) return;
+    if (!img.matches(".tool-favicon, .tool-favicon-sm, .tool-favicon-xs, .ai-topic-badge-icon")) return;
+    handled.add(img);
+
+    const fallback = document.createElement("span");
+    fallback.className = `${img.className} icon-fallback-chip`;
+    fallback.textContent = fallbackText(img);
+    fallback.setAttribute("aria-hidden", img.alt ? "true" : "false");
+    img.replaceWith(fallback);
+  };
+
+  document.addEventListener("error", (event) => {
+    replaceBrokenImg(event.target);
+  }, true);
+
+  // 兼容脚本动态插入但 error 事件已错过的图片。
+  const check = (root = document) => {
+    root.querySelectorAll?.("img.tool-favicon, img.tool-favicon-sm, img.tool-favicon-xs, img.ai-topic-badge-icon").forEach((img) => {
+      if (img.complete && img.naturalWidth === 0) replaceBrokenImg(img);
+    });
+  };
+
+  check();
+  new MutationObserver((mutations) => {
+    mutations.forEach((m) => m.addedNodes.forEach((node) => {
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      if (node.matches?.("img")) check(node.parentElement || document);
+      else check(node);
+    }));
+  }).observe(document.body, { childList: true, subtree: true });
+}
+
+// ============================================================
+// 顶栏下拉增强：点击外部 / Esc 关闭，保持静态 details 的低成本实现
+// ============================================================
+function initNavMenu() {
+  const menus = Array.from(document.querySelectorAll(".nav-menu"));
+  if (!menus.length) return;
+
+  document.addEventListener("click", (event) => {
+    menus.forEach((menu) => {
+      if (!menu.contains(event.target)) menu.open = false;
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    menus.forEach((menu) => { menu.open = false; });
+  });
+}
+
+// ============================================================
 // 键盘快捷键
 // ============================================================
 function initKeyboard() {
@@ -957,6 +1021,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initTrustBar();
   initHeroMirror();
   initBackToTop();
+  initImageFallbacks();
+  initNavMenu();
   initKeyboard();
   EasterEgg.init();
   initSidePanel();
