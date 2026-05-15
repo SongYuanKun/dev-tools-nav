@@ -235,6 +235,98 @@ img {
   font-weight: 600;
 }
 
+.nav-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.nav-menu summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.nav-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-menu-trigger::after {
+  content: "⌄";
+  margin-left: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  transition: transform var(--transition), color var(--transition);
+}
+
+.nav-menu[open] .nav-menu-trigger {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.nav-menu[open] .nav-menu-trigger::after {
+  transform: rotate(180deg);
+  color: var(--color-primary);
+}
+
+.nav-menu-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  width: min(560px, calc(100vw - 32px));
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  transform: translateX(-50%);
+  z-index: 120;
+}
+
+.nav-menu-panel::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.nav-menu-panel a {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.nav-menu-panel a span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.nav-menu-panel a:hover,
+.nav-menu-panel a:focus-visible {
+  outline: none;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  transform: translateY(-1px);
+}
+
 /* 暗色模式切换按钮 */
 .theme-toggle {
   flex-shrink: 0;
@@ -2207,6 +2299,20 @@ img {
   .nav-link {
     padding: 6px 10px;
     font-size: 12px;
+  }
+
+  .nav-menu-panel {
+    left: auto;
+    right: -56px;
+    width: min(320px, calc(100vw - 24px));
+    grid-template-columns: 1fr;
+    transform: none;
+  }
+
+  .nav-menu-panel::before {
+    left: auto;
+    right: 76px;
+    transform: rotate(45deg);
   }
 }
 

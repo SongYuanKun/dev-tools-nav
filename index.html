@@ -66,7 +66,21 @@
         <!-- 导航链接 -->
         <div class="nav-links">
           <a href="index.html" class="nav-link active">工具导航</a>
-          <a href="pages/ai/index.html" class="nav-link">🤖 AI 专题</a>
+          <details class="nav-menu">
+            <summary class="nav-link nav-menu-trigger" aria-label="展开 AI 专题子页面导航">
+              🤖 AI 专题
+            </summary>
+            <div class="nav-menu-panel" aria-label="AI 专题子页面">
+              <a href="pages/ai/index.html">专题首页<span>学习路径与场景速查</span></a>
+              <a href="pages/ai/beginner.html">新手入门<span>从概念到第一步</span></a>
+              <a href="pages/ai/workflow.html">场景工作流<span>写作、编程、办公</span></a>
+              <a href="pages/ai/prompts.html">Prompt 模板<span>可直接复制使用</span></a>
+              <a href="pages/ai/compare.html">工具横评<span>按任务选择工具</span></a>
+              <a href="pages/ai/glossary.html">术语词典<span>模型、Token、RAG</span></a>
+              <a href="pages/ai/safety.html">隐私安全<span>数据与账号风险</span></a>
+              <a href="pages/ai/dev-api.html">开发者 API<span>网页、API、IDE 助手</span></a>
+            </div>
+          </details>
           <a href="pages/tools/index.html" class="nav-link">在线工具</a>
           <a href="pages/blog/index.html" class="nav-link">技术博客</a>
           <a href="pages/portfolio.html" class="nav-link">作品集</a>
