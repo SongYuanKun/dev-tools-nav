@@ -87,11 +87,13 @@
 
   function applyThemeToBtn(btn, theme) {
     if (!btn) return;
+    var title = theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式';
     btn.textContent = theme === 'dark' ? '☀️' : '🌙';
-    btn.setAttribute('title', theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式');
+    btn.setAttribute('title', title);
+    btn.setAttribute('aria-label', title);
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
+  function initSharedNav() {
     var nav = document.querySelector('nav.navbar');
     if (!nav) return;
 
@@ -99,13 +101,15 @@
     var active = getActiveSection();
     nav.innerHTML = buildNav(prefix, active);
 
-    // 主题切换绑定（main.js 的 ThemeManager 在首页也会绑定，重复无害）
+    // base.js 统一接管注入后的主题按钮，避免各页面旧监听在 nav 替换后丢失。
     var btn = document.getElementById('themeToggle');
     var theme = document.documentElement.getAttribute('data-theme') || 'light';
     applyThemeToBtn(btn, theme);
 
     if (btn) {
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function (event) {
+        // 部分页面仍会在 DOMContentLoaded 中绑定旧的主题逻辑；这里保持单次切换。
+        if (event) event.stopImmediatePropagation();
         var cur = document.documentElement.getAttribute('data-theme') || 'light';
         var next = cur === 'dark' ? 'light' : 'dark';
         localStorage.setItem('dev-tools-theme', next);
@@ -113,9 +117,17 @@
         applyThemeToBtn(btn, next);
         // 同步 main.js ThemeManager（如果存在）
         if (window.ThemeManager) window.ThemeManager.apply(next);
-      });
+      }, true);
     }
-  });
+
+    window.__sharedNavReady = true;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSharedNav);
+  } else {
+    initSharedNav();
+  }
 })();
 
 // ============================================================
