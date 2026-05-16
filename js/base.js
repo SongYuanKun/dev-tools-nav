@@ -12,14 +12,24 @@
     var parts = window.location.pathname.split('/').filter(Boolean);
     // 去掉末尾的文件名
     if (parts.length && parts[parts.length - 1].indexOf('.') !== -1) parts.pop();
-    return parts.length === 0 ? '' : parts.map(function () { return '..'; }).join('/') + '/';
+
+    // 站点可能部署在 GitHub Pages 子路径（/dev-tools-nav/）下，子路径本身不应计入站点内深度。
+    var siteDirs = ['pages', 'tools'];
+    var firstSiteDir = -1;
+    for (var i = 0; i < siteDirs.length; i++) {
+      var idx = parts.indexOf(siteDirs[i]);
+      if (idx !== -1 && (firstSiteDir === -1 || idx < firstSiteDir)) firstSiteDir = idx;
+    }
+
+    var depth = firstSiteDir === -1 ? 0 : parts.length - firstSiteDir;
+    return depth === 0 ? '' : Array(depth + 1).join('../');
   }
 
   // 根据当前路径判断哪个 nav-link 高亮
   function getActiveSection() {
     var p = window.location.pathname.toLowerCase();
     if (p.includes('/pages/ai/'))        return 'ai';
-    if (p.includes('/pages/tools/'))     return 'tools';
+    if (p.includes('/pages/tools/') || p.includes('/tools/')) return 'tools';
     if (p.includes('/pages/blog/'))      return 'blog';
     if (p.includes('/pages/portfolio'))  return 'portfolio';
     if (p.includes('/pages/about'))      return 'about';
