@@ -17,42 +17,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch jpy.wang page
-        run: curl -sL "https://www.jpy.wang/page/jrebel.html" -o /tmp/jrebel.html
-
-      - name: Extract and update servers.json
-        run: |
-          python3 << 'PY'
-          import re
-          import json
-          from datetime import datetime, timezone
-
-          with open("/tmp/jrebel.html", "r", encoding="utf-8", errors="ignore") as f:
-              content = f.read()
-
-          url_match = re.search(r"http://[\d.]+:\d+/[\w-]+", content)
-          email_match = re.search(r"[\w.+-]+@[\w.-]+\.\w+", content)
-
-          url = url_match.group(0) if url_match else ""
-          email = email_match.group(0) if email_match else ""
-
-          data_path = "data/servers.json"
-          try:
-              with open(data_path, "r", encoding="utf-8") as f:
-                  data = json.load(f)
-          except (FileNotFoundError, json.JSONDecodeError):
-              data = {}
-
-          data["jrebel"] = {
-              "url": url,
-              "email": email,
-              "updatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-              "source": "https://www.jpy.wang/page/jrebel.html"
-          }
-
-          with open(data_path, "w", encoding="utf-8") as f:
-              json.dump(data, f, ensure_ascii=False, indent=2)
-          PY
+      - name: Fetch and update servers.json
+        run: python3 scripts/sync-jrebel-server.py
 
       - name: Commit and push if changed
         run: |
