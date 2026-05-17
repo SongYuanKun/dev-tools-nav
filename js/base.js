@@ -12,6 +12,8 @@
     var parts = window.location.pathname.split('/').filter(Boolean);
     // 去掉末尾的文件名
     if (parts.length && parts[parts.length - 1].indexOf('.') !== -1) parts.pop();
+    // GitHub Pages 下第一段是仓库名（如 /dev-tools-nav/...），不算路径深度
+    if (window.location.hostname.endsWith('.github.io') && parts.length > 0) parts = parts.slice(1);
     return parts.length === 0 ? '' : parts.map(function () { return '..'; }).join('/') + '/';
   }
 
