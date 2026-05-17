@@ -7,13 +7,25 @@
 // 统一导航注入 — 保证所有页面 nav 内容一致
 // ============================================================
 (function () {
-  // 根据当前 URL 路径计算到根目录的相对前缀
+  // 根据 canonical URL 的路径深度计算到根目录的相对前缀
+  // 使用 canonical 而非当前 URL，确保 GitHub Pages / 自定义域名 / 本地都正确
   function getRootPrefix() {
+    var canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      try {
+        var canonPath = new URL(canonical.href).pathname; // 如 /pages/ai/index.html 或 /dev-tools-nav/pages/ai/index.html
+        var parts = canonPath.split('/').filter(Boolean);
+        // 去掉末尾文件名
+        if (parts.length && parts[parts.length - 1].indexOf('.') !== -1) parts.pop();
+        // 若 canonical 在 *.github.io 上，第一段是仓库名，不算深度
+        var canonHost = new URL(canonical.href).hostname;
+        if (canonHost.endsWith('.github.io') && parts.length > 0) parts = parts.slice(1);
+        return parts.length === 0 ? '' : parts.map(function () { return '..'; }).join('/') + '/';
+      } catch (_) {}
+    }
+    // 无 canonical 时回退：用当前路径（自定义域名上始终正确）
     var parts = window.location.pathname.split('/').filter(Boolean);
-    // 去掉末尾的文件名
     if (parts.length && parts[parts.length - 1].indexOf('.') !== -1) parts.pop();
-    // GitHub Pages 下第一段是仓库名（如 /dev-tools-nav/...），不算路径深度
-    if (window.location.hostname.endsWith('.github.io') && parts.length > 0) parts = parts.slice(1);
     return parts.length === 0 ? '' : parts.map(function () { return '..'; }).join('/') + '/';
   }
 
