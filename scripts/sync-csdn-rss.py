@@ -19,7 +19,7 @@ from zoneinfo import ZoneInfo
 
 DEFAULT_RSS = "https://blog.csdn.net/syk123839070/rss/list"
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-OUT_PATH = os.path.join(_REPO_ROOT, "data", "csdn-articles.json")
+DEFAULT_OUT_PATH = os.path.join(_REPO_ROOT, "data", "csdn-articles.json")
 MAX_ITEMS = 40
 DESC_MAX = 200
 UA = "Mozilla/5.0 (compatible; dev-tools-nav/1.0; +https://github.com/SongYuanKun/dev-tools-nav)"
@@ -64,6 +64,13 @@ def fetch_rss(url: str) -> bytes | None:
         return None
 
 
+def keep_existing(out_path: str, reason: str) -> bool:
+    if not os.path.isfile(out_path):
+        return False
+    print(f"Keep existing csdn-articles.json ({reason}).")
+    return True
+
+
 def parse_rss(xml_bytes: bytes) -> list[dict]:
     root = ET.fromstring(xml_bytes)
     channel = root.find("channel")
@@ -105,10 +112,10 @@ def parse_rss(xml_bytes: bytes) -> list[dict]:
 
 def main() -> int:
     rss_url = os.environ.get("CSDN_RSS_URL", DEFAULT_RSS)
+    out_path = os.environ.get("CSDN_ARTICLES_PATH", DEFAULT_OUT_PATH)
     raw = fetch_rss(rss_url)
     if raw is None:
-        if os.path.isfile(OUT_PATH):
-            print("Keep existing csdn-articles.json (fetch failed).")
+        if keep_existing(out_path, "fetch failed"):
             return 0
         items = []
     else:
@@ -116,7 +123,12 @@ def main() -> int:
             items = parse_rss(raw)
         except ET.ParseError as e:
             print(f"WARN: RSS parse error: {e}", file=sys.stderr)
+            if keep_existing(out_path, "parse failed"):
+                return 0
             items = []
+        else:
+            if not items and keep_existing(out_path, "no valid RSS items"):
+                return 0
 
     payload = {
         "updatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -124,12 +136,12 @@ def main() -> int:
         "items": items,
     }
 
-    os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
-    with open(OUT_PATH, "w", encoding="utf-8") as f:
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
         f.write("\n")
 
-    print(f"Wrote {len(items)} articles to {OUT_PATH}")
+    print(f"Wrote {len(items)} articles to {out_path}")
     return 0
 
 
