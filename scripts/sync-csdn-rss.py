@@ -19,7 +19,10 @@ from zoneinfo import ZoneInfo
 
 DEFAULT_RSS = "https://blog.csdn.net/syk123839070/rss/list"
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-OUT_PATH = os.path.join(_REPO_ROOT, "data", "csdn-articles.json")
+OUT_PATH = os.environ.get(
+    "CSDN_ARTICLES_OUT_PATH",
+    os.path.join(_REPO_ROOT, "data", "csdn-articles.json"),
+)
 MAX_ITEMS = 40
 DESC_MAX = 200
 UA = "Mozilla/5.0 (compatible; dev-tools-nav/1.0; +https://github.com/SongYuanKun/dev-tools-nav)"
@@ -103,20 +106,28 @@ def parse_rss(xml_bytes: bytes) -> list[dict]:
     return items
 
 
+def keep_existing(reason: str) -> bool:
+    if os.path.isfile(OUT_PATH):
+        print(f"Keep existing csdn-articles.json ({reason}).")
+        return True
+    print(f"ERROR: cannot write csdn-articles.json ({reason}) and no existing file found.", file=sys.stderr)
+    return False
+
+
 def main() -> int:
     rss_url = os.environ.get("CSDN_RSS_URL", DEFAULT_RSS)
     raw = fetch_rss(rss_url)
     if raw is None:
-        if os.path.isfile(OUT_PATH):
-            print("Keep existing csdn-articles.json (fetch failed).")
-            return 0
-        items = []
+        return 0 if keep_existing("fetch failed") else 1
     else:
         try:
             items = parse_rss(raw)
         except ET.ParseError as e:
             print(f"WARN: RSS parse error: {e}", file=sys.stderr)
-            items = []
+            return 0 if keep_existing("parse failed") else 1
+
+    if not items:
+        return 0 if keep_existing("RSS contained no usable items") else 1
 
     payload = {
         "updatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
