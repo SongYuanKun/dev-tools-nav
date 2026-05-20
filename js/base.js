@@ -26,6 +26,7 @@
     // 无 canonical 时回退：用当前路径（自定义域名上始终正确）
     var parts = window.location.pathname.split('/').filter(Boolean);
     if (parts.length && parts[parts.length - 1].indexOf('.') !== -1) parts.pop();
+    if (window.location.hostname.endsWith('.github.io') && parts[0] === 'dev-tools-nav') parts = parts.slice(1);
     return parts.length === 0 ? '' : parts.map(function () { return '..'; }).join('/') + '/';
   }
 
