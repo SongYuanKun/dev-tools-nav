@@ -19,7 +19,10 @@ from zoneinfo import ZoneInfo
 
 DEFAULT_RSS = "https://blog.csdn.net/syk123839070/rss/list"
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-OUT_PATH = os.path.join(_REPO_ROOT, "data", "csdn-articles.json")
+OUT_PATH = os.environ.get(
+    "CSDN_ARTICLES_OUT_PATH",
+    os.path.join(_REPO_ROOT, "data", "csdn-articles.json"),
+)
 MAX_ITEMS = 40
 DESC_MAX = 200
 UA = "Mozilla/5.0 (compatible; dev-tools-nav/1.0; +https://github.com/SongYuanKun/dev-tools-nav)"
@@ -117,6 +120,10 @@ def main() -> int:
         except ET.ParseError as e:
             print(f"WARN: RSS parse error: {e}", file=sys.stderr)
             items = []
+
+    if not items and os.path.isfile(OUT_PATH):
+        print("Keep existing csdn-articles.json (no valid RSS items parsed).")
+        return 0
 
     payload = {
         "updatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
