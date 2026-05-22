@@ -62,7 +62,7 @@
 
     var aiActive = active === 'ai';
     var aiDropdown = [
-      '<details class="nav-menu"' + (aiActive ? ' open' : '') + '>',
+      '<details class="nav-menu">',
       '  <summary class="nav-link nav-menu-trigger' + (aiActive ? ' active' : '') + '"',
       '    aria-label="展开 AI 专题子页面导航">🤖 AI 专题</summary>',
       '  <div class="nav-menu-panel" aria-label="AI 专题子页面">',
@@ -70,6 +70,7 @@
       '    <a href="' + prefix + 'pages/ai/beginner.html">新手入门<span>从概念到第一步</span></a>',
       '    <a href="' + prefix + 'pages/ai/workflow.html">场景工作流<span>写作、编程、办公</span></a>',
       '    <a href="' + prefix + 'pages/ai/prompts.html">Prompt 模板<span>可直接复制使用</span></a>',
+      '    <a href="' + prefix + 'pages/ai/open-source-radar.html">开源项目雷达<span>每周 AI/ML Trending</span></a>',
       '    <a href="' + prefix + 'pages/ai/compare.html">工具横评<span>按任务选择工具</span></a>',
       '    <a href="' + prefix + 'pages/ai/glossary.html">术语词典<span>模型、Token、RAG</span></a>',
       '    <a href="' + prefix + 'pages/ai/safety.html">隐私安全<span>数据与账号风险</span></a>',

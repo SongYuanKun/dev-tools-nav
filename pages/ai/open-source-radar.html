@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="AI 开源项目雷达 - 每周从 GitHub Trending 筛选 AI、LLM、Agent、机器学习相关热门项目，提供中文解读、核心功能和适用场景。" />
+  <meta property="og:title" content="AI 开源项目雷达 · Koen的工具箱" />
+  <meta property="og:description" content="每周精选 GitHub Trending 中 AI/ML/Agent 热门项目，中文卡片化解读。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/pages/ai/open-source-radar.html" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <link rel="canonical" href="https://tools.songyuankun.top/pages/ai/open-source-radar.html" />
+  <title>AI 开源项目雷达 · Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/ai-topic.css" />
+  <script defer src="../../js/base.js"></script>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">工具导航</a>
+          <a href="index.html" class="nav-link active">AI 专题</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+          <a href="../about.html" class="nav-link">关于我</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <nav class="ai-subnav" aria-label="AI 专题内导航">
+    <div class="ai-subnav-inner">
+      <a href="index.html" class="ai-subnav-link">专题首页</a>
+      <a href="beginner.html" class="ai-subnav-link">入门</a>
+      <a href="glossary.html" class="ai-subnav-link">术语</a>
+      <a href="safety.html" class="ai-subnav-link">安全</a>
+      <a href="dev-api.html" class="ai-subnav-link">开发者</a>
+      <a href="open-source-radar.html" class="ai-subnav-link ai-subnav-current">开源雷达</a>
+      <a href="compare.html" class="ai-subnav-link">横评</a>
+      <a href="workflow.html" class="ai-subnav-link">工作流</a>
+      <a href="prompts.html" class="ai-subnav-link">Prompt</a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <nav class="ai-page-nav" aria-label="面包屑">
+      <a href="../../index.html">首页</a>
+      <span class="separator">›</span>
+      <a href="index.html">AI 专题</a>
+      <span class="separator">›</span>
+      <span class="current">AI 开源项目雷达</span>
+    </nav>
+
+    <section class="radar-hero" aria-labelledby="radarTitle">
+      <p class="radar-kicker">GitHub Trending Weekly · AI/ML</p>
+      <h1 id="radarTitle">AI 开源项目雷达</h1>
+      <p class="radar-lead">每周从 GitHub Trending 里筛选 AI、LLM、Agent、机器学习相关项目，按本周新增 Star 排序，补充中文解读、核心功能和适用场景。</p>
+      <div class="radar-meta" aria-label="数据元信息">
+        <span>抓取时间：2026-05-22 15:56 CST</span>
+        <span>项目数：12</span>
+        <span>排序：本周新增 Star 降序</span>
+      </div>
+    </section>
+
+    <section class="radar-summary" aria-labelledby="radarSummaryTitle">
+      <h2 id="radarSummaryTitle">本周观察</h2>
+      <p>本周的 AI/ML 开源热点集中在三条线上：Agent Skills 能力封装、AI 编程上下文优化、多模型与多媒体生成工作流。开发者关注点正在从“模型能不能回答”转向“AI 能不能稳定进入真实工程流程”。</p>
+    </section>
+
+    <section class="radar-grid" aria-label="AI 开源项目榜单">
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#01</span>
+            <h2><a href="https://github.com/tinyhumansai/openhuman" target="_blank" rel="noopener noreferrer">tinyhumansai/openhuman</a></h2>
+          </div>
+          <div class="radar-stats"><span>Rust</span><span>Star 25,257</span><strong>+17,399</strong></div>
+        </div>
+        <p class="radar-desc">一款强调本地隐私和个人化能力的桌面级 AI 助手，目标是把个人 AI 超级智能放到用户自己的工作环境里。</p>
+        <h3>核心功能</h3>
+        <ul><li>私有化个人 AI 工作台，强调数据留在本地或用户可控环境中。</li><li>提供跨平台安装脚本和桌面应用入口，面向日常高频 AI 使用。</li><li>项目仍处 Early Beta，适合关注个人 AI 助手形态的开发者提前体验。</li></ul>
+        <div class="radar-tags"><span>个人 AI 助手</span><span>隐私优先</span><span>桌面工作流</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#02</span>
+            <h2><a href="https://github.com/colbymchenry/codegraph" target="_blank" rel="noopener noreferrer">colbymchenry/codegraph</a></h2>
+          </div>
+          <div class="radar-stats"><span>TypeScript</span><span>Star 14,829</span><strong>+10,749</strong></div>
+        </div>
+        <p class="radar-desc">为 Claude Code、Codex、Cursor、OpenCode 等 AI 编程工具提供本地代码知识图谱，减少上下文 token 和工具调用成本。</p>
+        <h3>核心功能</h3>
+        <ul><li>预索引代码仓库，形成语义级代码知识图谱。</li><li>支持主流 AI 编程 Agent，让模型更快定位相关文件和调用关系。</li><li>100% 本地运行，降低代码外泄风险，并减少重复检索开销。</li></ul>
+        <div class="radar-tags"><span>AI 编程</span><span>大仓库理解</span><span>本地索引</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#03</span>
+            <h2><a href="https://github.com/Imbad0202/academic-research-skills" target="_blank" rel="noopener noreferrer">Imbad0202/academic-research-skills</a></h2>
+          </div>
+          <div class="radar-stats"><span>Python</span><span>Star 18,591</span><strong>+10,737</strong></div>
+        </div>
+        <p class="radar-desc">面向 Claude Code 的学术研究技能包，把选题、检索、写作、审稿、修改到定稿流程拆成可复用 Agent Skills。</p>
+        <h3>核心功能</h3>
+        <ul><li>覆盖 research -> write -> review -> revise -> finalize 的完整学术工作流。</li><li>提供多语言文档，降低非英语用户使用门槛。</li><li>适合把论文、综述、研究笔记流程标准化到 AI Agent 中。</li></ul>
+        <div class="radar-tags"><span>学术写作</span><span>研究工作流</span><span>Claude Skills</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#04</span>
+            <h2><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener noreferrer">anthropics/skills</a></h2>
+          </div>
+          <div class="radar-stats"><span>Python</span><span>Star 139,043</span><strong>+4,703</strong></div>
+        </div>
+        <p class="radar-desc">Anthropic 官方公开的 Agent Skills 仓库，用文件夹化指令、脚本和资源扩展 Claude 在特定任务上的能力。</p>
+        <h3>核心功能</h3>
+        <ul><li>用结构化目录封装任务说明、脚本和参考资源。</li><li>让 Claude 在文档生成、数据分析、流程自动化等任务中动态加载专用能力。</li><li>可作为设计企业内部 Agent 技能库的参考模板。</li></ul>
+        <div class="radar-tags"><span>Agent Skills</span><span>企业自动化</span><span>能力扩展</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#05</span>
+            <h2><a href="https://github.com/HKUDS/CLI-Anything" target="_blank" rel="noopener noreferrer">HKUDS/CLI-Anything</a></h2>
+          </div>
+          <div class="radar-stats"><span>Python</span><span>Star 39,361</span><strong>+4,587</strong></div>
+        </div>
+        <p class="radar-desc">把复杂软件包装成 Agent 可调用的 CLI，让 AI Agent 能通过命令行控制 CAD、3D、字幕、图表等外部工具。</p>
+        <h3>核心功能</h3>
+        <ul><li>提供 CLI-Hub，用于浏览、安装和管理社区构建的 CLI。</li><li>面向 Agent-Native 软件交互，让模型通过 CLI 生成真实工件。</li><li>包含多类演示场景，例如 CAD、3D 场景、图表、游戏和字幕处理。</li></ul>
+        <div class="radar-tags"><span>Agent 工具调用</span><span>CLI 自动化</span><span>软件控制</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#06</span>
+            <h2><a href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/ai-agents-for-beginners</a></h2>
+          </div>
+          <div class="radar-stats"><span>Jupyter Notebook</span><span>Star 65,115</span><strong>+3,677</strong></div>
+        </div>
+        <p class="radar-desc">微软出品的 AI Agent 入门课程，用 12 节内容系统讲解如何从零开始构建 AI Agent。</p>
+        <h3>核心功能</h3>
+        <ul><li>课程式结构，适合从概念、架构到实践逐步学习。</li><li>使用 Notebook 组织案例，便于边学边运行。</li><li>覆盖 Agent 构建所需的核心概念和开发路径。</li></ul>
+        <div class="radar-tags"><span>AI Agent 入门</span><span>团队培训</span><span>课程学习</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#07</span>
+            <h2><a href="https://github.com/K-Dense-AI/scientific-agent-skills" target="_blank" rel="noopener noreferrer">K-Dense-AI/scientific-agent-skills</a></h2>
+          </div>
+          <div class="radar-stats"><span>Python</span><span>Star 25,124</span><strong>+3,478</strong></div>
+        </div>
+        <p class="radar-desc">面向科研、工程、分析、金融和写作场景的 Agent Skills 集合，强调跨 Agent 标准兼容。</p>
+        <h3>核心功能</h3>
+        <ul><li>提供大量即用型科研和分析技能。</li><li>从 Claude Scientific Skills 扩展为更通用的 Scientific Agent Skills。</li><li>可配合本地 AI co-scientist 工作台，用于数据库检索、文件处理和科研辅助。</li></ul>
+        <div class="radar-tags"><span>科研助手</span><span>数据分析</span><span>Agent Skills</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#08</span>
+            <h2><a href="https://github.com/decolua/9router" target="_blank" rel="noopener noreferrer">decolua/9router</a></h2>
+          </div>
+          <div class="radar-stats"><span>JavaScript</span><span>Star 13,342</span><strong>+3,003</strong></div>
+        </div>
+        <p class="radar-desc">面向 AI 编程工具的模型路由器，把 Claude Code、Codex、Cursor 等连接到多家模型供应商并支持自动 fallback。</p>
+        <h3>核心功能</h3>
+        <ul><li>支持 40+ AI Provider 和 100+ 模型接入。</li><li>提供自动 fallback 和 token 节省策略，降低高频 AI 编程成本。</li><li>可作为多模型、多工具统一入口，但正式链路仍需关注数据边界和供应商可信度。</li></ul>
+        <div class="radar-tags"><span>AI 编程路由</span><span>多模型接入</span><span>成本优化</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#09</span>
+            <h2><a href="https://github.com/Anil-matcha/Open-Generative-AI" target="_blank" rel="noopener noreferrer">Anil-matcha/Open-Generative-AI</a></h2>
+          </div>
+          <div class="radar-stats"><span>JavaScript</span><span>Star 16,521</span><strong>+2,917</strong></div>
+        </div>
+        <p class="radar-desc">开源 AI 图片和视频生成工作室，目标是提供可自部署、无订阅费的生成式媒体平台替代方案。</p>
+        <h3>核心功能</h3>
+        <ul><li>聚合 200+ 图像和视频生成模型。</li><li>面向图片、视频、编辑、拼接等媒体生成流程。</li><li>可与 AI coding agents 结合，构建自动化媒体生产流水线。</li></ul>
+        <div class="radar-tags"><span>AI 视频</span><span>图像生成</span><span>内容生产</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#10</span>
+            <h2><a href="https://github.com/ZhuLinsen/daily_stock_analysis" target="_blank" rel="noopener noreferrer">ZhuLinsen/daily_stock_analysis</a></h2>
+          </div>
+          <div class="radar-stats"><span>Python</span><span>Star 38,399</span><strong>+2,496</strong></div>
+        </div>
+        <p class="radar-desc">LLM 驱动的股票智能分析系统，聚合行情、新闻和模型分析，生成 A/H/美股决策仪表盘与推送。</p>
+        <h3>核心功能</h3>
+        <ul><li>整合多数据源行情和实时新闻。</li><li>使用 LLM 生成分析结果和决策辅助视图。</li><li>支持定时运行和多渠道推送，适合个人量化观察和投研辅助。</li></ul>
+        <div class="radar-tags"><span>金融分析</span><span>定时报告</span><span>LLM 仪表盘</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#11</span>
+            <h2><a href="https://github.com/HKUDS/ViMax" target="_blank" rel="noopener noreferrer">HKUDS/ViMax</a></h2>
+          </div>
+          <div class="radar-stats"><span>Python</span><span>Star 6,548</span><strong>+2,495</strong></div>
+        </div>
+        <p class="radar-desc">Agentic Video Generation 项目，把导演、编剧、制片和视频生成整合到一个 Agent 化视频生产流程里。</p>
+        <h3>核心功能</h3>
+        <ul><li>面向视频生成的多角色 Agent 协作流程。</li><li>把创意拆解、脚本规划、生产调度和生成过程串联起来。</li><li>适合观察 AI 视频从单次生成走向流程化生产的趋势。</li></ul>
+        <div class="radar-tags"><span>AI 视频生成</span><span>Agent 工作流</span><span>创意生产</span></div>
+      </article>
+
+      <article class="radar-card">
+        <div class="radar-card-head">
+          <div>
+            <span class="radar-rank">#12</span>
+            <h2><a href="https://github.com/yikart/AiToEarn" target="_blank" rel="noopener noreferrer">yikart/AiToEarn</a></h2>
+          </div>
+          <div class="radar-stats"><span>TypeScript</span><span>Star 16,001</span><strong>+2,278</strong></div>
+        </div>
+        <p class="radar-desc">面向一人公司、创作者和品牌的 AI 内容营销智能体，覆盖内容生成、分发、互动和变现流程。</p>
+        <h3>核心功能</h3>
+        <ul><li>支持多平台内容分发，包括抖音、小红书、B站、TikTok、YouTube、X、LinkedIn 等。</li><li>通过 AI Agent 自动化内容生产、发布和互动运营。</li><li>定位一站式内容商业化平台，适合研究创作者工具链和个人 IP 自动化。</li></ul>
+        <div class="radar-tags"><span>内容营销</span><span>一人公司</span><span>多平台分发</span></div>
+      </article>
+    </section>
+
+    <section class="radar-source" aria-labelledby="radarSourceTitle">
+      <h2 id="radarSourceTitle">数据来源与说明</h2>
+      <ul>
+        <li>数据来源：<a href="https://github.com/trending?since=weekly" target="_blank" rel="noopener noreferrer">GitHub Trending Weekly</a>。</li>
+        <li>检索范围：overall、Python、Jupyter Notebook、TypeScript、JavaScript，并按 AI、LLM、machine-learning、deep-learning、GPT、agent 等关键词筛选。</li>
+        <li>GitHub Trending 页面存在缓存和实时波动，同一周不同时间抓取可能有轻微差异。</li>
+        <li>中文解读基于公开仓库描述和 README 片段整理，部分内容由 AI 辅助生成。</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="../../index.html">工具导航</a>
+        <span class="footer-divider">|</span>
+        <a href="index.html">AI 专题</a>
+        <span class="footer-divider">|</span>
+        <a href="../about.html">关于我</a>
+      </div>
+      <p class="footer-copyright">Made with Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../../js/main.js"></script>
+</body>
+</html>

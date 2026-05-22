@@ -2310,9 +2310,25 @@ img {
     grid-template-columns: 1fr;
   }
 
+  .navbar-inner {
+    min-width: 0;
+    padding: 0 12px;
+    gap: 8px;
+    overflow: hidden;
+  }
+
   .nav-links {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
     gap: 0;
     margin-right: 4px;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
   }
 
   .nav-link {
@@ -2322,7 +2338,7 @@ img {
 
   .nav-menu-panel {
     left: auto;
-    right: -56px;
+    right: 0;
     width: min(320px, calc(100vw - 24px));
     grid-template-columns: 1fr;
     transform: none;
@@ -2330,7 +2346,7 @@ img {
 
   .nav-menu-panel::before {
     left: auto;
-    right: 76px;
+    right: 20px;
     transform: rotate(45deg);
   }
 }
