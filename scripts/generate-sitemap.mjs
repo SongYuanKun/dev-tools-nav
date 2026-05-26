@@ -80,6 +80,7 @@ export function collectStaticUrls(root = ROOT) {
     { loc: `${BASE_URL}/pages/tools/jwt.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/sql-formatter.html`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/pages/tools/regex.html`, changefreq: "monthly", priority: "0.8" },
+    { loc: `${BASE_URL}/tools/jrebel/`, changefreq: "monthly", priority: "0.8" },
   ];
 }
 

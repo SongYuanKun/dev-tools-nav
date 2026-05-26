@@ -3126,6 +3126,7 @@ body.redesign-v2 {
 .v2-tool-match .v2-tool-icon { background: var(--v2-green); }
 .v2-tool-sql .v2-tool-icon { background: #7c3aed; }
 .v2-tool-jwt .v2-tool-icon { background: #0f766e; }
+.v2-tool-java .v2-tool-icon { background: #4f46e5; }
 
 .v2-contact { text-align: center; }
 .v2-contact h2,
