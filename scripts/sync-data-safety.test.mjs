@@ -64,6 +64,59 @@ test("CSDN sync preserves existing articles when RSS has no usable items", () =>
   assert.deepEqual(JSON.parse(readFileSync(outPath, "utf-8")), existing);
 });
 
+test("CSDN sync keeps prior articles when RSS returns only a partial feed", () => {
+  const dir = tempDir();
+  const outPath = join(dir, "csdn-articles.json");
+  const rssPath = join(dir, "partial.xml");
+
+  writeFileSync(
+    outPath,
+    JSON.stringify(
+      {
+        updatedAt: "2026-01-01T00:00:00Z",
+        source: "previous",
+        items: [
+          { title: "old newest", url: "https://example.com/old-newest" },
+          { title: "old second", url: "https://example.com/old-second" },
+          { title: "old third", url: "https://example.com/old-third" },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+  writeFileSync(
+    rssPath,
+    `<?xml version="1.0"?>
+<rss><channel>
+  <item>
+    <title>fresh article</title>
+    <link>https://example.com/fresh</link>
+    <description>fresh desc</description>
+    <pubDate>Tue, 26 May 2026 08:00:00 GMT</pubDate>
+  </item>
+</channel></rss>`,
+  );
+
+  const result = runPython("scripts/sync-csdn-rss.py", {
+    CSDN_ARTICLES_OUT_PATH: outPath,
+    CSDN_RSS_URL: pathToFileURL(rssPath).href,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+
+  const data = JSON.parse(readFileSync(outPath, "utf-8"));
+  assert.deepEqual(
+    data.items.map((item) => item.url),
+    [
+      "https://example.com/fresh",
+      "https://example.com/old-newest",
+      "https://example.com/old-second",
+      "https://example.com/old-third",
+    ],
+  );
+});
+
 test("JRebel sync preserves existing server data when no URL is extracted", () => {
   const dir = tempDir();
   const outPath = join(dir, "servers.json");
