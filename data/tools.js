@@ -1271,17 +1271,18 @@ const TOOLS_DATA = [
     content: null,
   },
 
-  // ==================== 🔑 激活工具（隐藏，不展示在首页） ====================
+  // ==================== 🔑 KMS ====================
   {
     id: "kms",
+    slug: "kms",
     name: "KMS 激活",
     description: "Windows / Office / Server 全版本 KMS 激活工具，一键命令搞定",
-    category: "activate",
+    category: "online-tools",
     tags: ["Windows", "Office", "激活", "KMS"],
     url: "pages/kms.html",
     icon: "💻",
     featured: true,
-    hidden: true,
+    hidden: false,
     content: null,
   },
   {
