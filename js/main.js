@@ -1,5 +1,5 @@
 /**
- * 个人工具导航站 - 主交互逻辑
+ * Koen 工具箱 - 主交互逻辑
  * 功能：暗色模式、分类筛选、实时搜索、卡片渲染
  */
 
@@ -121,7 +121,7 @@ const ThemeManager = {
     document.documentElement.setAttribute("data-theme", theme);
     const btn = document.getElementById("themeToggle");
     if (btn) {
-      btn.textContent = theme === "dark" ? "☀️" : "🌙";
+      btn.textContent = theme === "dark" ? "亮色" : "暗色";
       btn.setAttribute("title", theme === "dark" ? "切换到亮色模式" : "切换到暗色模式");
     }
   },
@@ -152,7 +152,7 @@ const EasterEgg = {
   unlock() {
     state.secretUnlocked = true;
     SafeStorage.set(this.STORAGE_KEY, "true");
-    this.showToast("🎉 恭喜！发现隐藏分类！");
+    this.showToast("恭喜，发现隐藏分类！");
     this.revealSecretCategory();
     this.addSecretConfetti();
     window.umami?.track?.("easter_egg_unlocked");
@@ -167,7 +167,7 @@ const EasterEgg = {
     toast.className = "secret-toast";
     toast.innerHTML = `
       <div class="secret-toast-content">
-        <span class="secret-toast-icon">🔮</span>
+        <span class="secret-toast-icon">!</span>
         <span class="secret-toast-message">${message}</span>
       </div>
     `;
@@ -292,7 +292,7 @@ const EasterEgg = {
         }
 
         const remaining = this.SECRET_CLICKS - logoClick.count;
-        const messages = { 2: "🤔 继续点击...", 4: `🔍 还需要 ${remaining} 次...`, 6: "✨ 最后一击！" };
+        const messages = { 2: "继续点击...", 4: `还需要 ${remaining} 次...`, 6: "最后一次点击" };
         if (messages[logoClick.count]) {
           logoClick.toast = this.showLightToast(messages[logoClick.count], logoClick.toast);
         }
@@ -350,13 +350,13 @@ const EasterEgg = {
       footerHint.addEventListener("click", () => {
         hintClickCount++;
         const hints = [
-          "🔮 秘密藏在暗处...",
-          "✨ 有时候，答案就在眼前...",
-          "🎯 尝试点击 Logo？",
-          "🎮 还记得 Konami 代码吗？",
-          "🔑 URL 参数也能解锁秘密...",
-          "🎨 Ctrl+Shift+A 可能会有惊喜...",
-          "🎉 再点一次试试？"
+          "秘密藏在暗处...",
+          "有时候，答案就在眼前...",
+          "尝试点击 Logo？",
+          "还记得 Konami 代码吗？",
+          "URL 参数也能解锁秘密...",
+          "Ctrl+Shift+A 可能会有惊喜...",
+          "再点一次试试？"
         ];
 
         if (hintClickCount < hints.length) {
@@ -378,8 +378,8 @@ function initCategories() {
   if (!container || typeof CATEGORIES === "undefined") return;
 
   const extraTabs = [
-    { id: "favorites", label: "我的收藏", icon: "⭐" },
-    { id: "recent", label: "最近访问", icon: "🕐" },
+    { id: "favorites", label: "我的收藏", icon: "*" },
+    { id: "recent", label: "最近访问", icon: "REC" },
   ];
 
   CATEGORIES.filter((cat) => !cat.hidden).forEach((cat, i) => {
@@ -502,7 +502,7 @@ function createToolCard(tool) {
     </button>
     <div class="card-header">
       <div class="card-icon" id="icon-${tool.id}">
-        <span class="card-icon-fallback">🔧</span>
+        <span class="card-icon-fallback">TOOL</span>
       </div>
       <div>
         <div class="card-title">${escapeHtml(safeName)}</div>
@@ -513,9 +513,9 @@ function createToolCard(tool) {
     <div class="card-tags">${tagsHtml}</div>
     <div class="card-footer">
       ${tool.content
-        ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn" data-tool-id="${tool.id}">📖 教程</a>`
+        ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn" data-tool-id="${tool.id}">教程</a>`
         : (safeCategory === "activate" || safeCategory === "online-tools")
-          ? `<a href="${safeUrl}" class="visit-btn" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "🧰 使用" : "📖 访问"}</a>`
+          ? `<a href="${safeUrl}" class="visit-btn" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "使用" : "访问"}</a>`
           : `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="visit-btn" data-tool-id="${tool.id}">
             ↗ 访问
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -568,9 +568,9 @@ function createToolCard(tool) {
 }
 
 const ICON_FALLBACK_MAP = {
-  dev: "🛠️", hosting: "🌐", security: "🔒",
-  ops: "📊", design: "🎨", ai: "🤖", activate: "🔑",
-  "online-tools": "🧰",
+  dev: "DEV", hosting: "WEB", security: "SEC",
+  ops: "OPS", design: "UI", ai: "AI", activate: "KEY",
+  "online-tools": "TOOL",
 };
 
 // 共享单个懒加载 observer，避免每个图标创建新实例
@@ -702,15 +702,15 @@ function renderTools() {
       const title = emptyState.querySelector(".empty-title");
       const desc = emptyState.querySelector(".empty-desc");
       if (state.currentCategory === "favorites") {
-        if (icon) icon.textContent = "⭐";
+        if (icon) icon.textContent = "*";
         if (title) title.textContent = "还没有收藏任何工具";
         if (desc) desc.textContent = "浏览工具列表，点击 ☆ 收藏喜欢的工具";
       } else if (state.currentCategory === "recent") {
-        if (icon) icon.textContent = "🕐";
+        if (icon) icon.textContent = "REC";
         if (title) title.textContent = "还没有访问记录";
         if (desc) desc.textContent = "点击工具的「访问」或「详情」后会自动记录";
       } else {
-        if (icon) icon.textContent = "🔍";
+        if (icon) icon.textContent = "NO";
         if (title) title.textContent = "没有找到相关工具";
         if (desc) desc.textContent = "试试其他关键词，或切换分类查看";
       }
@@ -900,7 +900,7 @@ function initImageFallbacks() {
 
   const fallbackText = (img) => {
     const label = (img.alt || img.closest("a, span, td, div")?.textContent || "").trim();
-    if (!label) return "🤖";
+    if (!label) return "AI";
     return /[\u4e00-\u9fa5]/.test(label) ? label.slice(0, 1) : label.slice(0, 1).toUpperCase();
   };
 

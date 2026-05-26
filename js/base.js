@@ -36,7 +36,6 @@
     if (p.includes('/pages/tools/'))     return 'tools';
     if (p.includes('/pages/blog/'))      return 'blog';
     if (p.includes('/pages/portfolio'))  return 'portfolio';
-    if (p.includes('/pages/about'))      return 'about';
     return 'home';
   }
 
@@ -48,61 +47,43 @@
   }
 
   function buildNav(prefix, active) {
-    var isHome = active === 'home';
-
-    // 搜索框仅在首页显示（main.js 负责绑定逻辑）
-    var search = isHome ? [
-      '<div class="search-wrapper" role="search">',
-      '  <span class="search-icon" aria-hidden="true">🔍</span>',
-      '  <input type="search" id="searchInput" class="search-input"',
-      '    placeholder="搜索工具名称、描述、标签…（按 / 聚焦）"',
-      '    aria-label="搜索工具" autocomplete="off" spellcheck="false" />',
-      '</div>'
-    ].join('') : '';
-
     var aiActive = active === 'ai';
     var aiDropdown = [
       '<details class="nav-menu">',
       '  <summary class="nav-link nav-menu-trigger' + (aiActive ? ' active' : '') + '"',
-      '    aria-label="展开 AI 专题子页面导航">🤖 AI 专题</summary>',
+      '    aria-label="展开 AI 专题子页面导航">AI 专题</summary>',
       '  <div class="nav-menu-panel" aria-label="AI 专题子页面">',
       '    <a href="' + prefix + 'pages/ai/index.html">专题首页<span>学习路径与场景速查</span></a>',
       '    <a href="' + prefix + 'pages/ai/beginner.html">新手入门<span>从概念到第一步</span></a>',
       '    <a href="' + prefix + 'pages/ai/workflow.html">场景工作流<span>写作、编程、办公</span></a>',
       '    <a href="' + prefix + 'pages/ai/prompts.html">Prompt 模板<span>可直接复制使用</span></a>',
-      '    <a href="' + prefix + 'pages/ai/open-source-radar.html">开源项目雷达<span>每周 AI/ML Trending</span></a>',
       '    <a href="' + prefix + 'pages/ai/compare.html">工具横评<span>按任务选择工具</span></a>',
-      '    <a href="' + prefix + 'pages/ai/glossary.html">术语词典<span>模型、Token、RAG</span></a>',
-      '    <a href="' + prefix + 'pages/ai/safety.html">隐私安全<span>数据与账号风险</span></a>',
-      '    <a href="' + prefix + 'pages/ai/dev-api.html">开发者 API<span>网页、API、IDE 助手</span></a>',
       '  </div>',
       '</details>'
     ].join('');
 
     return [
       '<div class="navbar-inner">',
-      '  <a href="' + prefix + 'index.html" class="logo" aria-label="Koen的工具箱 首页">',
+      '  <a href="' + prefix + 'index.html" class="logo" aria-label="Koen 首页">',
       '    <img src="' + prefix + 'assets/logo.svg" alt="K" class="logo-img" />',
-      '    <span class="logo-text">Koen<span>\'s</span> 工具箱</span>',
+      '    <span class="logo-text">Koen</span>',
       '  </a>',
-      search,
       '  <div class="nav-links">',
-      '    ' + a(prefix + 'index.html', '工具导航', 'home', active),
+      '    ' + a(prefix + 'index.html', '首页', 'home', active),
       '    ' + aiDropdown,
-      '    ' + a(prefix + 'pages/tools/index.html', '在线工具', 'tools', active),
-      '    ' + a(prefix + 'pages/blog/index.html', '技术博客', 'blog', active),
-      '    ' + a(prefix + 'pages/portfolio.html', '作品集', 'portfolio', active),
-      '    ' + a(prefix + 'pages/about.html', '关于我', 'about', active),
+      '    ' + a(prefix + 'pages/tools/index.html', '工具', 'tools', active),
+      '    ' + a(prefix + 'pages/blog/index.html', '博客', 'blog', active),
+      '    ' + a(prefix + 'pages/portfolio.html', '作品', 'portfolio', active),
       '  </div>',
       '  <button id="themeToggle" class="theme-toggle"',
-      '    aria-label="切换暗色模式" title="切换暗色模式">🌙</button>',
+      '    aria-label="切换主题" title="切换主题">亮色</button>',
       '</div>'
     ].join('');
   }
 
   function applyThemeToBtn(btn, theme) {
     if (!btn) return;
-    btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    btn.textContent = theme === 'dark' ? '亮色' : '暗色';
     btn.setAttribute('title', theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式');
   }
 
