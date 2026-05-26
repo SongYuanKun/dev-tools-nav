@@ -45,7 +45,9 @@ dev-tools-nav/
 ├── pages/
 │   ├── template.html       # 工具详情页（?id=xxx）
 │   ├── ai/                 # AI 专题：index、compare、workflow、prompts、beginner、glossary、safety、dev-api
-│   ├── about.html 等       # 其他静态页
+│   ├── blog/               # 技术博客页面
+│   ├── ai/                 # AI 专题页面
+│   ├── tools/              # 在线工具页面
 ├── data/
 │   ├── tools.js            # 工具数据 TOOLS_DATA
 │   ├── ai-compare.js       # AI 专题数据（横评、工作流、Prompt、入门、价格、AI_TOOL_INFO）

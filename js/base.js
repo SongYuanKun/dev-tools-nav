@@ -33,9 +33,8 @@
   function getActiveSection() {
     var p = window.location.pathname.toLowerCase();
     if (p.includes('/pages/ai/'))        return 'ai';
-    if (p.includes('/pages/tools/'))     return 'tools';
+    if (p.includes('/pages/tools/') || p.includes('/tools/')) return 'tools';
     if (p.includes('/pages/blog/'))      return 'blog';
-    if (p.includes('/pages/portfolio'))  return 'portfolio';
     return 'home';
   }
 
@@ -73,7 +72,6 @@
       '    ' + aiDropdown,
       '    ' + a(prefix + 'pages/tools/index.html', '工具', 'tools', active),
       '    ' + a(prefix + 'pages/blog/index.html', '博客', 'blog', active),
-      '    ' + a(prefix + 'pages/portfolio.html', '作品', 'portfolio', active),
       '  </div>',
       '  <button id="themeToggle" class="theme-toggle"',
       '    aria-label="切换主题" title="切换主题">亮色</button>',
@@ -87,9 +85,51 @@
     btn.setAttribute('title', theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式');
   }
 
+  function stripDecorativeEmoji(root) {
+    if (!root || !document.createTreeWalker) return;
+    var emojiPattern = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        if (/^(SCRIPT|STYLE|TEXTAREA|INPUT|CODE|PRE)$/i.test(parent.tagName)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        emojiPattern.lastIndex = 0;
+        return emojiPattern.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function (node) {
+      node.nodeValue = node.nodeValue.replace(emojiPattern, '').replace(/\s{2,}/g, ' ').trim();
+    });
+  }
+
+  function normalizeToolNav() {
+    var labels = {
+      'json.html': 'JSON 格式化',
+      'timestamp.html': '时间戳',
+      'cron.html': 'Cron',
+      'base64.html': 'Base64',
+      'jwt.html': 'JWT',
+      'sql-formatter.html': 'SQL',
+      'regex.html': '正则'
+    };
+    document.querySelectorAll('.tool-nav-item').forEach(function (link) {
+      var href = (link.getAttribute('href') || '').split('/').pop();
+      if (labels[href]) link.textContent = labels[href];
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
-    var nav = document.querySelector('nav.navbar');
+    if (document.body) {
+      document.body.classList.add('site-v2');
+    }
+
+    var nav = document.querySelector('nav.navbar') || document.querySelector('nav.nav');
     if (!nav) return;
+    nav.className = 'navbar';
 
     var prefix = getRootPrefix();
     var active = getActiveSection();
@@ -111,6 +151,25 @@
         if (window.ThemeManager) window.ThemeManager.apply(next);
       });
     }
+
+    var aiSubnav = document.querySelector('.ai-subnav-inner');
+    if (aiSubnav) {
+      var current = window.location.pathname.split('/').pop() || 'index.html';
+      var aiLinks = [
+        ['index.html', '专题首页'],
+        ['beginner.html', '入门'],
+        ['workflow.html', '工作流'],
+        ['prompts.html', 'Prompt'],
+        ['compare.html', '横评']
+      ];
+      aiSubnav.innerHTML = aiLinks.map(function (item) {
+        var cls = item[0] === current ? 'ai-subnav-link ai-subnav-current' : 'ai-subnav-link';
+        return '<a href="' + item[0] + '" class="' + cls + '">' + item[1] + '</a>';
+      }).join('');
+    }
+
+    normalizeToolNav();
+    stripDecorativeEmoji(document.body);
   });
 })();
 
