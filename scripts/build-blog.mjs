@@ -387,6 +387,7 @@ function renderPage(meta, slug, contentHtml) {
       document.addEventListener("DOMContentLoaded", initTheme);
     })();
   </script>
+  <script defer src="../../js/footer.js"></script>
 </body>
 </html>`
 }
