@@ -28,8 +28,8 @@
     var prefix = getRootPrefix();
     var currentYear = new Date().getFullYear();
     var logo = localLink(prefix, 'assets/logo.svg');
-    var wechatQr = localLink(prefix, 'assets/sponsor-wechat.jpg');
-    var alipayQr = localLink(prefix, 'assets/sponsor-alipay.jpg');
+    var wechatQr = localLink(prefix, 'assets/sponsor-wechat-card.jpg');
+    var alipayQr = localLink(prefix, 'assets/sponsor-alipay-card.jpg');
 
     footer.setAttribute('data-unified-footer', 'true');
     footer.innerHTML = [
@@ -60,17 +60,26 @@
       '  <details class="footer-support">',
       '    <summary class="footer-support-summary">',
       '      <span>支持作者</span>',
-      '      <span class="footer-support-hint">微信 / 支付宝收款码</span>',
+      '      <span class="footer-support-hint">微信 / 支付宝</span>',
       '    </summary>',
       '    <div class="footer-support-body">',
-      '      <p class="footer-support-copy">如果这些工具帮到了你，可以请 Koen 喝杯咖啡。</p>',
-      '      <div class="footer-qr-grid">',
-      '        <figure class="footer-qr-card">',
-      '          <img src="' + wechatQr + '" alt="微信收款码" loading="lazy">',
-      '          <figcaption>微信</figcaption>',
+      '      <div class="footer-support-intro">',
+      '        <span class="footer-support-kicker">Koen Tools</span>',
+      '        <p class="footer-support-copy">如果这些工具帮到了你，可以请 Koen 喝杯咖啡。</p>',
+      '      </div>',
+      '      <div class="footer-qr-grid" aria-label="作者收款码">',
+      '        <figure class="footer-qr-card footer-qr-card-wechat">',
+      '          <span class="footer-qr-badge">微信</span>',
+      '          <a class="footer-qr-link" href="' + wechatQr + '" target="_blank" rel="noopener" aria-label="打开微信收款码大图">',
+      '            <img src="' + wechatQr + '" alt="微信收款码" loading="lazy">',
+      '          </a>',
+      '          <figcaption>微信支付</figcaption>',
       '        </figure>',
-      '        <figure class="footer-qr-card">',
-      '          <img src="' + alipayQr + '" alt="支付宝收款码" loading="lazy">',
+      '        <figure class="footer-qr-card footer-qr-card-alipay">',
+      '          <span class="footer-qr-badge">支付宝</span>',
+      '          <a class="footer-qr-link" href="' + alipayQr + '" target="_blank" rel="noopener" aria-label="打开支付宝收款码大图">',
+      '            <img src="' + alipayQr + '" alt="支付宝收款码" loading="lazy">',
+      '          </a>',
       '          <figcaption>支付宝</figcaption>',
       '        </figure>',
       '      </div>',
