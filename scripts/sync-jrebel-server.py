@@ -26,6 +26,22 @@ UA = "Mozilla/5.0 (compatible; dev-tools-nav/1.0; +https://github.com/SongYuanKu
 
 URL_RE = re.compile(r"http://(?:\d{1,3}\.){3}\d{1,3}:\d+/[\w-]+")
 EMAIL_RE = re.compile(r"[\w.+-]+@[\w.-]+\.\w+")
+URL_LABELS = (
+    "JRebel 激活地址",
+    "Jrebel 激活地址",
+    "激活地址",
+    "License server",
+    "License Server",
+    "license server",
+)
+EMAIL_LABELS = (
+    "JRebel 激活邮箱",
+    "Jrebel 激活邮箱",
+    "激活邮箱",
+    "email",
+    "Email",
+)
+LABEL_LOOKAHEAD_CHARS = 500
 
 
 def read_source() -> str | None:
@@ -62,21 +78,62 @@ def keep_existing(reason: str) -> bool:
     return False
 
 
+def unique_matches(pattern: re.Pattern[str], content: str) -> list[str]:
+    seen: set[str] = set()
+    values: list[str] = []
+    for match in pattern.finditer(content):
+        value = match.group(0)
+        if value not in seen:
+            values.append(value)
+            seen.add(value)
+    return values
+
+
+def match_after_label(content: str, labels: tuple[str, ...], pattern: re.Pattern[str]) -> str | None:
+    for label in labels:
+        label_re = re.compile(re.escape(label), re.IGNORECASE)
+        for label_match in label_re.finditer(content):
+            window = content[label_match.end() : label_match.end() + LABEL_LOOKAHEAD_CHARS]
+            value_match = pattern.search(window)
+            if value_match:
+                return value_match.group(0)
+    return None
+
+
+def extract_license_url(content: str) -> str | None:
+    labeled_url = match_after_label(content, URL_LABELS, URL_RE)
+    if labeled_url:
+        return labeled_url
+
+    urls = unique_matches(URL_RE, content)
+    if len(urls) == 1:
+        return urls[0]
+    return None
+
+
+def extract_license_email(content: str, previous_email: str) -> str:
+    labeled_email = match_after_label(content, EMAIL_LABELS, EMAIL_RE)
+    if labeled_email:
+        return labeled_email
+
+    emails = unique_matches(EMAIL_RE, content)
+    if len(emails) == 1:
+        return emails[0]
+    return previous_email
+
+
 def main() -> int:
     content = read_source()
     if content is None:
         return 0 if keep_existing("fetch failed") else 1
 
-    url_match = URL_RE.search(content)
-    if not url_match:
+    url = extract_license_url(content)
+    if not url:
         return 0 if keep_existing("no license server URL found") else 1
-
-    email_match = EMAIL_RE.search(content)
-    url = url_match.group(0)
 
     data = load_existing()
     previous = data.get("jrebel") if isinstance(data.get("jrebel"), dict) else {}
-    email = email_match.group(0) if email_match else previous.get("email", "")
+    email = extract_license_email(content, previous.get("email", ""))
 
     data["jrebel"] = {
         "url": url,

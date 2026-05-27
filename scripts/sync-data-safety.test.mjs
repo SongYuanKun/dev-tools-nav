@@ -142,6 +142,79 @@ test("JRebel sync preserves existing server data when no URL is extracted", () =
   assert.deepEqual(JSON.parse(readFileSync(outPath, "utf-8")), existing);
 });
 
+test("JRebel sync uses the labeled server instead of an earlier decoy URL", () => {
+  const dir = tempDir();
+  const outPath = join(dir, "servers.json");
+  const sourcePath = join(dir, "jrebel.html");
+
+  writeFileSync(
+    outPath,
+    JSON.stringify(
+      {
+        jrebel: {
+          url: "http://42.194.149.64:8088/previous",
+          email: "old@example.com",
+          updatedAt: "2026-01-01T00:00:00Z",
+          source: "previous",
+        },
+      },
+      null,
+      2,
+    ),
+  );
+  writeFileSync(
+    sourcePath,
+    `<html><body>
+      <p>Archived example: http://10.0.0.1:8088/not-the-license</p>
+      <p>Support contact: decoy@example.com</p>
+      <p>JRebel 激活地址: <span>http://42.194.149.64:8088/real-token</span></p>
+      <p>JRebel 激活邮箱: <span>real@example.com</span></p>
+    </body></html>`,
+  );
+
+  const result = runPython("scripts/sync-jrebel-server.py", {
+    JREBEL_SERVERS_OUT_PATH: outPath,
+    JREBEL_SOURCE_FILE: sourcePath,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+
+  const data = JSON.parse(readFileSync(outPath, "utf-8"));
+  assert.equal(data.jrebel.url, "http://42.194.149.64:8088/real-token");
+  assert.equal(data.jrebel.email, "real@example.com");
+});
+
+test("JRebel sync preserves existing server data when multiple unlabeled URLs are found", () => {
+  const dir = tempDir();
+  const outPath = join(dir, "servers.json");
+  const sourcePath = join(dir, "jrebel.html");
+  const existing = {
+    jrebel: {
+      url: "http://42.194.149.64:8088/previous",
+      email: "old@example.com",
+      updatedAt: "2026-01-01T00:00:00Z",
+      source: "previous",
+    },
+  };
+
+  writeFileSync(outPath, JSON.stringify(existing, null, 2));
+  writeFileSync(
+    sourcePath,
+    `<html><body>
+      <p>Mirror A: http://10.0.0.1:8088/first</p>
+      <p>Mirror B: http://10.0.0.2:8088/second</p>
+    </body></html>`,
+  );
+
+  const result = runPython("scripts/sync-jrebel-server.py", {
+    JREBEL_SERVERS_OUT_PATH: outPath,
+    JREBEL_SOURCE_FILE: sourcePath,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(JSON.parse(readFileSync(outPath, "utf-8")), existing);
+});
+
 test("JRebel sync updates URL and keeps previous email when source omits email", () => {
   const dir = tempDir();
   const outPath = join(dir, "servers.json");
