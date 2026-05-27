@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="description" content="免费在线 Unix 时间戳与日期互转：当前时间戳实时显示、秒/毫秒自动识别、ISO 8601 与 UTC 多格式输出、本地日期时间选择器与快捷填充。无需安装，浏览器即用。" />
-  <meta name="keywords" content="Unix时间戳,时间戳转换,Timestamp,ISO8601,在线工具,开发者工具" />
-  <meta property="og:title" content="在线时间戳转换工具 - Unix Timestamp 互转 | Koen的工具箱" />
-  <meta property="og:description" content="Unix 秒/毫秒与日期时间互转，支持 ISO 8601、UTC、本地格式与快捷「今天/本周/本月」。" />
+  <meta name="description" content="免费在线 Unix 时间戳与日期时间转换工具：支持秒、毫秒、微秒、纳秒自动识别，多时区对照、ISO/RFC/自定义格式、批量转换、时间差计算和常用快捷时间。本地浏览器运行，不上传数据。" />
+  <meta name="keywords" content="Unix时间戳,时间戳转换,Timestamp,Epoch,ISO8601,时区转换,批量转换,在线工具,开发者工具" />
+  <meta property="og:title" content="在线时间戳转换工具 - Unix Timestamp / Epoch 多时区互转 | Koen的工具箱" />
+  <meta property="og:description" content="Unix 秒/毫秒/微秒/纳秒与日期时间互转，支持多时区、批量转换、自定义格式和时间差计算。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tools.songyuankun.top/pages/tools/timestamp.html" />
   <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="在线时间戳转换工具 - Unix Timestamp 互转 | Koen的工具箱" />
-  <meta name="twitter:description" content="Unix 秒/毫秒与日期时间互转，支持多格式输出与快捷填充。" />
+  <meta name="twitter:description" content="Unix 秒/毫秒/微秒/纳秒与日期时间互转，支持多时区、批量转换和自定义格式。" />
   <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <link rel="canonical" href="https://tools.songyuankun.top/pages/tools/timestamp.html" />
-  <title>在线时间戳转换工具 - Unix Timestamp 互转 | Koen的工具箱</title>
+  <title>在线时间戳转换工具 - Unix Timestamp / Epoch 多时区互转 | Koen的工具箱</title>
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
   <script type="application/ld+json">
     {
@@ -29,7 +29,7 @@
       "browserRequirements": "Requires JavaScript",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
       "inLanguage": "zh-CN",
-      "description": "在浏览器中将 Unix 时间戳（秒/毫秒）与可读日期时间互转，支持 ISO 8601、UTC、本地区域设置格式及实时当前时间戳。",
+      "description": "在浏览器中将 Unix 时间戳与日期时间互转，支持秒、毫秒、微秒、纳秒、多时区对照、批量转换和自定义格式。",
       "url": "https://tools.songyuankun.top/pages/tools/timestamp.html",
       "author": { "@type": "Person", "name": "Koen", "url": "https://github.com/SongYuanKun" }
     }
@@ -44,6 +44,139 @@
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="../../css/tools.css" />
   <script defer src="../../js/base.js"></script>
+  <style>
+    .timestamp-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .timestamp-grid-three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .timestamp-card {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-page);
+    }
+    .timestamp-card strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 17px;
+      line-height: 1.45;
+      word-break: break-all;
+    }
+    .timestamp-card span,
+    .timestamp-help {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .timestamp-form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(160px, 0.5fr) minmax(180px, 0.6fr);
+      gap: 10px;
+      align-items: end;
+    }
+    .timestamp-output-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .timestamp-output {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+    .timestamp-output .tool-result {
+      min-height: 42px;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .copy-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: start;
+    }
+    .timestamp-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 4px;
+    }
+    .timestamp-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-page);
+    }
+    .timestamp-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      font-size: 13px;
+    }
+    .timestamp-table th,
+    .timestamp-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-color);
+      text-align: left;
+      vertical-align: top;
+    }
+    .timestamp-table th {
+      color: var(--text-muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .timestamp-table td {
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      word-break: break-all;
+    }
+    .timestamp-table tr:last-child td {
+      border-bottom: none;
+    }
+    .timestamp-format-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: end;
+    }
+    .tool-select {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      outline: none;
+    }
+    .tool-select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    }
+    @media (max-width: 860px) {
+      .timestamp-grid,
+      .timestamp-grid-three,
+      .timestamp-form-grid,
+      .timestamp-output-grid,
+      .timestamp-format-row {
+        grid-template-columns: 1fr;
+      }
+      .copy-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -80,94 +213,202 @@
       <a class="tool-nav-item" href="./sql-formatter.html">🗃️ SQL</a>
       <a class="tool-nav-item" href="./regex.html">🔍 正则</a>
     </nav>
+
     <header class="tool-page-header">
       <h1>在线时间戳转换</h1>
       <p>
-        Unix 时间戳与日期时间互转。输入数值<strong>≥ 10¹²</strong>时按<strong>毫秒</strong>解析，否则按<strong>秒</strong>解析。所有计算基于本机时区，结果仅供参考。
+        Unix Timestamp / Epoch 与日期时间互转。支持秒、毫秒、微秒、纳秒自动识别，多时区对照、批量转换、时间差计算和自定义格式。所有计算在浏览器本地完成，不上传数据。
       </p>
     </header>
 
     <section class="tool-panel" aria-labelledby="liveHeading">
       <h2 class="tool-panel-title" id="liveHeading">当前时间</h2>
-      <div class="tool-row" style="flex-wrap: wrap; align-items: stretch;">
-        <div class="tool-col" style="min-width: 200px;">
-          <span class="tool-label">Unix 时间戳（秒）</span>
-          <div class="tool-result" id="liveSec" style="min-height: 48px; font-size: 18px; font-weight: 700;">—</div>
-          <div class="tool-actions" style="margin-top: 8px;">
-            <button type="button" class="tool-btn copy-btn" data-copy-el="liveSec" aria-label="复制当前秒级时间戳">复制秒</button>
+      <div class="timestamp-grid timestamp-grid-three">
+        <div class="timestamp-card">
+          <span>Unix 时间戳（秒）</span>
+          <strong id="liveSec">—</strong>
+          <div class="tool-actions">
+            <button type="button" class="tool-btn copy-btn" data-copy-el="liveSec">复制秒</button>
           </div>
         </div>
-        <div class="tool-col" style="min-width: 200px;">
-          <span class="tool-label">Unix 时间戳（毫秒）</span>
-          <div class="tool-result" id="liveMs" style="min-height: 48px; font-size: 18px; font-weight: 700;">—</div>
-          <div class="tool-actions" style="margin-top: 8px;">
-            <button type="button" class="tool-btn copy-btn" data-copy-el="liveMs" aria-label="复制当前毫秒时间戳">复制毫秒</button>
+        <div class="timestamp-card">
+          <span>Unix 时间戳（毫秒）</span>
+          <strong id="liveMs">—</strong>
+          <div class="tool-actions">
+            <button type="button" class="tool-btn copy-btn" data-copy-el="liveMs">复制毫秒</button>
+          </div>
+        </div>
+        <div class="timestamp-card">
+          <span>本地时间</span>
+          <strong id="liveLocal">—</strong>
+          <div class="tool-actions">
+            <button type="button" class="tool-btn" id="useNowBtn">填入当前时间</button>
           </div>
         </div>
       </div>
-      <span class="tool-label" style="margin-top: 16px;">本地化日期时间</span>
-      <div class="tool-result" id="liveLocale" style="min-height: 44px;">—</div>
-      <p class="tool-status tool-status-info" style="margin-top: 12px; margin-bottom: 0;" role="status">
-        每秒自动刷新
-      </p>
+      <div class="timestamp-presets" aria-label="当前时间快捷操作">
+        <button type="button" class="tool-btn" data-shift="-3600">-1 小时</button>
+        <button type="button" class="tool-btn" data-shift="-60">-1 分钟</button>
+        <button type="button" class="tool-btn" data-shift="60">+1 分钟</button>
+        <button type="button" class="tool-btn" data-shift="3600">+1 小时</button>
+        <button type="button" class="tool-btn" data-shift="86400">+1 天</button>
+      </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="settingsHeading">
+      <h2 class="tool-panel-title" id="settingsHeading">显示设置</h2>
+      <div class="timestamp-grid">
+        <div>
+          <label class="tool-label" for="timezoneSelect">目标时区</label>
+          <select id="timezoneSelect" class="tool-select">
+            <option value="local">本机时区</option>
+            <option value="Asia/Shanghai">Asia/Shanghai</option>
+            <option value="UTC">UTC</option>
+            <option value="America/Los_Angeles">America/Los_Angeles</option>
+            <option value="America/New_York">America/New_York</option>
+            <option value="Europe/London">Europe/London</option>
+            <option value="Europe/Berlin">Europe/Berlin</option>
+            <option value="Asia/Tokyo">Asia/Tokyo</option>
+            <option value="Asia/Singapore">Asia/Singapore</option>
+          </select>
+        </div>
+        <div>
+          <label class="tool-label" for="formatInput">自定义格式</label>
+          <input id="formatInput" class="tool-input" value="YYYY-MM-DD HH:mm:ss.SSS Z" autocomplete="off" />
+          <p class="timestamp-help">支持 YYYY、MM、DD、HH、mm、ss、SSS、Z、ZZ、ddd</p>
+        </div>
+      </div>
     </section>
 
     <section class="tool-panel" aria-labelledby="ts2dateHeading">
       <h2 class="tool-panel-title" id="ts2dateHeading">时间戳 → 日期</h2>
-      <label class="tool-label" for="tsInput">Unix 时间戳（秒或毫秒）</label>
-      <input type="text" id="tsInput" class="tool-input" inputmode="numeric" placeholder="例如 1704067200 或 1704067200000" autocomplete="off" />
-      <div class="tool-actions">
-        <button type="button" class="tool-btn tool-btn-primary" id="tsConvertBtn">转换</button>
-        <button type="button" class="tool-btn" id="tsClearBtn">清空</button>
+      <div class="timestamp-form-grid">
+        <div>
+          <label class="tool-label" for="tsInput">Unix 时间戳</label>
+          <input type="text" id="tsInput" class="tool-input" inputmode="decimal" placeholder="例如 1704067200 / 1704067200000 / 1704067200000000" autocomplete="off" />
+        </div>
+        <div>
+          <label class="tool-label" for="unitSelect">单位</label>
+          <select id="unitSelect" class="tool-select">
+            <option value="auto">自动识别</option>
+            <option value="s">秒 s</option>
+            <option value="ms">毫秒 ms</option>
+            <option value="us">微秒 us</option>
+            <option value="ns">纳秒 ns</option>
+          </select>
+        </div>
+        <div class="tool-actions" style="margin:0;">
+          <button type="button" class="tool-btn tool-btn-primary" id="tsConvertBtn">转换</button>
+          <button type="button" class="tool-btn" id="tsClearBtn">清空</button>
+        </div>
       </div>
-      <div id="ts2dateError" class="tool-status tool-status-error" style="display: none;" role="alert"></div>
-      <div id="ts2dateOut" style="display: none;">
-        <span class="tool-label">ISO 8601</span>
-        <div class="copy-row">
-          <div class="tool-result" id="outIso"></div>
-          <button type="button" class="tool-btn copy-btn" data-copy-el="outIso">复制</button>
+      <div class="timestamp-presets" aria-label="时间戳输入快捷操作">
+        <button type="button" class="tool-btn" data-fill-ts="nowSec">当前秒</button>
+        <button type="button" class="tool-btn" data-fill-ts="nowMs">当前毫秒</button>
+        <button type="button" class="tool-btn" data-fill-ts="y2k">2000-01-01</button>
+        <button type="button" class="tool-btn" data-fill-ts="unix0">Unix 纪元</button>
+      </div>
+      <div id="ts2dateError" class="tool-status tool-status-error" style="display:none;" role="alert"></div>
+      <div id="ts2dateOut" style="display:none;">
+        <div class="timestamp-output-grid">
+          <div class="timestamp-output">
+            <span class="tool-label">目标时区</span>
+            <div class="copy-row"><div class="tool-result" id="outZone"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outZone">复制</button></div>
+          </div>
+          <div class="timestamp-output">
+            <span class="tool-label">自定义格式</span>
+            <div class="copy-row"><div class="tool-result" id="outCustom"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outCustom">复制</button></div>
+          </div>
+          <div class="timestamp-output">
+            <span class="tool-label">ISO 8601</span>
+            <div class="copy-row"><div class="tool-result" id="outIso"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outIso">复制</button></div>
+          </div>
+          <div class="timestamp-output">
+            <span class="tool-label">UTC / GMT</span>
+            <div class="copy-row"><div class="tool-result" id="outUtc"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outUtc">复制</button></div>
+          </div>
+          <div class="timestamp-output">
+            <span class="tool-label">RFC 2822</span>
+            <div class="copy-row"><div class="tool-result" id="outRfc"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outRfc">复制</button></div>
+          </div>
+          <div class="timestamp-output">
+            <span class="tool-label">解析说明</span>
+            <div class="tool-result" id="outHint"></div>
+          </div>
         </div>
-        <span class="tool-label">本地字符串（zh-CN）</span>
-        <div class="copy-row">
-          <div class="tool-result" id="outLocale"></div>
-          <button type="button" class="tool-btn copy-btn" data-copy-el="outLocale">复制</button>
-        </div>
-        <span class="tool-label">UTC 字符串</span>
-        <div class="copy-row">
-          <div class="tool-result" id="outUtc"></div>
-          <button type="button" class="tool-btn copy-btn" data-copy-el="outUtc">复制</button>
-        </div>
-        <span class="tool-label">解析说明</span>
-        <div class="tool-result" id="outHint" style="min-height: auto; font-size: 12px; color: var(--text-secondary);"></div>
       </div>
     </section>
 
     <section class="tool-panel" aria-labelledby="date2tsHeading">
       <h2 class="tool-panel-title" id="date2tsHeading">日期 → 时间戳</h2>
-      <label class="tool-label" for="dtLocal">本地日期与时间</label>
-      <input type="datetime-local" id="dtLocal" class="tool-input" />
-      <div class="tool-actions">
+      <div class="timestamp-grid">
+        <div>
+          <label class="tool-label" for="dtLocal">本地日期与时间</label>
+          <input type="datetime-local" id="dtLocal" class="tool-input" step="1" />
+        </div>
+        <div>
+          <label class="tool-label" for="dateTextInput">粘贴日期字符串</label>
+          <input type="text" id="dateTextInput" class="tool-input" placeholder="例如 2026-05-27 20:30:00 / 2026-05-27T12:30:00Z" autocomplete="off" />
+          <p class="timestamp-help">留空时使用左侧本地日期时间</p>
+        </div>
+      </div>
+      <div class="timestamp-presets">
         <button type="button" class="tool-btn" data-quick="todayStart">今天开始</button>
         <button type="button" class="tool-btn" data-quick="todayEnd">今天结束</button>
         <button type="button" class="tool-btn" data-quick="weekStart">本周开始</button>
         <button type="button" class="tool-btn" data-quick="monthStart">本月开始</button>
+        <button type="button" class="tool-btn" data-quick="yearStart">今年开始</button>
       </div>
       <div class="tool-actions">
         <button type="button" class="tool-btn tool-btn-primary" id="dtConvertBtn">转换为时间戳</button>
       </div>
-      <div id="date2tsError" class="tool-status tool-status-error" style="display: none;" role="alert"></div>
-      <div id="date2tsOut" style="display: none;">
-        <span class="tool-label">秒（s）</span>
-        <div class="copy-row">
-          <div class="tool-result" id="outSec"></div>
-          <button type="button" class="tool-btn copy-btn" data-copy-el="outSec">复制</button>
-        </div>
-        <span class="tool-label">毫秒（ms）</span>
-        <div class="copy-row">
-          <div class="tool-result" id="outMs"></div>
-          <button type="button" class="tool-btn copy-btn" data-copy-el="outMs">复制</button>
+      <div id="date2tsError" class="tool-status tool-status-error" style="display:none;" role="alert"></div>
+      <div id="date2tsOut" style="display:none;">
+        <div class="timestamp-output-grid">
+          <div class="timestamp-output"><span class="tool-label">秒（s）</span><div class="copy-row"><div class="tool-result" id="outSec"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outSec">复制</button></div></div>
+          <div class="timestamp-output"><span class="tool-label">毫秒（ms）</span><div class="copy-row"><div class="tool-result" id="outMs"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outMs">复制</button></div></div>
+          <div class="timestamp-output"><span class="tool-label">微秒（us）</span><div class="copy-row"><div class="tool-result" id="outUs"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outUs">复制</button></div></div>
+          <div class="timestamp-output"><span class="tool-label">纳秒（ns）</span><div class="copy-row"><div class="tool-result" id="outNs"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outNs">复制</button></div></div>
         </div>
       </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="batchHeading">
+      <h2 class="tool-panel-title" id="batchHeading">批量转换</h2>
+      <label class="tool-label" for="batchInput">每行一个时间戳或日期字符串</label>
+      <textarea id="batchInput" class="tool-textarea" style="min-height:130px;" placeholder="1704067200&#10;1704067200000&#10;2026-05-27 20:30:00&#10;2026-05-27T12:30:00Z"></textarea>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn tool-btn-primary" id="batchConvertBtn">批量转换</button>
+        <button type="button" class="tool-btn copy-btn" data-copy-el="batchCsv">复制 CSV</button>
+        <button type="button" class="tool-btn" id="batchSampleBtn">填入示例</button>
+      </div>
+      <div class="timestamp-table-wrap" id="batchTableWrap" style="display:none;">
+        <table class="timestamp-table">
+          <thead><tr><th>输入</th><th>识别</th><th>时间戳秒</th><th>时间戳毫秒</th><th>目标时区日期</th></tr></thead>
+          <tbody id="batchRows"></tbody>
+        </table>
+      </div>
+      <pre id="batchCsv" class="tool-result" style="display:none;"></pre>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="diffHeading">
+      <h2 class="tool-panel-title" id="diffHeading">时间差计算</h2>
+      <div class="timestamp-grid">
+        <div>
+          <label class="tool-label" for="diffStart">开始时间</label>
+          <input id="diffStart" class="tool-input" placeholder="时间戳或日期字符串" />
+        </div>
+        <div>
+          <label class="tool-label" for="diffEnd">结束时间</label>
+          <input id="diffEnd" class="tool-input" placeholder="时间戳或日期字符串" />
+        </div>
+      </div>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn tool-btn-primary" id="diffBtn">计算时间差</button>
+        <button type="button" class="tool-btn" id="diffNowBtn">结束时间填当前</button>
+      </div>
+      <div id="diffError" class="tool-status tool-status-error" style="display:none;" role="alert"></div>
+      <div id="diffOut" class="tool-result" style="display:none;"></div>
     </section>
 
     <nav class="tool-footer-nav" aria-label="相关在线工具">
@@ -204,96 +445,154 @@
         <span class="footer-divider">|</span>
         <span class="footer-secret-hint" title="🔮 有些东西藏在暗处...">?</span>
       </div>
-      <p class="footer-copyright">
-        Made with code by Koen · 数据来源于公开信息整理
-      </p>
+      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
     </div>
   </footer>
-
-  <style>
-    .copy-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      margin-bottom: 14px;
-    }
-    .copy-row .tool-result {
-      flex: 1;
-      min-height: 44px;
-      margin: 0;
-    }
-    .copy-row .tool-btn {
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-  </style>
 
   <script>
     (function () {
       var THEME_KEY = "dev-tools-theme";
+      var WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+
+      function $(id) { return document.getElementById(id); }
+      function pad(n, len) { return String(Math.abs(Math.trunc(n))).padStart(len || 2, "0"); }
+      function signed(n) { return n >= 0 ? "+" + n : String(n); }
 
       function applyTheme(theme) {
         document.documentElement.setAttribute("data-theme", theme);
-        var btn = document.getElementById("themeToggle");
-        if (btn) {
-          btn.textContent = theme === "dark" ? "☀️" : "🌙";
-          btn.setAttribute("title", theme === "dark" ? "切换到亮色模式" : "切换到暗色模式");
-          btn.setAttribute("aria-label", theme === "dark" ? "切换到亮色模式" : "切换到暗色模式");
-        }
+        var btn = $("themeToggle");
+        if (!btn) return;
+        var title = theme === "dark" ? "切换到亮色模式" : "切换到暗色模式";
+        btn.textContent = theme === "dark" ? "☀️" : "🌙";
+        btn.setAttribute("title", title);
+        btn.setAttribute("aria-label", title);
       }
 
       function initThemeToggle() {
-        var saved = localStorage.getItem(THEME_KEY);
-        if (saved) {
-          applyTheme(saved);
-        } else {
-          applyTheme(document.documentElement.getAttribute("data-theme") || "dark");
-        }
-
-        var btn = document.getElementById("themeToggle");
+        applyTheme(localStorage.getItem(THEME_KEY) || document.documentElement.getAttribute("data-theme") || "dark");
+        var btn = $("themeToggle");
         if (btn) {
           btn.addEventListener("click", function () {
-            var cur = document.documentElement.getAttribute("data-theme");
-            var next = cur === "dark" ? "light" : "dark";
+            var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
             localStorage.setItem(THEME_KEY, next);
             applyTheme(next);
           });
         }
       }
 
-      function pad2(n) {
-        return (n < 10 ? "0" : "") + n;
+      function getTimeZone() {
+        var v = $("timezoneSelect").value;
+        return v === "local" ? Intl.DateTimeFormat().resolvedOptions().timeZone : v;
+      }
+
+      function getZoneParts(date, timeZone) {
+        var parts = new Intl.DateTimeFormat("en-CA", {
+          timeZone: timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false
+        }).formatToParts(date);
+        var map = {};
+        parts.forEach(function (p) { if (p.type !== "literal") map[p.type] = p.value; });
+        return {
+          year: Number(map.year),
+          month: Number(map.month),
+          day: Number(map.day),
+          hour: Number(map.hour === "24" ? "0" : map.hour),
+          minute: Number(map.minute),
+          second: Number(map.second)
+        };
+      }
+
+      function getOffsetMinutes(date, timeZone) {
+        var p = getZoneParts(date, timeZone);
+        var asUtc = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+        return Math.round((asUtc - date.getTime()) / 60000);
+      }
+
+      function formatOffset(mins, compact) {
+        var sign = mins >= 0 ? "+" : "-";
+        var abs = Math.abs(mins);
+        var h = pad(Math.floor(abs / 60), 2);
+        var m = pad(abs % 60, 2);
+        return compact ? sign + h + m : "UTC" + sign + h + ":" + m;
+      }
+
+      function formatInZone(date, timeZone) {
+        return new Intl.DateTimeFormat("zh-CN", {
+          timeZone: timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          weekday: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false
+        }).format(date) + " " + formatOffset(getOffsetMinutes(date, timeZone));
+      }
+
+      function formatCustom(date) {
+        var tz = getTimeZone();
+        var p = getZoneParts(date, tz);
+        var offset = getOffsetMinutes(date, tz);
+        var tpl = $("formatInput").value || "YYYY-MM-DD HH:mm:ss.SSS Z";
+        return tpl
+          .replace(/YYYY/g, String(p.year))
+          .replace(/MM/g, pad(p.month, 2))
+          .replace(/DD/g, pad(p.day, 2))
+          .replace(/HH/g, pad(p.hour, 2))
+          .replace(/mm/g, pad(p.minute, 2))
+          .replace(/ss/g, pad(p.second, 2))
+          .replace(/SSS/g, pad(date.getMilliseconds(), 3))
+          .replace(/ZZ/g, formatOffset(offset, true))
+          .replace(/Z/g, formatOffset(offset, false))
+          .replace(/ddd/g, WEEKDAYS[new Date(Date.UTC(p.year, p.month - 1, p.day)).getUTCDay()]);
+      }
+
+      function normalizeDateText(raw) {
+        var s = String(raw || "").trim();
+        if (!s) return "";
+        if (/^\d{4}-\d{1,2}-\d{1,2} \d/.test(s) && !/[zZ]|[+-]\d{2}:?\d{2}$/.test(s)) {
+          return s.replace(" ", "T");
+        }
+        return s;
+      }
+
+      function parseUnix(raw, unit) {
+        var s = String(raw || "").trim().replace(/,/g, "");
+        if (!s || !/^[+-]?\d+(\.\d+)?$/.test(s)) return null;
+        var n = Number(s);
+        if (!Number.isFinite(n)) return null;
+        var u = unit || "auto";
+        if (u === "auto") {
+          var digits = s.replace(/^[+-]/, "").replace(/\..*$/, "").length;
+          if (digits >= 18) u = "ns";
+          else if (digits >= 15) u = "us";
+          else if (digits >= 12) u = "ms";
+          else u = "s";
+        }
+        var ms = u === "ns" ? n / 1000000 : u === "us" ? n / 1000 : u === "ms" ? n : n * 1000;
+        var date = new Date(ms);
+        if (Number.isNaN(date.getTime())) return null;
+        return { date: date, unit: u, raw: s };
+      }
+
+      function parseAny(raw) {
+        var unix = parseUnix(raw, "auto");
+        if (unix) return { date: unix.date, kind: "timestamp " + unix.unit };
+        var text = normalizeDateText(raw);
+        var d = new Date(text);
+        if (!text || Number.isNaN(d.getTime())) return null;
+        return { date: d, kind: "date" };
       }
 
       function toDatetimeLocalValue(d) {
-        var y = d.getFullYear();
-        var m = pad2(d.getMonth() + 1);
-        var day = pad2(d.getDate());
-        var h = pad2(d.getHours());
-        var min = pad2(d.getMinutes());
-        var s = pad2(d.getSeconds());
-        return y + "-" + m + "-" + day + "T" + h + ":" + min + ":" + s;
-      }
-
-      function startOfWeekMonday(d) {
-        var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        var day = x.getDay();
-        var diff = day === 0 ? -6 : 1 - day;
-        x.setDate(x.getDate() + diff);
-        x.setHours(0, 0, 0, 0);
-        return x;
-      }
-
-      function parseUnixInput(raw) {
-        var s = String(raw).trim();
-        if (!s) return null;
-        var n = Number(s);
-        if (!Number.isFinite(n)) return null;
-        var abs = Math.abs(n);
-        var ms = abs >= 1e12 ? n : n * 1000;
-        var date = new Date(ms);
-        if (Number.isNaN(date.getTime())) return null;
-        return { date: date, treatedAsMs: abs >= 1e12 };
+        return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
       }
 
       function showError(el, msg) {
@@ -306,137 +605,214 @@
         el.style.display = "flex";
       }
 
+      function setText(id, value) {
+        var el = $(id);
+        if (el) el.textContent = value;
+      }
+
       function copyFromEl(id, btn) {
-        var el = document.getElementById(id);
+        var el = $(id);
         if (!el) return;
-        var text = el.textContent || "";
-        if (!text || text === "—") return;
-        navigator.clipboard.writeText(text).then(function () {
-          var orig = btn.textContent;
+        var value = el.textContent || "";
+        if (!value || value === "—") return;
+        navigator.clipboard.writeText(value).then(function () {
+          var old = btn.textContent;
           btn.textContent = "已复制";
-          btn.classList.add("copied");
-          setTimeout(function () {
-            btn.textContent = orig;
-            btn.classList.remove("copied");
-          }, 1600);
+          setTimeout(function () { btn.textContent = old; }, 1300);
         });
       }
 
       function tickLive() {
         var now = new Date();
-        var ms = now.getTime();
-        var sec = Math.floor(ms / 1000);
-        var elSec = document.getElementById("liveSec");
-        var elMs = document.getElementById("liveMs");
-        var elLoc = document.getElementById("liveLocale");
-        if (elSec) elSec.textContent = String(sec);
-        if (elMs) elMs.textContent = String(ms);
-        if (elLoc) {
-          elLoc.textContent =
-            now.toLocaleString("zh-CN", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-              hour12: false,
-            }) +
-            "\n时区偏移: " +
-            (function () {
-              var off = -now.getTimezoneOffset();
-              var sign = off >= 0 ? "+" : "-";
-              var ab = Math.abs(off);
-              var oh = Math.floor(ab / 60);
-              var om = ab % 60;
-              return "UTC" + sign + pad2(oh) + ":" + pad2(om);
-            })();
-        }
+        setText("liveSec", String(Math.floor(now.getTime() / 1000)));
+        setText("liveMs", String(now.getTime()));
+        setText("liveLocal", formatInZone(now, getTimeZone()));
+      }
+
+      function fillDate(date) {
+        $("dtLocal").value = toDatetimeLocalValue(date);
+        $("dateTextInput").value = "";
+      }
+
+      function renderTimestamp(date, unit) {
+        var tz = getTimeZone();
+        setText("outZone", formatInZone(date, tz));
+        setText("outCustom", formatCustom(date));
+        setText("outIso", date.toISOString());
+        setText("outUtc", date.toUTCString());
+        setText("outRfc", date.toUTCString().replace("GMT", "+0000"));
+        setText("outHint", "输入按 " + unit + " 解析；目标时区：" + tz + "；本机时区：" + Intl.DateTimeFormat().resolvedOptions().timeZone + "。");
+        $("ts2dateOut").style.display = "block";
       }
 
       function runTsToDate() {
-        var err = document.getElementById("ts2dateError");
-        var out = document.getElementById("ts2dateOut");
-        var raw = document.getElementById("tsInput").value;
-        var parsed = parseUnixInput(raw);
+        var parsed = parseUnix($("tsInput").value, $("unitSelect").value);
         if (!parsed) {
-          showError(err, "请输入有效的数字时间戳。");
-          out.style.display = "none";
+          showError($("ts2dateError"), "请输入有效的 Unix 时间戳。支持秒、毫秒、微秒和纳秒。");
+          $("ts2dateOut").style.display = "none";
           return;
         }
-        showError(err, "");
-        var d = parsed.date;
-        document.getElementById("outIso").textContent = d.toISOString();
-        document.getElementById("outLocale").textContent = d.toLocaleString("zh-CN", { hour12: false });
-        document.getElementById("outUtc").textContent = d.toUTCString();
-        document.getElementById("outHint").textContent = parsed.treatedAsMs
-          ? "已按毫秒解析（|值| ≥ 10¹²）。"
-          : "已按秒解析（|值| < 10¹²）。";
-        out.style.display = "block";
+        showError($("ts2dateError"), "");
+        renderTimestamp(parsed.date, parsed.unit);
+      }
+
+      function readDateInput() {
+        var text = $("dateTextInput").value.trim();
+        if (text) return parseAny(text);
+        var local = $("dtLocal").value;
+        if (!local) return null;
+        var d = new Date(local);
+        return Number.isNaN(d.getTime()) ? null : { date: d, kind: "local datetime" };
       }
 
       function runDateToTs() {
-        var err = document.getElementById("date2tsError");
-        var out = document.getElementById("date2tsOut");
-        var v = document.getElementById("dtLocal").value;
-        if (!v) {
-          showError(err, "请选择日期与时间。");
-          out.style.display = "none";
+        var parsed = readDateInput();
+        if (!parsed) {
+          showError($("date2tsError"), "请输入可识别的日期时间，或选择本地日期时间。");
+          $("date2tsOut").style.display = "none";
           return;
         }
-        var d = new Date(v);
-        if (Number.isNaN(d.getTime())) {
-          showError(err, "无法解析该日期时间。");
-          out.style.display = "none";
+        showError($("date2tsError"), "");
+        var ms = parsed.date.getTime();
+        setText("outSec", String(Math.floor(ms / 1000)));
+        setText("outMs", String(ms));
+        setText("outUs", String(ms * 1000));
+        setText("outNs", String(ms * 1000000));
+        $("date2tsOut").style.display = "block";
+      }
+
+      function startOfWeekMonday(d) {
+        var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        var day = x.getDay();
+        x.setDate(x.getDate() + (day === 0 ? -6 : 1 - day));
+        x.setHours(0, 0, 0, 0);
+        return x;
+      }
+
+      function runBatch() {
+        var lines = $("batchInput").value.split(/\r?\n/).map(function (x) { return x.trim(); }).filter(Boolean);
+        var rows = [];
+        var csv = ["input,type,unix_seconds,unix_milliseconds,date"];
+        lines.forEach(function (line) {
+          var parsed = parseAny(line);
+          if (!parsed) {
+            rows.push("<tr><td>" + escapeHtml(line) + "</td><td>无法识别</td><td>—</td><td>—</td><td>—</td></tr>");
+            csv.push(csvCell(line) + ",invalid,,,");
+            return;
+          }
+          var ms = parsed.date.getTime();
+          var sec = Math.floor(ms / 1000);
+          var zone = formatInZone(parsed.date, getTimeZone());
+          rows.push("<tr><td>" + escapeHtml(line) + "</td><td>" + parsed.kind + "</td><td>" + sec + "</td><td>" + ms + "</td><td>" + escapeHtml(zone) + "</td></tr>");
+          csv.push([line, parsed.kind, sec, ms, zone].map(csvCell).join(","));
+        });
+        $("batchRows").innerHTML = rows.join("");
+        $("batchCsv").textContent = csv.join("\n");
+        $("batchTableWrap").style.display = rows.length ? "block" : "none";
+        $("batchCsv").style.display = rows.length ? "block" : "none";
+      }
+
+      function runDiff() {
+        var a = parseAny($("diffStart").value);
+        var b = parseAny($("diffEnd").value);
+        if (!a || !b) {
+          showError($("diffError"), "开始时间和结束时间都需要填写，可输入时间戳或日期字符串。");
+          $("diffOut").style.display = "none";
           return;
         }
-        showError(err, "");
-        var ms = d.getTime();
-        var sec = Math.floor(ms / 1000);
-        document.getElementById("outSec").textContent = String(sec);
-        document.getElementById("outMs").textContent = String(ms);
-        out.style.display = "block";
+        showError($("diffError"), "");
+        var diff = b.date.getTime() - a.date.getTime();
+        var sign = diff < 0 ? "-" : "";
+        var abs = Math.abs(diff);
+        var days = Math.floor(abs / 86400000);
+        var hours = Math.floor(abs % 86400000 / 3600000);
+        var mins = Math.floor(abs % 3600000 / 60000);
+        var secs = Math.floor(abs % 60000 / 1000);
+        $("diffOut").textContent =
+          "相差：" + sign + days + " 天 " + hours + " 小时 " + mins + " 分 " + secs + " 秒\n" +
+          "毫秒差：" + diff + "\n" +
+          "秒差：" + Math.trunc(diff / 1000);
+        $("diffOut").style.display = "block";
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      function csvCell(v) {
+        var s = String(v);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
       }
 
       document.addEventListener("DOMContentLoaded", function () {
         initThemeToggle();
+        fillDate(new Date());
         tickLive();
         setInterval(tickLive, 1000);
 
-        var dt = document.getElementById("dtLocal");
-        if (dt) dt.value = toDatetimeLocalValue(new Date());
-
-        document.getElementById("tsConvertBtn").addEventListener("click", function () { runTsToDate(); window.umami?.track?.("tool_used", { tool: "timestamp", action: "ts_to_date" }); });
-        document.getElementById("tsInput").addEventListener("keydown", function (e) {
-          if (e.key === "Enter") runTsToDate();
+        $("tsConvertBtn").addEventListener("click", runTsToDate);
+        $("tsInput").addEventListener("keydown", function (e) { if (e.key === "Enter") runTsToDate(); });
+        $("unitSelect").addEventListener("change", function () { if ($("tsInput").value.trim()) runTsToDate(); });
+        $("timezoneSelect").addEventListener("change", function () {
+          tickLive();
+          if ($("ts2dateOut").style.display !== "none" && $("tsInput").value.trim()) runTsToDate();
+          if ($("batchTableWrap").style.display !== "none") runBatch();
         });
-        document.getElementById("tsClearBtn").addEventListener("click", function () {
-          document.getElementById("tsInput").value = "";
-          document.getElementById("ts2dateOut").style.display = "none";
-          showError(document.getElementById("ts2dateError"), "");
+        $("formatInput").addEventListener("input", function () { if ($("ts2dateOut").style.display !== "none" && $("tsInput").value.trim()) runTsToDate(); });
+
+        $("tsClearBtn").addEventListener("click", function () {
+          $("tsInput").value = "";
+          $("ts2dateOut").style.display = "none";
+          showError($("ts2dateError"), "");
         });
+        $("dtConvertBtn").addEventListener("click", runDateToTs);
+        $("dateTextInput").addEventListener("keydown", function (e) { if (e.key === "Enter") runDateToTs(); });
+        $("useNowBtn").addEventListener("click", function () { fillDate(new Date()); runDateToTs(); });
 
-        document.getElementById("dtConvertBtn").addEventListener("click", function () { runDateToTs(); window.umami?.track?.("tool_used", { tool: "timestamp", action: "date_to_ts" }); });
-
-        document.querySelectorAll("[data-quick]").forEach(function (b) {
-          b.addEventListener("click", function () {
-            var kind = b.getAttribute("data-quick");
-            var now = new Date();
-            var d;
-            if (kind === "todayStart") {
-              d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-            } else if (kind === "todayEnd") {
-              d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-            } else if (kind === "weekStart") {
-              d = startOfWeekMonday(now);
-            } else if (kind === "monthStart") {
-              d = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-            } else {
-              return;
-            }
-            document.getElementById("dtLocal").value = toDatetimeLocalValue(d);
+        document.querySelectorAll("[data-fill-ts]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var now = Date.now();
+            var kind = btn.getAttribute("data-fill-ts");
+            if (kind === "nowSec") { $("tsInput").value = String(Math.floor(now / 1000)); $("unitSelect").value = "s"; }
+            if (kind === "nowMs") { $("tsInput").value = String(now); $("unitSelect").value = "ms"; }
+            if (kind === "y2k") { $("tsInput").value = "946684800"; $("unitSelect").value = "s"; }
+            if (kind === "unix0") { $("tsInput").value = "0"; $("unitSelect").value = "s"; }
+            runTsToDate();
           });
+        });
+
+        document.querySelectorAll("[data-shift]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var d = new Date(Date.now() + Number(btn.getAttribute("data-shift")) * 1000);
+            fillDate(d);
+            runDateToTs();
+          });
+        });
+
+        document.querySelectorAll("[data-quick]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var now = new Date();
+            var kind = btn.getAttribute("data-quick");
+            var d = new Date();
+            if (kind === "todayStart") d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+            if (kind === "todayEnd") d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+            if (kind === "weekStart") d = startOfWeekMonday(now);
+            if (kind === "monthStart") d = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+            if (kind === "yearStart") d = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
+            fillDate(d);
+            runDateToTs();
+          });
+        });
+
+        $("batchConvertBtn").addEventListener("click", runBatch);
+        $("batchSampleBtn").addEventListener("click", function () {
+          $("batchInput").value = "1704067200\n1704067200000\n2026-05-27 20:30:00\n2026-05-27T12:30:00Z";
+          runBatch();
+        });
+        $("diffBtn").addEventListener("click", runDiff);
+        $("diffNowBtn").addEventListener("click", function () {
+          $("diffEnd").value = String(Math.floor(Date.now() / 1000));
+          runDiff();
         });
 
         document.body.addEventListener("click", function (e) {
