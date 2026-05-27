@@ -16,13 +16,8 @@
     if (saved) {
       apply(saved);
     } else {
-      var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      apply(prefersDark ? "dark" : "light");
+      apply("dark");
     }
-
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
-      if (!localStorage.getItem(KEY)) apply(e.matches ? "dark" : "light");
-    });
 
     var btn = document.getElementById("themeToggle");
     if (btn) {
@@ -41,4 +36,3 @@
     init();
   }
 })();
-

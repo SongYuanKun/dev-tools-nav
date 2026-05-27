@@ -137,12 +137,13 @@
 
     // 主题切换绑定（main.js 的 ThemeManager 在首页也会绑定，重复无害）
     var btn = document.getElementById('themeToggle');
-    var theme = document.documentElement.getAttribute('data-theme') || 'light';
+    var theme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('dev-tools-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
     applyThemeToBtn(btn, theme);
 
     if (btn) {
       btn.addEventListener('click', function () {
-        var cur = document.documentElement.getAttribute('data-theme') || 'light';
+        var cur = document.documentElement.getAttribute('data-theme') || 'dark';
         var next = cur === 'dark' ? 'light' : 'dark';
         localStorage.setItem('dev-tools-theme', next);
         document.documentElement.setAttribute('data-theme', next);

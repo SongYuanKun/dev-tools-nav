@@ -197,11 +197,8 @@
           if (saved) {
             this.apply(saved);
           } else {
-            this.apply(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            this.apply("dark");
           }
-          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
-            if (!localStorage.getItem(ThemeManager.STORAGE_KEY)) ThemeManager.apply(e.matches ? "dark" : "light");
-          });
         },
         apply: function (theme) {
           document.documentElement.setAttribute("data-theme", theme);

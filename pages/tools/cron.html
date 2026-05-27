@@ -44,10 +44,8 @@
   </script>
   <script>
     (function () {
-      var t = localStorage.getItem("dev-tools-theme");
-      if (t === "dark" || t === "light") {
-        document.documentElement.setAttribute("data-theme", t);
-      }
+      var t = localStorage.getItem("dev-tools-theme") || "dark";
+      document.documentElement.setAttribute("data-theme", t);
     })();
   </script>
   <script defer src="../../js/base.js"></script>
@@ -260,18 +258,12 @@
         if (saved === "dark" || saved === "light") {
           themeApply(saved);
         } else {
-          var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-          themeApply(prefersDark ? "dark" : "light");
+          themeApply("dark");
         }
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
-          if (!localStorage.getItem(THEME_KEY)) {
-            themeApply(e.matches ? "dark" : "light");
-          }
-        });
       }
 
       function themeToggle() {
-        var cur = document.documentElement.getAttribute("data-theme") || "light";
+        var cur = document.documentElement.getAttribute("data-theme") || "dark";
         var next = cur === "dark" ? "light" : "dark";
         localStorage.setItem(THEME_KEY, next);
         themeApply(next);

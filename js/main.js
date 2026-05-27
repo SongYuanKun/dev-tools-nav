@@ -106,15 +106,8 @@ const ThemeManager = {
     if (saved) {
       this.apply(saved);
     } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      this.apply(prefersDark ? "dark" : "light");
+      this.apply("dark");
     }
-
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-      if (!SafeStorage.get(this.STORAGE_KEY)) {
-        this.apply(e.matches ? "dark" : "light");
-      }
-    });
   },
 
   apply(theme) {

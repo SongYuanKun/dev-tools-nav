@@ -205,15 +205,8 @@
           if (saved) {
             this.apply(saved);
           } else {
-            var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            this.apply(prefersDark ? "dark" : "light");
+            this.apply("dark");
           }
-
-          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
-            if (!localStorage.getItem(ThemeManager.STORAGE_KEY)) {
-              ThemeManager.apply(e.matches ? "dark" : "light");
-            }
-          });
         },
 
         apply: function (theme) {

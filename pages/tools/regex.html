@@ -378,10 +378,7 @@
         init: function () {
           var saved = localStorage.getItem(this.STORAGE_KEY);
           if (saved) { this.apply(saved); }
-          else { this.apply(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); }
-          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
-            if (!localStorage.getItem(ThemeManager.STORAGE_KEY)) ThemeManager.apply(e.matches ? "dark" : "light");
-          });
+          else { this.apply("dark"); }
         },
         apply: function (theme) {
           document.documentElement.setAttribute("data-theme", theme);

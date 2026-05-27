@@ -37,10 +37,7 @@
   <script>
     (function () {
       var k = "dev-tools-theme";
-      var t = localStorage.getItem(k);
-      if (!t) {
-        t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      }
+      var t = localStorage.getItem(k) || "dark";
       document.documentElement.setAttribute("data-theme", t);
     })();
   </script>
@@ -250,7 +247,7 @@
         if (saved) {
           applyTheme(saved);
         } else {
-          applyTheme(document.documentElement.getAttribute("data-theme") || "light");
+          applyTheme(document.documentElement.getAttribute("data-theme") || "dark");
         }
 
         var btn = document.getElementById("themeToggle");
@@ -262,12 +259,6 @@
             applyTheme(next);
           });
         }
-
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
-          if (!localStorage.getItem(THEME_KEY)) {
-            applyTheme(e.matches ? "dark" : "light");
-          }
-        });
       }
 
       function pad2(n) {
