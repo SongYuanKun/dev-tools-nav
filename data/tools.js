@@ -1280,6 +1280,7 @@ const TOOLS_DATA = [
     category: "online-tools",
     tags: ["Windows", "Office", "激活", "KMS"],
     url: "pages/kms.html",
+    legacyUrl: "pages/kms.html",
     icon: "💻",
     featured: true,
     hidden: false,
