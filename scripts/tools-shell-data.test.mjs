@@ -23,7 +23,11 @@ test("online tool shell entries point at existing legacy pages", () => {
   const missingLegacyUrls = shellTools
     .filter((tool) => !String(tool.legacyUrl || tool.legacy_url || "").trim())
     .map((tool) => tool.id);
-  assert.deepEqual(missingLegacyUrls, []);
+  assert.equal(
+    missingLegacyUrls.length,
+    0,
+    `missing legacyUrl for: ${missingLegacyUrls.join(", ")}`,
+  );
 
   for (const tool of shellTools) {
     const expectedShellUrl = `tools/${tool.slug}/`;
