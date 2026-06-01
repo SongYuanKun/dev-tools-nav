@@ -1,7 +1,15 @@
 {
-  "updatedAt": "2026-06-01T04:12:30Z",
+  "updatedAt": "2026-06-01T17:41:57Z",
   "source": "https://blog.csdn.net/syk123839070/rss/list",
   "items": [
+    {
+      "title": "腾讯 WorkBuddy「专家团」深度分析：它更像内部集成工作流，而不是简单角色 Prompt",
+      "description": "本文深入分析腾讯WorkBuddy\"专家团\"的产品本质，指出其并非简单的专家Prompt集合，而是一套面向办公场景封装的多Agent工作流系统。通过公开资料分析，文章从任务分解、专家依赖关系、工具链绑定等维度论证该系统的工作流特性，并推测其底层架构包含专家注册表、任务规划器、多Agent执行器等核心组件。研究认为WorkBuddy通过\"专家团\"的产品表达降低了用户理解成本，更符合企业组织心智，同…",
+      "url": "https://blog.csdn.net/syk123839070/article/details/161601892",
+      "date": "2026-06-01",
+      "platform": "CSDN",
+      "tags": []
+    },
     {
       "title": "DeepSeek V4 脱离 CUDA 全栈国产化：1.6T MoE 架构拆解 + 昇腾迁移数据",
       "description": "DeepSeek V4 成为全球首个脱离 CUDA、全面迁移至国产昇腾算力的万亿参数大模型，采用 1.6T MoE 架构，支持 1M 上下文窗口。",
