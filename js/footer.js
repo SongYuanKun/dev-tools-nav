@@ -48,7 +48,6 @@
       '      <span class="footer-divider">/</span>',
       '      <a href="' + localLink(prefix, 'pages/blog/index.html') + '">博客</a>',
       '      <span class="footer-divider">/</span>',
-      '      <a href="https://songyuankun.github.io/dev-tools-nav/" target="_blank" rel="noopener">备用入口</a>',
       '      <span class="footer-divider">/</span>',
       '      <a href="https://koen.songyuankun.top" target="_blank" rel="noopener">个人页</a>',
       '      <span class="footer-divider">/</span>',

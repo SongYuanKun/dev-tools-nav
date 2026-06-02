@@ -231,7 +231,7 @@
       }
 
       function loadCsdnArticles() {
-        return fetch("../../data/csdn-articles.json", { cache: "default" })
+        return fetch("../../data/csdn-articles.json", { cache: "no-store" })
           .then(function (res) {
             if (!res.ok) throw new Error("CSDN articles fetch failed");
             return res.json();

@@ -746,7 +746,7 @@ async function initArticles() {
 
   let articles = [];
   try {
-    const res = await fetch("data/csdn-articles.json", { cache: "default" });
+    const res = await fetch("data/csdn-articles.json", { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
       if (data && Array.isArray(data.items)) {
