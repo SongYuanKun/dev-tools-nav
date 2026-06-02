@@ -149,7 +149,6 @@
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') closeSponsorModal();
   });
-  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', normalizeFooter);
