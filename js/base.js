@@ -122,10 +122,27 @@
     });
   }
 
+  function getCurrentSiteLabel() {
+    var host = window.location.host || 'tools.songyuankun.top';
+    var pathParts = window.location.pathname.split('/').filter(Boolean);
+    if (window.location.hostname.endsWith('.github.io') && pathParts.length > 0) {
+      return host + '/' + pathParts[0];
+    }
+    return host;
+  }
+
+  function updateCurrentSiteLabels() {
+    document.querySelectorAll('[data-current-site]').forEach(function (el) {
+      el.textContent = getCurrentSiteLabel();
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     if (document.body) {
       document.body.classList.add('site-v2');
     }
+
+    updateCurrentSiteLabels();
 
     var nav = document.querySelector('nav.navbar') || document.querySelector('nav.nav');
     if (!nav) return;
