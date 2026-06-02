@@ -1082,6 +1082,31 @@ const AI_LEARN_PATH_STEPS = [
 // ==================== 专题更新记录（首页「近期更新」）====================
 const AI_TOPIC_CHANGELOG = [
   {
+    date: "2026-05-27",
+    title: "Unify site footer with support links",
+    detail: "Unify site footer with support links",
+  },
+  {
+    date: "2026-05-26",
+    title: "Unify tools site pages",
+    detail: "Unify tools site pages",
+  },
+  {
+    date: "2026-05-23",
+    title: "修复：show radar tag text",
+    detail: "修复 show radar tag text",
+  },
+  {
+    date: "2026-05-22",
+    title: "Add AI open source radar page",
+    detail: "Add AI open source radar page",
+  },
+  {
+    date: "2026-05-02",
+    title: "专题 P2 收尾、延伸阅读、横评声明与 changelog CI",
+    detail: "专题 P2 收尾、延伸阅读、横评声明与 changelog CI",
+  },
+  {
     date: "2026-04-20",
     title: "P1 开发者页、更新记录、场景内链、子导航与 Prom…等 1 项；修复 1 项",
     detail: "P1 开发者页、更新记录、场景内链、子导航与 Prompt 锚点；P0 术语页、安全页、学习路径与文档同步；修复 专题卡徽章品牌图标与 favicon 布局",
