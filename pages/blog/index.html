@@ -169,6 +169,7 @@
   <script>
     (function () {
       var currentCat = "all";
+      var dynamicPosts = [];
 
       function escapeHtml(str) {
         var d = document.createElement("div");
@@ -198,7 +199,11 @@
       function initCategories() {
         var container = document.getElementById("blogCategories");
         if (!container || typeof BLOG_CATEGORIES === "undefined") return;
-        BLOG_CATEGORIES.forEach(function (cat) {
+        var categories = BLOG_CATEGORIES.slice();
+        if (!categories.some(function (cat) { return cat.id === "CSDN"; })) {
+          categories.push({ id: "CSDN", label: "CSDN" });
+        }
+        categories.forEach(function (cat) {
           var btn = document.createElement("button");
           btn.className = "blog-cat-btn" + (cat.id === "all" ? " active" : "");
           btn.textContent = cat.label;
@@ -212,16 +217,52 @@
         });
       }
 
+      function normalizeCsdnArticle(article) {
+        return {
+          title: article.title || "未命名文章",
+          description: article.description || "查看 CSDN 原文",
+          date: article.date || "",
+          category: "CSDN",
+          tags: article.tags && article.tags.length ? article.tags : ["CSDN", "技术博客"],
+          readTime: 6,
+          externalUrl: article.url,
+          status: "published"
+        };
+      }
+
+      function loadCsdnArticles() {
+        return fetch("../../data/csdn-articles.json", { cache: "default" })
+          .then(function (res) {
+            if (!res.ok) throw new Error("CSDN articles fetch failed");
+            return res.json();
+          })
+          .then(function (data) {
+            var existingUrls = {};
+            (typeof BLOG_POSTS !== "undefined" ? BLOG_POSTS : []).forEach(function (p) {
+              if (p.externalUrl) existingUrls[p.externalUrl] = true;
+            });
+            dynamicPosts = (data.items || [])
+              .filter(function (article) { return article.url && !existingUrls[article.url]; })
+              .map(normalizeCsdnArticle);
+            renderPosts();
+          })
+          .catch(function () {
+            dynamicPosts = [];
+          });
+      }
+
       function renderPosts() {
         var list = document.getElementById("blogList");
         var empty = document.getElementById("blogEmpty");
         if (!list) return;
 
-        var posts = typeof BLOG_POSTS !== "undefined" ? BLOG_POSTS : [];
+        var posts = (typeof BLOG_POSTS !== "undefined" ? BLOG_POSTS : []).concat(dynamicPosts);
         var filtered = posts.filter(function (p) {
           if (p.status !== "published") return false;
           if (currentCat === "all") return true;
           return p.category === currentCat;
+        }).sort(function (a, b) {
+          return String(b.date || "").localeCompare(String(a.date || ""));
         });
 
         if (filtered.length === 0) {
@@ -256,6 +297,7 @@
         initTheme();
         initCategories();
         renderPosts();
+        loadCsdnArticles();
       });
     })();
   </script>

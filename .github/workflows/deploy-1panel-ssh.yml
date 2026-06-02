@@ -4,12 +4,16 @@ name: "Deploy to 1Panel (SSH + rsync)"
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Sync CSDN articles"]
+    types: [completed]
 
 permissions:
   contents: read
 
 jobs:
   deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     env:
       ONEPANEL_HOST: ${{ secrets.ONEPANEL_HOST }}
