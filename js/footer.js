@@ -48,7 +48,6 @@
       '      <span class="footer-divider">/</span>',
       '      <a href="' + localLink(prefix, 'pages/blog/index.html') + '">博客</a>',
       '      <span class="footer-divider">/</span>',
-      '      <span class="footer-divider">/</span>',
       '      <a href="https://koen.songyuankun.top" target="_blank" rel="noopener">个人页</a>',
       '      <span class="footer-divider">/</span>',
       '      <a href="https://github.com/SongYuanKun/dev-tools-nav" target="_blank" rel="noopener">GitHub</a>',
@@ -69,16 +68,16 @@
       '      <div class="footer-qr-grid" aria-label="作者收款码">',
       '        <figure class="footer-qr-card footer-qr-card-wechat">',
       '          <span class="footer-qr-badge">微信</span>',
-      '          <a class="footer-qr-link" href="' + wechatQr + '" target="_blank" rel="noopener" aria-label="打开微信收款码大图">',
+      '          <button class="footer-qr-link" type="button" data-sponsor-modal data-sponsor-src="' + wechatQr + '" data-sponsor-title="微信支付" aria-label="查看微信收款码大图">',
       '            <img src="' + wechatQr + '" alt="微信收款码" loading="lazy">',
-      '          </a>',
+      '          </button>',
       '          <figcaption>微信支付</figcaption>',
       '        </figure>',
       '        <figure class="footer-qr-card footer-qr-card-alipay">',
       '          <span class="footer-qr-badge">支付宝</span>',
-      '          <a class="footer-qr-link" href="' + alipayQr + '" target="_blank" rel="noopener" aria-label="打开支付宝收款码大图">',
+      '          <button class="footer-qr-link" type="button" data-sponsor-modal data-sponsor-src="' + alipayQr + '" data-sponsor-title="支付宝" aria-label="查看支付宝收款码大图">',
       '            <img src="' + alipayQr + '" alt="支付宝收款码" loading="lazy">',
-      '          </a>',
+      '          </button>',
       '          <figcaption>支付宝</figcaption>',
       '        </figure>',
       '      </div>',
@@ -87,6 +86,69 @@
       '  <p class="footer-copyright">Made with code by Koen · © 2024-' + currentYear + '</p>',
       '</div>'
     ].join('');
+
+    bindSponsorModal(footer);
+  }
+
+  function ensureSponsorModal() {
+    var existing = document.querySelector('.sponsor-modal');
+    if (existing) return existing;
+
+    var modal = document.createElement('div');
+    modal.className = 'sponsor-modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = [
+      '<div class="sponsor-modal-backdrop" data-sponsor-close></div>',
+      '<div class="sponsor-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="sponsorModalTitle">',
+      '  <button class="sponsor-modal-close" type="button" data-sponsor-close aria-label="关闭收款码弹窗">×</button>',
+      '  <h2 id="sponsorModalTitle">支持作者</h2>',
+      '  <img class="sponsor-modal-image" src="" alt="">',
+      '</div>'
+    ].join('');
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  function closeSponsorModal() {
+    var modal = document.querySelector('.sponsor-modal');
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('sponsor-modal-open');
+  }
+
+  function openSponsorModal(src, title) {
+    var modal = ensureSponsorModal();
+    var image = modal.querySelector('.sponsor-modal-image');
+    var heading = modal.querySelector('#sponsorModalTitle');
+    if (heading) heading.textContent = title || '支持作者';
+    if (image) {
+      image.src = src;
+      image.alt = (title || '收款码') + '收款码';
+    }
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('sponsor-modal-open');
+    var closeBtn = modal.querySelector('.sponsor-modal-close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function bindSponsorModal(footer) {
+    footer.querySelectorAll('[data-sponsor-modal]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        openSponsorModal(btn.getAttribute('data-sponsor-src'), btn.getAttribute('data-sponsor-title'));
+      });
+    });
+
+    var modal = ensureSponsorModal();
+    modal.querySelectorAll('[data-sponsor-close]').forEach(function (btn) {
+      btn.addEventListener('click', closeSponsorModal);
+    });
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') closeSponsorModal();
+  });
   }
 
   if (document.readyState === 'loading') {
