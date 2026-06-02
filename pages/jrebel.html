@@ -82,9 +82,9 @@
         <div class="license-copy-wrap">
           <button type="button" class="copy-btn-big" id="copyLicenseUrl">一键复制地址</button>
           <div class="server-status">
-            <span id="statusDot" class="status-dot checking"></span>
-            <span id="statusText">检测中...</span>
-            <button type="button" id="recheckBtn" onclick="checkServer()">重新检测</button>
+            <span id="statusDot" class="status-dot unknown"></span>
+            <span id="statusText">等待地址同步</span>
+            <button type="button" id="recheckBtn" onclick="loadServersAndCheck()">刷新地址</button>
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@ echo 完成。请重启 IDE 后重新激活。</code></pre>
         });
     }
 
-    async function checkServer() {
+    function checkServer() {
       var dot = document.getElementById('statusDot');
       var text = document.getElementById('statusText');
       var recheckBtn = document.getElementById('recheckBtn');
@@ -190,31 +190,8 @@ echo 完成。请重启 IDE 后重新激活。</code></pre>
 
       if (!licenseUrl || licenseUrl === '加载中...' || licenseUrl === '加载失败' || licenseUrl === '暂无数据') return;
 
-      dot.className = 'status-dot checking';
-      text.textContent = '检测中...';
-      recheckBtn.disabled = true;
-
-      var controller = new AbortController();
-      var timeoutId = setTimeout(function() { controller.abort(); }, 5000);
-
-      try {
-        var res = await fetch(licenseUrl, { method: 'GET', signal: controller.signal, mode: 'cors' });
-        clearTimeout(timeoutId);
-        dot.className = 'status-dot online';
-        text.textContent = '在线';
-      } catch (e) {
-        clearTimeout(timeoutId);
-        if (e.name === 'AbortError') {
-          dot.className = 'status-dot offline';
-          text.textContent = '离线';
-        } else if (e instanceof TypeError) {
-          dot.className = 'status-dot unknown';
-          text.textContent = '无法检测（服务可能正常）';
-        } else {
-          dot.className = 'status-dot offline';
-          text.textContent = '离线';
-        }
-      }
+      dot.className = 'status-dot unknown';
+      text.textContent = '地址已同步，连接以 IDE 为准';
       recheckBtn.disabled = false;
     }
     loadServersAndCheck();
