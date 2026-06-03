@@ -288,3 +288,25 @@
     } catch (_) {}
   }
 })();
+
+// ==================== Umami 自定义事件 helper ====================
+(function () {
+  var scripts = document.getElementsByTagName('script');
+  var i = scripts.length;
+  var baseJs = '';
+  while (i--) {
+    var src = scripts[i].src || '';
+    if (src.indexOf('/js/base.js') !== -1) {
+      baseJs = src;
+      break;
+    }
+  }
+  var helperSrc = baseJs
+    ? baseJs.replace(/\/js\/base\.js(?:\?.*)?$/, '/js/umami-helper.js')
+    : 'js/umami-helper.js';
+
+  var helper = document.createElement('script');
+  helper.defer = true;
+  helper.src = helperSrc;
+  document.head.appendChild(helper);
+})();
