@@ -1,6 +1,7 @@
 /**
  * dev-tools-nav — Umami 自定义事件埋点
  * 零依赖，事件委托模式
+ * 注意：umami 对象由 base.js 内联定义，无需等待加载
  */
 (function () {
   'use strict';
@@ -9,8 +10,13 @@
     try {
       if (typeof umami !== 'undefined' && typeof umami.track === 'function') {
         umami.track(name, props);
+        console.log('[Umami] tracked:', name, props);
+      } else {
+        console.warn('[Umami] umami.track not available');
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error('[Umami] track error:', e);
+    }
   }
 
   function attr(el, name) {
