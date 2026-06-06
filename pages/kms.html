@@ -145,6 +145,7 @@ slmgr /ato</code></pre>
           var t = btn.textContent; btn.textContent = '已复制'; btn.classList.add('copied');
           setTimeout(function() { btn.textContent = t; btn.classList.remove('copied'); }, 1500);
         });
+        window.umami?.track?.("tool_used", { tool: "kms", action: "copy" });
       });
     });
   </script>

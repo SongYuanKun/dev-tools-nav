@@ -165,6 +165,9 @@
         localStorage.setItem('dev-tools-theme', next);
         document.documentElement.setAttribute('data-theme', next);
         applyThemeToBtn(btn, next);
+        if (window.umami && typeof window.umami.track === 'function') {
+          window.umami.track('theme_toggle', { from: cur, to: next });
+        }
         // 同步 main.js ThemeManager（如果存在）
         if (window.ThemeManager) window.ThemeManager.apply(next);
       });

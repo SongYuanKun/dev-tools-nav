@@ -204,6 +204,7 @@ const EasterEgg = {
 
   // 揭示隐藏分类
   revealSecretCategory() {
+    if (typeof CATEGORIES === "undefined") return;
     const activateCat = CATEGORIES.find(c => c.id === "activate");
     if (!activateCat) return;
 
@@ -400,7 +401,7 @@ function createCategoryBtn(cat, container) {
     state.currentCategory = cat.id;
     activateCategoryBtn(btn);
     renderTools();
-    window.umami?.track?.("category_switch", { category: cat.id });
+    window.umami?.track?.("category_click", { category: cat.id });
   });
   return btn;
 }
@@ -419,10 +420,9 @@ function initSearch() {
       state.searchQuery = e.target.value.trim().toLowerCase();
       const count = renderTools();
       if (state.searchQuery.length > 1) {
-        window.umami?.track?.("search", {
+        window.umami?.track?.("search_use", {
           query: state.searchQuery,
-          results_count: count,
-          has_results: count > 0,
+          results: count,
         });
       }
     }, 200);

@@ -1,4 +1,12 @@
 (function () {
+  function umamiTrack(name, data) {
+    try {
+      if (window.umami && typeof window.umami.track === 'function') {
+        window.umami.track(name, data);
+      }
+    } catch (_) {}
+  }
+
   function escapeHtml(str) {
     var div = document.createElement("div");
     div.appendChild(document.createTextNode(String(str || "")));
@@ -126,6 +134,7 @@
 
     function setCategory(categoryId) {
       state.categoryId = categoryId;
+      umamiTrack('category_click', { category: categoryId });
       persist();
       draw();
       drawCategoryChips();
@@ -211,6 +220,11 @@
     }
 
     function openTool(slug) {
+      var tool = tools.find(function (t) { return t.slug === slug; });
+      umamiTrack('tool_click', {
+        name: tool ? tool.name : slug,
+        category: tool ? tool.categoryId : '',
+      });
       if (window.ToolsPrefs) window.ToolsPrefs.addRecent(slug);
       window.location.href = toolHref(slug);
     }
@@ -282,10 +296,17 @@
       draw();
     });
 
+    var searchTrackTimer;
     searchEl.addEventListener("input", function () {
       state.q = searchEl.value;
       persist();
       draw();
+      clearTimeout(searchTrackTimer);
+      searchTrackTimer = setTimeout(function () {
+        var q = String(state.q || "").trim();
+        if (q.length < 2) return;
+        umamiTrack('search_use', { query: q.slice(0, 100), results: filterList().length });
+      }, 400);
     });
 
     listEl.addEventListener("click", function (e) {
