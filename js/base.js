@@ -219,7 +219,11 @@
   const screen = `${width}x${height}`;
 
   let cache;
-  let currentUrl = location.pathname + location.search;
+  function getAnalyticsUrl() {
+    return location.pathname || "/";
+  }
+
+  let currentUrl = getAnalyticsUrl();
   let currentRef = document.referrer.startsWith(location.origin) ? "" : document.referrer;
 
   var MAX_RETRIES = 2;
@@ -252,7 +256,7 @@
   function onNav() {
     var prev = currentUrl;
     currentRef = prev;
-    currentUrl = location.pathname + location.search;
+    currentUrl = getAnalyticsUrl();
     if (currentUrl !== prev) setTimeout(trackPageview, 300);
   }
 
