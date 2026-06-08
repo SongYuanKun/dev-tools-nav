@@ -9,15 +9,26 @@
 
   function track(name, props) {
     try {
-      if (typeof umami !== 'undefined' && typeof umami.track === 'function') {
+      if (typeof window.umamiTrack === 'function') {
+        window.umamiTrack(name, props);
+      } else if (typeof umami !== 'undefined' && typeof umami.track === 'function') {
         umami.track(name, props);
-        console.log('[Umami] tracked:', name, props);
-      } else {
-        console.warn('[Umami] umami.track not available');
       }
-    } catch (e) {
-      console.error('[Umami] track error:', e);
-    }
+    } catch (_) {}
+  }
+
+  // 声明式埋点：data-umami-event="事件名" data-umami-event-foo="bar"
+  var EVENT_ATTR = /^data-umami-event-([\w-_]+)/;
+
+  function trackDeclarative(el) {
+    var name = attr(el, 'data-umami-event');
+    if (!name) return;
+    var props = {};
+    el.getAttributeNames().forEach(function (key) {
+      var m = key.match(EVENT_ATTR);
+      if (m) props[m[1]] = el.getAttribute(key);
+    });
+    track(name, props);
   }
 
   function attr(el, name) {
@@ -57,6 +68,13 @@
 
   // 点击埋点
   document.addEventListener('click', function (e) {
+    // 声明式：data-umami-event
+    var declarative = e.target.closest('[data-umami-event]');
+    if (declarative) {
+      trackDeclarative(declarative);
+      return;
+    }
+
     // CTA：首页 Hero、博客订阅、支持作者
     var ctaBtn = e.target.closest('.v2-btn');
     if (ctaBtn) {
@@ -187,6 +205,27 @@
     if (link.closest('nav, .navbar, .sidebar, .header, .menu, .footer-links, .ai-subnav-inner')) {
       track('nav_click', { page: href, label: text });
     }
+  });
+
+  // 滚动深度（25/50/75/100%）
+  var scrollMarks = [25, 50, 75, 100];
+  var scrollFired = {};
+  var pageStart = Date.now();
+
+  window.addEventListener('scroll', function () {
+    var doc = document.documentElement;
+    var max = Math.max(doc.scrollHeight - window.innerHeight, 1);
+    var pct = Math.round((window.scrollY / max) * 100);
+    scrollMarks.forEach(function (mark) {
+      if (!scrollFired[mark] && pct >= mark) {
+        scrollFired[mark] = true;
+        track('scroll_depth', { depth: mark });
+      }
+    });
+  }, { passive: true });
+
+  window.addEventListener('pagehide', function () {
+    track('page_exit', { duration: Date.now() - pageStart });
   });
 
   // 搜索（规范：search_use；toolsSearch / searchInput 由业务脚本带 results 上报）
