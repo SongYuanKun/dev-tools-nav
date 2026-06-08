@@ -1,12 +1,4 @@
 (function () {
-  function umamiTrack(name, data) {
-    try {
-      if (window.umami && typeof window.umami.track === 'function') {
-        window.umami.track(name, data);
-      }
-    } catch (_) {}
-  }
-
   function escapeHtml(str) {
     var div = document.createElement("div");
     div.appendChild(document.createTextNode(String(str || "")));
@@ -134,7 +126,7 @@
 
     function setCategory(categoryId) {
       state.categoryId = categoryId;
-      umamiTrack('category_click', { category: categoryId });
+      window.umamiTrack?.('category_click', { category: categoryId });
       persist();
       draw();
       drawCategoryChips();
@@ -221,7 +213,7 @@
 
     function openTool(slug) {
       var tool = tools.find(function (t) { return t.slug === slug; });
-      umamiTrack('tool_click', {
+      window.umamiTrack?.('tool_click', {
         name: tool ? tool.name : slug,
         category: tool ? tool.categoryId : '',
       });
@@ -305,7 +297,7 @@
       searchTrackTimer = setTimeout(function () {
         var q = String(state.q || "").trim();
         if (q.length < 2) return;
-        umamiTrack('search_use', { query: q.slice(0, 100), results: filterList().length });
+        window.umamiTrack?.('search_use', { query: q.slice(0, 100), results: filterList().length });
       }, 400);
     });
 

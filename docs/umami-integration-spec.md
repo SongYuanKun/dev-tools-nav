@@ -17,12 +17,12 @@
 
 两个站点共用以下事件名，事件属性按站点实际情况填充：
 
-| 事件名 | 触发时机 | 事件属性 | 说明 |
-|--------|---------|---------|------|
-| `nav_click` | 点击导航链接 | `{ page: string, label: string }` | 用户点了哪个导航 |
-| `tool_click` | 点击工具/卡片/链接 | `{ name: string, category: string }` | 用户点了哪个工具 |
-| `theme_toggle` | 切换暗色/亮色主题 | `{ from: string, to: string }` | 主题切换 |
-| `cta_action` | 点击 CTA 按钮/订阅/提交 | `{ action: string, target: string }` | 核心转化行为 |
+| 事件名 | 中文描述 | 触发时机 | 事件属性 | 说明 |
+|--------|---------|---------|---------|------|
+| `nav_click` | 导航点击 | 点击导航链接 | `{ page, label, 描述 }` | 用户点了哪个导航 |
+| `tool_click` | 工具点击 | 点击工具/卡片/链接 | `{ name, category, 描述 }` | 用户点了哪个工具 |
+| `theme_toggle` | 主题切换 | 切换暗色/亮色主题 | `{ from, to, 描述 }` | 暗色 ↔ 亮色 |
+| `cta_action` | CTA 按钮 | 点击 CTA / 订阅 / 支持作者 | `{ action, target, 描述 }` | 核心转化行为 |
 
 ### 1.2 au_message 站点额外事件
 
@@ -35,11 +35,48 @@
 
 ### 1.3 dev-tools-nav 站点额外事件
 
-| 事件名 | 触发时机 | 事件属性 |
-|--------|---------|---------|
-| `category_click` | 点击分类 Tab/筛选 | `{ category: string }` |
-| `search_use` | 使用搜索功能（如有） | `{ query: string, results: number }` |
-| `external_link` | 点击外部链接 | `{ url: string, label: string }` |
+| 事件名 | 中文描述 | 触发时机 | 事件属性 |
+|--------|---------|---------|---------|
+| `category_click` | 分类筛选 | 点击分类 Tab/筛选 | `{ category, 描述 }` |
+| `search_use` | 搜索使用 | 使用搜索功能 | `{ query, results, 描述 }` |
+| `external_link` | 外部链接 | 点击外部链接 | `{ url, label, 描述 }` |
+| `tool_used` | 工具使用 | 在线工具内执行操作 | `{ tool, action, 描述 }` |
+
+> **Umami 后台查看**：每条自定义事件会自动附带 `描述` 字段（中文），在 Events → 点开事件 → Properties 中可见。事件名对照表见 `js/umami-labels.js`。
+
+### 1.4 dev-tools-nav 已启用的 Umami 平台能力
+
+| 能力 | 实现位置 | 后台查看位置 | 说明 |
+|------|---------|-------------|------|
+| **PV / UV** | `js/base.js` 自动 pageview | Overview → Pageviews / Visitors | UV 靠 `distinct_id` + IP/UA 去重 |
+| **访客识别** | `localStorage` 存 `umami.visitor-id`，`umami.identify()` | Sessions → 搜索 Distinct ID | 跨访问识别同一浏览器 |
+| **Session Data** | identify 附带 `主题/区域/回访/首访/嵌入` | Sessions → 点开会话 → Properties | 无需登录即可画像 |
+| **Tag 分组** | 按路径自动打标 `home/ai/tools/blog` | 可按 tag 筛选事件 | 等同官方 `data-tag` |
+| **Performance** | Core Web Vitals（LCP/INP/CLS/FCP/TTFB） | Performance 标签页 | `type: performance`，非自定义事件 |
+| **Goals** | 后台手动配置 | Settings → Goals | 见 §4.1 |
+| **Funnels** | 后台手动配置 | Reports → Funnel | 见 §4.2 |
+| **声明式埋点** | `data-umami-event="事件名"` | Events | 可选 `data-umami-event-foo="bar"` |
+| **JS 错误** | `error` + `unhandledrejection` | Events → `js_error` | 含 Promise 未捕获拒绝 |
+| **滚动深度** | `scroll_depth` 25/50/75/100% | Events | 参与度辅助指标 |
+| **页面停留** | `page_exit` 离开时上报 | Events | `duration` 毫秒 |
+| **DNT 尊重** | 检测 `navigator.doNotTrack` | — | 用户开启 DNT 时不采集 |
+| **禁用开关** | `localStorage.setItem('umami.disabled','1')` | — | 调试用 |
+
+**PV vs UV 说明**：
+
+- **PV**：每次 pageview 请求计 1（`website_event` 无 `event_name` 的记录）
+- **UV（Visitors）**：独立 `session`；启用 `umami.visitor-id` 后可在 Sessions 按 Distinct ID 聚合跨天回访
+- **Visits**：约 30 分钟无活动后新开 visit（Umami 服务端 JWT 管理）
+
+**声明式埋点示例**（HTML 无需写 JS）：
+
+```html
+<button data-umami-event="cta_action"
+        data-umami-event-action="demo"
+        data-umami-event-target="hero">
+  立即体验
+</button>
+```
 
 ---
 
@@ -362,11 +399,16 @@
 
 **dev-tools-nav 站点的 Goals：**
 
-| Goal 名称 | 事件类型 | 事件名 |
-|-----------|---------|--------|
-| 点击工具 | event | `tool_click` |
-| 使用搜索 | event | `search_use` |
-| 外部链接点击 | event | `external_link` |
+| Goal 名称 | 事件类型 | 事件名 | 附加条件 |
+|-----------|---------|--------|---------|
+| 点击工具 | event | `tool_click` | — |
+| 使用搜索 | event | `search_use` | — |
+| 外部链接点击 | event | `external_link` | — |
+| CTA 转化 | event | `cta_action` | — |
+| 工具实际使用 | event | `tool_used` | — |
+| 主题切换 | event | `theme_toggle` | — |
+| 滚动到底 | event | `scroll_depth` | depth = 100 |
+| JS 错误 | event | `js_error` | — |
 
 ### 4.2 创建 Funnels
 

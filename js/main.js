@@ -148,7 +148,7 @@ const EasterEgg = {
     this.showToast("恭喜，发现隐藏分类！");
     this.revealSecretCategory();
     this.addSecretConfetti();
-    window.umami?.track?.("easter_egg_unlocked");
+    window.umamiTrack?.("easter_egg_unlocked");
   },
 
   // 显示提示（完整版，用于解锁成功等场景）
@@ -401,7 +401,7 @@ function createCategoryBtn(cat, container) {
     state.currentCategory = cat.id;
     activateCategoryBtn(btn);
     renderTools();
-    window.umami?.track?.("category_click", { category: cat.id });
+    window.umamiTrack?.("category_click", { category: cat.id });
   });
   return btn;
 }
@@ -420,7 +420,7 @@ function initSearch() {
       state.searchQuery = e.target.value.trim().toLowerCase();
       const count = renderTools();
       if (state.searchQuery.length > 1) {
-        window.umami?.track?.("search_use", {
+        window.umamiTrack?.("search_use", {
           query: state.searchQuery,
           results: count,
         });
@@ -528,7 +528,7 @@ function createToolCard(tool) {
   card.querySelector(".fav-btn").addEventListener("click", (e) => {
     e.stopPropagation();
     const added = Favorites.toggle(tool.id);
-    window.umami?.track?.("favorite_toggle", {
+    window.umamiTrack?.("favorite_toggle", {
       tool_id: tool.id,
       tool_name: tool.name,
       action: added ? "add" : "remove",
@@ -548,7 +548,7 @@ function createToolCard(tool) {
   card.querySelectorAll("[data-tool-id]").forEach((link) => {
     link.addEventListener("click", () => {
       RecentVisits.add(tool.id);
-      window.umami?.track?.("tool_click", {
+      window.umamiTrack?.("tool_click", {
         tool_id: tool.id,
         tool_name: tool.name,
         category: tool.category,
