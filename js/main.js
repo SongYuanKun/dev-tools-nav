@@ -719,6 +719,11 @@ function renderTools() {
     : [...filtered].sort((a, b) => {
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
+        // 同为精选时，自研在线工具优先于外链导航
+        if (a.featured && b.featured) {
+          if (a.category === "online-tools" && b.category !== "online-tools") return -1;
+          if (b.category === "online-tools" && a.category !== "online-tools") return 1;
+        }
         return 0;
       });
 

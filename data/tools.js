@@ -15,7 +15,7 @@ const TOOLS_DATA = [
     tags: ["AI对话", "免费", "国产"],
     url: "https://chat.deepseek.com/",
     icon: "https://icon.horse/icon/deepseek.com",
-    featured: true,
+    featured: false,
     content: {
       intro: "DeepSeek 是国产 AI 大模型的代表作品，提供 DeepSeek-V3 和 DeepSeek-R1 等模型。支持 128K 超长上下文，擅长代码生成、数学推理、长文档分析，中文理解能力出色，完全免费开放使用。",
       features: ["128K 超长上下文", "代码生成与调试", "数学与逻辑推理", "完全免费开放"],
@@ -41,7 +41,7 @@ const TOOLS_DATA = [
     tags: ["AI对话", "GPT-4", "多模态"],
     url: "https://chat.openai.com/",
     icon: "https://icon.horse/icon/openai.com",
-    featured: true,
+    featured: false,
     content: {
       intro: "ChatGPT 是 OpenAI 推出的 AI 对话系统，支持 GPT-4o、GPT-4 Turbo 等先进模型。具备多模态能力（文字、图片、语音），覆盖写作、编程、数据分析、创意设计等场景，拥有丰富的插件和 GPTs 生态。",
       features: ["GPT-4o 多模态能力", "丰富的 GPTs 插件生态", "代码解释器与数据分析", "DALL-E 图像生成"],
@@ -67,7 +67,7 @@ const TOOLS_DATA = [
     tags: ["AI对话", "长文本", "安全"],
     url: "https://claude.ai/",
     icon: "https://icon.horse/icon/claude.ai",
-    featured: true,
+    featured: false,
     content: {
       intro: "Claude 是 Anthropic 开发的 AI 助手，以安全性和可解释性著称。支持 200K 超长上下文，擅长长文档分析、代码审查、创意写作，回复自然流畅，被广泛认为是 GPT 的最佳替代方案。",
       features: ["200K 超长上下文", "Artifacts 实时预览", "安全可控的 AI 设计", "出色的写作与推理能力"],
@@ -142,7 +142,7 @@ const TOOLS_DATA = [
     tags: ["AI编程", "编辑器", "代码生成"],
     url: "https://cursor.sh/",
     icon: "https://icon.horse/icon/cursor.sh",
-    featured: true,
+    featured: false,
     content: {
       intro: "Cursor 是一款 AI 原生代码编辑器，基于 VS Code 构建并深度集成 Claude、GPT-4 等模型。支持自然语言生成代码、智能重构、错误修复、代码解释，被誉为开发者必备的 AI 编程神器。",
       features: ["Cmd+K 自然语言生成代码", "Cmd+L 代码解释与问答", "智能重构与 Bug 修复", "多模型支持 (Claude/GPT)"],
@@ -169,7 +169,7 @@ const TOOLS_DATA = [
     tags: ["AI编程", "代码补全", "IDE插件"],
     url: "https://github.com/features/copilot",
     icon: "https://icon.horse/icon/github.com",
-    featured: true,
+    featured: false,
     content: {
       intro: "GitHub Copilot 是最成熟的 AI 编程助手之一，深度集成 VS Code、JetBrains 等 IDE。支持实时代码补全、函数生成、单元测试编写，订阅制 $10/月，学生和开源维护者可免费使用。",
       features: ["实时代码补全", "多 IDE 支持", "单元测试生成", "代码解释与文档"],
@@ -195,7 +195,7 @@ const TOOLS_DATA = [
     tags: ["AI编程", "免费", "代码补全"],
     url: "https://codeium.com/",
     icon: "https://icon.horse/icon/codeium.com",
-    featured: false,
+    featured: true,
     content: {
       intro: "Codeium 是免费的 AI 代码补全工具，支持 70+ 编程语言，可集成 VS Code、JetBrains、Vim 等主流编辑器。基础补全功能永久免费，是 Copilot 的优秀免费替代方案。",
       features: ["支持 70+ 编程语言", "多 IDE 插件支持", "基础功能永久免费", "代码解释与重构"],
@@ -243,7 +243,7 @@ const TOOLS_DATA = [
     tags: ["AI绘画", "图像生成", "设计"],
     url: "https://www.midjourney.com/",
     icon: "https://icon.horse/icon/www.midjourney.com",
-    featured: true,
+    featured: false,
     content: {
       intro: "Midjourney 是目前效果最好的 AI 图像生成工具之一，通过文字描述即可生成高质量艺术图像。支持多种艺术风格，生成效果惊艳，被广泛应用于概念设计、插画创作、素材生成等场景。",
       features: ["顶级图像生成质量", "多种艺术风格", "高清放大与变体", "局部重绘功能"],
@@ -338,7 +338,7 @@ const TOOLS_DATA = [
     tags: ["AI办公", "PPT生成", "演示"],
     url: "https://gamma.app/",
     icon: "https://icon.horse/icon/gamma.app",
-    featured: true,
+    featured: false,
     content: {
       intro: "Gamma 是 AI 驱动的演示文稿工具，输入主题即可自动生成完整的 PPT。支持智能排版、图表生成、在线协作，大幅提升演示文稿制作效率，是职场必备的 AI 办公工具。",
       features: ["一句话生成完整 PPT", "智能排版与设计", "图表自动生成", "在线协作与演示"],
@@ -388,7 +388,7 @@ const TOOLS_DATA = [
     tags: ["AI搜索", "研究", "联网"],
     url: "https://www.perplexity.ai/",
     icon: "https://icon.horse/icon/www.perplexity.ai",
-    featured: true,
+    featured: false,
     content: {
       intro: "Perplexity 是 AI 驱动的搜索引擎，结合大语言模型与实时联网搜索。提供带引用来源的精准答案，支持追问和多轮对话，是学术研究、信息收集的利器。",
       features: ["实时联网搜索", "答案带引用来源", "多轮追问对话", "专业搜索模式 (Pro)"],
@@ -505,7 +505,7 @@ const TOOLS_DATA = [
     tags: ["AI开发", "开源", "企业级"],
     url: "https://dify.ai/",
     icon: "https://icon.horse/icon/dify.ai",
-    featured: false,
+    featured: true,
     content: {
       intro: "Dify 是开源的大语言模型应用开发平台，提供可视化界面构建 AI 应用。支持多模型接入、知识库管理、工作流编排，适合企业级 AI 应用开发和私有化部署。",
       features: ["开源可自托管", "多模型支持", "可视化工作流", "企业级权限管理"],
@@ -1228,7 +1228,7 @@ const TOOLS_DATA = [
     url: "tools/base64/",
     legacyUrl: "pages/tools/base64.html",
     icon: "🔄",
-    featured: false,
+    featured: true,
     content: null,
   },
   {
@@ -1241,7 +1241,7 @@ const TOOLS_DATA = [
     url: "tools/jwt/",
     legacyUrl: "pages/tools/jwt.html",
     icon: "🔐",
-    featured: false,
+    featured: true,
     content: null,
   },
   {
@@ -1254,7 +1254,7 @@ const TOOLS_DATA = [
     url: "tools/sql-formatter/",
     legacyUrl: "pages/tools/sql-formatter.html",
     icon: "🗃️",
-    featured: false,
+    featured: true,
     content: null,
   },
   {
@@ -1267,7 +1267,7 @@ const TOOLS_DATA = [
     url: "tools/regex/",
     legacyUrl: "pages/tools/regex.html",
     icon: "🔍",
-    featured: false,
+    featured: true,
     content: null,
   },
 
@@ -1281,7 +1281,7 @@ const TOOLS_DATA = [
     tags: ["Windows", "Office", "激活", "KMS"],
     url: "pages/kms.html",
     icon: "💻",
-    featured: true,
+    featured: false,
     hidden: false,
     content: null,
   },
@@ -1295,7 +1295,7 @@ const TOOLS_DATA = [
     url: "tools/jrebel/",
     legacyUrl: "pages/jrebel.html",
     icon: "JR",
-    featured: true,
+    featured: false,
     content: null,
   },
 ];

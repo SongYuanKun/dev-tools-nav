@@ -371,7 +371,11 @@
         section.innerHTML = "";
         const wrapper = document.createElement("div");
         wrapper.className = "detail-section";
-        wrapper.innerHTML = "<h2>同类工具推荐</h2>";
+        var heading = "<h2>同类工具推荐</h2>";
+        if (tool.category === "ai") {
+          heading += '<p style="margin:8px 0 0;color:var(--text-secondary);font-size:14px;">外链对话工具人人皆知，更系统的选型请看 <a href="../pages/ai/compare.html" style="color:var(--color-primary);">AI 工具横评</a> 与 <a href="../pages/ai/index.html" style="color:var(--color-primary);">AI 专题</a>。</p>';
+        }
+        wrapper.innerHTML = heading;
         wrapper.appendChild(grid);
         section.appendChild(wrapper);
       }

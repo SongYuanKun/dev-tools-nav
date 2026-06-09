@@ -1,6 +1,6 @@
 # Koen's 工具箱 · 开发者工具导航站
 
-> 精选 **60+** 款开发 & 建站管理常用工具，纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以页面实际展示为准。
+> 精选 **70** 款开发 & 建站管理常用工具，纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。
 
 ## 预览
 
@@ -12,7 +12,7 @@
 
 ## 功能特性
 
-- **分类筛选**：AI 工具 / 开发工具 / 建站工具 / 安全工具 / 运维监控 / 设计资源
+- **分类筛选**：AI 工具 / 开发工具 / 建站工具 / 安全工具 / 运维监控 / 设计资源 / 在线工具
 - **实时搜索**：按名称、描述、标签即时过滤
 - **暗色模式**：跟随系统偏好 + 手动切换，偏好持久化
 - **工具详情页**：每个工具独立详情页，含同类推荐
@@ -37,17 +37,19 @@
 
 ## 工具分类
 
+与 `data/tools.js` 中 `CATEGORIES` 一致（不含「全部」；「激活工具」为彩蛋隐藏 Tab，见下文）：
+
 | 分类 | 数量 | 代表工具 |
 |------|------|----------|
-| 🤖 AI 工具 | 20 | DeepSeek、ChatGPT、Claude、Cursor、Midjourney |
+| 🤖 AI 工具 | 21 | Dify、Codeium 等（外链索引；选型见 [AI 专题](pages/ai/index.html)） |
 | 🛠️ 开发工具 | 11 | VS Code、GitHub、Postman、CodeSandbox |
 | 🌐 建站工具 | 8 | Vercel、Netlify、Cloudflare、Porkbun |
 | 🔒 安全工具 | 6 | SSL Labs、VirusTotal、Bitwarden |
 | 📊 运维监控 | 7 | UptimeRobot、Grafana、Sentry |
 | 🎨 设计资源 | 7 | Figma、Iconify、Coolors、Google Fonts |
-| 🔑 激活工具 | 2 | KMS 激活、JRebel 激活 |
+| 🧰 在线工具 | 10 | **JSON 格式化**、JWT 解码、时间戳、Cron、SQL、正则（自研，站内最高访问） |
 
-> 上表为概览，条目数会随 `data/tools.js` 更新而变化。
+> 合计 **70** 条。KMS / JRebel 现收录在「在线工具」；彩蛋解锁后会出现隐藏的「🔑 激活工具」分类 Tab（`CATEGORIES` 中 `hidden: true`）。
 
 ## 文件结构
 
@@ -143,9 +145,9 @@ dev-tools-nav/
 
 **下一阶段产品 TODO（待实现）**
 
-- [ ] **任务入口区**：首页 Hero 下增加“我想完成什么”快捷入口，将用户意图直接路由到 JSON 格式化、JWT 解码、Cron 生成、AI 工具选择、个人建站等高频任务。
+- [x] **任务入口区**：首页「我想完成什么」已上线（JSON / JWT / AI 横评 / 开源雷达），依据 [Umami 数据洞察](docs/analytics-insights.md)。
 - [x] **在线工具互链**：各工具页底部「相关在线工具」区已上线（JSON ↔ SQL/正则/时间戳等）。
-- [ ] **数据驱动迭代**：基于 Umami 访问数据定期查看高访问/高跳出页面，再决定下一批内容与工具优化优先级。
+- [x] **数据驱动迭代**：首份 [Umami 数据洞察](docs/analytics-insights.md) 已建立；JSON 工具优先、头部 AI 外链降权已落地。
 
 **刻意不做（备忘）**
 
@@ -244,7 +246,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 🎮 彩蛋系统
 
-"激活工具"分类被隐藏，需要通过有趣的解锁方式才能发现！
+导航栏中的「🔑 激活工具」分类 Tab 默认隐藏，需要通过有趣的解锁方式才会出现（KMS / JRebel 等入口在「在线工具」分类中）。
 
 ### 解锁方式
 
