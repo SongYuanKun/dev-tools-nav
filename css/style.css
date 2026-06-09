@@ -2676,6 +2676,83 @@ img {
   }
 }
 
+/* 解锁后激活工具入口（v2 首页等无工具网格的页面） */
+.secret-activate-panel {
+  padding: 28px 20px;
+  border-top: 1px solid var(--border-color);
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.06), transparent);
+}
+
+.secret-activate-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.secret-activate-label {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+}
+
+.secret-activate-links {
+  display: grid;
+  gap: 12px;
+}
+
+.secret-activate-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.secret-activate-link:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.secret-activate-link strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.secret-activate-link small {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.secret-activate-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.tool-index-card.secret-activate-card {
+  border-color: rgba(245, 158, 11, 0.35);
+  animation: secretCardIn 0.45s ease;
+}
+
+@keyframes secretCardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* 撒花效果 */
 .secret-confetti {
   position: fixed;

@@ -590,8 +590,10 @@
     document.head.appendChild(s);
   }
 
-  // 先加载中文描述，再加载事件委托
+  // 先加载中文描述，再加载事件委托，最后加载全站彩蛋
   loadScript(root + 'umami-labels.js', function () {
-    loadScript(root + 'umami-helper.js');
+    loadScript(root + 'umami-helper.js', function () {
+      loadScript(root + 'easter-egg.js');
+    });
   });
 })();

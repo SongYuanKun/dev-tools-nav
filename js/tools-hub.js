@@ -5,28 +5,45 @@
     return div.innerHTML;
   }
 
+  function mapToolRecord(t) {
+    var legacyUrl = t.legacyUrl || t.legacy_url || "";
+    var slug = t.slug;
+    if (!slug && legacyUrl) {
+      var m = legacyUrl.match(/\/([^/]+)\.html$/);
+      slug = m ? m[1] : "";
+    }
+    return {
+      id: String(t.id || slug || ""),
+      slug: String(slug || "").trim(),
+      name: String(t.name || ""),
+      description: String(t.description || ""),
+      tags: Array.isArray(t.tags) ? t.tags : [],
+      icon: t.icon || "🧰",
+      featured: !!t.featured,
+      legacyUrl: String(legacyUrl || ""),
+      categoryId: t.category === "activate" ? "activate" : null,
+    };
+  }
+
+  function isSecretUnlocked() {
+    return !!(window.EasterEgg && window.EasterEgg.isUnlocked());
+  }
+
   function getOnlineTools() {
     if (typeof TOOLS_DATA === "undefined") return [];
     return TOOLS_DATA
-      .filter(function (t) { return t && t.category === "online-tools" && !t.hidden && t.id !== "online-tools-hub"; })
-      .map(function (t) {
-        var legacyUrl = t.legacyUrl || t.legacy_url || "";
-        var slug = t.slug;
-        if (!slug && legacyUrl) {
-          var m = legacyUrl.match(/\/([^/]+)\.html$/);
-          slug = m ? m[1] : "";
-        }
-        return {
-          id: String(t.id || slug || ""),
-          slug: String(slug || "").trim(),
-          name: String(t.name || ""),
-          description: String(t.description || ""),
-          tags: Array.isArray(t.tags) ? t.tags : [],
-          icon: t.icon || "🧰",
-          featured: !!t.featured,
-          legacyUrl: String(legacyUrl || ""),
-        };
+      .filter(function (t) {
+        return t && t.category === "online-tools" && !t.hidden && t.id !== "online-tools-hub";
       })
+      .map(mapToolRecord)
+      .filter(function (t) { return !!t.slug; });
+  }
+
+  function getActivateTools() {
+    if (!isSecretUnlocked() || typeof TOOLS_DATA === "undefined") return [];
+    return TOOLS_DATA
+      .filter(function (t) { return t && t.category === "activate"; })
+      .map(mapToolRecord)
       .filter(function (t) { return !!t.slug; });
   }
 
@@ -40,6 +57,7 @@
   ];
 
   function inferCategoryId(tool) {
+    if (tool.categoryId === "activate") return "activate";
     var slug = tool.slug;
     if (slug === "timestamp" || slug === "cron") return "time";
     if (slug === "json" || slug === "sql-formatter") return "data";
@@ -47,6 +65,14 @@
     if (slug === "regex") return "regex";
     if (slug === "base64") return "encode";
     return "data";
+  }
+
+  function getCategoryDefs() {
+    var defs = CATEGORY_DEFS.slice();
+    if (isSecretUnlocked()) {
+      defs.push({ id: "activate", name: "激活工具" });
+    }
+    return defs;
   }
 
   function buildTagIndex(tools) {
@@ -78,7 +104,7 @@
   }
 
   function render() {
-    var tools = getOnlineTools().map(function (t) {
+    var tools = getOnlineTools().concat(getActivateTools()).map(function (t) {
       t.categoryId = inferCategoryId(t);
       return t;
     });
@@ -141,7 +167,7 @@
     }
 
     function drawCategoryChips() {
-      categoryWrap.innerHTML = CATEGORY_DEFS.map(function (c) {
+      categoryWrap.innerHTML = getCategoryDefs().map(function (c) {
         var active = c.id === state.categoryId ? " is-active" : "";
         return '<button type="button" class="tools-chip' + active + '" data-category="' + escapeHtml(c.id) + '">' + escapeHtml(c.name) + '</button>';
       }).join("");
@@ -355,6 +381,15 @@
           draw();
         }
       }
+    });
+
+    window.addEventListener("easterEggUnlocked", function () {
+      tools = getOnlineTools().concat(getActivateTools()).map(function (t) {
+        t.categoryId = inferCategoryId(t);
+        return t;
+      });
+      drawCategoryChips();
+      draw();
     });
   }
 

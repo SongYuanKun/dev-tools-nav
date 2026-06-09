@@ -128,241 +128,36 @@ const ThemeManager = {
 };
 
 // ============================================================
-// 彩蛋系统 - 激活工具分类解锁
+// 彩蛋联动 - 逻辑在 js/easter-egg.js，此处仅处理旧版分类栏
 // ============================================================
-const EasterEgg = {
-  SECRET_KEY: "devtools2024", // URL 参数密钥
-  SECRET_CLICKS: 7, // Logo 点击次数
-  CLICK_TIMEOUT: 3000, // 点击超时时间(ms)
-  STORAGE_KEY: "devtools-secret-unlocked",
+function revealActivateCategoryTab() {
+  if (typeof CATEGORIES === "undefined") return;
+  const activateCat = CATEGORIES.find((c) => c.id === "activate");
+  if (!activateCat) return;
 
-  // 检查是否已解锁
-  isUnlocked() {
-    return SafeStorage.get(this.STORAGE_KEY) === "true" || state.secretUnlocked;
-  },
+  const container = document.getElementById("categoryBar");
+  if (!container) return;
+  if (container.querySelector('[data-category="activate"]')) return;
 
-  // 解锁彩蛋
-  unlock() {
+  const btn = document.createElement("button");
+  btn.className = "category-btn secret-category";
+  btn.dataset.category = "activate";
+  btn.innerHTML = `<span>${activateCat.icon}</span><span>${activateCat.label}</span>`;
+  btn.addEventListener("click", () => {
+    state.currentCategory = "activate";
+    activateCategoryBtn(btn);
+    renderTools();
+  });
+  container.appendChild(btn);
+  setTimeout(() => btn.classList.add("animate-in"), 100);
+}
+
+function syncSecretUnlockState() {
+  if (window.EasterEgg?.isUnlocked()) {
     state.secretUnlocked = true;
-    SafeStorage.set(this.STORAGE_KEY, "true");
-    this.showToast("恭喜，发现隐藏分类！");
-    this.revealSecretCategory();
-    this.addSecretConfetti();
-    window.umamiTrack?.("easter_egg_unlocked");
-  },
-
-  // 显示提示（完整版，用于解锁成功等场景）
-  showToast(message) {
-    const existing = document.querySelector(".secret-toast");
-    if (existing) existing.remove();
-
-    const toast = document.createElement("div");
-    toast.className = "secret-toast";
-    toast.innerHTML = `
-      <div class="secret-toast-content">
-        <span class="secret-toast-icon">!</span>
-        <span class="secret-toast-message">${message}</span>
-      </div>
-    `;
-    document.body.appendChild(toast);
-
-    requestAnimationFrame(() => {
-      toast.classList.add("show");
-    });
-
-    setTimeout(() => {
-      toast.classList.remove("show");
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
-  },
-
-  // 轻量级提示（用于点击计数，避免卡顿）
-  showLightToast(message, existingEl) {
-    // 复用已有元素，减少 DOM 操作
-    if (existingEl && document.body.contains(existingEl)) {
-      const msgEl = existingEl.querySelector(".secret-toast-message");
-      if (msgEl) {
-        msgEl.textContent = message;
-        return existingEl;
-      }
-    }
-
-    // 首次创建
-    if (existingEl) existingEl.remove();
-    
-    const toast = document.createElement("div");
-    toast.className = "secret-toast light";
-    toast.innerHTML = `<span class="secret-toast-message">${message}</span>`;
-    document.body.appendChild(toast);
-
-    requestAnimationFrame(() => {
-      toast.classList.add("show");
-    });
-
-    return toast;
-  },
-
-  // 揭示隐藏分类
-  revealSecretCategory() {
-    if (typeof CATEGORIES === "undefined") return;
-    const activateCat = CATEGORIES.find(c => c.id === "activate");
-    if (!activateCat) return;
-
-    const container = document.getElementById("categoryBar");
-    if (!container) return;
-
-    // 检查是否已存在
-    if (container.querySelector(`[data-category="activate"]`)) return;
-
-    const btn = document.createElement("button");
-    btn.className = "category-btn secret-category";
-    btn.dataset.category = "activate";
-    btn.innerHTML = `<span>${activateCat.icon}</span><span>${activateCat.label}</span>`;
-    btn.addEventListener("click", () => {
-      state.currentCategory = "activate";
-      activateCategoryBtn(btn);
-      renderTools();
-    });
-
-    container.appendChild(btn);
-
-    // 添加动画效果
-    setTimeout(() => {
-      btn.classList.add("animate-in");
-    }, 100);
-  },
-
-  // 撒花效果
-  addSecretConfetti() {
-    const colors = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"];
-    for (let i = 0; i < 50; i++) {
-      const confetti = document.createElement("div");
-      confetti.className = "secret-confetti";
-      confetti.style.left = Math.random() * 100 + "vw";
-      confetti.style.top = "-20px";
-      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      confetti.style.animationDelay = Math.random() * 2 + "s";
-      confetti.style.animationDuration = (2 + Math.random() * 2) + "s";
-      document.body.appendChild(confetti);
-
-      setTimeout(() => confetti.remove(), 5000);
-    }
-  },
-
-  // 初始化彩蛋系统
-  init() {
-    // 1. 检查 URL 参数
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get(this.SECRET_KEY) === "unlock") {
-      this.unlock();
-      // 清理 URL 参数
-      window.history.replaceState({}, document.title, window.location.pathname);
-      return;
-    }
-
-    // 2. 检查已解锁状态
-    if (this.isUnlocked()) {
-      this.revealSecretCategory();
-    }
-
-    // 3. Logo 点击序列（兼容单击回首页）
-    const logoClick = { timer: null, navTimer: null, count: 0, toast: null };
-    const NAV_DELAY = 300;
-
-    const logo = document.querySelector(".logo");
-    if (logo) {
-      logo.addEventListener("click", (e) => {
-        e.preventDefault();
-        clearTimeout(logoClick.timer);
-        clearTimeout(logoClick.navTimer);
-        logoClick.count++;
-
-        if (logoClick.count === 1) {
-          logoClick.navTimer = setTimeout(() => {
-            logoClick.count = 0;
-            window.location.href = logo.href;
-          }, NAV_DELAY);
-          return;
-        }
-
-        const remaining = this.SECRET_CLICKS - logoClick.count;
-        const messages = { 2: "继续点击...", 4: `还需要 ${remaining} 次...`, 6: "最后一次点击" };
-        if (messages[logoClick.count]) {
-          logoClick.toast = this.showLightToast(messages[logoClick.count], logoClick.toast);
-        }
-
-        if (logoClick.count >= this.SECRET_CLICKS) {
-          logoClick.count = 0;
-          if (logoClick.toast) { logoClick.toast.remove(); logoClick.toast = null; }
-          this.unlock();
-          return;
-        }
-
-        logoClick.timer = setTimeout(() => {
-          logoClick.count = 0;
-          if (logoClick.toast) { logoClick.toast.remove(); logoClick.toast = null; }
-        }, 1500);
-      });
-    }
-
-    // 4. 搜索框密钥
-    const searchInput = getDom("searchInput");
-    if (searchInput) {
-      searchInput.addEventListener("keydown", (e) => {
-        // Ctrl+Shift+A 或 Cmd+Shift+A
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "A") {
-          e.preventDefault();
-          this.unlock();
-        }
-      });
-    }
-
-    // 5. Konami 代码
-    const konamiSequence = [
-      "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-      "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
-      "b", "a"
-    ];
-    let konamiIndex = 0;
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === konamiSequence[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiSequence.length) {
-          this.unlock();
-          konamiIndex = 0;
-        }
-      } else {
-        konamiIndex = 0;
-      }
-    });
-
-    // 6. 页脚神秘问号
-    const footerHint = document.querySelector(".footer-secret-hint");
-    if (footerHint) {
-      let hintClickCount = 0;
-      footerHint.addEventListener("click", () => {
-        hintClickCount++;
-        const hints = [
-          "秘密藏在暗处...",
-          "有时候，答案就在眼前...",
-          "尝试点击 Logo？",
-          "还记得 Konami 代码吗？",
-          "URL 参数也能解锁秘密...",
-          "Ctrl+Shift+A 可能会有惊喜...",
-          "再点一次试试？"
-        ];
-
-        if (hintClickCount < hints.length) {
-          this.showToast(hints[hintClickCount - 1]);
-        } else {
-          this.unlock();
-          hintClickCount = 0;
-        }
-      });
-    }
-  },
-};
+    revealActivateCategoryTab();
+  }
+}
 
 // ============================================================
 // 分类筛选
@@ -1022,7 +817,11 @@ document.addEventListener("DOMContentLoaded", () => {
   initImageFallbacks();
   initNavMenu();
   initKeyboard();
-  EasterEgg.init();
+  window.EasterEgg?.registerOnUnlock(() => {
+    state.secretUnlocked = true;
+    revealActivateCategoryTab();
+  });
+  syncSecretUnlockState();
   initSidePanel();
 });
 
