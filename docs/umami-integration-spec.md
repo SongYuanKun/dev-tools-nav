@@ -408,18 +408,27 @@
 | 切换单位 | event | `unit_switch` | — |
 | 图表交互 | event | `chart_interact` | — |
 
-**dev-tools-nav 站点的 Goals：**
+**dev-tools-nav 站点的 Goals（已重建，事件名为中文）：**
 
-| Goal 名称 | 事件类型 | 事件名 | 附加条件 |
-|-----------|---------|--------|---------|
-| 点击工具 | event | `tool_click` | — |
-| 使用搜索 | event | `search_use` | — |
-| 外部链接点击 | event | `external_link` | — |
-| CTA 转化 | event | `cta_action` | — |
-| 工具实际使用 | event | `工具使用` | — |
-| 主题切换 | event | `theme_toggle` | — |
-| 滚动到底 | event | `scroll_depth` | depth = 100 |
-| JS 错误 | event | `js_error` | — |
+| Goal 名称 | 类型 | 匹配值 |
+|-----------|------|--------|
+| 点击工具 | event | `工具点击` |
+| 使用搜索 | event | `搜索使用` |
+| 外部链接点击 | event | `外部链接` |
+| CTA 转化 | event | `按钮点击` |
+| 工具实际使用 | event | `工具使用` |
+| 主题切换 | event | `主题切换` |
+| 滚动深度 | event | `滚动深度` |
+| JS 错误 | event | `JS 错误` |
+| 导航点击 | event | `导航点击` |
+| 分类筛选 | event | `分类筛选` |
+| 收藏切换 | event | `收藏切换` |
+| 彩蛋解锁 | event | `彩蛋解锁` |
+| AI 专题导航 | event | `AI 专题导航` |
+| 访问在线工具 | path | `/tools/` |
+| 使用 JSON 工具 | path | `/tools/json/` |
+
+服务器重建脚本：`scripts/rebuild-umami-goals.sql`（直接更新 Umami PostgreSQL `report` 表）。
 
 ### 4.2 创建 Funnels
 
@@ -429,11 +438,17 @@
 |--------|--------|--------|
 | `/` | `/history` | `/analysis` |
 
-**dev-tools-nav 深度浏览漏斗：**
+**dev-tools-nav 深度浏览漏斗（已更新）：**
 
 | Step 1 | Step 2 | Step 3 |
 |--------|--------|--------|
-| `/` | `/pages/ai` 或 `/pages/tools` | `/tools/*`（任意工具子页面） |
+| `/` | `/pages/ai` | `/tools/` |
+
+**dev-tools-nav 工具使用漏斗（已更新）：**
+
+| Step 1 | Step 2 | Step 3 |
+|--------|--------|--------|
+| `/` | `/tools/` | `/tools/json/` |
 
 ---
 

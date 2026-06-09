@@ -7,6 +7,7 @@
 | [deploy-1panel.md](./deploy-1panel.md) | 同步到 1Panel 静态站（tools.songyuankun.top）的步骤与 rsync 示例 |
 | [umami-integration-spec.md](./umami-integration-spec.md) | Umami 埋点规范（含 `tool_used` 等在线工具事件） |
 | [analytics-insights.md](./analytics-insights.md) | **Umami 数据洞察**：高访问页面、迭代优先级矩阵（按月复盘） |
+| [../scripts/rebuild-umami-goals.sql](../scripts/rebuild-umami-goals.sql) | Umami Goals/Funnels 中文事件名重建 SQL |
 | [sdlc-project-delivery-kit.md](./sdlc-project-delivery-kit.md) | 全流程交付套件：需求调研、Sprint、验收模板（对齐静态站） |
 | [ai-free-tokens-handbook.md](./ai-free-tokens-handbook.md) | AI 免费 Token 手册；**线上正文**见 `pages/blog/ai-free-tokens-handbook.html` |
 | [xiaohongshu-online-tools-welcome.md](./xiaohongshu-online-tools-welcome.md) | 小红书稿：在线工具欢迎帖 + **配图路径**（`assets/screenshot*.png`） |
