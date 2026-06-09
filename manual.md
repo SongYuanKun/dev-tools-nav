@@ -40,7 +40,9 @@ python3 -m http.server 8080
 
 JSON 工具高级面板（页面底部）：结构统计、JSON Path 查询、按 Key 排序。
 
-各工具页支持 URL 参数预填，例如 JSON：`pages/tools/json.html?q=%7B%22a%22%3A1%7D`。
+各工具页支持 URL 参数预填，例如 JSON：`tools/json/?q=%7B%22a%22%3A1%7D`。
+
+Umami 自定义事件在后台以**中文**展示（如「工具使用」「导航点击」），详见 `js/umami-labels.js`。
 
 ## 4. 预览截图
 

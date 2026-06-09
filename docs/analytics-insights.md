@@ -53,8 +53,8 @@ GROUP BY url_path ORDER BY views DESC LIMIT 20;"
 | **P1** | 降权头部 AI 外链精选（ChatGPT/Claude/DeepSeek 等） | 无稀缺性，不应占精选位 |
 | **P1** | 提升在线工具精选（JSON/JWT/SQL/正则/Base64） | 护城河内容 |
 | **P1** | AI 详情页引导至横评专题 | template.html 流量高，避免停在「又一个 ChatGPT 链接」 |
-| **P2** | 统一 JSON 路径（`/tools/json/` vs `/pages/tools/json.html`） | 避免 PV 拆分 |
-| **P2** | 增强 `tool_used` 埋点覆盖 | 目前仅 JSON 部分 action |
+| **P2** | 统一 JSON 路径 | ✅ `pages/tools/json.html` 非 embed 时 302 到 `/tools/json/` |
+| **P2** | 增强 `tool_used` 埋点 + 中文展示 | ✅ 全工具走 `umamiTrack`，Umami 事件名为中文 |
 | **P3** | 时间戳/Cron 工具增强 | PV 个位数，低于 JSON 一个数量级 |
 
 ## 站点定位（数据 + 产品共识）

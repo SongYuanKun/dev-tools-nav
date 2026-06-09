@@ -21,6 +21,6 @@ test("collectStaticUrls excludes blog post template and keeps sorted entries", (
 
 test("collectStaticUrls includes static online tool pages", () => {
   const urls = collectStaticUrls(process.cwd()).map((item) => item.loc);
-  assert.ok(urls.includes("https://tools.songyuankun.top/pages/tools/json.html"));
-  assert.ok(urls.includes("https://tools.songyuankun.top/pages/tools/regex.html"));
+  assert.ok(urls.includes("https://tools.songyuankun.top/tools/json/"));
+  assert.ok(urls.includes("https://tools.songyuankun.top/tools/regex/"));
 });

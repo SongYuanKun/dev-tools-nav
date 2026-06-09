@@ -40,9 +40,11 @@
 | `category_click` | 分类筛选 | 点击分类 Tab/筛选 | `{ category, 描述 }` |
 | `search_use` | 搜索使用 | 使用搜索功能 | `{ query, results, 描述 }` |
 | `external_link` | 外部链接 | 点击外部链接 | `{ url, label, 描述 }` |
-| `tool_used` | 工具使用 | 在线工具内执行操作 | `{ tool, action, 描述 }` |
+| `tool_used` | 工具使用 | 在线工具内执行操作 | `{ 工具, 操作, 描述 }`（中文属性） |
 
-**JSON 工具 `tool_used` 的 `action` 取值**（`js/json-tool.js`）：
+> **Umami 后台展示**：`js/umami-labels.js` 将事件名映射为中文（如 `tool_used` → **工具使用**），属性键亦为中文（`工具`、`操作`、`描述`）。请使用 `window.umamiTrack()` 上报，勿直接 `umami.track('tool_used')`。Goals 需按中文事件名重新配置。
+
+**JSON 工具 `action` 取值**（代码内英文键，`umami-labels.js` 会转为中文「操作」）：
 
 | action | 触发操作 |
 |--------|----------|
@@ -414,7 +416,7 @@
 | 使用搜索 | event | `search_use` | — |
 | 外部链接点击 | event | `external_link` | — |
 | CTA 转化 | event | `cta_action` | — |
-| 工具实际使用 | event | `tool_used` | — |
+| 工具实际使用 | event | `工具使用` | — |
 | 主题切换 | event | `theme_toggle` | — |
 | 滚动到底 | event | `scroll_depth` | depth = 100 |
 | JS 错误 | event | `js_error` | — |

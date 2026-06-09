@@ -461,7 +461,7 @@
         document.getElementById("btnSample").addEventListener("click", function () {
           if (ta) ta.value = SAMPLE_JWT;
           decodeAndRender();
-          window.umami?.track?.("tool_used", { tool: "jwt", action: "decode" });
+          window.umamiTrack?.("tool_used", { tool: "jwt", action: "decode" });
         });
 
         document.getElementById("btnClear").addEventListener("click", function () {

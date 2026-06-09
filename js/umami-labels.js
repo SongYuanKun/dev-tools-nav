@@ -1,15 +1,15 @@
 /**
- * Umami 事件中文描述 — 写入每条事件的 描述 字段，便于后台查看
+ * Umami 事件中文映射 — 事件名与属性均以中文写入 Umami，便于后台阅读
  */
 (function () {
   'use strict';
 
-  // 事件名 → 中文说明
+  // 内部事件键 → Umami 展示用中文事件名
   var EVENT_LABELS = {
     nav_click: '导航点击',
     tool_click: '工具点击',
     theme_toggle: '主题切换',
-    cta_action: 'CTA 按钮',
+    cta_action: '按钮点击',
     category_click: '分类筛选',
     search_use: '搜索使用',
     external_link: '外部链接',
@@ -24,7 +24,7 @@
     favorite_toggle: '收藏切换',
     easter_egg_unlocked: '彩蛋解锁',
     js_error: 'JS 错误',
-    perf_lcp: '页面性能 LCP',
+    perf_lcp: '页面性能',
     scroll_depth: '滚动深度',
     page_exit: '页面离开'
   };
@@ -44,6 +44,7 @@
     regex: '正则表达式',
     cron: 'Cron 表达式',
     jwt: 'JWT 解码',
+    sql: 'SQL 格式化',
     sql_formatter: 'SQL 格式化',
     kms: 'KMS 激活',
     jrebel: 'JRebel 激活'
@@ -53,15 +54,22 @@
     format: '格式化',
     minify: '压缩',
     validate: '校验',
+    repair: '修复',
     encode: '编码',
     decode: '解码',
     replace: '替换',
     parse: '解析',
-    copy: '复制命令',
+    copy: '复制',
+    download: '下载',
+    clear: '清空',
+    verify: '验签',
+    analyze: '分析',
     ts_to_date: '时间戳转日期',
     date_to_ts: '日期转时间戳',
     batch: '批量转换',
-    diff: '时间差计算'
+    diff: '时间差计算',
+    match: '匹配测试',
+    sample: '加载示例'
   };
 
   var CATEGORY_LABELS = {
@@ -72,7 +80,11 @@
     auth: '鉴权安全',
     regex: '正则文本',
     ai: 'AI 工具',
-    hosting: '托管部署',
+    dev: '开发工具',
+    hosting: '建站工具',
+    security: '安全工具',
+    ops: '运维监控',
+    design: '设计资源',
     favorites: '我的收藏',
     recent: '最近访问',
     'online-tools': '在线工具',
@@ -86,82 +98,131 @@
   function buildDesc(name, data) {
     data = data || {};
     var base = EVENT_LABELS[name] || name;
-    var d = data;
 
     if (name === 'cta_action') {
-      return base + '：' + pick(CTA_LABELS, d.action);
+      return base + '：' + pick(CTA_LABELS, data.action);
     }
     if (name === 'tool_click') {
-      var cat = pick(CATEGORY_LABELS, d.category);
-      return base + '：' + (d.tool_name || d.name || '') + (cat ? '（' + cat + '）' : '');
+      var cat = pick(CATEGORY_LABELS, data.category);
+      return base + '：' + (data.tool_name || data.name || '') + (cat ? '（' + cat + '）' : '');
     }
     if (name === 'tool_used') {
-      return base + '：' + pick(TOOL_LABELS, d.tool) + ' - ' + pick(ACTION_LABELS, d.action);
+      return base + '：' + pick(TOOL_LABELS, data.tool) + ' · ' + pick(ACTION_LABELS, data.action);
     }
     if (name === 'search_use') {
-      return base + '：「' + (d.query || '') + '」' + (d.results != null ? '（' + d.results + ' 条结果）' : '');
+      return base + '：「' + (data.query || '') + '」' + (data.results != null ? '（' + data.results + ' 条）' : '');
     }
     if (name === 'category_click' || name === 'blog_category' || name === 'prompt_category') {
-      return base + '：' + (pick(CATEGORY_LABELS, d.category) || d.category);
+      return base + '：' + (pick(CATEGORY_LABELS, data.category) || data.category);
     }
     if (name === 'nav_click') {
-      return base + '：' + (d.label || d.page || '');
+      return base + '：' + (data.label || data.page || '');
     }
     if (name === 'external_link') {
-      return base + '：' + (d.label || d.url || '');
+      return base + '：' + (data.label || data.url || '');
     }
     if (name === 'theme_toggle') {
-      return base + '：' + (d.from || '') + ' → ' + (d.to || '');
+      return base + '：' + (data.from || '') + ' → ' + (data.to || '');
     }
     if (name === 'favorite_toggle') {
-      return base + '：' + (d.tool_name || d.tool_id || '') + '（' + (d.action === 'add' ? '收藏' : '取消') + '）';
+      return base + '：' + (data.tool_name || data.tool_id || '') + '（' + (data.action === 'add' ? '收藏' : '取消') + '）';
     }
     if (name === 'article_click') {
-      return base + '：' + (d.title || '');
+      return base + '：' + (data.title || '');
     }
     if (name === 'ai_path_click') {
-      return base + '：' + (d.step || '');
+      return base + '：' + (data.step || '');
     }
     if (name === 'ai_nav_click') {
-      return base + '：' + (d.label || '');
+      return base + '：' + (data.label || '');
     }
     if (name === 'ai_filter') {
-      return base + '：' + (d.scene || '');
+      return base + '：' + (data.scene || '');
     }
     if (name === 'copy_click') {
-      return base + '：' + (d.label || d.page || '');
+      return base + '：' + (data.label || data.page || '');
     }
     if (name === 'js_error') {
-      return base + '：' + (d.message || '');
-    }
-    if (name === 'perf_lcp') {
-      return base + '：' + (d.value != null ? d.value + 'ms' : '');
+      return base + '：' + (data.message || '');
     }
     if (name === 'scroll_depth') {
-      return base + '：' + (d.depth != null ? d.depth + '%' : '');
+      return base + '：' + (data.depth != null ? data.depth + '%' : '');
     }
     if (name === 'page_exit') {
-      return base + '：停留 ' + (d.duration != null ? Math.round(d.duration / 1000) + 's' : '');
+      return base + '：停留 ' + (data.duration != null ? Math.round(data.duration / 1000) + ' 秒' : '');
     }
 
     return base;
   }
 
-  function enrich(name, data) {
-    var props = Object.assign({}, data || {});
-    if (!props.描述) {
-      props.描述 = buildDesc(name, props);
+  // 属性键也改为中文，Umami Properties 面板可直接读
+  function toChineseProps(name, data) {
+    data = data || {};
+    var cn = { 描述: buildDesc(name, data) };
+
+    if (name === 'tool_used') {
+      cn['工具'] = pick(TOOL_LABELS, data.tool);
+      cn['操作'] = pick(ACTION_LABELS, data.action);
+    } else if (name === 'tool_click') {
+      cn['工具'] = data.tool_name || data.name || '';
+      cn['分类'] = pick(CATEGORY_LABELS, data.category);
+    } else if (name === 'category_click' || name === 'blog_category' || name === 'prompt_category') {
+      cn['分类'] = pick(CATEGORY_LABELS, data.category) || data.category || '';
+    } else if (name === 'search_use') {
+      cn['关键词'] = data.query || '';
+      if (data.results != null) cn['结果数'] = data.results;
+    } else if (name === 'nav_click') {
+      cn['链接'] = data.page || '';
+      cn['文字'] = data.label || '';
+    } else if (name === 'external_link') {
+      cn['地址'] = data.url || '';
+      cn['文字'] = data.label || '';
+    } else if (name === 'cta_action') {
+      cn['动作'] = pick(CTA_LABELS, data.action);
+      cn['目标'] = data.target || '';
+    } else if (name === 'theme_toggle') {
+      cn['从'] = data.from || '';
+      cn['到'] = data.to || '';
+    } else if (name === 'favorite_toggle') {
+      cn['工具'] = data.tool_name || data.tool_id || '';
+      cn['动作'] = data.action === 'add' ? '收藏' : '取消收藏';
+    } else if (name === 'article_click') {
+      cn['标题'] = data.title || '';
+    } else if (name === 'ai_nav_click' || name === 'ai_path_click') {
+      cn['标签'] = data.label || data.step || '';
+      cn['页面'] = data.page || '';
+    } else if (name === 'ai_filter') {
+      cn['场景'] = data.scene || '';
+    } else if (name === 'js_error') {
+      cn['错误'] = data.message || '';
+      cn['来源'] = data.source || '';
+      if (data.line) cn['行号'] = data.line;
+    } else if (name === 'scroll_depth') {
+      cn['深度'] = data.depth;
+    } else if (name === 'page_exit') {
+      cn['停留毫秒'] = data.duration;
+    } else if (name === 'copy_click') {
+      cn['页面'] = data.page || '';
+      cn['按钮'] = data.label || '';
     }
-    return props;
+
+    return cn;
   }
 
-  window.umamiEnrich = enrich;
+  function displayName(name) {
+    return EVENT_LABELS[name] || name;
+  }
+
+  window.umamiEnrich = function (name, data) {
+    return toChineseProps(name, data);
+  };
+
   window.umamiTrack = function (name, data) {
     try {
+      var cnName = displayName(name);
+      var props = toChineseProps(name, data);
       if (typeof umami !== 'undefined' && typeof umami._rawTrack === 'function') {
-        umami._rawTrack(name, enrich(name, data));
-      } else if (typeof umami !== 'undefined' && typeof umami.track === 'function') {
-        umami.track(name, enrich(name, data));
+        umami._rawTrack(cnName, props);
       }
     } catch (_) {}
   };

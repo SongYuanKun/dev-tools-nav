@@ -365,6 +365,19 @@
   }
 
   function sendEvent(name, data) {
+    // 已由 umamiTrack 中文化（含 描述 字段）
+    if (data && data.描述) {
+      var ready = basePayload();
+      ready.name = name;
+      ready.data = data;
+      send(ready, "event");
+      return;
+    }
+    // 优先走中文事件名映射
+    if (typeof window.umamiTrack === "function") {
+      window.umamiTrack(name, data);
+      return;
+    }
     var props = data;
     if (window.umamiEnrich) props = window.umamiEnrich(name, data);
     var payload = basePayload();

@@ -25,7 +25,7 @@
 
 | 工具 | 路径 | 亮点 |
 |------|------|------|
-| **JSON 格式化** | `pages/tools/json.html` | 实时校验、行号定位、树形视图、宽松解析（注释/尾逗号）、修复/压缩、JSON Path 查询 |
+| **JSON 格式化** | `tools/json/` | 实时校验、行号定位、树形视图、宽松解析（注释/尾逗号）、修复/压缩、JSON Path 查询 |
 | 时间戳转换 | `pages/tools/timestamp.html` | 秒/毫秒、多时区 |
 | Cron 生成器 | `pages/tools/cron.html` | 表达式解析与下次执行时间 |
 | Base64 | `pages/tools/base64.html` | 编解码 + SHA 摘要 |

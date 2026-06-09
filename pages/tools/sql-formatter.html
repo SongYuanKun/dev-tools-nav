@@ -497,7 +497,7 @@
         var result = formatSQL(sql, opts);
         setOutput(result);
         setStatus("ok", "格式化完成。");
-        window.umami?.track?.("tool_used", { tool: "sql_formatter", action: "format" });
+        window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "format" });
       });
 
       document.getElementById("btnMinify").addEventListener("click", function () {
@@ -506,6 +506,7 @@
         var result = minifySQL(sql);
         setOutput(result);
         setStatus("ok", "已压缩为单行。");
+        window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "minify" });
       });
 
       document.getElementById("btnCopy").addEventListener("click", function () {

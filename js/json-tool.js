@@ -335,7 +335,7 @@
       var pretty = stringify(r.data, prefs);
       setInput(pretty);
       setStatus("ok", "已格式化。");
-      window.umami?.track?.("tool_used", { tool: "json", action: "format" });
+      window.umamiTrack?.("tool_used", { tool: "json", action: "format" });
     }
 
     function doMinify() {
@@ -351,7 +351,7 @@
       }
       setInput(JSON.stringify(r.data));
       setStatus("ok", "已压缩为一行。");
-      window.umami?.track?.("tool_used", { tool: "json", action: "minify" });
+      window.umamiTrack?.("tool_used", { tool: "json", action: "minify" });
     }
 
     function doRepair() {
@@ -364,7 +364,7 @@
       } else {
         setStatus("info", "未发现可自动修复的常见问题。");
       }
-      window.umami?.track?.("tool_used", { tool: "json", action: "repair" });
+      window.umamiTrack?.("tool_used", { tool: "json", action: "repair" });
     }
 
     function doCopy() {
@@ -436,7 +436,7 @@
     document.getElementById("btnRepair")?.addEventListener("click", doRepair);
     document.getElementById("btnValidate")?.addEventListener("click", function () {
       validateAndMaybeFormat(false);
-      window.umami?.track?.("tool_used", { tool: "json", action: "validate" });
+      window.umamiTrack?.("tool_used", { tool: "json", action: "validate" });
     });
     document.getElementById("btnCopy")?.addEventListener("click", doCopy);
     document.getElementById("btnDownload")?.addEventListener("click", doDownload);

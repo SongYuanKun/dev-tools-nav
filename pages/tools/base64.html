@@ -507,8 +507,8 @@
         });
       });
 
-      document.getElementById("btnEncode").addEventListener("click", function () { runEncode(); window.umami?.track?.("tool_used", { tool: "base64", action: "encode" }); });
-      document.getElementById("btnDecode").addEventListener("click", function () { runDecode(); window.umami?.track?.("tool_used", { tool: "base64", action: "decode" }); });
+      document.getElementById("btnEncode").addEventListener("click", function () { runEncode(); window.umamiTrack?.("tool_used", { tool: "base64", action: "encode" }); });
+      document.getElementById("btnDecode").addEventListener("click", function () { runDecode(); window.umamiTrack?.("tool_used", { tool: "base64", action: "decode" }); });
       document.getElementById("btnSwap").addEventListener("click", swapIo);
       document.getElementById("btnCopy").addEventListener("click", copyOutput);
       document.getElementById("btnClear").addEventListener("click", clearAll);

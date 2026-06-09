@@ -654,7 +654,7 @@
         }
         showError($("ts2dateError"), "");
         renderTimestamp(parsed.date, parsed.unit);
-        window.umami?.track?.("tool_used", { tool: "timestamp", action: "ts_to_date" });
+        window.umamiTrack?.("tool_used", { tool: "timestamp", action: "ts_to_date" });
       }
 
       function readDateInput() {
@@ -680,7 +680,7 @@
         setText("outUs", String(ms * 1000));
         setText("outNs", String(ms * 1000000));
         $("date2tsOut").style.display = "block";
-        window.umami?.track?.("tool_used", { tool: "timestamp", action: "date_to_ts" });
+        window.umamiTrack?.("tool_used", { tool: "timestamp", action: "date_to_ts" });
       }
 
       function startOfWeekMonday(d) {
@@ -712,7 +712,7 @@
         $("batchCsv").textContent = csv.join("\n");
         $("batchTableWrap").style.display = rows.length ? "block" : "none";
         $("batchCsv").style.display = rows.length ? "block" : "none";
-        window.umami?.track?.("tool_used", { tool: "timestamp", action: "batch" });
+        window.umamiTrack?.("tool_used", { tool: "timestamp", action: "batch" });
       }
 
       function runDiff() {
@@ -736,7 +736,7 @@
           "毫秒差：" + diff + "\n" +
           "秒差：" + Math.trunc(diff / 1000);
         $("diffOut").style.display = "block";
-        window.umami?.track?.("tool_used", { tool: "timestamp", action: "diff" });
+        window.umamiTrack?.("tool_used", { tool: "timestamp", action: "diff" });
       }
 
       function escapeHtml(s) {

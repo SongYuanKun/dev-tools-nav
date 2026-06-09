@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+  <script>
+    // 非嵌入模式统一跳转到 /tools/json/，避免 PV 拆分到两个 URL
+    (function () {
+      if (new URLSearchParams(location.search).get("embed") === "1") return;
+      var q = location.search || "";
+      location.replace("../../tools/json/" + q);
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
@@ -10,13 +18,13 @@
   <meta property="og:title" content="在线 JSON 格式化工具 - 实时校验与树形视图 | Koen的工具箱" />
   <meta property="og:description" content="实时 JSON 校验、格式化、树形浏览，支持注释与尾逗号修复，行号定位错误，本地处理不上传。" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://tools.songyuankun.top/pages/tools/json.html" />
+  <meta property="og:url" content="https://tools.songyuankun.top/tools/json/" />
   <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="在线 JSON 格式化工具 - 实时校验与树形视图 | Koen的工具箱" />
   <meta name="twitter:description" content="实时 JSON 校验、格式化、树形浏览，支持注释与尾逗号修复。" />
   <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
-  <link rel="canonical" href="https://tools.songyuankun.top/pages/tools/json.html" />
+  <link rel="canonical" href="https://tools.songyuankun.top/tools/json/" />
   <title>在线 JSON 格式化工具 - 实时校验与树形视图 | Koen的工具箱</title>
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../css/style.css" />
@@ -35,7 +43,7 @@
         "priceCurrency": "CNY"
       },
       "description": "免费在线 JSON 格式化、压缩与语法校验，实时错误定位、树形视图、注释尾逗号容错，本地处理不上传。",
-      "url": "https://tools.songyuankun.top/pages/tools/json.html",
+      "url": "https://tools.songyuankun.top/tools/json/",
       "author": {
         "@type": "Person",
         "name": "Koen"

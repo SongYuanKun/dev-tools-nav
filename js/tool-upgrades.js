@@ -198,7 +198,10 @@
     if (sample) sample.addEventListener("click", function () { setTimeout(audit, 0); });
     var clear = document.getElementById("btnClear");
     if (clear) clear.addEventListener("click", function () { setTimeout(audit, 0); });
-    document.getElementById("jwtProVerify").onclick = verify;
+    document.getElementById("jwtProVerify").onclick = function () {
+      verify();
+      window.umamiTrack?.("tool_used", { tool: "jwt", action: "verify" });
+    };
     audit();
   }
 
@@ -227,7 +230,10 @@
       document.getElementById("sqlProOut").textContent = report;
       return report;
     }
-    document.getElementById("sqlProAnalyze").onclick = analyze;
+    document.getElementById("sqlProAnalyze").onclick = function () {
+      analyze();
+      window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "analyze" });
+    };
     document.getElementById("sqlProCopy").onclick = function () { copy(document.getElementById("sqlProOut").textContent, document.getElementById("sqlProAnalyze")); };
   }
 

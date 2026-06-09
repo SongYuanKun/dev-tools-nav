@@ -22,7 +22,7 @@ const TARGETS = [
   { path: "/index.html", file: "screenshot.png", fullPage: false },
   { path: "/pages/blog/index.html", file: "screenshot-blog.png", fullPage: false },
   {
-    path: "/pages/tools/json.html",
+    path: "/pages/tools/json.html?embed=1",
     file: "screenshot-json-tool.png",
     fullPage: false,
     async prepare(page) {
