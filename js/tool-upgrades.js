@@ -29,9 +29,21 @@
   function initJson() {
     var input = document.getElementById("jsonInput");
     if (!input || document.getElementById("jsonProPanel")) return;
+    var anchor = input.closest(".tool-panel");
     var panel = node('<section class="tool-panel" id="jsonProPanel"><h2 class="tool-panel-title">高级分析</h2><div class="tool-pro-grid tool-pro-grid-three"><div class="tool-pro-card"><span>结构统计</span><strong id="jsonProStats">—</strong></div><div class="tool-pro-card"><span>大小对比</span><strong id="jsonProSize">—</strong></div><div class="tool-pro-card"><span>路径查询</span><strong id="jsonProState">支持 $.a[0].b</strong></div></div><div class="tool-pro-inline" style="margin-top:14px;"><div><label class="tool-label" for="jsonProPath">JSON Path</label><input id="jsonProPath" class="tool-input" placeholder="users[0].name 或 $.users[0].name" /></div><button type="button" class="tool-btn tool-btn-primary" id="jsonProQuery">查询</button></div><div class="tool-actions"><button type="button" class="tool-btn" id="jsonProRefresh">刷新统计</button><button type="button" class="tool-btn" id="jsonProSort">按 Key 排序</button><button type="button" class="tool-btn" id="jsonProSample">复杂示例</button><button type="button" class="tool-btn" id="jsonProCopy">复制结果</button></div><pre class="tool-pro-result" id="jsonProOut">路径查询结果会显示在这里。</pre></section>');
-    after(document.getElementById("jsonOutput").closest(".tool-panel"), panel);
-    function parse() { return JSON.parse(input.value.trim()); }
+    after(anchor, panel);
+    function parse() {
+      var raw = input.value.trim();
+      var relaxed = document.getElementById("relaxedParse");
+      if (relaxed && relaxed.checked) {
+        raw = raw.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, " ");
+        raw = raw.replace(/,(\s*[}\]])/g, "$1");
+        raw = raw.replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, function (_, inner) {
+          return '"' + inner.replace(/"/g, '\\"') + '"';
+        });
+      }
+      return JSON.parse(raw);
+    }
     function stats(v) {
       var s = { obj: 0, arr: 0, keys: 0, leaf: 0, depth: 0 };
       function walk(x, d) {
@@ -79,7 +91,7 @@
       try {
         var text = JSON.stringify(sortKeys(parse()), null, 2);
         input.value = text;
-        document.getElementById("jsonOutput").textContent = text;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
         refresh();
       } catch (_) {}
     };

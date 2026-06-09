@@ -1183,7 +1183,7 @@ const TOOLS_DATA = [
     id: "online-json",
     slug: "json",
     name: "JSON 格式化",
-    description: "在线 JSON 格式化、校验、压缩工具，支持语法高亮和错误定位，开发调试必备。",
+    description: "在线 JSON 格式化、校验、压缩，实时错误定位、树形视图、注释/尾逗号容错，开发调试必备。",
     category: "online-tools",
     tags: ["JSON", "格式化", "校验"],
     url: "tools/json/",
