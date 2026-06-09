@@ -71,6 +71,7 @@
 - 为每个工具子页面（json.html, regex.html, timestamp.html等）添加交叉引流区：
   - "你可能还需要"推荐模块（3个相关工具卡片链接）
   - "← 返回在线工具" + "更多开发工具 →"（链回主站）
+  - **2026-06 已落地**：各 `pages/tools/*.html` 底部 `tool-footer-nav` 互链；JSON 工具已重构（实时校验、树形视图、行号定位）
 - 在 tools/index.html 列表页添加：
   - 完整 JSON-LD（SoftwareApplication 类型，每个工具一个）
   - 每个工具卡片增加"免费在线使用"徽章

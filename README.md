@@ -4,7 +4,11 @@
 
 ## 预览
 
-![Koen's 工具箱](assets/screenshot.png)
+| 首页导航 | JSON 工具（实时校验 + 行号） | 技术博客 |
+|----------|------------------------------|----------|
+| ![首页](assets/screenshot.png) | ![JSON 工具](assets/screenshot-json-tool.png) | ![博客](assets/screenshot-blog.png) |
+
+> 截图由 `npm run capture-screenshots` 生成，见 [更新截图](#更新预览截图)。
 
 ## 功能特性
 
@@ -12,9 +16,24 @@
 - **实时搜索**：按名称、描述、标签即时过滤
 - **暗色模式**：跟随系统偏好 + 手动切换，偏好持久化
 - **工具详情页**：每个工具独立详情页，含同类推荐
+- **在线工具集**：7 款浏览器内工具（JSON / 时间戳 / Cron / Base64 / JWT / SQL / 正则），纯前端、数据不出站
 - **响应式设计**：移动端、平板、桌面全适配
 - **精选标记**：高频推荐工具标注精选徽章
 - **🎮 彩蛋系统**：隐藏的"激活工具"分类，5 种趣味解锁方式！
+
+## 在线工具（`pages/tools/`）
+
+| 工具 | 路径 | 亮点 |
+|------|------|------|
+| **JSON 格式化** | `pages/tools/json.html` | 实时校验、行号定位、树形视图、宽松解析（注释/尾逗号）、修复/压缩、JSON Path 查询 |
+| 时间戳转换 | `pages/tools/timestamp.html` | 秒/毫秒、多时区 |
+| Cron 生成器 | `pages/tools/cron.html` | 表达式解析与下次执行时间 |
+| Base64 | `pages/tools/base64.html` | 编解码 + SHA 摘要 |
+| JWT 解码 | `pages/tools/jwt.html` | Header/Payload 解析 + HMAC 验签 |
+| SQL 格式化 | `pages/tools/sql-formatter.html` | 关键字大写、缩进、压缩 |
+| 正则测试 | `pages/tools/regex.html` | 匹配高亮 + JS/Java 代码生成 |
+
+各工具页底部均有「相关在线工具」互链；高级能力由 `js/tool-upgrades.js` 按页注入（路径查询、验签、SQL 分析等）。
 
 ## 工具分类
 
@@ -36,28 +55,37 @@
 dev-tools-nav/
 ├── index.html              # 主页（导航 + 工具卡片列表）
 ├── favicon.ico / favicon.svg
-├── css/style.css           # 全站样式（CSS 变量、暗色模式、响应式）
-├── css/ai-topic.css        # AI 专题页样式
+├── css/
+│   ├── style.css           # 全站样式（CSS 变量、暗色模式、响应式）
+│   ├── tools.css           # 在线工具页共享样式
+│   └── ai-topic.css        # AI 专题页样式
 ├── js/
 │   ├── main.js             # 搜索过滤、分类、彩蛋、侧栏等
-│   ├── ai-related-reads.js # AI 子页底部「延伸阅读」注入
-│   └── base.js             # 全站共用（如统计）
+│   ├── base.js             # 全站导航注入、主题、Umami 统计
+│   ├── json-tool.js        # JSON 工具核心逻辑（实时校验、树形视图、宽松解析）
+│   ├── tool-upgrades.js    # 在线工具高级面板（Path 查询、验签、SQL 分析等）
+│   ├── tools-hub.js        # 工具汇总页交互
+│   └── ai-related-reads.js # AI 子页底部「延伸阅读」注入
 ├── pages/
 │   ├── template.html       # 工具详情页（?id=xxx）
-│   ├── ai/                 # AI 专题：index、compare、workflow、prompts、beginner、glossary、safety、dev-api
-│   ├── blog/               # 技术博客页面
-│   ├── ai/                 # AI 专题页面
-│   ├── tools/              # 在线工具页面
+│   ├── ai/                 # AI 专题子页
+│   ├── blog/               # 技术博客
+│   └── tools/              # 在线工具（json、timestamp、cron 等）
 ├── data/
 │   ├── tools.js            # 工具数据 TOOLS_DATA
 │   ├── ai-compare.js       # AI 专题数据（横评、工作流、Prompt、入门、价格、AI_TOOL_INFO）
 │   ├── articles.js         # 首页「最新动态」文章区
 │   └── servers.json        # JRebel 等（可由 Actions 同步更新）
-├── assets/                 # 图片、Logo
+├── assets/                 # Logo、预览截图（screenshot*.png）
+├── scripts/
+│   └── capture-screenshots.mjs  # Playwright 截取 README 用预览图
 ├── docs/                   # 部署说明等（不随 Pages 发布，见 docs/README.md）
 ├── deploy.sh               # 同步到 1Panel 的本地脚本
+├── package.json            # npm test、capture-screenshots（Playwright）
 └── .github/workflows/
     ├── deploy-pages.yml    # GitHub Pages 自动发布
+    ├── deploy-1panel-ssh.yml  # 可选：SSH 同步到 1Panel
+    ├── update-screenshots.yml # 每周刷新 assets/screenshot*.png
     └── sync-jrebel.yml     # 定时同步 JRebel 配置
 ```
 
@@ -116,7 +144,7 @@ dev-tools-nav/
 **下一阶段产品 TODO（待实现）**
 
 - [ ] **任务入口区**：首页 Hero 下增加“我想完成什么”快捷入口，将用户意图直接路由到 JSON 格式化、JWT 解码、Cron 生成、AI 工具选择、个人建站等高频任务。
-- [ ] **在线工具互链**：在 JSON/JWT/Base64、Cron/时间戳、SQL/Regex 等相关工具页增加“相关工具”区，提升站内停留和工具发现效率。
+- [x] **在线工具互链**：各工具页底部「相关在线工具」区已上线（JSON ↔ SQL/正则/时间戳等）。
 - [ ] **数据驱动迭代**：基于 Umami 访问数据定期查看高访问/高跳出页面，再决定下一批内容与工具优化优先级。
 
 **刻意不做（备忘）**
@@ -139,6 +167,28 @@ npx serve .
 # 使用 VS Code Live Server 插件
 # 右键 index.html → Open with Live Server
 ```
+
+### 更新预览截图
+
+修改首页或在线工具 UI 后，在仓库根目录执行：
+
+```bash
+# 终端 1：起静态服务（端口勿与占用冲突）
+python3 -m http.server 9876
+
+# 终端 2：截取 assets/screenshot*.png
+BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
+```
+
+输出文件：
+
+| 文件 | 页面 |
+|------|------|
+| `assets/screenshot.png` | 首页 |
+| `assets/screenshot-json-tool.png` | JSON 工具（自动点「示例」） |
+| `assets/screenshot-blog.png` | 博客列表 |
+
+CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/update-screenshots.yml) 每周一也会自动刷新并提交。
 
 ## 部署到 GitHub Pages
 
@@ -229,7 +279,9 @@ MIT
 
 ## 📁 相关文档
 
+- **[manual.md](manual.md)** — 简明使用说明（含在线工具与截图）  
 - **[docs/README.md](docs/README.md)** — 文档索引  
 - **[docs/deploy-1panel.md](docs/deploy-1panel.md)** — 1Panel / 本机 `rsync` 部署  
 - **[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)** — GitHub Pages CI  
+- **[.github/workflows/update-screenshots.yml](.github/workflows/update-screenshots.yml)** — 预览截图自动刷新  
 - **[.github/workflows/sync-jrebel.yml](.github/workflows/sync-jrebel.yml)** — JRebel 地址定时同步

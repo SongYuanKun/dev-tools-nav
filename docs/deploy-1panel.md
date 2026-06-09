@@ -45,6 +45,8 @@ rsync -av --delete \
 
 ## AI 专题与同步范围
 
-AI 专题静态页位于 `pages/ai/`，样式为 `css/ai-topic.css`，数据集中在 `data/ai-compare.js`。`./deploy.sh` 与上文 **rsync** 会随仓库一并同步（排除项仅含 `docs/`、`.github` 等，与 AI 资源无关）。
+AI 专题静态页位于 `pages/ai/`，样式为 `css/ai-topic.css`，数据集中在 `data/ai-compare.js`。在线工具位于 `pages/tools/`，逻辑在 `js/json-tool.js`、`js/tool-upgrades.js`，样式为 `css/tools.css`。`./deploy.sh` 与上文 **rsync** 会随仓库一并同步（排除项仅含 `docs/`、`.github` 等，与站点资源无关）。
+
+预览截图 `assets/screenshot*.png` 会一并同步；更新方式见根目录 [README.md](../README.md) 的「更新预览截图」一节。
 
 **专题内容路线图（已完成 / 待办）** 与仓库根目录 [README.md](../README.md) 中的 **「AI 专题规划」** 一节保持同步；改需求时优先改 README 清单，再改页面与数据。

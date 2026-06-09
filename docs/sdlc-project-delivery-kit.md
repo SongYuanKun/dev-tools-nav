@@ -256,7 +256,8 @@ ARTICLES / CSDN 同步 JSON
 | 工作流 | 作用 |
 |--------|------|
 | `deploy-pages.yml` | Checkout 全历史 → blog → sitemap → AI changelog → RSS → `_site` 发布 Pages |
-| 其他 | JRebel/CSDN/截图等定时或辅助 |
+| `update-screenshots.yml` | Playwright 刷新 `assets/screenshot*.png` 并自动提交 |
+| 其他 | JRebel/CSDN 等定时或辅助 |
 
 ### 静态代码扫描阈值（对齐说明）
 
@@ -297,7 +298,7 @@ ARTICLES / CSDN 同步 JSON
 | 用例编号 | 场景 | 期望 | 结果 | 备注 |
 |----------|------|------|------|------|
 | F-01 | 首页搜索过滤 | 输入关键字卡片实时过滤 | 待测 | |
-| F-02 | 在线 JSON 工具 | 非法 JSON 报位置合理 | 待测 | |
+| F-02 | 在线 JSON 工具 | 非法 JSON 报行/列；宽松模式支持注释/尾逗号；树形视图可浏览 | 通过 | 2026-06 重构 `js/json-tool.js` |
 | F-03 | AI 专题延伸阅读 | 链到博客与首页相对路径正确 | 待测 | |
 | … | … | … | … | |
 

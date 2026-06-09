@@ -42,6 +42,15 @@
 | `external_link` | 外部链接 | 点击外部链接 | `{ url, label, 描述 }` |
 | `tool_used` | 工具使用 | 在线工具内执行操作 | `{ tool, action, 描述 }` |
 
+**JSON 工具 `tool_used` 的 `action` 取值**（`js/json-tool.js`）：
+
+| action | 触发操作 |
+|--------|----------|
+| `format` | 点击「格式化」 |
+| `minify` | 点击「压缩」 |
+| `repair` | 点击「修复」（去注释/尾逗号等） |
+| `validate` | 点击「校验」 |
+
 > **Umami 后台查看**：每条自定义事件会自动附带 `描述` 字段（中文），在 Events → 点开事件 → Properties 中可见。事件名对照表见 `js/umami-labels.js`。
 
 ### 1.4 dev-tools-nav 已启用的 Umami 平台能力

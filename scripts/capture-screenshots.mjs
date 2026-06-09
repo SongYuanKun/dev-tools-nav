@@ -17,11 +17,20 @@ const ASSETS = join(ROOT, "assets");
 
 const BASE_URL = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
-/** @type {{ path: string; file: string; fullPage?: boolean }[]} */
+/** @type {{ path: string; file: string; fullPage?: boolean; prepare?: (page: import('playwright').Page) => Promise<void> }[]} */
 const TARGETS = [
   { path: "/index.html", file: "screenshot.png", fullPage: false },
   { path: "/pages/blog/index.html", file: "screenshot-blog.png", fullPage: false },
-  { path: "/pages/tools/json.html", file: "screenshot-json-tool.png", fullPage: false },
+  {
+    path: "/pages/tools/json.html",
+    file: "screenshot-json-tool.png",
+    fullPage: false,
+    async prepare(page) {
+      // 加载示例 JSON，展示新版编辑器、行号与实时校验状态
+      await page.click("#btnSample");
+      await page.waitForTimeout(600);
+    },
+  },
 ];
 
 async function main() {
@@ -43,6 +52,7 @@ async function main() {
       if (!res || !res.ok()) {
         throw new Error(`HTTP ${res?.status()} for ${url}`);
       }
+      if (t.prepare) await t.prepare(page);
       await new Promise((r) => setTimeout(r, 1200));
       await page.screenshot({
         path: out,
