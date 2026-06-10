@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>(function(){var t=localStorage.getItem('dev-tools-theme')||'dark';document.documentElement.setAttribute('data-theme',t)})();</script>
   <title>文章加载中...</title>
   <style>
     /* ===== CSS 变量（与全站保持一致） ===== */
@@ -19,9 +20,20 @@
       --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
     }
 
-    /* 暗色模式 */
+    /* 暗色模式（与全站 data-theme 同步） */
+    [data-theme="dark"] {
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --bg-page: #0f172a;
+      --bg-surface: #1e293b;
+      --border-color: #334155;
+      --color-primary: #60a5fa;
+      --color-primary-hover: #93c5fd;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root:not([data-theme="light"]) {
         --text-primary: #f1f5f9;
         --text-secondary: #94a3b8;
         --bg-page: #0f172a;
@@ -370,12 +382,27 @@
     }
   </style>
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/blog.css">
   <script defer src="../../js/base.js"></script>
 </head>
-<body>
+<body class="site-v2">
 
-  <!-- ===== 导航栏 ===== -->
-  <nav class="navbar" role="navigation" aria-label="主导航"></nav>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">首页</a>
+          <a href="../tools/json.html" class="nav-link">在线工具</a>
+          <a href="index.html" class="nav-link active">技术博客</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
 
   <!-- ===== 文章容器 ===== -->
   <main class="post-container" id="post-container">
@@ -431,6 +458,7 @@
 
         // 构建文章头部
         var headerHTML = ''
+          + '<a class="blog-quick-link" href="index.html" style="margin-bottom:1.25rem;">← 返回博客列表</a>'
           + '<header class="post-header">'
           + '  <span class="post-header__category">' + escapeHTML(post.category) + '</span>'
           + '  <h1 class="post-header__title">' + escapeHTML(post.title) + '</h1>'
