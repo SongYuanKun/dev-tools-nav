@@ -210,6 +210,7 @@ public void setParameters(PreparedStatement ps) {
 var BLOG_CATEGORIES = [
   { id: "all", label: "全部" },
   { id: "独立开发", label: "独立开发" },
+  { id: "AI 实践", label: "AI 实践" },
   { id: "Java 源码", label: "Java 源码" },
   { id: "后端架构", label: "后端架构" },
   { id: "前端", label: "前端" }
@@ -221,6 +222,17 @@ var BLOG_CATEGORIES = [
  * 外部文章用 externalUrl 指向 CSDN
  */
 var BLOG_POSTS = [
+  {
+    title: "AI 免费 Token / 额度薅羊毛手册",
+    description: "各平台免费额度、限流与绑卡说明，及常见踩坑备忘。适合小白与初体验程序员。",
+    date: "2026-03-30",
+    category: "AI 实践",
+    tags: ["AI", "免费额度", "API", "OpenAI"],
+    readTime: 18,
+    url: "ai-free-tokens-handbook.html",
+    featured: true,
+    status: "published"
+  },
   // === 站内全文 ===
   {
     title: "为什么我要做一个工具导航站",
