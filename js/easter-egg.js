@@ -134,6 +134,9 @@
   }
 
   function revealActivatePanel() {
+    // 嵌入 iframe 时由外层详情页展示，避免同一屏出现两套「隐藏分类已解锁」
+    if (document.documentElement.classList.contains("is-embed")) return;
+
     var prefix = getRootPrefix();
     var grid = document.getElementById("toolsGrid");
     if (grid) {
