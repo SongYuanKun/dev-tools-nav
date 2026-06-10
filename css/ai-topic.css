@@ -180,6 +180,24 @@
   line-height: 1.75;
 }
 
+.radar-features-title {
+  margin: 0 0 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.radar-features {
+  margin: 0 0 14px;
+  padding-left: 18px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.radar-features li + li {
+  margin-top: 4px;
+}
+
 .radar-card h3 {
   margin: 0 0 6px;
   color: var(--text-primary);
@@ -334,26 +352,6 @@
 .radar-copy-btn:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-}
-
-.radar-details {
-  margin: 0 0 8px;
-  border: 1px dashed var(--border-color);
-  border-radius: 8px;
-  padding: 10px 12px;
-  background: color-mix(in srgb, var(--bg-page) 50%, var(--bg-card));
-}
-
-.radar-details summary {
-  cursor: pointer;
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 600;
-  list-style-position: outside;
-}
-
-.radar-details[open] summary {
-  margin-bottom: 8px;
 }
 
 .radar-empty,

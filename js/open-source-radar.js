@@ -74,10 +74,8 @@
         "</div>" +
       "</div>" +
       '<p class="radar-desc">' + escapeHtml(project.summary) + "</p>" +
-      '<details class="radar-details">' +
-        '<summary>核心功能与适用场景</summary>' +
-        "<ul>" + features + "</ul>" +
-      "</details>" +
+      '<h3 class="radar-features-title">核心功能</h3>' +
+      "<ul class=\"radar-features\">" + features + "</ul>" +
       '<div class="radar-tags">' + tags + "</div>" +
       "</article>"
     );
