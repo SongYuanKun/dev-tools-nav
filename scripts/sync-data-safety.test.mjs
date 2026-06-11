@@ -142,6 +142,100 @@ test("JRebel sync preserves existing server data when no URL is extracted", () =
   assert.deepEqual(JSON.parse(readFileSync(outPath, "utf-8")), existing);
 });
 
+test("radar sync preserves existing data when trending HTML is empty", () => {
+  const dir = tempDir();
+  const outPath = join(dir, "open-source-radar.json");
+  const sourcePath = join(dir, "trending.html");
+  const existing = {
+    updatedAt: "2026-01-01T00:00:00+08:00",
+    weekLabel: "2025-12-25 ~ 2026-01-01",
+    summary: "人工维护摘要",
+    themes: [{ id: "all", label: "全部" }],
+    projects: [
+      {
+        rank: 1,
+        repo: "obra/superpowers",
+        language: "Shell",
+        stars: 100,
+        weekStars: 0,
+        trending: false,
+        topic: "skills",
+        summary: "保留中文解读",
+        features: ["特性 A"],
+        tags: ["Skill"],
+      },
+    ],
+  };
+
+  writeFileSync(outPath, JSON.stringify(existing, null, 2));
+  writeFileSync(sourcePath, "<html><body>no articles</body></html>");
+
+  const result = runPython("scripts/sync-open-source-radar.py", {
+    RADAR_OUT_PATH: outPath,
+    GITHUB_TRENDING_URL: pathToFileURL(sourcePath).href,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(JSON.parse(readFileSync(outPath, "utf-8")), existing);
+});
+
+test("radar sync keeps curated Chinese copy and refreshes trending stats", () => {
+  const dir = tempDir();
+  const outPath = join(dir, "open-source-radar.json");
+  const sourcePath = join(dir, "trending.html");
+  const existing = {
+    updatedAt: "2026-01-01T00:00:00+08:00",
+    weekLabel: "old",
+    summary: "旧摘要",
+    themes: [{ id: "all", label: "全部" }],
+    projects: [
+      {
+        rank: 1,
+        repo: "mvanhorn/last30days-skill",
+        language: "Python",
+        stars: 1000,
+        weekStars: 1,
+        trending: true,
+        topic: "research",
+        summary: "人工中文摘要",
+        features: ["人工特性 1", "人工特性 2", "人工特性 3"],
+        tags: ["调研 Skill"],
+      },
+    ],
+  };
+
+  writeFileSync(outPath, JSON.stringify(existing, null, 2));
+  writeFileSync(
+    sourcePath,
+    `<html><body>
+      <article class="Box-row">
+        <h2 class="h3 lh-condensed">
+          <a href="/mvanhorn/last30days-skill" data-hydro-click="{&quot;event_type&quot;:&quot;explore.click&quot;}">repo</a>
+        </h2>
+        <p class="col-9 color-fg-muted">AI agent skill for research</p>
+        <span>2,500 stars this week</span>
+        <span itemprop="programmingLanguage">Python</span>
+      </article>
+    </body></html>`,
+  );
+
+  const result = runPython("scripts/sync-open-source-radar.py", {
+    RADAR_OUT_PATH: outPath,
+    GITHUB_TRENDING_URL: pathToFileURL(sourcePath).href,
+    GITHUB_TOKEN: "",
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+
+  const data = JSON.parse(readFileSync(outPath, "utf-8"));
+  assert.equal(data.projects[0].repo, "mvanhorn/last30days-skill");
+  assert.equal(data.projects[0].summary, "人工中文摘要");
+  assert.deepEqual(data.projects[0].features, ["人工特性 1", "人工特性 2", "人工特性 3"]);
+  assert.equal(data.projects[0].weekStars, 2500);
+  assert.equal(data.projects[0].trending, true);
+  assert.match(data.updatedAt, /^2026-/);
+});
+
 test("JRebel sync updates URL and keeps previous email when source omits email", () => {
   const dir = tempDir();
   const outPath = join(dir, "servers.json");

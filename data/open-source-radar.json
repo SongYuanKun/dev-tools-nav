@@ -1,38 +1,59 @@
 {
-  "updatedAt": "2026-06-10T12:00:00+08:00",
-  "weekLabel": "2026-06-03 ~ 2026-06-10",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、持久化记忆 Agent、联网调研 Skill 与 Notebook 式知识工作台。Skills 正从「提示词技巧」变成可安装、可复用的工程资产；Agent 也开始需要跨会话记忆与真实互联网读写能力。",
+  "updatedAt": "2026-06-11T11:19:42+08:00",
+  "weekLabel": "2026-06-04 ~ 2026-06-11",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 调研 / 知识、Agent Skills、记忆 / Harness 等方向。代表项目包括 headroom、last30days-skill、hermes-agent。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
-    { "id": "all", "label": "全部" },
-    { "id": "skills", "label": "Agent Skills" },
-    { "id": "memory", "label": "记忆 / Harness" },
-    { "id": "research", "label": "调研 / 知识" },
-    { "id": "coding", "label": "编程 Agent" },
-    { "id": "multimodal", "label": "多模态" }
+    {
+      "id": "all",
+      "label": "全部"
+    },
+    {
+      "id": "skills",
+      "label": "Agent Skills"
+    },
+    {
+      "id": "memory",
+      "label": "记忆 / Harness"
+    },
+    {
+      "id": "research",
+      "label": "调研 / 知识"
+    },
+    {
+      "id": "coding",
+      "label": "编程 Agent"
+    },
+    {
+      "id": "multimodal",
+      "label": "多模态"
+    }
   ],
   "projects": [
     {
       "rank": 1,
-      "repo": "NousResearch/hermes-agent",
+      "repo": "chopratejas/headroom",
       "language": "Python",
-      "stars": 189496,
-      "weekStars": 11915,
+      "stars": 21917,
+      "weekStars": 13062,
       "trending": true,
-      "topic": "memory",
-      "summary": "「会成长的 Agent」——强调跨会话记忆与能力复利，本周 Trending 涨幅最高。",
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：headroom — Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
       "features": [
-        "持久化 Agent 运行时，把上下文与能力沉淀到多次任务之间。",
-        "适合观察「Agent 产品化」如何从单次对话走向长期协作。",
-        "可挂载到现有 Agent 宿主，而非另起一套聊天产品。"
+        "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
-      "tags": ["记忆 Agent", "持久化", "Agent 运行时"]
+      "tags": [
+        "Agent Skills",
+        "headroom"
+      ]
     },
     {
       "rank": 2,
       "repo": "mvanhorn/last30days-skill",
       "language": "Python",
-      "stars": 38655,
-      "weekStars": 9307,
+      "stars": 39192,
+      "weekStars": 11732,
       "trending": true,
       "topic": "research",
       "summary": "Claude Code 风格 Skill：跨 Reddit、X、YouTube、HN、Polymarket 做主题调研并输出 grounded 摘要。",
@@ -41,14 +62,78 @@
         "适合选题研究、竞品扫描、技术趋势速览。",
         "代表 Skills 生态里「信息获取类」能力的标准化趋势。"
       ],
-      "tags": ["调研 Skill", "多源检索", "Claude Code"]
+      "tags": [
+        "调研 Skill",
+        "多源检索",
+        "Claude Code"
+      ]
     },
     {
       "rank": 3,
+      "repo": "NousResearch/hermes-agent",
+      "language": "Python",
+      "stars": 190112,
+      "weekStars": 11519,
+      "trending": true,
+      "topic": "memory",
+      "summary": "「会成长的 Agent」——强调跨会话记忆与能力复利，本周 Trending 涨幅最高。",
+      "features": [
+        "持久化 Agent 运行时，把上下文与能力沉淀到多次任务之间。",
+        "适合观察「Agent 产品化」如何从单次对话走向长期协作。",
+        "可挂载到现有 Agent 宿主，而非另起一套聊天产品。"
+      ],
+      "tags": [
+        "记忆 Agent",
+        "持久化",
+        "Agent 运行时"
+      ]
+    },
+    {
+      "rank": 4,
+      "repo": "Leonxlnx/taste-skill",
+      "language": "Shell",
+      "stars": 40770,
+      "weekStars": 8077,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：taste-skill — Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop",
+      "features": [
+        "Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "taste skill",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 5,
+      "repo": "affaan-m/ECC",
+      "language": "JavaScript",
+      "stars": 212817,
+      "weekStars": 7865,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "features": [
+        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "ECC",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 6,
       "repo": "Panniantong/Agent-Reach",
       "language": "Python",
-      "stars": 25887,
-      "weekStars": 4361,
+      "stars": 26100,
+      "weekStars": 5021,
       "trending": true,
       "topic": "research",
       "summary": "给 Agent 装上「看互联网的眼睛」——读写 Twitter、Reddit、YouTube、GitHub、B 站、小红书等。",
@@ -57,14 +142,18 @@
         "覆盖中文社区（B 站、小红书），对国内创作者场景更友好。",
         "接入前需评估账号安全与平台 ToS，避免把 Cookie 交给不可信链路。"
       ],
-      "tags": ["联网 Agent", "社媒读取", "中文平台"]
+      "tags": [
+        "联网 Agent",
+        "社媒读取",
+        "中文平台"
+      ]
     },
     {
-      "rank": 4,
+      "rank": 7,
       "repo": "lfnovo/open-notebook",
       "language": "TypeScript",
-      "stars": 28798,
-      "weekStars": 4245,
+      "stars": 29023,
+      "weekStars": 4648,
       "trending": true,
       "topic": "research",
       "summary": "开源 NotebookLM 替代方案，强调更灵活的多源资料导入与对话式研究。",
@@ -73,125 +162,17 @@
         "自托管友好，资料留在本地或自有服务器。",
         "适合「研究型工作者」而非单次聊天场景。"
       ],
-      "tags": ["NotebookLM", "知识库", "自托管"]
-    },
-    {
-      "rank": 5,
-      "repo": "Open-LLM-VTuber/Open-LLM-VTuber",
-      "language": "Python",
-      "stars": 10794,
-      "weekStars": 2642,
-      "trending": true,
-      "topic": "multimodal",
-      "summary": "本地运行的语音 + Live2D 虚拟形象 LLM 伙伴，支持免提对话与打断。",
-      "features": [
-        "多 LLM 后端可切换，强调低延迟语音交互体验。",
-        "Live2D 表情驱动，适合直播、陪伴、演示类场景。",
-        "本地部署降低隐私顾虑，但需自备 GPU/模型资源。"
-      ],
-      "tags": ["语音交互", "Live2D", "本地部署"]
-    },
-    {
-      "rank": 6,
-      "repo": "phuryn/pm-skills",
-      "language": "Markdown",
-      "stars": 13968,
-      "weekStars": 1329,
-      "trending": true,
-      "topic": "skills",
-      "summary": "PM Skills Marketplace：100+ 面向产品管理的 Agent Skills，覆盖发现、策略、执行到发布。",
-      "features": [
-        "把产品经理日常流程拆成可安装 Skill，而非通用聊天。",
-        "体现 Skills 向「岗位工作流」渗透——不只服务工程师。",
-        "适合产品/运营团队评估 Agent 如何进入真实职能流程。"
-      ],
-      "tags": ["产品管理", "Skills 市场", "工作流"]
-    },
-    {
-      "rank": 7,
-      "repo": "revfactory/harness",
-      "language": "HTML",
-      "stars": 6713,
-      "weekStars": 1256,
-      "trending": true,
-      "topic": "skills",
-      "summary": "Meta-Skill：自动设计领域 Agent 团队、定义角色并生成配套 Skills。",
-      "features": [
-        "从「用一个 Agent」升级到「编排一支 Agent 小队」。",
-        "适合复杂任务拆解与角色分工实验。",
-        "生成结果仍需人工审核，避免 Skill 依赖链失控。"
-      ],
-      "tags": ["Meta-Skill", "多 Agent", "团队编排"]
+      "tags": [
+        "NotebookLM",
+        "知识库",
+        "自托管"
+      ]
     },
     {
       "rank": 8,
-      "repo": "colbymchenry/codegraph",
-      "language": "TypeScript",
-      "stars": 46506,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "coding",
-      "summary": "为 Claude Code、Cursor、Codex 等编程 Agent 预建本地代码知识图谱，省 token、少工具调用。",
-      "features": [
-        "大仓库语义索引，让 Agent 更快定位文件与调用关系。",
-        "100% 本地运行，降低代码外泄风险。",
-        "AI 编程从「全文塞上下文」走向「结构化索引 + 精准检索」。"
-      ],
-      "tags": ["AI 编程", "代码图谱", "本地索引"]
-    },
-    {
-      "rank": 9,
-      "repo": "anthropics/skills",
-      "language": "Python",
-      "stars": 148842,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "skills",
-      "summary": "Anthropic 官方 Agent Skills 公开仓库，文件夹化指令 + 脚本 + 资源扩展 Claude 能力。",
-      "features": [
-        "SKILL.md + 脚本的标准结构，已成行业参考模板。",
-        "覆盖文档生成、数据分析、流程自动化等任务。",
-        "企业内部 Agent 技能库设计的最佳实践样本。"
-      ],
-      "tags": ["官方 Skills", "Claude", "能力扩展"]
-    },
-    {
-      "rank": 10,
-      "repo": "google-gemini/gemini-cli",
-      "language": "TypeScript",
-      "stars": 105128,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "coding",
-      "summary": "Google 开源终端 Agent，把 Gemini 能力带进命令行与代码仓库。",
-      "features": [
-        "与 Claude Code、Codex CLI 形成「终端 Agent 三足鼎立」格局。",
-        "适合已有 Gemini 生态或 Google Cloud 账户的开发者。",
-        "关注模型版本与配额策略变更，避免写死单一模型名。"
-      ],
-      "tags": ["终端 Agent", "Gemini", "开源 CLI"]
-    },
-    {
-      "rank": 11,
-      "repo": "browser-use/browser-use",
-      "language": "Python",
-      "stars": 98070,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "research",
-      "summary": "让 Agent 能「像人一样操作浏览器」——填表、点击、抓取，完成在线任务自动化。",
-      "features": [
-        "把网页 DOM 暴露给 LLM，实现 RPA 式自动化。",
-        "适合数据采集、测试、重复性网页操作。",
-        "生产环境需配合沙箱与权限控制，防止误操作。"
-      ],
-      "tags": ["浏览器自动化", "RPA", "Agent 工具"]
-    },
-    {
-      "rank": 12,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 223097,
+      "stars": 223747,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -201,7 +182,91 @@
         "适合团队统一 Claude Code / Cursor 的开发规范。",
         "体现 Skills 从工具包升级为「可安装的工程流程」。"
       ],
-      "tags": ["开发方法论", "Skill 链", "工程规范"]
+      "tags": [
+        "开发方法论",
+        "Skill 链",
+        "工程规范"
+      ]
+    },
+    {
+      "rank": 9,
+      "repo": "anthropics/skills",
+      "language": "Python",
+      "stars": 149074,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "skills",
+      "summary": "Anthropic 官方 Agent Skills 公开仓库，文件夹化指令 + 脚本 + 资源扩展 Claude 能力。",
+      "features": [
+        "SKILL.md + 脚本的标准结构，已成行业参考模板。",
+        "覆盖文档生成、数据分析、流程自动化等任务。",
+        "企业内部 Agent 技能库设计的最佳实践样本。"
+      ],
+      "tags": [
+        "官方 Skills",
+        "Claude",
+        "能力扩展"
+      ]
+    },
+    {
+      "rank": 10,
+      "repo": "google-gemini/gemini-cli",
+      "language": "TypeScript",
+      "stars": 105147,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "coding",
+      "summary": "Google 开源终端 Agent，把 Gemini 能力带进命令行与代码仓库。",
+      "features": [
+        "与 Claude Code、Codex CLI 形成「终端 Agent 三足鼎立」格局。",
+        "适合已有 Gemini 生态或 Google Cloud 账户的开发者。",
+        "关注模型版本与配额策略变更，避免写死单一模型名。"
+      ],
+      "tags": [
+        "终端 Agent",
+        "Gemini",
+        "开源 CLI"
+      ]
+    },
+    {
+      "rank": 11,
+      "repo": "browser-use/browser-use",
+      "language": "Python",
+      "stars": 98176,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "research",
+      "summary": "让 Agent 能「像人一样操作浏览器」——填表、点击、抓取，完成在线任务自动化。",
+      "features": [
+        "把网页 DOM 暴露给 LLM，实现 RPA 式自动化。",
+        "适合数据采集、测试、重复性网页操作。",
+        "生产环境需配合沙箱与权限控制，防止误操作。"
+      ],
+      "tags": [
+        "浏览器自动化",
+        "RPA",
+        "Agent 工具"
+      ]
+    },
+    {
+      "rank": 12,
+      "repo": "colbymchenry/codegraph",
+      "language": "TypeScript",
+      "stars": 46871,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "coding",
+      "summary": "为 Claude Code、Cursor、Codex 等编程 Agent 预建本地代码知识图谱，省 token、少工具调用。",
+      "features": [
+        "大仓库语义索引，让 Agent 更快定位文件与调用关系。",
+        "100% 本地运行，降低代码外泄风险。",
+        "AI 编程从「全文塞上下文」走向「结构化索引 + 精准检索」。"
+      ],
+      "tags": [
+        "AI 编程",
+        "代码图谱",
+        "本地索引"
+      ]
     }
   ]
 }

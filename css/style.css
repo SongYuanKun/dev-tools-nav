@@ -4066,6 +4066,19 @@ body.site-v2 a {
   box-shadow: none !important;
 }
 
+[data-theme="light"] .site-v2 .tool-textarea,
+[data-theme="light"] .site-v2 .tool-result,
+[data-theme="light"] .site-v2 .tool-input,
+[data-theme="light"] .site-v2 .tool-select,
+[data-theme="light"] .site-v2 textarea,
+[data-theme="light"] .site-v2 input,
+[data-theme="light"] .site-v2 select,
+[data-theme="light"] .site-v2 pre {
+  background: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
 .site-v2 .tool-panel-title,
 .site-v2 .blog-post-content h2,
 .site-v2 .blog-related h2,
