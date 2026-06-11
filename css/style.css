@@ -46,29 +46,51 @@
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --font-mono: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+
+  /* 徽章 / 导航交互（暗色默认） */
+  --badge-text: #c7d2fe;
+  --badge-bg: rgba(99, 102, 241, 0.14);
+  --badge-info-text: #bae6fd;
+  --badge-info-bg: rgba(37, 99, 235, 0.14);
+  --badge-success-text: #bbf7d0;
+  --badge-success-bg: rgba(5, 150, 105, 0.14);
+  --nav-hover-bg: rgba(99, 102, 241, 0.16);
+  --card-hover-border: rgba(99, 102, 241, 0.52);
 }
 
 [data-theme="light"] {
-  --bg-page: #f8fafc;
-  --bg-card: #ffffff;
-  --bg-nav: rgba(255, 255, 255, 0.85);
-  --bg-tag: #f1f5f9;
-  --bg-input: #ffffff;
-  --bg-category: #f1f5f9;
+  /* 暖砂纸编辑风：墨绿强调，避免冷灰 + 紫渐变 */
+  --color-primary: #0f766e;
+  --color-primary-hover: #0d5f59;
+  --color-primary-light: #ccfbf1;
 
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --text-tag: #475569;
+  --bg-page: #f4f0e6;
+  --bg-card: #fffdf8;
+  --bg-nav: rgba(255, 253, 248, 0.9);
+  --bg-tag: #ebe4d6;
+  --bg-input: #fffdf8;
+  --bg-category: #ebe4d6;
 
-  --border-color: #e2e8f0;
-  --border-card: #e2e8f0;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #78716c;
+  --text-tag: #44403c;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 10px 25px rgba(99, 102, 241, 0.12), 0 4px 10px rgba(0, 0, 0, 0.06);
-  --shadow-nav: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --border-color: #d9d0c2;
+  --border-card: #d6cdc0;
 
-  --color-primary-light: #e0e7ff;
+  --shadow-card: 0 1px 2px rgba(28, 25, 23, 0.05), 0 10px 28px rgba(28, 25, 23, 0.04);
+  --shadow-card-hover: 0 14px 36px rgba(15, 118, 110, 0.1), 0 4px 14px rgba(28, 25, 23, 0.06);
+  --shadow-nav: 0 1px 0 rgba(28, 25, 23, 0.06);
+
+  --badge-text: #0f5f59;
+  --badge-bg: rgba(15, 118, 110, 0.1);
+  --badge-info-text: #0c4a6e;
+  --badge-info-bg: rgba(8, 145, 178, 0.1);
+  --badge-success-text: #166534;
+  --badge-success-bg: rgba(5, 150, 105, 0.1);
+  --nav-hover-bg: rgba(15, 118, 110, 0.08);
+  --card-hover-border: rgba(15, 118, 110, 0.34);
 }
 
 /* 暗色模式 */
@@ -93,6 +115,15 @@
   --shadow-nav: 0 1px 3px rgba(0, 0, 0, 0.3);
 
   --color-primary-light: #312e81;
+
+  --badge-text: #c7d2fe;
+  --badge-bg: rgba(99, 102, 241, 0.14);
+  --badge-info-text: #bae6fd;
+  --badge-info-bg: rgba(37, 99, 235, 0.14);
+  --badge-success-text: #bbf7d0;
+  --badge-success-bg: rgba(5, 150, 105, 0.14);
+  --nav-hover-bg: rgba(99, 102, 241, 0.16);
+  --card-hover-border: rgba(99, 102, 241, 0.52);
 }
 
 /* ============================================================
@@ -2889,17 +2920,22 @@ img {
 
 [data-theme="light"] {
   color-scheme: light;
-  --v2-bg: #f8fafc;
-  --v2-bg-soft: #eef2f7;
-  --v2-surface: rgba(255, 255, 255, 0.86);
-  --v2-surface-solid: #ffffff;
-  --v2-surface-hover: #f1f5f9;
-  --v2-text: #0f172a;
-  --v2-text-secondary: #334155;
-  --v2-text-muted: #64748b;
-  --v2-border: rgba(15, 23, 42, 0.12);
-  --v2-border-strong: rgba(15, 23, 42, 0.22);
-  --v2-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+  --v2-bg: #f4f0e6;
+  --v2-bg-soft: #ebe4d8;
+  --v2-surface: rgba(255, 253, 248, 0.94);
+  --v2-surface-solid: #fffdf8;
+  --v2-surface-hover: #f0ebe1;
+  --v2-text: #1c1917;
+  --v2-text-secondary: #57534e;
+  --v2-text-muted: #78716c;
+  --v2-border: rgba(68, 64, 60, 0.12);
+  --v2-border-strong: rgba(68, 64, 60, 0.2);
+  --v2-accent: #0f766e;
+  --v2-accent-hover: #0d5f59;
+  --v2-blue: #0369a1;
+  --v2-cyan: #0e7490;
+  --v2-green: #15803d;
+  --v2-shadow: 0 18px 50px rgba(28, 25, 23, 0.07);
 }
 
 html { scroll-behavior: smooth; }
@@ -2914,6 +2950,14 @@ body.redesign-v2 {
     linear-gradient(180deg, var(--v2-bg) 0%, var(--v2-bg-soft) 100%);
 }
 
+[data-theme="light"] body.redesign-v2,
+[data-theme="light"] body.site-v2 {
+  background:
+    radial-gradient(circle at 12% 4%, rgba(15, 118, 110, 0.07), transparent 32rem),
+    radial-gradient(circle at 92% 0%, rgba(180, 140, 70, 0.05), transparent 26rem),
+    linear-gradient(180deg, var(--v2-bg) 0%, var(--v2-bg-soft) 100%);
+}
+
 .navbar {
   position: fixed;
   inset: 0 0 auto 0;
@@ -2925,7 +2969,10 @@ body.redesign-v2 {
   -webkit-backdrop-filter: blur(20px);
 }
 
-[data-theme="light"] .navbar { background: rgba(248, 250, 252, 0.82); }
+[data-theme="light"] .navbar {
+  background: rgba(255, 253, 248, 0.9);
+  border-bottom-color: var(--v2-border);
+}
 
 .navbar-inner {
   width: min(1120px, calc(100% - 40px));
@@ -2968,7 +3015,7 @@ body.redesign-v2 {
 .nav-link.active,
 .nav-menu[open] .nav-menu-trigger {
   color: var(--v2-text);
-  background: rgba(99, 102, 241, 0.16);
+  background: var(--nav-hover-bg);
 }
 
 .nav-menu { position: relative; }
@@ -3109,7 +3156,7 @@ body.redesign-v2 {
 .v2-text-link {
   color: var(--v2-text);
   border: 1px solid var(--v2-border);
-  background: rgba(148, 163, 184, 0.08);
+  background: var(--v2-surface-hover);
 }
 
 .v2-btn-ghost:hover,
@@ -3180,21 +3227,21 @@ body.redesign-v2 {
 .v2-card-interactive,
 .v2-tool-card { transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; }
 .v2-card-interactive:hover,
-.v2-tool-card:hover { transform: translateY(-3px); border-color: rgba(99, 102, 241, 0.52); background: var(--v2-surface-hover); }
+.v2-tool-card:hover { transform: translateY(-3px); border-color: var(--card-hover-border); background: var(--v2-surface-hover); }
 
 .v2-tag {
   display: inline-flex;
   width: fit-content;
   padding: 5px 9px;
   border-radius: 999px;
-  color: #c7d2fe;
-  background: rgba(99, 102, 241, 0.14);
+  color: var(--badge-text);
+  background: var(--badge-bg);
   font-size: 12px;
   font-weight: 800;
 }
 
-.v2-tag-info { color: #bae6fd; background: rgba(37, 99, 235, 0.14); }
-.v2-tag-success { color: #bbf7d0; background: rgba(5, 150, 105, 0.14); }
+.v2-tag-info { color: var(--badge-info-text); background: var(--badge-info-bg); }
+.v2-tag-success { color: var(--badge-success-text); background: var(--badge-success-bg); }
 
 .v2-card h3,
 .v2-tool-card strong {
@@ -3237,6 +3284,10 @@ body.redesign-v2 {
   border-top: 1px solid var(--v2-border);
   color: var(--v2-text-secondary);
   background: rgba(2, 6, 23, 0.28);
+}
+
+[data-theme="light"] .footer {
+  background: rgba(255, 253, 248, 0.82);
 }
 
 .footer-content {
@@ -3285,7 +3336,9 @@ body.redesign-v2 {
 }
 
 [data-theme="light"] .footer-support {
-  background: rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(135deg, rgba(15, 118, 110, 0.06), transparent 45%),
+    rgba(255, 253, 248, 0.88);
 }
 
 .footer-support-summary {
@@ -3695,8 +3748,8 @@ body.site-v2 a {
   align-items: center;
   padding: 0 10px;
   border-radius: 999px;
-  color: #c7d2fe;
-  background: rgba(99, 102, 241, 0.14);
+  color: var(--badge-text);
+  background: var(--badge-bg);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -3738,7 +3791,7 @@ body.site-v2 a {
 }
 
 [data-theme="light"] .site-v2 .ai-subnav {
-  background: rgba(248, 250, 252, 0.82);
+  background: rgba(255, 253, 248, 0.9);
 }
 
 .site-v2 .ai-subnav-inner {
@@ -3760,7 +3813,7 @@ body.site-v2 a {
   border: 1px solid var(--v2-border);
   border-radius: var(--v2-radius);
   color: var(--v2-text-secondary);
-  background: rgba(148, 163, 184, 0.08);
+  background: color-mix(in srgb, var(--v2-text-muted) 8%, transparent);
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
@@ -3774,8 +3827,8 @@ body.site-v2 a {
 .site-v2 .blog-category:hover,
 .site-v2 .blog-category.active {
   color: var(--v2-text);
-  border-color: rgba(99, 102, 241, 0.5);
-  background: rgba(99, 102, 241, 0.16);
+  border-color: var(--card-hover-border);
+  background: var(--nav-hover-bg);
 }
 
 .site-v2 .ai-overview-card,
@@ -3805,7 +3858,7 @@ body.site-v2 a {
 .site-v2 .blog-card:hover,
 .site-v2 .portfolio-card:hover,
 .site-v2 .product-card:hover {
-  border-color: rgba(99, 102, 241, 0.5);
+  border-color: var(--card-hover-border);
   background: var(--v2-surface-hover);
   transform: translateY(-2px);
 }
@@ -4103,8 +4156,8 @@ body.site-v2 a {
 .site-v2 .blog-card-tag,
 .site-v2 .ai-tool-badge {
   border-radius: 999px !important;
-  color: #c7d2fe !important;
-  background: rgba(99, 102, 241, 0.14) !important;
+  color: var(--badge-text) !important;
+  background: var(--badge-bg) !important;
   border: 0 !important;
 }
 

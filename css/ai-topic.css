@@ -2247,3 +2247,27 @@
 .glossary-toc-link:hover {
   text-decoration: underline;
 }
+
+/* ============================================================
+   亮色主题：墨绿强调，收敛紫粉渐变
+   ============================================================ */
+[data-theme="light"] .ai-hero-title {
+  background: linear-gradient(135deg, #134e4a, #0f766e, #115e59);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .ai-topic-card::before {
+  background: linear-gradient(90deg, #0f766e, #0e7490, #0369a1);
+}
+
+[data-theme="light"] .compare-summary {
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.07), rgba(14, 116, 144, 0.06));
+  border-color: rgba(15, 118, 110, 0.18);
+}
+
+[data-theme="light"] .beginner-step-number {
+  background: linear-gradient(135deg, #0f766e, #0e7490);
+  box-shadow: 0 4px 16px rgba(15, 118, 110, 0.22);
+}
