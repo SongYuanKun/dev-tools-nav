@@ -16,7 +16,7 @@
 - **实时搜索**：按名称、描述、标签即时过滤
 - **暗色模式**：跟随系统偏好 + 手动切换，偏好持久化
 - **工具详情页**：每个工具独立详情页，含同类推荐
-- **在线工具集**：7 款浏览器内工具（JSON / 时间戳 / Cron / Base64 / JWT / SQL / 正则），纯前端、数据不出站
+- **在线工具集**：10 款浏览器内工具（JSON / 时间戳 / Cron / Base64 / JWT / SQL / 正则 / UUID / Diff / 颜色），纯前端、数据不出站
 - **响应式设计**：移动端、平板、桌面全适配
 - **精选标记**：高频推荐工具标注精选徽章
 - **🎮 彩蛋系统**：隐藏的"激活工具"分类，5 种趣味解锁方式！
@@ -33,7 +33,7 @@
 | SQL 格式化 | `pages/tools/sql-formatter.html` | 关键字大写、缩进、压缩 |
 | 正则测试 | `pages/tools/regex.html` | 匹配高亮 + JS/Java 代码生成 |
 
-各工具页底部均有「相关在线工具」互链；高级能力由 `js/tool-upgrades.js` 按页注入（路径查询、验签、SQL 分析等）。
+各工具页由 `js/tool-chrome.js` 统一导航与复制反馈；能力分布在各 `js/*-tool.js` 中（Path 查询、验签、SQL 分析、Diff 等）。
 
 ## 工具分类
 
@@ -65,7 +65,8 @@ dev-tools-nav/
 │   ├── main.js             # 搜索过滤、分类、彩蛋、侧栏等
 │   ├── base.js             # 全站导航注入、主题、Umami 统计
 │   ├── json-tool.js        # JSON 工具核心逻辑（实时校验、树形视图、宽松解析）
-│   ├── tool-upgrades.js    # 在线工具高级面板（Path 查询、验签、SQL 分析等）
+│   ├── tool-chrome.js      # 在线工具共享壳层（导航、Toast、本地处理提示）
+│   ├── *-tool.js           # 各工具独立逻辑（json、timestamp、cron 等）
 │   ├── tools-hub.js        # 工具汇总页交互
 │   └── ai-related-reads.js # AI 子页底部「延伸阅读」注入
 ├── pages/

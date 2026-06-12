@@ -3253,6 +3253,7 @@ body.redesign-v2 {
 }
 
 .v2-tool-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.v2-tool-grid-ten { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .v2-tool-card { min-height: 180px; }
 .v2-tool-card em { display: inline-block; margin-top: 16px; color: var(--v2-accent); font-style: normal; font-weight: 800; }
 
@@ -3273,6 +3274,10 @@ body.redesign-v2 {
 .v2-tool-match .v2-tool-icon { background: var(--v2-green); }
 .v2-tool-sql .v2-tool-icon { background: #7c3aed; }
 .v2-tool-jwt .v2-tool-icon { background: #0f766e; }
+.v2-tool-cron .v2-tool-icon { background: #f59e0b; }
+.v2-tool-uuid .v2-tool-icon { background: #6366f1; }
+.v2-tool-diff .v2-tool-icon { background: #ec4899; }
+.v2-tool-color .v2-tool-icon { background: #8b5cf6; }
 .v2-tool-java .v2-tool-icon { background: #4f46e5; }
 
 .v2-contact { text-align: center; }
@@ -3620,6 +3625,7 @@ body.sponsor-modal-open {
 
 @media (max-width: 1080px) {
   .v2-tool-grid,
+  .v2-tool-grid-ten,
   .v2-card-grid-four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .v2-card-grid-three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

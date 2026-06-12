@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-tool-slug="diff" data-canonical-slug="diff">
+<head>
+  <script>
+    (function () {
+      if (new URLSearchParams(location.search).get("embed") === "1") return;
+      var slug = document.documentElement.getAttribute("data-canonical-slug") || "diff";
+      location.replace("../../tools/" + slug + "/" + (location.search || ""));
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="免费在线文本 Diff 对比工具，逐行高亮增删改，导出 Unified Diff 格式，浏览器本地运行。" />
+  <meta name="keywords" content="文本对比,Diff,差异对比,Unified Diff,在线工具" />
+  <meta property="og:title" content="在线文本 Diff 对比工具 | Koen的工具箱" />
+  <meta property="og:description" content="逐行对比两段文本，高亮增删行并导出 Unified Diff。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/tools/diff/" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="在线文本 Diff 对比工具 | Koen的工具箱" />
+  <meta name="twitter:description" content="逐行文本差异对比与 Unified Diff 导出。" />
+  <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <link rel="canonical" href="https://tools.songyuankun.top/tools/diff/" />
+  <title>在线文本 Diff 对比工具 | Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/tools.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "在线文本 Diff 对比工具",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+      "description": "在浏览器中逐行对比两段文本，高亮增删并导出 Unified Diff。",
+      "url": "https://tools.songyuankun.top/tools/diff/",
+      "author": { "@type": "Person", "name": "Koen" },
+      "inLanguage": "zh-CN"
+    }
+  </script>
+  <script src="../../data/tools.js"></script>
+  <script defer src="../../js/base.js"></script>
+  <script defer src="../../js/tool-chrome.js"></script>
+  <script defer src="../../js/diff-tool.js"></script>
+</head>
+<body data-tool-slug="diff">
+
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">首页</a>
+          <a href="./index.html" class="nav-link active" aria-current="page">在线工具</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+        </div>
+        <button type="button" id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="tool-page" id="main">
+    <nav class="tool-nav" data-tool-nav aria-label="在线工具"></nav>
+
+    <header class="tool-page-header">
+      <h1>在线文本 Diff 对比</h1>
+      <p>逐行对比两段文本，高亮显示新增与删除行，并生成 Unified Diff 格式输出。适合代码、配置与日志片段对比，全部在浏览器本地完成。</p>
+    </header>
+
+    <section class="tool-panel" aria-labelledby="diff-input-heading">
+      <h2 id="diff-input-heading" class="tool-panel-title">输入文本</h2>
+      <div class="diff-grid">
+        <div class="diff-pane">
+          <label class="tool-label" for="diffLeft">左侧（旧版本）</label>
+          <textarea id="diffLeft" class="tool-textarea" spellcheck="false" autocomplete="off" placeholder="粘贴左侧文本…"></textarea>
+        </div>
+        <div class="diff-pane">
+          <label class="tool-label" for="diffRight">右侧（新版本）</label>
+          <textarea id="diffRight" class="tool-textarea" spellcheck="false" autocomplete="off" placeholder="粘贴右侧文本…"></textarea>
+        </div>
+      </div>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn tool-btn-primary" id="btnDiffRun">对比</button>
+        <button type="button" class="tool-btn" id="btnDiffSwap">交换左右</button>
+        <button type="button" class="tool-btn" id="btnDiffClear">清空</button>
+      </div>
+      <div id="diffStats" class="tool-status tool-status-info" role="status">
+        就绪：在左右两侧输入文本进行逐行对比。
+      </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="diff-result-heading">
+      <h2 id="diff-result-heading" class="tool-panel-title">对比结果</h2>
+      <div id="diffResult" class="diff-result tool-result" aria-live="polite"></div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="diff-unified-heading">
+      <h2 id="diff-unified-heading" class="tool-panel-title">Unified Diff</h2>
+      <pre id="diffUnified" class="tool-pro-result"></pre>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn" id="btnCopyUnified" data-copy-target="#diffUnified">复制 Unified Diff</button>
+      </div>
+    </section>
+
+    <nav class="tool-footer-nav" aria-label="相关工具">
+      <h3>相关工具</h3>
+      <div class="tool-footer-links" data-tool-footer></div>
+    </nav>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" title="CSDN 博客">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">首页</a>
+        <span class="footer-divider">|</span>
+        <span class="footer-secret-hint" title="🔮 有些东西藏在暗处...">?</span>
+      </div>
+      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script defer src="../../js/footer.js"></script>
+</body>
+</html>

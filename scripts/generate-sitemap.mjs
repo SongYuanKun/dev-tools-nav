@@ -81,6 +81,9 @@ export function collectStaticUrls(root = ROOT) {
     { loc: `${BASE_URL}/tools/jwt/`, changefreq: "monthly", priority: "0.85" },
     { loc: `${BASE_URL}/tools/sql-formatter/`, changefreq: "monthly", priority: "0.85" },
     { loc: `${BASE_URL}/tools/regex/`, changefreq: "monthly", priority: "0.85" },
+    { loc: `${BASE_URL}/tools/uuid/`, changefreq: "monthly", priority: "0.85" },
+    { loc: `${BASE_URL}/tools/diff/`, changefreq: "monthly", priority: "0.85" },
+    { loc: `${BASE_URL}/tools/color/`, changefreq: "monthly", priority: "0.85" },
     { loc: `${BASE_URL}/tools/jrebel/`, changefreq: "monthly", priority: "0.8" },
     { loc: `${BASE_URL}/tools/kms/`, changefreq: "monthly", priority: "0.8" },
   ];

@@ -2,7 +2,7 @@
 
 ## 1. 项目定位
 
-`dev-tools-nav` 是一个纯静态的开发者工具导航站，核心能力包括分类筛选、搜索、收藏、最近访问、暗色模式、隐藏彩蛋分类，以及 **7 款浏览器内在线工具**（数据本地处理、不上传服务器）。
+`dev-tools-nav` 是一个纯静态的开发者工具导航站，核心能力包括分类筛选、搜索、收藏、最近访问、暗色模式、隐藏彩蛋分类，以及 **10 款浏览器内在线工具**（数据本地处理、不上传服务器）。
 
 ## 2. 本地运行
 
@@ -14,7 +14,7 @@ python3 -m http.server 8080
 
 然后访问：`http://127.0.0.1:8080/index.html`
 
-在线工具入口：`http://127.0.0.1:8080/pages/tools/index.html`
+在线工具入口：`http://127.0.0.1:8080/tools/`
 
 ## 3. 主要功能
 
@@ -23,24 +23,27 @@ python3 -m http.server 8080
 - **分类筛选**：点击顶部分类按钮切换工具集合。
 - **搜索**：在搜索框输入关键词，按名称/描述/标签实时过滤。
 - **收藏**：卡片右上角点击 `☆`/`★` 加入或取消收藏。
-- **最近访问**：点击「访问/详情」会自动记录到「最近访问」标签页。
+- **最近访问**：点击工具会自动记录到「最近访问」标签页。
 - **主题切换**：右上角按钮在亮色/暗色之间切换并持久化保存。
 
-### 在线工具（`pages/tools/`）
+### 在线工具（`tools/` 壳层 + `pages/tools/` 实现）
 
 | 工具 | 说明 |
 |------|------|
-| JSON 格式化 | 实时校验、行号错误定位、树形视图、宽松解析（`//` 注释、尾逗号、单引号）、修复/压缩、Unicode 转义、文件上传下载、`Ctrl+Enter` 格式化 |
-| 时间戳 | 秒/毫秒互转、多时区显示 |
-| Cron | 表达式解析、下次执行时间、部署片段 |
-| Base64 | 编解码 + SHA-1/256/512 |
-| JWT | Header/Payload 解码 + HMAC 验签 |
-| SQL | 关键字大写、缩进、压缩 + 语句分析 |
-| 正则 | 匹配测试 + JS/Java 代码生成 |
+| JSON 格式化 | 校验、树形视图、YAML 互转、双 JSON Diff、Path 查询、宽松解析 |
+| 时间戳 | 秒/毫秒/微秒/纳秒、多时区、批量、时间差、代码片段 |
+| Cron | Linux 五段 / Quartz 六段、执行预览、K8s/GitHub Actions 片段 |
+| Base64 | 编解码、Hash、Hex、文件摘要、Data URL 预览 |
+| JWT | 解码、生成、HMAC/RS 验签、安全审计 |
+| SQL | 格式化/压缩/分析，MySQL/PostgreSQL 方言 |
+| 正则 | 26+ 模板、Python/Go/JS/Java 代码生成 |
+| UUID | v4 / v7 批量生成 |
+| 文本 Diff | 行级对比、Unified Diff 导出 |
+| 颜色转换 | HEX/RGB/HSL/HWB、WCAG 对比度 |
 
-JSON 工具高级面板（页面底部）：结构统计、JSON Path 查询、按 Key 排序。
+共享壳层：`js/tool-chrome.js`（导航、复制 Toast、本地处理提示）。
 
-各工具页支持 URL 参数预填，例如 JSON：`tools/json/?q=%7B%22a%22%3A1%7D`。
+各工具页支持 URL 参数预填，例如 JSON：`tools/json/?q=%7B%22a%22%3A1%7D`，时间戳：`?ts=1704067200`。
 
 Umami 自定义事件在后台以**中文**展示（如「工具使用」「导航点击」），详见 `js/umami-labels.js`。
 
@@ -84,6 +87,6 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 
 ## 8. 验证记录
 
-- 语法检查：`node --check js/main.js && node --check js/json-tool.js` 通过。
+- 语法检查：`node --check js/*-tool.js js/tool-chrome.js` 通过。
 - 页面冒烟：本地静态服务下 `curl -I /index.html` 返回 `200`。
 - JSON 工具：非法 JSON 可定位行号；宽松模式下注释/尾逗号可解析。

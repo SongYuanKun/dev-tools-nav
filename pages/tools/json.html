@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-tool-slug="json" data-canonical-slug="json">
 <head>
   <script>
-    // 非嵌入模式统一跳转到 /tools/json/，避免 PV 拆分到两个 URL
     (function () {
       if (new URLSearchParams(location.search).get("embed") === "1") return;
-      var q = location.search || "";
-      location.replace("../../tools/json/" + q);
+      var slug = document.documentElement.getAttribute("data-canonical-slug") || "json";
+      location.replace("../../tools/" + slug + "/" + (location.search || ""));
     })();
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="description" content="免费在线 JSON 格式化、压缩与校验工具。实时语法检查、树形视图、注释/尾逗号容错、行号定位，数据仅在浏览器本地处理。" />
-  <meta name="keywords" content="JSON格式化,JSON校验,JSON美化,JSON压缩,JSON树形视图,在线工具,开发者工具" />
+  <meta name="description" content="免费在线 JSON 格式化、压缩与校验工具。实时语法检查、树形视图、JSON Path 查询、YAML 互转与结构对比，数据仅在浏览器本地处理。" />
+  <meta name="keywords" content="JSON格式化,JSON校验,JSON美化,JSON压缩,JSON树形视图,JSON Path,YAML,在线工具" />
   <meta property="og:title" content="在线 JSON 格式化工具 - 实时校验与树形视图 | Koen的工具箱" />
-  <meta property="og:description" content="实时 JSON 校验、格式化、树形浏览，支持注释与尾逗号修复，行号定位错误，本地处理不上传。" />
+  <meta property="og:description" content="实时 JSON 校验、格式化、树形浏览，支持注释与尾逗号修复、JSON Path 与 YAML 互转，本地处理不上传。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tools.songyuankun.top/tools/json/" />
   <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="在线 JSON 格式化工具 - 实时校验与树形视图 | Koen的工具箱" />
-  <meta name="twitter:description" content="实时 JSON 校验、格式化、树形浏览，支持注释与尾逗号修复。" />
+  <meta name="twitter:title" content="在线 JSON 格式化工具 | Koen的工具箱" />
+  <meta name="twitter:description" content="实时 JSON 校验、格式化、树形浏览与高级分析。" />
   <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <link rel="canonical" href="https://tools.songyuankun.top/tools/json/" />
   <title>在线 JSON 格式化工具 - 实时校验与树形视图 | Koen的工具箱</title>
@@ -37,25 +36,21 @@
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires JavaScript. Requires HTML5.",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "CNY"
-      },
-      "description": "免费在线 JSON 格式化、压缩与语法校验，实时错误定位、树形视图、注释尾逗号容错，本地处理不上传。",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+      "description": "免费在线 JSON 格式化、压缩与语法校验，实时错误定位、树形视图、JSON Path 与 YAML 互转，本地处理不上传。",
       "url": "https://tools.songyuankun.top/tools/json/",
-      "author": {
-        "@type": "Person",
-        "name": "Koen"
-      },
+      "author": { "@type": "Person", "name": "Koen" },
       "inLanguage": "zh-CN"
     }
   </script>
+  <script src="../../data/tools.js"></script>
   <script defer src="../../js/base.js"></script>
+  <script defer src="../../js/tool-chrome.js"></script>
   <script defer src="../../js/json-tool.js"></script>
-  <script defer src="../../js/tool-upgrades.js"></script>
 </head>
-<body>
+<body data-tool-slug="json">
+
+  <a class="skip-link" href="#main">跳到主要内容</a>
 
   <header>
     <nav class="navbar" role="navigation" aria-label="主导航">
@@ -69,31 +64,18 @@
           <a href="./index.html" class="nav-link active" aria-current="page">在线工具</a>
           <a href="../blog/index.html" class="nav-link">技术博客</a>
         </div>
-        <button
-          type="button"
-          id="themeToggle"
-          class="theme-toggle"
-          aria-label="切换暗色模式"
-          title="切换暗色模式"
-        >🌙</button>
+        <button type="button" id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
       </div>
     </nav>
   </header>
 
   <main class="tool-page" id="main">
-    <nav class="tool-nav" aria-label="在线首页">
-      <a class="tool-nav-item active" href="./json.html">📋 JSON 格式化</a>
-      <a class="tool-nav-item" href="./timestamp.html">⏱️ 时间戳</a>
-      <a class="tool-nav-item" href="./cron.html">⏰ Cron</a>
-      <a class="tool-nav-item" href="./base64.html">🔄 Base64</a>
-      <a class="tool-nav-item" href="./jwt.html">🔐 JWT</a>
-      <a class="tool-nav-item" href="./sql-formatter.html">🗃️ SQL</a>
-      <a class="tool-nav-item" href="./regex.html">🔍 正则</a>
-    </nav>
+    <nav class="tool-nav" data-tool-nav aria-label="在线工具"></nav>
+
     <header class="tool-page-header">
       <h1>在线 JSON 格式化 / 校验</h1>
       <p>
-        参考 JSONLint、JSONFormatter 等主流工具：实时校验、行号定位、树形浏览、注释/尾逗号容错修复。支持 URL 参数 <code style="font-size:12px;">?q=</code> 预填（URL 编码）。数据不会上传到服务器，内容自动保存在浏览器本地。
+        实时校验、行号定位、树形浏览、注释/尾逗号容错修复。支持 JSON Path 查询、YAML 互转与结构对比。支持 URL 参数 <code>?q=</code> 预填（URL 编码）。数据不会上传到服务器，内容自动保存在浏览器本地。
       </p>
     </header>
 
@@ -136,7 +118,7 @@
             class="json-textarea tool-textarea"
             spellcheck="false"
             autocomplete="off"
-            placeholder='粘贴 JSON，支持 // 注释与尾逗号。快捷键：Ctrl+Enter 格式化'
+            placeholder="粘贴 JSON，支持 // 注释与尾逗号。快捷键：Ctrl+Enter 格式化"
             aria-describedby="statusMsg"
           ></textarea>
         </div>
@@ -156,7 +138,7 @@
         <button type="button" class="tool-btn" id="btnValidate">校验</button>
         <button type="button" class="tool-btn" id="btnCopy">复制</button>
         <button type="button" class="tool-btn" id="btnDownload">下载</button>
-        <label class="tool-btn" style="cursor:pointer;margin:0;">
+        <label class="tool-btn">
           上传文件
           <input id="jsonFileInput" type="file" accept=".json,.txt,application/json" hidden />
         </label>
@@ -167,17 +149,69 @@
       </div>
     </section>
 
-    <nav class="tool-footer-nav" aria-label="相关在线工具">
-      <h3>相关在线工具</h3>
-      <div class="tool-footer-links">
-        <a class="tool-footer-link" href="./sql-formatter.html">SQL 格式化</a>
-        <a class="tool-footer-link" href="./regex.html">正则测试</a>
-        <a class="tool-footer-link" href="./timestamp.html">时间戳转换</a>
-        <a class="tool-footer-link" href="./base64.html">Base64 编解码</a>
-        <a class="tool-footer-link" href="./jwt.html">JWT 解码器</a>
-        <a class="tool-footer-link" href="./cron.html">Cron 生成器</a>
-        <a class="tool-footer-link" href="../../index.html">← 返回首页</a>
+    <section class="tool-panel" aria-labelledby="json-pro-heading">
+      <h2 id="json-pro-heading" class="tool-panel-title">高级分析</h2>
+      <div class="tool-stat-row">
+        <div class="tool-stat-card">
+          <span>结构统计</span>
+          <strong id="jsonProStats">—</strong>
+        </div>
+        <div class="tool-stat-card">
+          <span>大小对比</span>
+          <strong id="jsonProSize">—</strong>
+        </div>
+        <div class="tool-stat-card">
+          <span>路径查询</span>
+          <strong id="jsonProState">支持 $.a[0].b</strong>
+        </div>
       </div>
+      <div class="tool-pro-inline">
+        <div>
+          <label class="tool-label" for="jsonProPath">JSON Path</label>
+          <input id="jsonProPath" class="tool-input" placeholder="users[0].name 或 $.users[0].name" autocomplete="off" />
+        </div>
+        <button type="button" class="tool-btn tool-btn-primary" id="jsonProQuery">查询</button>
+      </div>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn" id="jsonProRefresh">刷新统计</button>
+        <button type="button" class="tool-btn" id="jsonProSort">按 Key 排序</button>
+        <button type="button" class="tool-btn" id="jsonProSample">复杂示例</button>
+        <button type="button" class="tool-btn" id="jsonProCopy">复制结果</button>
+      </div>
+      <pre id="jsonProOut" class="tool-pro-result">路径查询结果会显示在这里。</pre>
+    </section>
+
+    <section class="tool-panel" id="yamlPanel" aria-labelledby="yaml-heading">
+      <h2 id="yaml-heading" class="tool-panel-title">YAML 互转</h2>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn tool-btn-primary" id="btnJsonToYaml">JSON → YAML</button>
+        <button type="button" class="tool-btn" id="btnYamlToJson">YAML → JSON</button>
+      </div>
+      <label class="tool-label" for="yamlIO">YAML 内容</label>
+      <textarea id="yamlIO" class="tool-textarea" spellcheck="false" autocomplete="off" placeholder="YAML 内容将显示在这里，也可直接编辑后转回 JSON…"></textarea>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="json-diff-heading">
+      <h2 id="json-diff-heading" class="tool-panel-title">JSON 结构对比</h2>
+      <div class="diff-grid">
+        <div class="diff-pane">
+          <label class="tool-label" for="jsonDiffLeft">左侧 JSON</label>
+          <textarea id="jsonDiffLeft" class="tool-textarea" spellcheck="false" autocomplete="off" placeholder="粘贴左侧 JSON…"></textarea>
+        </div>
+        <div class="diff-pane">
+          <label class="tool-label" for="jsonDiffRight">右侧 JSON</label>
+          <textarea id="jsonDiffRight" class="tool-textarea" spellcheck="false" autocomplete="off" placeholder="粘贴右侧 JSON…"></textarea>
+        </div>
+      </div>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn tool-btn-primary" id="btnJsonDiff">对比差异</button>
+      </div>
+      <pre id="jsonDiffOut" class="tool-pro-result">对比结果会显示在这里。</pre>
+    </section>
+
+    <nav class="tool-footer-nav" aria-label="相关工具">
+      <h3>相关工具</h3>
+      <div class="tool-footer-links" data-tool-footer></div>
     </nav>
   </main>
 
@@ -189,12 +223,12 @@
       </div>
       <div class="footer-links">
         <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
           </svg>
         </a>
         <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" title="CSDN 博客">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
           </svg>
         </a>

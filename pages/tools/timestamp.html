@@ -1,24 +1,33 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-tool-slug="timestamp" data-canonical-slug="timestamp">
 <head>
+  <script>
+    (function () {
+      if (new URLSearchParams(location.search).get("embed") === "1") return;
+      var slug = document.documentElement.getAttribute("data-canonical-slug") || "timestamp";
+      location.replace("../../tools/" + slug + "/" + (location.search || ""));
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
   <meta name="description" content="免费在线 Unix 时间戳与日期时间转换工具：支持秒、毫秒、微秒、纳秒自动识别，多时区对照、ISO/RFC/自定义格式、批量转换、时间差计算和常用快捷时间。本地浏览器运行，不上传数据。" />
-  <meta name="keywords" content="Unix时间戳,时间戳转换,Timestamp,Epoch,ISO8601,时区转换,批量转换,在线工具,开发者工具" />
+  <meta name="keywords" content="Unix时间戳,时间戳转换,Timestamp,Epoch,ISO8601,时区转换,批量转换,在线工具" />
   <meta property="og:title" content="在线时间戳转换工具 - Unix Timestamp / Epoch 多时区互转 | Koen的工具箱" />
   <meta property="og:description" content="Unix 秒/毫秒/微秒/纳秒与日期时间互转，支持多时区、批量转换、自定义格式和时间差计算。" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://tools.songyuankun.top/pages/tools/timestamp.html" />
+  <meta property="og:url" content="https://tools.songyuankun.top/tools/timestamp/" />
   <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="在线时间戳转换工具 - Unix Timestamp 互转 | Koen的工具箱" />
-  <meta name="twitter:description" content="Unix 秒/毫秒/微秒/纳秒与日期时间互转，支持多时区、批量转换和自定义格式。" />
+  <meta name="twitter:title" content="在线时间戳转换工具 | Koen的工具箱" />
+  <meta name="twitter:description" content="Unix 时间戳与日期互转，支持多时区、批量转换和自定义格式。" />
   <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
-  <link rel="canonical" href="https://tools.songyuankun.top/pages/tools/timestamp.html" />
+  <link rel="canonical" href="https://tools.songyuankun.top/tools/timestamp/" />
   <title>在线时间戳转换工具 - Unix Timestamp / Epoch 多时区互转 | Koen的工具箱</title>
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/tools.css" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -30,155 +39,18 @@
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
       "inLanguage": "zh-CN",
       "description": "在浏览器中将 Unix 时间戳与日期时间互转，支持秒、毫秒、微秒、纳秒、多时区对照、批量转换和自定义格式。",
-      "url": "https://tools.songyuankun.top/pages/tools/timestamp.html",
+      "url": "https://tools.songyuankun.top/tools/timestamp/",
       "author": { "@type": "Person", "name": "Koen", "url": "https://github.com/SongYuanKun" }
     }
   </script>
-  <script>
-    (function () {
-      var k = "dev-tools-theme";
-      var t = localStorage.getItem(k) || "dark";
-      document.documentElement.setAttribute("data-theme", t);
-    })();
-  </script>
-  <link rel="stylesheet" href="../../css/style.css" />
-  <link rel="stylesheet" href="../../css/tools.css" />
+  <script src="../../data/tools.js"></script>
   <script defer src="../../js/base.js"></script>
-  <style>
-    .timestamp-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-    .timestamp-grid-three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .timestamp-card {
-      min-width: 0;
-      padding: 14px;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      background: var(--bg-page);
-    }
-    .timestamp-card strong {
-      display: block;
-      margin-top: 5px;
-      color: var(--text-primary);
-      font-family: var(--font-mono);
-      font-size: 17px;
-      line-height: 1.45;
-      word-break: break-all;
-    }
-    .timestamp-card span,
-    .timestamp-help {
-      color: var(--text-muted);
-      font-size: 12px;
-      line-height: 1.55;
-    }
-    .timestamp-form-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(160px, 0.5fr) minmax(180px, 0.6fr);
-      gap: 10px;
-      align-items: end;
-    }
-    .timestamp-output-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .timestamp-output {
-      display: grid;
-      gap: 8px;
-      min-width: 0;
-    }
-    .timestamp-output .tool-result {
-      min-height: 42px;
-      margin: 0;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    .copy-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-      align-items: start;
-    }
-    .timestamp-presets {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0 4px;
-    }
-    .timestamp-table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      background: var(--bg-page);
-    }
-    .timestamp-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 720px;
-      font-size: 13px;
-    }
-    .timestamp-table th,
-    .timestamp-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border-color);
-      text-align: left;
-      vertical-align: top;
-    }
-    .timestamp-table th {
-      color: var(--text-muted);
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .timestamp-table td {
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-      word-break: break-all;
-    }
-    .timestamp-table tr:last-child td {
-      border-bottom: none;
-    }
-    .timestamp-format-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px;
-      align-items: end;
-    }
-    .tool-select {
-      width: 100%;
-      height: 40px;
-      padding: 0 12px;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      background: var(--bg-page);
-      color: var(--text-primary);
-      font-family: var(--font-sans);
-      font-size: 14px;
-      outline: none;
-    }
-    .tool-select:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
-    }
-    @media (max-width: 860px) {
-      .timestamp-grid,
-      .timestamp-grid-three,
-      .timestamp-form-grid,
-      .timestamp-output-grid,
-      .timestamp-format-row {
-        grid-template-columns: 1fr;
-      }
-      .copy-row {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+  <script defer src="../../js/tool-chrome.js"></script>
+  <script defer src="../../js/timestamp-tool.js"></script>
 </head>
-<body>
+<body data-tool-slug="timestamp">
+
+  <a class="skip-link" href="#main">跳到主要内容</a>
 
   <header>
     <nav class="navbar" role="navigation" aria-label="主导航">
@@ -192,27 +64,13 @@
           <a href="./index.html" class="nav-link active" aria-current="page">在线工具</a>
           <a href="../blog/index.html" class="nav-link">技术博客</a>
         </div>
-        <button
-          type="button"
-          id="themeToggle"
-          class="theme-toggle"
-          aria-label="切换暗色模式"
-          title="切换暗色模式"
-        >🌙</button>
+        <button type="button" id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
       </div>
     </nav>
   </header>
 
   <main class="tool-page" id="main">
-    <nav class="tool-nav" aria-label="在线首页">
-      <a class="tool-nav-item" href="./json.html">📋 JSON 格式化</a>
-      <a class="tool-nav-item active" href="./timestamp.html">⏱️ 时间戳</a>
-      <a class="tool-nav-item" href="./cron.html">⏰ Cron</a>
-      <a class="tool-nav-item" href="./base64.html">🔄 Base64</a>
-      <a class="tool-nav-item" href="./jwt.html">🔐 JWT</a>
-      <a class="tool-nav-item" href="./sql-formatter.html">🗃️ SQL</a>
-      <a class="tool-nav-item" href="./regex.html">🔍 正则</a>
-    </nav>
+    <nav class="tool-nav" data-tool-nav aria-label="在线工具"></nav>
 
     <header class="tool-page-header">
       <h1>在线时间戳转换</h1>
@@ -246,6 +104,10 @@
           </div>
         </div>
       </div>
+      <div class="timestamp-card">
+        <span>相对 Unix 纪元</span>
+        <strong id="liveRelative">—</strong>
+      </div>
       <div class="timestamp-presets" aria-label="当前时间快捷操作">
         <button type="button" class="tool-btn" data-shift="-3600">-1 小时</button>
         <button type="button" class="tool-btn" data-shift="-60">-1 分钟</button>
@@ -260,7 +122,7 @@
       <div class="timestamp-grid">
         <div>
           <label class="tool-label" for="timezoneSelect">目标时区</label>
-          <select id="timezoneSelect" class="tool-select">
+          <select id="timezoneSelect" class="tool-select" aria-describedby="timezoneList">
             <option value="local">本机时区</option>
             <option value="Asia/Shanghai">Asia/Shanghai</option>
             <option value="UTC">UTC</option>
@@ -271,6 +133,16 @@
             <option value="Asia/Tokyo">Asia/Tokyo</option>
             <option value="Asia/Singapore">Asia/Singapore</option>
           </select>
+          <datalist id="timezoneList">
+            <option value="Asia/Shanghai"></option>
+            <option value="UTC"></option>
+            <option value="America/Los_Angeles"></option>
+            <option value="America/New_York"></option>
+            <option value="Europe/London"></option>
+            <option value="Europe/Berlin"></option>
+            <option value="Asia/Tokyo"></option>
+            <option value="Asia/Singapore"></option>
+          </datalist>
         </div>
         <div>
           <label class="tool-label" for="formatInput">自定义格式</label>
@@ -297,7 +169,7 @@
             <option value="ns">纳秒 ns</option>
           </select>
         </div>
-        <div class="tool-actions" style="margin:0;">
+        <div class="tool-actions">
           <button type="button" class="tool-btn tool-btn-primary" id="tsConvertBtn">转换</button>
           <button type="button" class="tool-btn" id="tsClearBtn">清空</button>
         </div>
@@ -308,8 +180,8 @@
         <button type="button" class="tool-btn" data-fill-ts="y2k">2000-01-01</button>
         <button type="button" class="tool-btn" data-fill-ts="unix0">Unix 纪元</button>
       </div>
-      <div id="ts2dateError" class="tool-status tool-status-error" style="display:none;" role="alert"></div>
-      <div id="ts2dateOut" style="display:none;">
+      <div id="ts2dateError" class="tool-status tool-status-error" hidden role="alert"></div>
+      <div id="ts2dateOut" hidden>
         <div class="timestamp-output-grid">
           <div class="timestamp-output">
             <span class="tool-label">目标时区</span>
@@ -362,8 +234,8 @@
       <div class="tool-actions">
         <button type="button" class="tool-btn tool-btn-primary" id="dtConvertBtn">转换为时间戳</button>
       </div>
-      <div id="date2tsError" class="tool-status tool-status-error" style="display:none;" role="alert"></div>
-      <div id="date2tsOut" style="display:none;">
+      <div id="date2tsError" class="tool-status tool-status-error" hidden role="alert"></div>
+      <div id="date2tsOut" hidden>
         <div class="timestamp-output-grid">
           <div class="timestamp-output"><span class="tool-label">秒（s）</span><div class="copy-row"><div class="tool-result" id="outSec"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outSec">复制</button></div></div>
           <div class="timestamp-output"><span class="tool-label">毫秒（ms）</span><div class="copy-row"><div class="tool-result" id="outMs"></div><button type="button" class="tool-btn copy-btn" data-copy-el="outMs">复制</button></div></div>
@@ -376,19 +248,19 @@
     <section class="tool-panel" aria-labelledby="batchHeading">
       <h2 class="tool-panel-title" id="batchHeading">批量转换</h2>
       <label class="tool-label" for="batchInput">每行一个时间戳或日期字符串</label>
-      <textarea id="batchInput" class="tool-textarea" style="min-height:130px;" placeholder="1704067200&#10;1704067200000&#10;2026-05-27 20:30:00&#10;2026-05-27T12:30:00Z"></textarea>
+      <textarea id="batchInput" class="tool-textarea" placeholder="1704067200&#10;1704067200000&#10;2026-05-27 20:30:00&#10;2026-05-27T12:30:00Z"></textarea>
       <div class="tool-actions">
         <button type="button" class="tool-btn tool-btn-primary" id="batchConvertBtn">批量转换</button>
         <button type="button" class="tool-btn copy-btn" data-copy-el="batchCsv">复制 CSV</button>
         <button type="button" class="tool-btn" id="batchSampleBtn">填入示例</button>
       </div>
-      <div class="timestamp-table-wrap" id="batchTableWrap" style="display:none;">
+      <div class="timestamp-table-wrap" id="batchTableWrap" hidden>
         <table class="timestamp-table">
           <thead><tr><th>输入</th><th>识别</th><th>时间戳秒</th><th>时间戳毫秒</th><th>目标时区日期</th></tr></thead>
           <tbody id="batchRows"></tbody>
         </table>
       </div>
-      <pre id="batchCsv" class="tool-result" style="display:none;"></pre>
+      <pre id="batchCsv" class="tool-result" hidden></pre>
     </section>
 
     <section class="tool-panel" aria-labelledby="diffHeading">
@@ -396,32 +268,36 @@
       <div class="timestamp-grid">
         <div>
           <label class="tool-label" for="diffStart">开始时间</label>
-          <input id="diffStart" class="tool-input" placeholder="时间戳或日期字符串" />
+          <input id="diffStart" class="tool-input" placeholder="时间戳或日期字符串" autocomplete="off" />
         </div>
         <div>
           <label class="tool-label" for="diffEnd">结束时间</label>
-          <input id="diffEnd" class="tool-input" placeholder="时间戳或日期字符串" />
+          <input id="diffEnd" class="tool-input" placeholder="时间戳或日期字符串" autocomplete="off" />
         </div>
       </div>
       <div class="tool-actions">
         <button type="button" class="tool-btn tool-btn-primary" id="diffBtn">计算时间差</button>
         <button type="button" class="tool-btn" id="diffNowBtn">结束时间填当前</button>
       </div>
-      <div id="diffError" class="tool-status tool-status-error" style="display:none;" role="alert"></div>
-      <div id="diffOut" class="tool-result" style="display:none;"></div>
+      <div id="diffError" class="tool-status tool-status-error" hidden role="alert"></div>
+      <div id="diffOut" class="tool-result" hidden></div>
     </section>
 
-    <nav class="tool-footer-nav" aria-label="相关在线工具">
-      <h3>相关工具</h3>
-      <div class="tool-footer-links">
-        <a class="tool-footer-link" href="./json.html">JSON 格式化</a>
-        <a class="tool-footer-link" href="./sql-formatter.html">SQL 格式化</a>
-        <a class="tool-footer-link" href="./regex.html">正则测试</a>
-        <a class="tool-footer-link" href="./base64.html">Base64 编解码</a>
-        <a class="tool-footer-link" href="./jwt.html">JWT 解码器</a>
-        <a class="tool-footer-link" href="./cron.html">Cron 生成器</a>
-        <a class="tool-footer-link" href="../../index.html">← 返回首页</a>
+    <section class="tool-panel">
+      <div class="tool-section">
+        <button type="button" class="tool-section-toggle" data-section-toggle aria-expanded="false" aria-controls="codeSnippetsSection">
+          多语言代码片段
+          <span aria-hidden="true">▼</span>
+        </button>
+        <div class="tool-section-body" id="codeSnippetsSection" hidden>
+          <pre id="codeSnippets" class="tool-result"></pre>
+        </div>
       </div>
+    </section>
+
+    <nav class="tool-footer-nav" aria-label="相关工具">
+      <h3>相关工具</h3>
+      <div class="tool-footer-links" data-tool-footer></div>
     </nav>
   </main>
 
@@ -433,15 +309,17 @@
       </div>
       <div class="footer-links">
         <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer" title="GitHub">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
           </svg>
         </a>
         <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" title="CSDN 博客">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.18 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
           </svg>
         </a>
+        <span class="footer-divider">|</span>
+        <a href="../../index.html">首页</a>
         <span class="footer-divider">|</span>
         <span class="footer-secret-hint" title="🔮 有些东西藏在暗处...">?</span>
       </div>
@@ -449,385 +327,6 @@
     </div>
   </footer>
 
-  <script>
-    (function () {
-      var THEME_KEY = "dev-tools-theme";
-      var WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
-
-      function $(id) { return document.getElementById(id); }
-      function pad(n, len) { return String(Math.abs(Math.trunc(n))).padStart(len || 2, "0"); }
-      function signed(n) { return n >= 0 ? "+" + n : String(n); }
-
-      function applyTheme(theme) {
-        document.documentElement.setAttribute("data-theme", theme);
-        var btn = $("themeToggle");
-        if (!btn) return;
-        var title = theme === "dark" ? "切换到亮色模式" : "切换到暗色模式";
-        btn.textContent = theme === "dark" ? "☀️" : "🌙";
-        btn.setAttribute("title", title);
-        btn.setAttribute("aria-label", title);
-      }
-
-      function initThemeToggle() {
-        applyTheme(localStorage.getItem(THEME_KEY) || document.documentElement.getAttribute("data-theme") || "dark");
-        var btn = $("themeToggle");
-        if (btn) {
-          btn.addEventListener("click", function () {
-            var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-            localStorage.setItem(THEME_KEY, next);
-            applyTheme(next);
-          });
-        }
-      }
-
-      function getTimeZone() {
-        var v = $("timezoneSelect").value;
-        return v === "local" ? Intl.DateTimeFormat().resolvedOptions().timeZone : v;
-      }
-
-      function getZoneParts(date, timeZone) {
-        var parts = new Intl.DateTimeFormat("en-CA", {
-          timeZone: timeZone,
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false
-        }).formatToParts(date);
-        var map = {};
-        parts.forEach(function (p) { if (p.type !== "literal") map[p.type] = p.value; });
-        return {
-          year: Number(map.year),
-          month: Number(map.month),
-          day: Number(map.day),
-          hour: Number(map.hour === "24" ? "0" : map.hour),
-          minute: Number(map.minute),
-          second: Number(map.second)
-        };
-      }
-
-      function getOffsetMinutes(date, timeZone) {
-        var p = getZoneParts(date, timeZone);
-        var asUtc = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
-        return Math.round((asUtc - date.getTime()) / 60000);
-      }
-
-      function formatOffset(mins, compact) {
-        var sign = mins >= 0 ? "+" : "-";
-        var abs = Math.abs(mins);
-        var h = pad(Math.floor(abs / 60), 2);
-        var m = pad(abs % 60, 2);
-        return compact ? sign + h + m : "UTC" + sign + h + ":" + m;
-      }
-
-      function formatInZone(date, timeZone) {
-        return new Intl.DateTimeFormat("zh-CN", {
-          timeZone: timeZone,
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          weekday: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false
-        }).format(date) + " " + formatOffset(getOffsetMinutes(date, timeZone));
-      }
-
-      function formatCustom(date) {
-        var tz = getTimeZone();
-        var p = getZoneParts(date, tz);
-        var offset = getOffsetMinutes(date, tz);
-        var tpl = $("formatInput").value || "YYYY-MM-DD HH:mm:ss.SSS Z";
-        return tpl
-          .replace(/YYYY/g, String(p.year))
-          .replace(/MM/g, pad(p.month, 2))
-          .replace(/DD/g, pad(p.day, 2))
-          .replace(/HH/g, pad(p.hour, 2))
-          .replace(/mm/g, pad(p.minute, 2))
-          .replace(/ss/g, pad(p.second, 2))
-          .replace(/SSS/g, pad(date.getMilliseconds(), 3))
-          .replace(/ZZ/g, formatOffset(offset, true))
-          .replace(/Z/g, formatOffset(offset, false))
-          .replace(/ddd/g, WEEKDAYS[new Date(Date.UTC(p.year, p.month - 1, p.day)).getUTCDay()]);
-      }
-
-      function normalizeDateText(raw) {
-        var s = String(raw || "").trim();
-        if (!s) return "";
-        if (/^\d{4}-\d{1,2}-\d{1,2} \d/.test(s) && !/[zZ]|[+-]\d{2}:?\d{2}$/.test(s)) {
-          return s.replace(" ", "T");
-        }
-        return s;
-      }
-
-      function parseUnix(raw, unit) {
-        var s = String(raw || "").trim().replace(/,/g, "");
-        if (!s || !/^[+-]?\d+(\.\d+)?$/.test(s)) return null;
-        var n = Number(s);
-        if (!Number.isFinite(n)) return null;
-        var u = unit || "auto";
-        if (u === "auto") {
-          var digits = s.replace(/^[+-]/, "").replace(/\..*$/, "").length;
-          if (digits >= 18) u = "ns";
-          else if (digits >= 15) u = "us";
-          else if (digits >= 12) u = "ms";
-          else u = "s";
-        }
-        var ms = u === "ns" ? n / 1000000 : u === "us" ? n / 1000 : u === "ms" ? n : n * 1000;
-        var date = new Date(ms);
-        if (Number.isNaN(date.getTime())) return null;
-        return { date: date, unit: u, raw: s };
-      }
-
-      function parseAny(raw) {
-        var unix = parseUnix(raw, "auto");
-        if (unix) return { date: unix.date, kind: "timestamp " + unix.unit };
-        var text = normalizeDateText(raw);
-        var d = new Date(text);
-        if (!text || Number.isNaN(d.getTime())) return null;
-        return { date: d, kind: "date" };
-      }
-
-      function toDatetimeLocalValue(d) {
-        return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
-      }
-
-      function showError(el, msg) {
-        if (!msg) {
-          el.style.display = "none";
-          el.textContent = "";
-          return;
-        }
-        el.textContent = msg;
-        el.style.display = "flex";
-      }
-
-      function setText(id, value) {
-        var el = $(id);
-        if (el) el.textContent = value;
-      }
-
-      function copyFromEl(id, btn) {
-        var el = $(id);
-        if (!el) return;
-        var value = el.textContent || "";
-        if (!value || value === "—") return;
-        navigator.clipboard.writeText(value).then(function () {
-          var old = btn.textContent;
-          btn.textContent = "已复制";
-          setTimeout(function () { btn.textContent = old; }, 1300);
-        });
-      }
-
-      function tickLive() {
-        var now = new Date();
-        setText("liveSec", String(Math.floor(now.getTime() / 1000)));
-        setText("liveMs", String(now.getTime()));
-        setText("liveLocal", formatInZone(now, getTimeZone()));
-      }
-
-      function fillDate(date) {
-        $("dtLocal").value = toDatetimeLocalValue(date);
-        $("dateTextInput").value = "";
-      }
-
-      function renderTimestamp(date, unit) {
-        var tz = getTimeZone();
-        setText("outZone", formatInZone(date, tz));
-        setText("outCustom", formatCustom(date));
-        setText("outIso", date.toISOString());
-        setText("outUtc", date.toUTCString());
-        setText("outRfc", date.toUTCString().replace("GMT", "+0000"));
-        setText("outHint", "输入按 " + unit + " 解析；目标时区：" + tz + "；本机时区：" + Intl.DateTimeFormat().resolvedOptions().timeZone + "。");
-        $("ts2dateOut").style.display = "block";
-      }
-
-      function runTsToDate() {
-        var parsed = parseUnix($("tsInput").value, $("unitSelect").value);
-        if (!parsed) {
-          showError($("ts2dateError"), "请输入有效的 Unix 时间戳。支持秒、毫秒、微秒和纳秒。");
-          $("ts2dateOut").style.display = "none";
-          return;
-        }
-        showError($("ts2dateError"), "");
-        renderTimestamp(parsed.date, parsed.unit);
-        window.umamiTrack?.("tool_used", { tool: "timestamp", action: "ts_to_date" });
-      }
-
-      function readDateInput() {
-        var text = $("dateTextInput").value.trim();
-        if (text) return parseAny(text);
-        var local = $("dtLocal").value;
-        if (!local) return null;
-        var d = new Date(local);
-        return Number.isNaN(d.getTime()) ? null : { date: d, kind: "local datetime" };
-      }
-
-      function runDateToTs() {
-        var parsed = readDateInput();
-        if (!parsed) {
-          showError($("date2tsError"), "请输入可识别的日期时间，或选择本地日期时间。");
-          $("date2tsOut").style.display = "none";
-          return;
-        }
-        showError($("date2tsError"), "");
-        var ms = parsed.date.getTime();
-        setText("outSec", String(Math.floor(ms / 1000)));
-        setText("outMs", String(ms));
-        setText("outUs", String(ms * 1000));
-        setText("outNs", String(ms * 1000000));
-        $("date2tsOut").style.display = "block";
-        window.umamiTrack?.("tool_used", { tool: "timestamp", action: "date_to_ts" });
-      }
-
-      function startOfWeekMonday(d) {
-        var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        var day = x.getDay();
-        x.setDate(x.getDate() + (day === 0 ? -6 : 1 - day));
-        x.setHours(0, 0, 0, 0);
-        return x;
-      }
-
-      function runBatch() {
-        var lines = $("batchInput").value.split(/\r?\n/).map(function (x) { return x.trim(); }).filter(Boolean);
-        var rows = [];
-        var csv = ["input,type,unix_seconds,unix_milliseconds,date"];
-        lines.forEach(function (line) {
-          var parsed = parseAny(line);
-          if (!parsed) {
-            rows.push("<tr><td>" + escapeHtml(line) + "</td><td>无法识别</td><td>—</td><td>—</td><td>—</td></tr>");
-            csv.push(csvCell(line) + ",invalid,,,");
-            return;
-          }
-          var ms = parsed.date.getTime();
-          var sec = Math.floor(ms / 1000);
-          var zone = formatInZone(parsed.date, getTimeZone());
-          rows.push("<tr><td>" + escapeHtml(line) + "</td><td>" + parsed.kind + "</td><td>" + sec + "</td><td>" + ms + "</td><td>" + escapeHtml(zone) + "</td></tr>");
-          csv.push([line, parsed.kind, sec, ms, zone].map(csvCell).join(","));
-        });
-        $("batchRows").innerHTML = rows.join("");
-        $("batchCsv").textContent = csv.join("\n");
-        $("batchTableWrap").style.display = rows.length ? "block" : "none";
-        $("batchCsv").style.display = rows.length ? "block" : "none";
-        window.umamiTrack?.("tool_used", { tool: "timestamp", action: "batch" });
-      }
-
-      function runDiff() {
-        var a = parseAny($("diffStart").value);
-        var b = parseAny($("diffEnd").value);
-        if (!a || !b) {
-          showError($("diffError"), "开始时间和结束时间都需要填写，可输入时间戳或日期字符串。");
-          $("diffOut").style.display = "none";
-          return;
-        }
-        showError($("diffError"), "");
-        var diff = b.date.getTime() - a.date.getTime();
-        var sign = diff < 0 ? "-" : "";
-        var abs = Math.abs(diff);
-        var days = Math.floor(abs / 86400000);
-        var hours = Math.floor(abs % 86400000 / 3600000);
-        var mins = Math.floor(abs % 3600000 / 60000);
-        var secs = Math.floor(abs % 60000 / 1000);
-        $("diffOut").textContent =
-          "相差：" + sign + days + " 天 " + hours + " 小时 " + mins + " 分 " + secs + " 秒\n" +
-          "毫秒差：" + diff + "\n" +
-          "秒差：" + Math.trunc(diff / 1000);
-        $("diffOut").style.display = "block";
-        window.umamiTrack?.("tool_used", { tool: "timestamp", action: "diff" });
-      }
-
-      function escapeHtml(s) {
-        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-      }
-
-      function csvCell(v) {
-        var s = String(v);
-        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        initThemeToggle();
-        fillDate(new Date());
-        tickLive();
-        setInterval(tickLive, 1000);
-
-        $("tsConvertBtn").addEventListener("click", runTsToDate);
-        $("tsInput").addEventListener("keydown", function (e) { if (e.key === "Enter") runTsToDate(); });
-        $("unitSelect").addEventListener("change", function () { if ($("tsInput").value.trim()) runTsToDate(); });
-        $("timezoneSelect").addEventListener("change", function () {
-          tickLive();
-          if ($("ts2dateOut").style.display !== "none" && $("tsInput").value.trim()) runTsToDate();
-          if ($("batchTableWrap").style.display !== "none") runBatch();
-        });
-        $("formatInput").addEventListener("input", function () { if ($("ts2dateOut").style.display !== "none" && $("tsInput").value.trim()) runTsToDate(); });
-
-        $("tsClearBtn").addEventListener("click", function () {
-          $("tsInput").value = "";
-          $("ts2dateOut").style.display = "none";
-          showError($("ts2dateError"), "");
-        });
-        $("dtConvertBtn").addEventListener("click", runDateToTs);
-        $("dateTextInput").addEventListener("keydown", function (e) { if (e.key === "Enter") runDateToTs(); });
-        $("useNowBtn").addEventListener("click", function () { fillDate(new Date()); runDateToTs(); });
-
-        document.querySelectorAll("[data-fill-ts]").forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            var now = Date.now();
-            var kind = btn.getAttribute("data-fill-ts");
-            if (kind === "nowSec") { $("tsInput").value = String(Math.floor(now / 1000)); $("unitSelect").value = "s"; }
-            if (kind === "nowMs") { $("tsInput").value = String(now); $("unitSelect").value = "ms"; }
-            if (kind === "y2k") { $("tsInput").value = "946684800"; $("unitSelect").value = "s"; }
-            if (kind === "unix0") { $("tsInput").value = "0"; $("unitSelect").value = "s"; }
-            runTsToDate();
-          });
-        });
-
-        document.querySelectorAll("[data-shift]").forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            var d = new Date(Date.now() + Number(btn.getAttribute("data-shift")) * 1000);
-            fillDate(d);
-            runDateToTs();
-          });
-        });
-
-        document.querySelectorAll("[data-quick]").forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            var now = new Date();
-            var kind = btn.getAttribute("data-quick");
-            var d = new Date();
-            if (kind === "todayStart") d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-            if (kind === "todayEnd") d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-            if (kind === "weekStart") d = startOfWeekMonday(now);
-            if (kind === "monthStart") d = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-            if (kind === "yearStart") d = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
-            fillDate(d);
-            runDateToTs();
-          });
-        });
-
-        $("batchConvertBtn").addEventListener("click", runBatch);
-        $("batchSampleBtn").addEventListener("click", function () {
-          $("batchInput").value = "1704067200\n1704067200000\n2026-05-27 20:30:00\n2026-05-27T12:30:00Z";
-          runBatch();
-        });
-        $("diffBtn").addEventListener("click", runDiff);
-        $("diffNowBtn").addEventListener("click", function () {
-          $("diffEnd").value = String(Math.floor(Date.now() / 1000));
-          runDiff();
-        });
-
-        document.body.addEventListener("click", function (e) {
-          var btn = e.target.closest(".copy-btn");
-          if (!btn) return;
-          var id = btn.getAttribute("data-copy-el");
-          if (id) copyFromEl(id, btn);
-        });
-      });
-    })();
-  </script>
   <script defer src="../../js/footer.js"></script>
 </body>
 </html>

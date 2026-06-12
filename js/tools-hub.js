@@ -54,16 +54,18 @@
     { id: "data", name: "数据处理" },
     { id: "auth", name: "鉴权安全" },
     { id: "regex", name: "正则文本" },
+    { id: "design", name: "设计配色" },
   ];
 
   function inferCategoryId(tool) {
     if (tool.categoryId === "activate") return "activate";
     var slug = tool.slug;
     if (slug === "timestamp" || slug === "cron") return "time";
-    if (slug === "json" || slug === "sql-formatter") return "data";
+    if (slug === "json" || slug === "sql-formatter" || slug === "uuid") return "data";
     if (slug === "jwt") return "auth";
-    if (slug === "regex") return "regex";
+    if (slug === "regex" || slug === "diff") return "regex";
     if (slug === "base64") return "encode";
+    if (slug === "color") return "design";
     return "data";
   }
 
