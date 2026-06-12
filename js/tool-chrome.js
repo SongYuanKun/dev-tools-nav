@@ -149,6 +149,42 @@
     });
   }
 
+  function collapsePanelToModule(panel) {
+    var heading = panel.querySelector(".tool-panel-title, h2");
+    var label = heading ? heading.textContent.trim() : "更多功能";
+    if (heading) heading.remove();
+    var details = document.createElement("details");
+    details.className = "tool-module";
+    var summary = document.createElement("summary");
+    summary.className = "tool-module-summary";
+    summary.textContent = label;
+    var body = document.createElement("div");
+    body.className = "tool-module-body";
+    while (panel.firstChild) body.appendChild(panel.firstChild);
+    details.appendChild(summary);
+    details.appendChild(body);
+    panel.replaceWith(details);
+  }
+
+  function enhanceEmbedWorkbench() {
+    if (!document.documentElement.classList.contains("is-embed")) return;
+    var page = document.querySelector(".tool-page");
+    if (!page || page.getAttribute("data-workbench-ready") === "1") return;
+    page.classList.add("tool-workbench-inner");
+    page.setAttribute("data-workbench-ready", "1");
+
+    var panels = Array.prototype.slice.call(page.querySelectorAll(":scope > .tool-panel"));
+    if (!panels.length) return;
+
+    panels[0].classList.add("tool-module-primary");
+
+    if (panels.length > 2) {
+      for (var i = 1; i < panels.length; i++) collapsePanelToModule(panels[i]);
+    } else if (panels.length === 2) {
+      panels[1].classList.add("tool-module-secondary");
+    }
+  }
+
   function bindWorkspaceTabs() {
     document.querySelectorAll("[data-ws-tab]").forEach(function (tab) {
       tab.addEventListener("click", function () {
@@ -182,6 +218,7 @@
     bindCopyButtons();
     bindSectionToggle();
     bindWorkspaceTabs();
+    enhanceEmbedWorkbench();
   });
 
   window.ToolChrome = {

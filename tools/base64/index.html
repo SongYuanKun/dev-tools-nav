@@ -27,21 +27,28 @@
     </nav>
   </header>
 
-  <main class="tool-shell">
-    <a class="tool-shell-back" href="../">← 返回在线工具</a>
-    <div class="tool-shell-head">
-      <div>
-        <div id="toolTitle" class="tool-shell-title">加载中…</div>
-        <div id="toolDesc" class="tool-shell-desc"></div>
-        <div id="toolTags" class="tool-shell-meta"></div>
+  <main class="tool-workbench" id="toolWorkbench">
+    <header class="tool-workbench-bar">
+      <div class="tool-workbench-leading">
+        <a class="tool-workbench-back" href="../" aria-label="返回在线工具">← 工具</a>
+        <div class="tool-workbench-identity">
+          <h1 id="toolTitle" class="tool-workbench-title">加载中…</h1>
+          <div id="toolTags" class="tool-workbench-tags" aria-label="标签"></div>
+        </div>
       </div>
-      <div class="tool-shell-actions">
-        <button id="favBtn" type="button" class="tool-btn">☆ 收藏</button>
-        <a id="legacyLink" class="tool-btn" href="#" target="_blank" rel="noopener noreferrer">在新标签页打开</a>
+      <div class="tool-workbench-actions">
+        <button id="favBtn" type="button" class="tool-workbench-icon-btn" aria-label="收藏" title="收藏">☆</button>
+        <a id="legacyLink" class="tool-workbench-icon-btn" href="#" target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开" title="在新标签页打开">↗</a>
       </div>
+    </header>
+    <p id="toolDesc" class="tool-workbench-desc"></p>
+    <div id="toolError" class="tools-empty" hidden>加载失败，可尝试在新标签页打开。</div>
+    <div class="tool-workbench-stage">
+      <iframe id="toolFrame" class="tool-workbench-frame" title="在线工具"></iframe>
     </div>
-    <div id="toolError" class="tools-empty" style="display:none;">加载失败，可尝试“在新标签页打开”。</div>
-    <iframe id="toolFrame" class="tool-shell-iframe" title="在线工具"></iframe>
+    <footer class="tool-workbench-foot">
+      <span class="tool-workbench-privacy">数据仅在浏览器本地处理，不会上传</span>
+    </footer>
   </main>
 
   <footer class="footer">

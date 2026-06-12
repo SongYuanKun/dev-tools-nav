@@ -3983,6 +3983,7 @@ body.site-v2 a {
 .site-v2 .blog-post-page,
 .site-v2 .tool-page,
 .site-v2 .tool-shell,
+.site-v2 .tool-workbench,
 .site-v2 .main-content {
   width: min(1120px, calc(100% - 40px)) !important;
   max-width: none !important;
@@ -3995,14 +3996,12 @@ body.site-v2 a {
   width: min(920px, calc(100% - 40px)) !important;
 }
 
-.site-v2 .tool-shell {
+.site-v2 .tool-shell,
+.site-v2 .tool-workbench {
   display: block !important;
   min-height: auto !important;
-  padding-top: 42px !important;
-  padding-bottom: 72px !important;
 }
 
-.site-v2 .tool-shell-head,
 .site-v2 .tool-page-header,
 .site-v2 .blog-post-header,
 .site-v2 .blog-header,
@@ -4032,16 +4031,13 @@ body.site-v2 a {
   letter-spacing: 0 !important;
 }
 
-.site-v2 .tool-shell-title {
+.site-v2 .tool-workbench-title {
   margin: 0 !important;
   color: var(--v2-text) !important;
-  font-size: clamp(22px, 3.2vw, 32px) !important;
+  font-size: clamp(20px, 2.8vw, 28px) !important;
   line-height: 1.15 !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .site-v2 .tool-page-header p,
@@ -4055,27 +4051,7 @@ body.site-v2 a {
   line-height: 1.75 !important;
 }
 
-.site-v2 .tool-shell-desc {
-  max-width: 72ch !important;
-  margin-top: 8px !important;
-  color: var(--v2-text-secondary) !important;
-  font-size: 14px !important;
-  line-height: 1.65 !important;
-}
-
-.site-v2 .tool-shell-head {
-  border: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 0 16px !important;
-  margin-bottom: 0 !important;
-}
-
-.site-v2 .tool-shell-meta {
-  margin-top: 10px !important;
-}
-
-.site-v2 .tool-shell-back,
+.site-v2 .tool-workbench-back,
 .site-v2 .ai-page-nav,
 .site-v2 .breadcrumb {
   display: inline-flex !important;
@@ -4092,7 +4068,7 @@ body.site-v2 a {
   font-weight: 700 !important;
 }
 
-.site-v2 .tool-shell-actions,
+.site-v2 .tool-workbench-actions,
 .site-v2 .tool-actions {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -4111,7 +4087,7 @@ body.site-v2 a {
 
 .site-v2 .tool-panel,
 .site-v2 .tool-footer-nav,
-.site-v2 .tool-shell-iframe,
+.site-v2 .tool-workbench-stage,
 .site-v2 .blog-post-content,
 .site-v2 .blog-author-card,
 .site-v2 .blog-related-list a,
@@ -4135,12 +4111,15 @@ body.site-v2 a {
   padding: 24px !important;
 }
 
-.site-v2 .tool-shell-iframe {
+.site-v2 .tool-workbench-frame {
   display: block !important;
   width: 100% !important;
-  min-height: 520px !important;
+  min-height: 480px !important;
   overflow: hidden !important;
   padding: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 html.is-embed body.site-v2 .tool-panel {
@@ -4217,6 +4196,7 @@ html.is-embed body.site-v2 .tool-panel {
   .site-v2 .blog-post-page,
   .site-v2 .tool-page,
   .site-v2 .tool-shell,
+  .site-v2 .tool-workbench,
   .site-v2 .main-content {
     width: min(100% - 28px, 1120px) !important;
     padding: 38px 0 64px !important;
@@ -4230,10 +4210,6 @@ html.is-embed body.site-v2 .tool-panel {
     padding: 24px !important;
   }
 
-  .site-v2 .tool-shell-head {
-    padding: 0 0 14px !important;
-  }
-
   .site-v2 .tool-page-header h1,
   .site-v2 .blog-post-header h1,
   .site-v2 .blog-header h1,
@@ -4242,8 +4218,8 @@ html.is-embed body.site-v2 .tool-panel {
     font-size: 34px !important;
   }
 
-  .site-v2 .tool-shell-title {
-    font-size: 24px !important;
+  .site-v2 .tool-workbench-title {
+    font-size: 22px !important;
   }
 }
 

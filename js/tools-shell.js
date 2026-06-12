@@ -54,10 +54,10 @@
       document.title = "工具不存在 · Koen的工具箱";
       titleEl.textContent = "未找到该工具";
       descEl.textContent = "请返回工具中心重新选择。";
-      legacyLink.style.display = "none";
-      favBtn.style.display = "none";
-      frame.style.display = "none";
-      errorEl.style.display = "block";
+      legacyLink.hidden = true;
+      favBtn.hidden = true;
+      frame.hidden = true;
+      errorEl.hidden = false;
       return;
     }
 
@@ -83,7 +83,9 @@
       var active = window.ToolsPrefs ? window.ToolsPrefs.hasFavorite(slug) : false;
       favBtn.classList.toggle("is-active", active);
       favBtn.setAttribute("aria-pressed", active ? "true" : "false");
-      favBtn.textContent = active ? "★ 已收藏" : "☆ 收藏";
+      favBtn.textContent = active ? "★" : "☆";
+      favBtn.setAttribute("aria-label", active ? "取消收藏" : "收藏");
+      favBtn.title = active ? "取消收藏" : "收藏";
     }
 
     syncFavUI();
@@ -110,13 +112,13 @@
           doc.body ? doc.body.scrollHeight : 0,
           doc.documentElement ? doc.documentElement.scrollHeight : 0
         );
-        if (height > 0) frame.style.height = Math.min(Math.max(height + 24, 560), 1400) + "px";
+        if (height > 0) frame.style.height = Math.min(Math.max(height + 16, 480), 3600) + "px";
       } catch (_) {}
     }
 
     frame.setAttribute("src", frameUrl);
     frame.addEventListener("load", function () {
-      errorEl.style.display = "none";
+      errorEl.hidden = true;
       resizeFrame();
       setTimeout(resizeFrame, 200);
       try {
@@ -127,7 +129,7 @@
     window.addEventListener("resize", resizeFrame);
 
     frame.addEventListener("error", function () {
-      errorEl.style.display = "block";
+      errorEl.hidden = false;
     });
   }
 

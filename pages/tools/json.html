@@ -82,11 +82,16 @@
       </p>
     </header>
 
-    <section class="tool-panel" aria-labelledby="editor-heading">
-      <div class="json-toolbar">
-        <div class="json-view-tabs" role="tablist" aria-label="视图切换">
-          <button type="button" class="json-view-tab is-active" data-json-tab="editor" role="tab" aria-selected="true">编辑器</button>
-          <button type="button" class="json-view-tab" data-json-tab="tree" role="tab" aria-selected="false">树形视图</button>
+    <section class="tool-panel tool-module-primary" aria-labelledby="editor-heading">
+      <div class="tool-command-bar">
+        <div class="tool-command-leading">
+          <div class="json-view-tabs" role="tablist" aria-label="视图切换">
+            <button type="button" class="json-view-tab is-active" data-json-tab="editor" role="tab" aria-selected="true">编辑器</button>
+            <button type="button" class="json-view-tab" data-json-tab="tree" role="tab" aria-selected="false">树形视图</button>
+          </div>
+          <div id="statusMsg" class="tool-status-pill tool-status-info" role="status" aria-live="polite">
+            就绪：粘贴或输入 JSON，将实时校验语法。
+          </div>
         </div>
         <div class="json-toolbar-options">
           <label class="json-option" for="indentSelect">
@@ -99,7 +104,7 @@
           </label>
           <label class="json-option">
             <input type="checkbox" id="autoFormat" />
-            <span>输入时自动格式化</span>
+            <span>自动格式化</span>
           </label>
           <label class="json-option" title="允许 // 注释、/* */ 注释、尾逗号、单引号">
             <input type="checkbox" id="relaxedParse" checked />
@@ -108,12 +113,8 @@
         </div>
       </div>
 
-      <div id="statusMsg" class="tool-status tool-status-info" role="status" aria-live="polite">
-        就绪：粘贴或输入 JSON，将实时校验语法。
-      </div>
-
       <div data-json-view="editor">
-        <label class="tool-label" for="jsonInput" id="editor-heading">JSON 编辑器</label>
+        <label class="tool-label tool-sr-only" for="jsonInput" id="editor-heading">JSON 编辑器</label>
         <div id="jsonEditorWrap" class="json-editor-wrap">
           <div id="jsonLineNums" class="json-line-nums" aria-hidden="true">1</div>
           <textarea
@@ -134,21 +135,27 @@
         </div>
       </div>
 
-      <div class="tool-actions">
-        <button type="button" class="tool-btn tool-btn-primary" id="btnFormat">格式化</button>
-        <button type="button" class="tool-btn" id="btnMinify">压缩</button>
-        <button type="button" class="tool-btn" id="btnRepair">修复</button>
-        <button type="button" class="tool-btn" id="btnValidate">校验</button>
-        <button type="button" class="tool-btn" id="btnCopy">复制</button>
-        <button type="button" class="tool-btn" id="btnDownload">下载</button>
-        <label class="tool-btn">
-          上传文件
-          <input id="jsonFileInput" type="file" accept=".json,.txt,application/json" hidden />
-        </label>
-        <button type="button" class="tool-btn" id="btnEscapeUnicode">Unicode 转义</button>
-        <button type="button" class="tool-btn" id="btnUnescapeUnicode">Unicode 还原</button>
-        <button type="button" class="tool-btn" id="btnSample">示例</button>
-        <button type="button" class="tool-btn tool-btn-danger" id="btnClear">清空</button>
+      <div class="tool-action-dock" aria-label="JSON 操作">
+        <div class="tool-action-group">
+          <button type="button" class="tool-btn tool-btn-primary" id="btnFormat">格式化</button>
+          <button type="button" class="tool-btn" id="btnMinify">压缩</button>
+          <button type="button" class="tool-btn" id="btnRepair">修复</button>
+          <button type="button" class="tool-btn" id="btnValidate">校验</button>
+        </div>
+        <div class="tool-action-group">
+          <button type="button" class="tool-btn" id="btnCopy">复制</button>
+          <button type="button" class="tool-btn" id="btnDownload">下载</button>
+          <label class="tool-btn">
+            上传
+            <input id="jsonFileInput" type="file" accept=".json,.txt,application/json" hidden />
+          </label>
+          <button type="button" class="tool-btn" id="btnEscapeUnicode">Unicode 转义</button>
+          <button type="button" class="tool-btn" id="btnUnescapeUnicode">Unicode 还原</button>
+          <button type="button" class="tool-btn" id="btnSample">示例</button>
+        </div>
+        <div class="tool-action-group tool-action-group-end">
+          <button type="button" class="tool-btn tool-btn-danger" id="btnClear">清空</button>
+        </div>
       </div>
     </section>
 

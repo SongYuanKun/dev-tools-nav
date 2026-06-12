@@ -95,7 +95,7 @@
         if (/^(SCRIPT|STYLE|TEXTAREA|INPUT|CODE|PRE)$/i.test(parent.tagName)) {
           return NodeFilter.FILTER_REJECT;
         }
-        if (parent.closest(".tools-card-icon, .tool-shell-title")) {
+        if (parent.closest(".tools-card-icon, .tool-shell-title, .tool-workbench-title")) {
           return NodeFilter.FILTER_REJECT;
         }
         emojiPattern.lastIndex = 0;

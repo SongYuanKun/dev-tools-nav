@@ -513,7 +513,7 @@
 
     function setStatus(kind, text) {
       if (!statusEl) return;
-      statusEl.className = "tool-status";
+      statusEl.className = "tool-status-pill";
       if (kind === "ok") statusEl.classList.add("tool-status-success");
       else if (kind === "err") statusEl.classList.add("tool-status-error");
       else statusEl.classList.add("tool-status-info");
