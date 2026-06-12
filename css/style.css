@@ -4111,6 +4111,16 @@ body.site-v2 a {
   padding: 24px !important;
 }
 
+.site-v2 .compare-section,
+.site-v2 .workflow-section,
+.site-v2 .glossary-section,
+.site-v2 .safety-section,
+.site-v2 .dev-api-section,
+.site-v2 .radar-section {
+  padding: 28px 32px !important;
+  margin-bottom: 24px !important;
+}
+
 .site-v2 .tool-workbench-frame {
   display: block !important;
   width: 100% !important;
@@ -4220,6 +4230,15 @@ html.is-embed body.site-v2 .tool-panel {
 
   .site-v2 .tool-workbench-title {
     font-size: 22px !important;
+  }
+
+  .site-v2 .compare-section,
+  .site-v2 .workflow-section,
+  .site-v2 .glossary-section,
+  .site-v2 .safety-section,
+  .site-v2 .dev-api-section,
+  .site-v2 .radar-section {
+    padding: 22px 20px !important;
   }
 }
 

@@ -493,20 +493,22 @@
 }
 
 .compare-section-title {
-  font-size: 20px;
+  font-size: clamp(18px, 2.4vw, 22px);
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin: 0 0 10px;
   display: flex;
   align-items: center;
   gap: 10px;
+  line-height: 1.35;
 }
 
 .compare-section-desc {
   font-size: 14px;
   color: var(--text-secondary);
-  margin-bottom: 24px;
-  line-height: 1.6;
+  margin: 0 0 22px;
+  max-width: 72ch;
+  line-height: 1.65;
 }
 
 /* 维度卡片 */
@@ -514,9 +516,14 @@
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-lg);
-  padding: 24px;
-  margin-bottom: 16px;
+  padding: 22px 24px;
+  margin-bottom: 14px;
   box-shadow: var(--shadow-card);
+}
+
+.site-v2 .compare-section .compare-dimension {
+  background: rgba(148, 163, 184, 0.06);
+  box-shadow: none;
 }
 
 .compare-dimension-header {
@@ -552,9 +559,10 @@
 
 .compare-score-row {
   display: grid;
-  grid-template-columns: 120px 1fr 40px;
+  grid-template-columns: minmax(108px, 132px) minmax(0, 1fr) 44px;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  padding: 2px 0;
 }
 
 .compare-score-name {
@@ -641,8 +649,8 @@
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08));
   border: 1px solid rgba(99, 102, 241, 0.2);
   border-radius: var(--radius-lg);
-  padding: 28px;
-  margin-top: 32px;
+  padding: 22px 24px;
+  margin-top: 24px;
 }
 
 [data-theme="dark"] .compare-summary {
