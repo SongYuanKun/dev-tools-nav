@@ -3,7 +3,10 @@
 <head>
   <script>
     (function () {
-      if (new URLSearchParams(location.search).get("embed") === "1") return;
+      if (new URLSearchParams(location.search).get("embed") === "1") {
+        document.documentElement.classList.add("is-embed");
+        return;
+      }
       var slug = document.documentElement.getAttribute("data-canonical-slug") || "cron";
       location.replace("../../tools/" + slug + "/" + (location.search || ""));
     })();

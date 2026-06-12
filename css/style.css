@@ -3998,6 +3998,8 @@ body.site-v2 a {
 .site-v2 .tool-shell {
   display: block !important;
   min-height: auto !important;
+  padding-top: 42px !important;
+  padding-bottom: 72px !important;
 }
 
 .site-v2 .tool-shell-head,
@@ -4018,7 +4020,6 @@ body.site-v2 a {
 }
 
 .site-v2 .tool-page-header h1,
-.site-v2 .tool-shell-title,
 .site-v2 .blog-post-header h1,
 .site-v2 .blog-header h1,
 .site-v2 .ai-hero-title,
@@ -4031,8 +4032,19 @@ body.site-v2 a {
   letter-spacing: 0 !important;
 }
 
+.site-v2 .tool-shell-title {
+  margin: 0 !important;
+  color: var(--v2-text) !important;
+  font-size: clamp(22px, 3.2vw, 32px) !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .site-v2 .tool-page-header p,
-.site-v2 .tool-shell-desc,
 .site-v2 .blog-post-meta,
 .site-v2 .blog-header p,
 .site-v2 .ai-hero-desc,
@@ -4041,6 +4053,26 @@ body.site-v2 a {
   color: var(--v2-text-secondary) !important;
   font-size: 16px !important;
   line-height: 1.75 !important;
+}
+
+.site-v2 .tool-shell-desc {
+  max-width: 72ch !important;
+  margin-top: 8px !important;
+  color: var(--v2-text-secondary) !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+}
+
+.site-v2 .tool-shell-head {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 0 16px !important;
+  margin-bottom: 0 !important;
+}
+
+.site-v2 .tool-shell-meta {
+  margin-top: 10px !important;
 }
 
 .site-v2 .tool-shell-back,
@@ -4106,8 +4138,16 @@ body.site-v2 a {
 .site-v2 .tool-shell-iframe {
   display: block !important;
   width: 100% !important;
-  min-height: 72vh !important;
+  min-height: 520px !important;
   overflow: hidden !important;
+  padding: 0 !important;
+}
+
+html.is-embed body.site-v2 .tool-panel {
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  background: transparent !important;
 }
 
 .site-v2 .tool-textarea,
@@ -4182,7 +4222,6 @@ body.site-v2 a {
     padding: 38px 0 64px !important;
   }
 
-  .site-v2 .tool-shell-head,
   .site-v2 .tool-page-header,
   .site-v2 .blog-post-header,
   .site-v2 .blog-header,
@@ -4191,13 +4230,20 @@ body.site-v2 a {
     padding: 24px !important;
   }
 
+  .site-v2 .tool-shell-head {
+    padding: 0 0 14px !important;
+  }
+
   .site-v2 .tool-page-header h1,
-  .site-v2 .tool-shell-title,
   .site-v2 .blog-post-header h1,
   .site-v2 .blog-header h1,
   .site-v2 .ai-hero-title,
   .site-v2 .tool-index-title {
     font-size: 34px !important;
+  }
+
+  .site-v2 .tool-shell-title {
+    font-size: 24px !important;
   }
 }
 

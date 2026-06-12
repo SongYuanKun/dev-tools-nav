@@ -95,6 +95,9 @@
         if (/^(SCRIPT|STYLE|TEXTAREA|INPUT|CODE|PRE)$/i.test(parent.tagName)) {
           return NodeFilter.FILTER_REJECT;
         }
+        if (parent.closest(".tools-card-icon, .tool-shell-title")) {
+          return NodeFilter.FILTER_REJECT;
+        }
         emojiPattern.lastIndex = 0;
         return emojiPattern.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
       }

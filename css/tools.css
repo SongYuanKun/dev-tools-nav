@@ -1306,25 +1306,27 @@
 .is-embed body > header,
 .is-embed body > footer,
 .is-embed .tool-nav,
-.is-embed .tool-footer-nav {
+.is-embed .tool-footer-nav,
+.is-embed .tool-page-header,
+.is-embed .skip-link {
   display: none !important;
 }
 
 .is-embed .tool-page {
   max-width: none;
-  padding: 20px;
+  padding: 18px 20px 20px;
 }
 
-.is-embed .tool-page-header {
-  margin-bottom: 18px;
+.is-embed .tool-panel {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 0;
+  background: transparent;
 }
 
-.is-embed .tool-page-header h1 {
-  font-size: 20px;
-}
-
-.is-embed .tool-page-header p {
-  max-width: 760px;
+.is-embed .tool-local-banner {
+  display: none !important;
 }
 
 .tool-shell-back {
