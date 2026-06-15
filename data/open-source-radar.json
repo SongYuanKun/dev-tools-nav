@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-06-11T11:19:42+08:00",
-  "weekLabel": "2026-06-04 ~ 2026-06-11",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 调研 / 知识、Agent Skills、记忆 / Harness 等方向。代表项目包括 headroom、last30days-skill、hermes-agent。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-06-15T15:24:41+08:00",
+  "weekLabel": "2026-06-08 ~ 2026-06-15",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、调研 / 知识 等方向。代表项目包括 last30days-skill、headroom、agent-skills。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,29 +31,10 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "chopratejas/headroom",
-      "language": "Python",
-      "stars": 21917,
-      "weekStars": 13062,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：headroom — Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
-      "features": [
-        "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "headroom"
-      ]
-    },
-    {
-      "rank": 2,
       "repo": "mvanhorn/last30days-skill",
       "language": "Python",
-      "stars": 39192,
-      "weekStars": 11732,
+      "stars": 42325,
+      "weekStars": 12053,
       "trending": true,
       "topic": "research",
       "summary": "Claude Code 风格 Skill：跨 Reddit、X、YouTube、HN、Polymarket 做主题调研并输出 grounded 摘要。",
@@ -69,31 +50,68 @@
       ]
     },
     {
-      "rank": 3,
-      "repo": "NousResearch/hermes-agent",
+      "rank": 2,
+      "repo": "chopratejas/headroom",
       "language": "Python",
-      "stars": 190112,
-      "weekStars": 11519,
+      "stars": 27924,
+      "weekStars": 10653,
       "trending": true,
-      "topic": "memory",
-      "summary": "「会成长的 Agent」——强调跨会话记忆与能力复利，本周 Trending 涨幅最高。",
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：headroom — Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
       "features": [
-        "持久化 Agent 运行时，把上下文与能力沉淀到多次任务之间。",
-        "适合观察「Agent 产品化」如何从单次对话走向长期协作。",
-        "可挂载到现有 Agent 宿主，而非另起一套聊天产品。"
+        "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "记忆 Agent",
-        "持久化",
-        "Agent 运行时"
+        "Agent Skills",
+        "headroom"
+      ]
+    },
+    {
+      "rank": 3,
+      "repo": "addyosmani/agent-skills",
+      "language": "Shell",
+      "stars": 59777,
+      "weekStars": 10445,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：agent-skills — Production-grade engineering skills for AI coding agents.",
+      "features": [
+        "Production-grade engineering skills for AI coding agents.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "Agent Skill"
       ]
     },
     {
       "rank": 4,
+      "repo": "apple/container",
+      "language": "Swift",
+      "stars": 37155,
+      "weekStars": 10021,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：container — A tool for creating and running Linux containers using lightweight virtual machines on a Mac. It is written in Swift, and optimized for Apple silicon.",
+      "features": [
+        "A tool for creating and running Linux containers using lightweight virtual machines on a Mac. It is written in Swift, and optimized for Apple silicon.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "container"
+      ]
+    },
+    {
+      "rank": 5,
       "repo": "Leonxlnx/taste-skill",
       "language": "Shell",
-      "stars": 40770,
-      "weekStars": 8077,
+      "stars": 43984,
+      "weekStars": 7591,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：taste-skill — Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop",
@@ -109,70 +127,50 @@
       ]
     },
     {
-      "rank": 5,
-      "repo": "affaan-m/ECC",
-      "language": "JavaScript",
-      "stars": 212817,
-      "weekStars": 7865,
+      "rank": 6,
+      "repo": "phuryn/pm-skills",
+      "language": "—",
+      "stars": 18302,
+      "weekStars": 5713,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "summary": "本周 GitHub Trending：pm-skills — PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to strategy, execution, launch, and growth.",
       "features": [
-        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+        "PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to strategy, execution, launch, and growth.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "ECC",
+        "pm skills",
         "Agent Skill"
       ]
     },
     {
-      "rank": 6,
-      "repo": "Panniantong/Agent-Reach",
-      "language": "Python",
-      "stars": 26100,
-      "weekStars": 5021,
-      "trending": true,
-      "topic": "research",
-      "summary": "给 Agent 装上「看互联网的眼睛」——读写 Twitter、Reddit、YouTube、GitHub、B 站、小红书等。",
-      "features": [
-        "解决 Agent 只能聊训练数据、无法触达实时网页的问题。",
-        "覆盖中文社区（B 站、小红书），对国内创作者场景更友好。",
-        "接入前需评估账号安全与平台 ToS，避免把 Cookie 交给不可信链路。"
-      ],
-      "tags": [
-        "联网 Agent",
-        "社媒读取",
-        "中文平台"
-      ]
-    },
-    {
       "rank": 7,
-      "repo": "lfnovo/open-notebook",
-      "language": "TypeScript",
-      "stars": 29023,
-      "weekStars": 4648,
+      "repo": "safishamsi/graphify",
+      "language": "Python",
+      "stars": 67332,
+      "weekStars": 5478,
       "trending": true,
-      "topic": "research",
-      "summary": "开源 NotebookLM 替代方案，强调更灵活的多源资料导入与对话式研究。",
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：graphify — AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Turn any folder of code, SQL schemas, R scripts, shell scripts, docs, papers, images, or videos into a queryable knowledge graph. App code + database schema + infrastructure in one graph.",
       "features": [
-        "把 PDF、网页、笔记汇总成可问答的知识库，适合深度阅读与写作。",
-        "自托管友好，资料留在本地或自有服务器。",
-        "适合「研究型工作者」而非单次聊天场景。"
+        "AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Turn any folder of code, SQL schemas, R scripts, shell scripts, docs, papers, images, or videos into a queryable knowledge graph. App code + database schema + infrastructure in one graph.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "NotebookLM",
-        "知识库",
-        "自托管"
+        "Agent Skills",
+        "graphify",
+        "Agent Skill"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 223747,
+      "stars": 228164,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -190,9 +188,49 @@
     },
     {
       "rank": 9,
+      "repo": "affaan-m/ECC",
+      "language": "JavaScript",
+      "stars": 215683,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "features": [
+        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "ECC",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 10,
+      "repo": "NousResearch/hermes-agent",
+      "language": "Python",
+      "stars": 193822,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "memory",
+      "summary": "「会成长的 Agent」——强调跨会话记忆与能力复利，本周 Trending 涨幅最高。",
+      "features": [
+        "持久化 Agent 运行时，把上下文与能力沉淀到多次任务之间。",
+        "适合观察「Agent 产品化」如何从单次对话走向长期协作。",
+        "可挂载到现有 Agent 宿主，而非另起一套聊天产品。"
+      ],
+      "tags": [
+        "记忆 Agent",
+        "持久化",
+        "Agent 运行时"
+      ]
+    },
+    {
+      "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 149074,
+      "stars": 150828,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -209,10 +247,10 @@
       ]
     },
     {
-      "rank": 10,
+      "rank": 12,
       "repo": "google-gemini/gemini-cli",
       "language": "TypeScript",
-      "stars": 105147,
+      "stars": 105291,
       "weekStars": 0,
       "trending": false,
       "topic": "coding",
@@ -226,46 +264,6 @@
         "终端 Agent",
         "Gemini",
         "开源 CLI"
-      ]
-    },
-    {
-      "rank": 11,
-      "repo": "browser-use/browser-use",
-      "language": "Python",
-      "stars": 98176,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "research",
-      "summary": "让 Agent 能「像人一样操作浏览器」——填表、点击、抓取，完成在线任务自动化。",
-      "features": [
-        "把网页 DOM 暴露给 LLM，实现 RPA 式自动化。",
-        "适合数据采集、测试、重复性网页操作。",
-        "生产环境需配合沙箱与权限控制，防止误操作。"
-      ],
-      "tags": [
-        "浏览器自动化",
-        "RPA",
-        "Agent 工具"
-      ]
-    },
-    {
-      "rank": 12,
-      "repo": "colbymchenry/codegraph",
-      "language": "TypeScript",
-      "stars": 46871,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "coding",
-      "summary": "为 Claude Code、Cursor、Codex 等编程 Agent 预建本地代码知识图谱，省 token、少工具调用。",
-      "features": [
-        "大仓库语义索引，让 Agent 更快定位文件与调用关系。",
-        "100% 本地运行，降低代码外泄风险。",
-        "AI 编程从「全文塞上下文」走向「结构化索引 + 精准检索」。"
-      ],
-      "tags": [
-        "AI 编程",
-        "代码图谱",
-        "本地索引"
       ]
     }
   ]
