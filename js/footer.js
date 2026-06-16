@@ -84,6 +84,7 @@
       '    </div>',
       '  </details>',
       '  <p class="footer-copyright">Made with code by Koen · © 2024-' + currentYear + '</p>',
+      '  <p class="footer-beian"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备17048720号-1</a></p>',
       '</div>'
     ].join('');
 
