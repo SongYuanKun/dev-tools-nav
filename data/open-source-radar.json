@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-06-15T15:24:41+08:00",
-  "weekLabel": "2026-06-08 ~ 2026-06-15",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、调研 / 知识 等方向。代表项目包括 last30days-skill、headroom、agent-skills。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-06-22T15:28:09+08:00",
+  "weekLabel": "2026-06-15 ~ 2026-06-22",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、调研 / 知识 等方向。代表项目包括 Agent-Reach、iptv、codebase-memory-mcp。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,49 +31,67 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "mvanhorn/last30days-skill",
+      "repo": "Panniantong/Agent-Reach",
       "language": "Python",
-      "stars": 42325,
-      "weekStars": 12053,
+      "stars": 37219,
+      "weekStars": 8233,
       "trending": true,
       "topic": "research",
-      "summary": "Claude Code 风格 Skill：跨 Reddit、X、YouTube、HN、Polymarket 做主题调研并输出 grounded 摘要。",
+      "summary": "本周 GitHub Trending：Agent-Reach — Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
       "features": [
-        "把「上网搜一圈再写结论」封装成可触发 Skill，而非每次手写流程。",
-        "适合选题研究、竞品扫描、技术趋势速览。",
-        "代表 Skills 生态里「信息获取类」能力的标准化趋势。"
+        "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "调研 Skill",
-        "多源检索",
-        "Claude Code"
+        "调研 / 知识",
+        "Agent Reach"
       ]
     },
     {
       "rank": 2,
-      "repo": "chopratejas/headroom",
-      "language": "Python",
-      "stars": 27924,
-      "weekStars": 10653,
+      "repo": "iptv-org/iptv",
+      "language": "TypeScript",
+      "stars": 127251,
+      "weekStars": 7266,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：iptv — Collection of publicly available IPTV channels from all over the world",
+      "features": [
+        "Collection of publicly available IPTV channels from all over the world",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "iptv"
+      ]
+    },
+    {
+      "rank": 3,
+      "repo": "DeusData/codebase-memory-mcp",
+      "language": "C",
+      "stars": 10735,
+      "weekStars": 6372,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：headroom — Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
+      "summary": "本周 GitHub Trending：codebase-memory-mcp — High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
       "features": [
-        "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
+        "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "headroom"
+        "codebase memory mcp"
       ]
     },
     {
-      "rank": 3,
+      "rank": 4,
       "repo": "addyosmani/agent-skills",
       "language": "Shell",
-      "stars": 59777,
-      "weekStars": 10445,
+      "stars": 64985,
+      "weekStars": 5610,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：agent-skills — Production-grade engineering skills for AI coding agents.",
@@ -88,81 +106,61 @@
       ]
     },
     {
-      "rank": 4,
-      "repo": "apple/container",
-      "language": "Swift",
-      "stars": 37155,
-      "weekStars": 10021,
+      "rank": 5,
+      "repo": "google-research/timesfm",
+      "language": "Python",
+      "stars": 24973,
+      "weekStars": 4114,
       "trending": true,
       "topic": "research",
-      "summary": "本周 GitHub Trending：container — A tool for creating and running Linux containers using lightweight virtual machines on a Mac. It is written in Swift, and optimized for Apple silicon.",
+      "summary": "本周 GitHub Trending：timesfm — TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
       "features": [
-        "A tool for creating and running Linux containers using lightweight virtual machines on a Mac. It is written in Swift, and optimized for Apple silicon.",
+        "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "调研 / 知识",
-        "container"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "Leonxlnx/taste-skill",
-      "language": "Shell",
-      "stars": 43984,
-      "weekStars": 7591,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：taste-skill — Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop",
-      "features": [
-        "Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "taste skill",
-        "Agent Skill"
+        "timesfm"
       ]
     },
     {
       "rank": 6,
-      "repo": "phuryn/pm-skills",
-      "language": "—",
-      "stars": 18302,
-      "weekStars": 5713,
+      "repo": "NVIDIA/SkillSpector",
+      "language": "Python",
+      "stars": 9159,
+      "weekStars": 4055,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：pm-skills — PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to strategy, execution, launch, and growth.",
+      "summary": "本周 GitHub Trending：SkillSpector — Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, and security risks.",
       "features": [
-        "PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to strategy, execution, launch, and growth.",
+        "Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, and security risks.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "pm skills",
+        "SkillSpector",
         "Agent Skill"
       ]
     },
     {
       "rank": 7,
-      "repo": "safishamsi/graphify",
+      "repo": "calesthio/OpenMontage",
       "language": "Python",
-      "stars": 67332,
-      "weekStars": 5478,
+      "stars": 9715,
+      "weekStars": 2867,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：graphify — AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Turn any folder of code, SQL schemas, R scripts, shell scripts, docs, papers, images, or videos into a queryable knowledge graph. App code + database schema + infrastructure in one graph.",
+      "summary": "本周 GitHub Trending：OpenMontage — World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.",
       "features": [
-        "AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Turn any folder of code, SQL schemas, R scripts, shell scripts, docs, papers, images, or videos into a queryable knowledge graph. App code + database schema + infrastructure in one graph.",
+        "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "graphify",
+        "OpenMontage",
         "Agent Skill"
       ]
     },
@@ -170,7 +168,7 @@
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 228164,
+      "stars": 235379,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -190,7 +188,7 @@
       "rank": 9,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 215683,
+      "stars": 219513,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -210,7 +208,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 193822,
+      "stars": 199319,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -230,7 +228,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 150828,
+      "stars": 153675,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -250,7 +248,7 @@
       "rank": 12,
       "repo": "google-gemini/gemini-cli",
       "language": "TypeScript",
-      "stars": 105291,
+      "stars": 105481,
       "weekStars": 0,
       "trending": false,
       "topic": "coding",
