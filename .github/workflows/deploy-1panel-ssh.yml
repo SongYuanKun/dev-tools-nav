@@ -49,7 +49,7 @@ jobs:
           PORT="${ONEPANEL_PORT:-22}"
           ssh-keyscan -p "$PORT" -H "$ONEPANEL_HOST" >> ~/.ssh/known_hosts
 
-      - name: Sync site
+      - name: Sync site to temp dir
         if: env.DEPLOY_ENABLED == 'true'
         run: |
           PORT="${ONEPANEL_PORT:-22}"
@@ -69,3 +69,11 @@ jobs:
             --exclude='*.bak' \
             --exclude='.DS_Store' \
             ./ "$ONEPANEL_USER@$ONEPANEL_HOST:$ONEPANEL_PATH/"
+
+      - name: Copy into OpenResty container
+        if: env.DEPLOY_ENABLED == 'true'
+        run: |
+          ssh -p "${ONEPANEL_PORT:-22}" "$ONEPANEL_USER@$ONEPANEL_HOST" \
+            "docker cp $ONEPANEL_PATH/. 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/index/ && \
+             docker exec 1Panel-openresty-rRvM chown -R ubuntu:ubuntu /www/sites/tools.songyuankun.top/index/ && \
+             echo '✅ Container sync done'"
