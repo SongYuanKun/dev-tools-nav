@@ -1,0 +1,17 @@
+[
+  {
+    "date": "2026-06-24",
+    "title": "SEO 优化与页面 URL 修复",
+    "description": "修复全站 canonical/OG URL 指向，更新 robots.txt 和 sitemap，提升搜索引擎友好度。"
+  },
+  {
+    "date": "2026-06-02",
+    "title": "全站缓存策略优化 + 赞赏码交互改进",
+    "description": "OpenResty 缓存控制头配置，赞赏码改为弹窗交互；全站 35 个页面 Playwright 巡检。"
+  },
+  {
+    "date": "2026-06-02",
+    "title": "博客同步链路修复 + 站点边界清理",
+    "description": "CSDN RSS 博客同步链路修复，GitHub Actions deploy workflow 优化；footer 备用入口链接清理。"
+  }
+]

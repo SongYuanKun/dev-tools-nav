@@ -5,6 +5,9 @@
 set -e
 ROOT="/opt/1panel/www/sites/tools.songyuankun.top/index"
 
+echo "生成 sitemap.xml..."
+npm run generate-sitemap 2>/dev/null || node scripts/generate-sitemap.mjs
+
 if [[ ! -d "$ROOT" ]]; then
   echo "错误: 目录不存在: $ROOT"
   exit 1

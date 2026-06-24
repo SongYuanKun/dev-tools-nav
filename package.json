@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "test": "node --test scripts/*.test.mjs",
-    "capture-screenshots": "node scripts/capture-screenshots.mjs"
+    "capture-screenshots": "node scripts/capture-screenshots.mjs",
+    "generate-sitemap": "node scripts/generate-sitemap.mjs",
+    "build": "npm run generate-sitemap"
   },
   "devDependencies": {
     "playwright": "^1.51.0"

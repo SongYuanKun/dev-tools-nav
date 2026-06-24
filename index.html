@@ -99,6 +99,20 @@
       </div>
     </section>
 
+    <!-- 近期更新 -->
+    <section class="v2-section" id="updates" aria-labelledby="updatesTitle">
+      <div class="v2-container">
+        <div class="v2-section-head">
+          <p class="v2-eyebrow">Recent Updates</p>
+          <h2 id="updatesTitle">近期更新</h2>
+          <p>工具箱持续迭代中，以下是近期的功能新增和改进。</p>
+        </div>
+        <div class="v2-card-grid" id="updateList">
+          <!-- 由脚本加载 data/updates.json 渲染 -->
+        </div>
+      </div>
+    </section>
+
     <section class="v2-section" id="tools" aria-labelledby="toolsTitle">
       <div class="v2-container">
         <div class="v2-section-head v2-section-head-row">
@@ -287,6 +301,20 @@
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
       }
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        var res = await fetch('/data/updates.json');
+        if (!res.ok) return;
+        var updates = await res.json();
+        var list = document.getElementById('updateList');
+        if (!list || !updates.length) return;
+        list.innerHTML = updates.slice(0, 6).map(function (u) {
+          return '<div class="v2-card"><div class="v2-card-body"><span class="v2-tag v2-tag-info" style="float:right">' + u.date + '</span><h3>' + u.title + '</h3><p>' + u.description + '</p></div></div>';
+        }).join('');
+      } catch (e) { /* 静默失败 */ }
     });
   </script>
   <script defer src="js/footer.js"></script>
