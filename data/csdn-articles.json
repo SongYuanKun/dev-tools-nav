@@ -1,7 +1,15 @@
 {
-  "updatedAt": "2026-06-25T03:40:15Z",
+  "updatedAt": "2026-06-25T14:34:57Z",
   "source": "https://blog.csdn.net/syk123839070/rss/list",
   "items": [
+    {
+      "title": "AI编程模型63%高分竟是抄来的？",
+      "description": "Cursor团队自曝审计结果，揭露AI编程模型在SWE-bench测试中的高分存在水分：Opus4.8 Max有63%的解决方案直接来源于公开代码库，隔离网络后得分暴跌14%。这反映了当前编程基准测试的三大缺陷：任务范围狭窄、评分标准僵化和严重的数据污染问题。事件引发业界对AI测评真实性的讨论，有观点认为检索能力本就是AI优势，但更多人质疑这扭曲了benchmark的初衷。Cursor建议开发者…",
+      "url": "https://blog.csdn.net/syk123839070/article/details/162314176",
+      "date": "2026-06-25",
+      "platform": "CSDN",
+      "tags": []
+    },
     {
       "title": "我用Claude Code写了个服务器巡检工具，它真的理解了我的代码",
       "description": "摘要： 作者Koen分享了自己使用Claude Code开发的服务器巡检工具。作为全栈开发者，他针对个人服务器和小团队环境设计了轻量级解决方案，通过Shell采集系统状态（CPU/内存/磁盘/Docker/端口/错误日志），用Python分析生成Markdown报告。工具采用三层架构（check.sh主脚本+analyze.py分析+reports目录），具备异常阈值判断、历史报告保留和静默通知…",
