@@ -552,10 +552,10 @@
 
     function setStatus(kind, text) {
       if (!statusEl) return;
-      statusEl.className = "tool-status-pill";
-      if (kind === "ok") statusEl.classList.add("tool-status-success");
-      else if (kind === "err") statusEl.classList.add("tool-status-error");
-      else statusEl.classList.add("tool-status-info");
+      statusEl.className = "json-status-line";
+      if (kind === "ok") statusEl.classList.add("is-ok");
+      else if (kind === "err") statusEl.classList.add("is-err");
+      else statusEl.classList.add("is-info");
       statusEl.textContent = text;
     }
 
@@ -637,7 +637,7 @@
     function validateAndMaybeFormat(silent) {
       var raw = getRaw();
       if (!raw.trim()) {
-        setStatus("info", "就绪：左侧输入 JSON，右侧实时预览格式化结果。");
+        setStatus("info", "就绪：输入 JSON 后右侧自动预览");
         updateLineNums(null);
         if (treeEl) treeEl.innerHTML = '<p class="json-tree-empty">解析成功后显示树形结构。</p>';
         refreshFormattedOut(null);
