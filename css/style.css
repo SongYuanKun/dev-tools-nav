@@ -4131,6 +4131,33 @@ body.site-v2 a {
   margin-bottom: 24px !important;
 }
 
+.site-v2 .json-studio {
+  border: 1px solid var(--v2-border) !important;
+  border-radius: var(--v2-radius) !important;
+  background: var(--v2-surface) !important;
+  box-shadow: var(--v2-shadow) !important;
+}
+
+.site-v2 .json-studio-split {
+  padding: 20px 24px 24px !important;
+  gap: 20px !important;
+}
+
+.site-v2 .json-studio-toolbar-row {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+.site-v2 .json-studio-pane {
+  border-color: var(--v2-border) !important;
+  background: var(--v2-surface) !important;
+}
+
+html.is-embed body.site-v2 .json-studio {
+  border: 1px solid var(--v2-border) !important;
+  border-radius: var(--v2-radius) !important;
+}
+
 .site-v2 .tool-workbench-frame {
   display: block !important;
   width: 100% !important;
@@ -4287,4 +4314,15 @@ html.is-embed body.site-v2 {
   .site-v2 .hero {
     padding: 24px;
   }
+}
+
+/* embed iframe：site-v2 .tool-page 会把左右 padding 压成 0 */
+html.is-embed body.site-v2 .tool-page,
+html.is-embed body.site-v2 .tool-workbench-inner {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 18px 20px 20px !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
 }

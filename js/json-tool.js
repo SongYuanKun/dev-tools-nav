@@ -536,7 +536,7 @@
         return;
       }
       if (!data) {
-        formattedOut.innerHTML = '<span class="json-formatted-empty">解析成功后显示格式化结果。</span>';
+        formattedOut.textContent = "";
         return;
       }
       formattedOut.innerHTML = highlightJson(getOutputPreviewText(data));
@@ -552,7 +552,7 @@
 
     function setStatus(kind, text) {
       if (!statusEl) return;
-      statusEl.className = "json-status-line";
+      statusEl.className = "json-studio-status";
       if (kind === "ok") statusEl.classList.add("is-ok");
       else if (kind === "err") statusEl.classList.add("is-err");
       else statusEl.classList.add("is-info");
@@ -653,7 +653,7 @@
         var lines = raw.split("\n").length;
         var keys = typeof r.data === "object" && r.data ? Object.keys(r.data).length : 0;
         var type = Array.isArray(r.data) ? "数组" : typeof r.data === "object" ? "对象" : typeof r.data;
-        setStatus("ok", "✓ JSON 合法 · " + type + (keys ? " · " + keys + " 个键" : "") + " · " + lines + " 行 · " + raw.length + " 字符");
+        setStatus("ok", "合法 · " + lines + " 行");
         updateLineNums(null);
         refreshJsonPro(r.data, "校验通过");
 
@@ -670,7 +670,7 @@
 
       var info = parseJsonPosition(r.err, r.processed);
       var extra = info.line != null ? "第 " + info.line + " 行，第 " + info.col + " 列" : "";
-      setStatus("err", "✗ 语法错误" + (extra ? "：" + extra : "") + " — " + info.msg);
+      setStatus("err", "语法错误" + (extra ? "：" + extra : "") + " — " + info.msg);
       updateLineNums(info.line);
       refreshJsonPro(null, "校验失败");
       refreshFormattedOut(null, info.msg);
@@ -871,8 +871,9 @@
       });
     }
 
-    tabBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
+    document.querySelectorAll("[data-json-tab]").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
         switchTab(btn.getAttribute("data-json-tab"));
       });
     });
