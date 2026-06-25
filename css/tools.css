@@ -1548,6 +1548,44 @@
   color: #fff;
 }
 
+.tool-input-compact {
+  width: min(100%, 220px);
+  min-height: 34px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.tool-input-mono {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+}
+
+.ts-format-hint {
+  margin: -4px 0 14px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.cron-parse-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.cron-parse-meta .tool-input-compact {
+  width: 88px;
+}
+
+.tool-input.cron-input-valid {
+  border-color: #10b981;
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.25);
+}
+
+.tool-input.cron-input-invalid {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.22);
+}
+
 .tool-b64-opts {
   display: none;
   align-items: center;

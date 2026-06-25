@@ -80,71 +80,83 @@
       <p>通过五段式字段组合或粘贴已有表达式，生成适用于 Linux crontab、Kubernetes CronJob、GitHub Actions 等环境的 Cron；查看中文说明与接下来 5 次触发时间（按本地时区估算）。</p>
     </header>
 
-    <section class="tool-panel" aria-labelledby="cron-mode-heading">
-      <h2 id="cron-mode-heading" class="tool-panel-title">表达式类型</h2>
-      <div class="cron-mode-bar">
-        <label class="tool-label" for="cronMode">Cron 方言</label>
-        <select id="cronMode" class="tool-select">
-          <option value="linux">Linux（5 段）</option>
-          <option value="quartz">Quartz / Spring（6 段）</option>
-        </select>
-      </div>
-    </section>
-
-    <section class="tool-panel" aria-labelledby="cron-display-heading">
-      <h2 id="cron-display-heading" class="tool-panel-title">当前表达式</h2>
-      <div id="cronDisplay" class="cron-display" role="status" aria-live="polite">* * * * *</div>
-      <div class="cron-toolbar">
-        <button type="button" id="btnCopy" class="tool-btn tool-btn-primary">复制表达式</button>
-        <span id="copyHint" class="tool-label timestamp-help"></span>
-      </div>
-    </section>
-
-    <section class="tool-panel" aria-labelledby="fields-heading">
-      <h2 id="fields-heading" class="tool-panel-title">字段配置</h2>
-      <p class="tool-label">依次为：分钟 (0–59)、小时 (0–23)、日 (1–31)、月 (1–12)、星期 (0–6)。选择规则类型后在右侧填写参数（任意类型无需填写）。</p>
-      <div id="cronFields"></div>
-      <div>
-        <span class="tool-label">常用预设</span>
-        <div class="cron-preset-bar tool-actions">
-          <button type="button" class="tool-btn" data-preset="every_min">每分钟</button>
-          <button type="button" class="tool-btn" data-preset="every_hour">每小时</button>
-          <button type="button" class="tool-btn" data-preset="daily_midnight">每天零点</button>
-          <button type="button" class="tool-btn" data-preset="weekly_mon">每周一</button>
-          <button type="button" class="tool-btn" data-preset="monthly_first">每月1号</button>
-          <button type="button" class="tool-btn" data-preset="weekdays">工作日</button>
+    <section class="tool-panel tool-module-primary" aria-label="Cron 工作台">
+      <div class="tool-command-bar">
+        <div class="tool-command-leading">
+          <div class="tool-mode-tabs" role="tablist" aria-label="功能切换">
+            <button type="button" class="mode-tab is-active" data-cron-tab="gen" role="tab" aria-selected="true">生成</button>
+            <button type="button" class="mode-tab" data-cron-tab="parse" role="tab" aria-selected="false">解析</button>
+            <button type="button" class="mode-tab" data-cron-tab="tpl" role="tab" aria-selected="false">模板</button>
+            <button type="button" class="mode-tab" data-cron-tab="deploy" role="tab" aria-selected="false">部署</button>
+          </div>
+          <div id="cronStatus" class="tool-status-pill tool-status-info" role="status" aria-live="polite">就绪：配置字段或粘贴表达式，将自动预览。</div>
+        </div>
+        <div class="json-toolbar-options">
+          <label class="json-option" for="cronMode">
+            <span>方言</span>
+            <select id="cronMode" class="tool-select" aria-label="Cron 方言">
+              <option value="linux">Linux（5 段）</option>
+              <option value="quartz">Quartz / Spring（6 段）</option>
+            </select>
+          </label>
         </div>
       </div>
-    </section>
+      <p id="cronModeHint" class="timestamp-help ts-format-hint">Linux 五段：分 时 日 月 周 · Quartz 六段：秒 分 时 日 月 周（日/周可用 ?）</p>
 
-    <section class="tool-panel" aria-labelledby="parse-heading">
-      <h2 id="parse-heading" class="tool-panel-title">解析已有表达式</h2>
-      <div class="cron-parse-row">
-        <input type="text" id="parseInput" class="tool-input" placeholder="粘贴五段式，例如：0 0 * * *" autocomplete="off" spellcheck="false" aria-label="Cron 表达式" />
-        <button type="button" id="btnParse" class="tool-btn tool-btn-primary">解析并应用到表单</button>
+      <div data-cron-panel="gen">
+        <h2 class="tool-sr-only" id="cron-display-heading">当前表达式</h2>
+        <div id="cronDisplay" class="cron-display" role="status" aria-live="polite">* * * * *</div>
+        <div class="cron-toolbar">
+          <button type="button" id="btnCopy" class="tool-btn tool-btn-primary">复制表达式</button>
+          <span id="copyHint" class="tool-label timestamp-help"></span>
+        </div>
+        <h2 class="tool-sr-only" id="fields-heading">字段配置</h2>
+        <p class="tool-label">选择规则类型后在右侧填写参数（任意类型无需填写）。</p>
+        <div id="cronFields"></div>
+        <div>
+          <span class="tool-label">常用预设</span>
+          <div class="cron-preset-bar tool-actions">
+            <button type="button" class="tool-btn" data-preset="every_min">每分钟</button>
+            <button type="button" class="tool-btn" data-preset="every_hour">每小时</button>
+            <button type="button" class="tool-btn" data-preset="daily_midnight">每天零点</button>
+            <button type="button" class="tool-btn" data-preset="weekly_mon">每周一</button>
+            <button type="button" class="tool-btn" data-preset="monthly_first">每月1号</button>
+            <button type="button" class="tool-btn" data-preset="weekdays">工作日</button>
+          </div>
+        </div>
+        <h2 class="tool-sr-only" id="desc-heading">语义说明</h2>
+        <div id="humanDesc" class="cron-desc-box tool-result">在每分钟执行一次。</div>
+        <h2 class="tool-sr-only" id="next-heading">接下来执行时间</h2>
+        <ul id="nextRuns" class="cron-next-list"></ul>
+        <p id="nextRunsNote" class="tool-label timestamp-help"></p>
       </div>
-      <p id="parseMsg" class="tool-label timestamp-help"></p>
-    </section>
 
-    <section class="tool-panel" aria-labelledby="desc-heading">
-      <h2 id="desc-heading" class="tool-panel-title">语义说明</h2>
-      <div id="humanDesc" class="cron-desc-box tool-result">在每分钟执行一次。</div>
-    </section>
+      <div data-cron-panel="parse" hidden>
+        <h2 class="tool-sr-only" id="parse-heading">解析已有表达式</h2>
+        <div class="cron-parse-row">
+          <input type="text" id="parseInput" class="tool-input tool-input-mono" placeholder="0 0 12 * * ? 或 0 0 * * *" autocomplete="off" spellcheck="false" aria-label="Cron 表达式" />
+          <button type="button" id="btnParse" class="tool-btn tool-btn-primary">应用到生成器</button>
+        </div>
+        <p id="parseMsg" class="tool-label timestamp-help">输入后自动校验并预览；点击「应用到生成器」同步字段配置。</p>
+        <div class="cron-parse-meta">
+          <label class="tool-label" for="cronCount">预览次数</label>
+          <input type="number" id="cronCount" class="tool-input tool-input-compact" value="10" min="1" max="50" aria-label="预览执行次数">
+        </div>
+        <div id="parseHumanDesc" class="cron-desc-box tool-result" hidden></div>
+        <ul id="parseNextRuns" class="cron-next-list" hidden></ul>
+        <p id="parseNextRunsNote" class="tool-label timestamp-help"></p>
+      </div>
 
-    <section class="tool-panel" aria-labelledby="next-heading">
-      <h2 id="next-heading" class="tool-panel-title">接下来 5 次执行时间（本地时区）</h2>
-      <ul id="nextRuns" class="cron-next-list"></ul>
-      <p id="nextRunsNote" class="tool-label timestamp-help"></p>
-    </section>
+      <div data-cron-panel="tpl" hidden>
+        <h2 class="tool-sr-only" id="cron-advanced-heading">高级预设</h2>
+        <p class="tool-label">点击模板将填入解析区并自动预览，可再应用到生成器。</p>
+        <div id="cronAdvancedPresets" class="tool-pro-chips"></div>
+      </div>
 
-    <section class="tool-panel" aria-labelledby="cron-advanced-heading">
-      <h2 id="cron-advanced-heading" class="tool-panel-title">高级预设</h2>
-      <div id="cronAdvancedPresets" class="tool-pro-chips"></div>
-    </section>
-
-    <section class="tool-panel" aria-labelledby="cron-snippets-heading">
-      <h2 id="cron-snippets-heading" class="tool-panel-title">部署片段</h2>
-      <pre id="cronSnippets" class="tool-pro-result">选择表达式后将生成 Kubernetes / GitHub Actions / Spring 片段。</pre>
+      <div data-cron-panel="deploy" hidden>
+        <h2 class="tool-sr-only" id="cron-snippets-heading">部署片段</h2>
+        <pre id="cronSnippets" class="tool-pro-result">选择表达式后将生成 Kubernetes / GitHub Actions / Spring 片段。</pre>
+      </div>
     </section>
 
     <nav class="tool-footer-nav" aria-label="相关工具">

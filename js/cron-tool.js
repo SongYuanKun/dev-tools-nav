@@ -58,6 +58,141 @@
     else fn();
   }
 
+  function getQueryParam(key) {
+    if (window.ToolChrome && ToolChrome.getQueryParam) return ToolChrome.getQueryParam(key);
+    try { return new URLSearchParams(location.search).get(key); } catch (_) { return null; }
+  }
+
+  function setCronStatus(kind, text) {
+    var el = document.getElementById("cronStatus");
+    if (!el) return;
+    el.className = "tool-status-pill";
+    if (kind === "ok") el.classList.add("tool-status-success");
+    else if (kind === "err") el.classList.add("tool-status-error");
+    else el.classList.add("tool-status-info");
+    el.textContent = text;
+  }
+
+  function switchCronTab(name) {
+    document.querySelectorAll("[data-cron-tab]").forEach(function (btn) {
+      var active = btn.getAttribute("data-cron-tab") === name;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    document.querySelectorAll("[data-cron-panel]").forEach(function (panel) {
+      panel.hidden = panel.getAttribute("data-cron-panel") !== name;
+    });
+  }
+
+  function getPreviewCount() {
+    var el = document.getElementById("cronCount");
+    var n = el ? parseInt(el.value, 10) : 5;
+    if (isNaN(n) || n < 1) return 5;
+    return Math.min(n, 50);
+  }
+
+  function validateExpression(expr) {
+    expr = (expr || "").trim();
+    if (!expr) return { ok: false, empty: true, note: "" };
+    var parts = expr.split(/\s+/);
+    if (parts.length !== 5 && parts.length !== 6) {
+      return { ok: false, note: "须为 5 段（Linux）或 6 段（Quartz）字段。" };
+    }
+    for (var t = 0; t < parts.length; t++) {
+      if (!parts[t]) return { ok: false, note: "字段不能为空。" };
+    }
+    return { ok: true, parts: parts };
+  }
+
+  function setParseInputStyle(kind) {
+    var input = document.getElementById("parseInput");
+    if (!input) return;
+    input.classList.remove("cron-input-valid", "cron-input-invalid");
+    if (kind === "valid") input.classList.add("cron-input-valid");
+    if (kind === "invalid") input.classList.add("cron-input-invalid");
+  }
+
+  function renderRunsList(ul, nr, noteEl) {
+    if (!ul) return;
+    ul.innerHTML = "";
+    if (!nr.ok) {
+      var li = document.createElement("li");
+      li.textContent = nr.note || "解析失败";
+      ul.appendChild(li);
+    } else if (nr.runs.length === 0) {
+      var li2 = document.createElement("li");
+      li2.textContent = "未找到即将到来的执行时间。";
+      ul.appendChild(li2);
+    } else {
+      nr.runs.forEach(function (dt) {
+        var li3 = document.createElement("li");
+        li3.textContent = dt.toLocaleString("zh-CN", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false
+        });
+        ul.appendChild(li3);
+      });
+    }
+    if (noteEl) noteEl.textContent = nr.note || "";
+  }
+
+  function renderParsePreview() {
+    var input = document.getElementById("parseInput");
+    var descEl = document.getElementById("parseHumanDesc");
+    var ul = document.getElementById("parseNextRuns");
+    var noteEl = document.getElementById("parseNextRunsNote");
+    if (!input) return;
+    var raw = input.value.trim();
+    var v = validateExpression(raw);
+    setParseInputStyle(v.ok ? "valid" : v.empty ? "neutral" : "invalid");
+    if (!raw) {
+      if (descEl) { descEl.hidden = true; descEl.textContent = ""; }
+      if (ul) { ul.hidden = true; ul.innerHTML = ""; }
+      if (noteEl) noteEl.textContent = "";
+      setCronStatus("info", "输入表达式后将自动校验并预览");
+      return;
+    }
+    if (!v.ok) {
+      if (descEl) { descEl.hidden = false; descEl.textContent = v.note; }
+      if (ul) { ul.hidden = true; ul.innerHTML = ""; }
+      if (noteEl) noteEl.textContent = "";
+      setCronStatus("err", v.note);
+      return;
+    }
+    if (descEl) {
+      descEl.hidden = false;
+      descEl.textContent = describeCron(raw);
+    }
+    var nr = nextRuns(raw, getPreviewCount(), new Date());
+    renderRunsList(ul, nr, noteEl);
+    if (ul) ul.hidden = false;
+    setCronStatus("ok", "表达式有效");
+  }
+
+  function updateModeHint() {
+    var hint = document.getElementById("cronModeHint");
+    if (!hint) return;
+    hint.textContent = cronMode === "quartz"
+      ? "Quartz 六段：秒 分 时 日 月 周（日/周可用 ?，如 0 0 12 * * ?）"
+      : "Linux 五段：分 时 日 月 周（如 0 0 * * *）";
+  }
+
+  function applyUrlPrefill() {
+    var expr = getQueryParam("expr");
+    if (!expr) return;
+    switchCronTab("parse");
+    var input = document.getElementById("parseInput");
+    if (input) {
+      input.value = expr;
+      renderParsePreview();
+    }
+  }
+
   function getFieldMeta() {
     return cronMode === "quartz" ? QUARTZ_META : LINUX_META;
   }
@@ -119,7 +254,7 @@
   function syncFromExpression(expr) {
     var p = expr.trim().split(/\s+/);
     if (p.length === 5) {
-      if (forceMode !== "quartz") cronMode = "linux";
+      cronMode = "linux";
       setCronModeSelect();
       buildFieldUI();
       return applyParts(p);
@@ -356,33 +491,9 @@
     document.getElementById("humanDesc").textContent = describeCron(expr);
     updateCronSnippets(expr);
 
-    var nr = nextRuns(expr, 5, new Date());
+    var nr = nextRuns(expr, getPreviewCount(), new Date());
     var ul = document.getElementById("nextRuns");
-    ul.innerHTML = "";
-    if (!nr.ok) {
-      var li = document.createElement("li");
-      li.textContent = nr.note || "解析失败";
-      ul.appendChild(li);
-    } else if (nr.runs.length === 0) {
-      var li2 = document.createElement("li");
-      li2.textContent = "未找到即将到来的执行时间。";
-      ul.appendChild(li2);
-    } else {
-      nr.runs.forEach(function (dt) {
-        var li3 = document.createElement("li");
-        li3.textContent = dt.toLocaleString("zh-CN", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false
-        });
-        ul.appendChild(li3);
-      });
-    }
-    document.getElementById("nextRunsNote").textContent = nr.note || "";
+    renderRunsList(ul, nr, document.getElementById("nextRunsNote"));
   }
 
   function bindFieldListeners() {
@@ -449,13 +560,10 @@
       btn.className = "tool-btn tool-pro-chip";
       btn.innerHTML = p[1] + ' · <code>' + p[0] + "</code>";
       btn.addEventListener("click", function () {
-        document.getElementById("parseInput").value = p[0];
-        applyAdvancedPreset(p[0]);
-        var msg = document.getElementById("parseMsg");
-        if (msg) {
-          msg.textContent = "已应用高级预设。";
-          msg.style.color = "var(--color-primary)";
-        }
+        var parseInput = document.getElementById("parseInput");
+        if (parseInput) parseInput.value = p[0];
+        switchCronTab("parse");
+        renderParsePreview();
       });
       host.appendChild(btn);
     });
@@ -463,12 +571,19 @@
   }
 
   function bindEvents() {
+    document.querySelectorAll("[data-cron-tab]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        switchCronTab(btn.getAttribute("data-cron-tab"));
+      });
+    });
+
     var modeSel = document.getElementById("cronMode");
     if (modeSel) {
       cronMode = modeSel.value || "linux";
       modeSel.addEventListener("change", function () {
         cronMode = modeSel.value;
         buildFieldUI();
+        updateModeHint();
         refreshUI();
       });
     }
@@ -476,20 +591,40 @@
     document.querySelectorAll("[data-preset]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         applyBasicPreset(btn.getAttribute("data-preset"));
+        setCronStatus("ok", "已应用预设");
       });
     });
+
+    var parseDebounce;
+    var parseInput = document.getElementById("parseInput");
+    if (parseInput) {
+      parseInput.addEventListener("input", function () {
+        clearTimeout(parseDebounce);
+        parseDebounce = setTimeout(renderParsePreview, 300);
+      });
+      parseInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") document.getElementById("btnParse").click();
+      });
+    }
+
+    var cronCount = document.getElementById("cronCount");
+    if (cronCount) {
+      cronCount.addEventListener("change", function () {
+        renderParsePreview();
+        refreshUI();
+      });
+    }
 
     document.getElementById("btnParse").addEventListener("click", function () {
       window.umamiTrack?.("tool_used", { tool: "cron", action: "parse" });
       var raw = document.getElementById("parseInput").value;
-      var msg = document.getElementById("parseMsg");
       if (syncFromExpression(raw)) {
-        msg.textContent = "已应用到上方字段（" + (cronMode === "quartz" ? "Quartz 六段" : "Linux 五段") + "）。";
-        msg.style.color = "var(--color-primary)";
+        switchCronTab("gen");
         refreshUI();
+        setCronStatus("ok", "已同步到生成器");
+        window.umamiTrack?.("tool_used", { tool: "cron", action: "apply" });
       } else {
-        msg.textContent = "请输入有效的五段或六段表达式（空格分隔）。";
-        msg.style.color = "#ef4444";
+        setCronStatus("err", "请输入有效的五段或六段表达式");
       }
     });
 
@@ -497,6 +632,7 @@
       var text = document.getElementById("cronDisplay").textContent;
       var hint = document.getElementById("copyHint");
       var done = function () {
+        window.umamiTrack?.("tool_used", { tool: "cron", action: "copy" });
         if (window.ToolChrome && ToolChrome.showToast) {
           ToolChrome.showToast("已复制到剪贴板");
           return;
@@ -520,6 +656,8 @@
     buildFieldUI();
     renderAdvancedPresets();
     bindEvents();
+    updateModeHint();
     refreshUI();
+    applyUrlPrefill();
   });
 })();

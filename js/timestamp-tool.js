@@ -5,16 +5,15 @@
   "use strict";
 
   var WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
-  var COMMON_ZONES = [
+  var COMPARE_ZONES = [
     "Asia/Shanghai",
     "UTC",
     "America/Los_Angeles",
     "America/New_York",
     "Europe/London",
-    "Europe/Berlin",
-    "Asia/Tokyo",
-    "Asia/Singapore"
+    "Asia/Tokyo"
   ];
+  var COMMON_ZONES = COMPARE_ZONES.concat(["Europe/Berlin", "Asia/Singapore"]);
 
   function $(id) { return document.getElementById(id); }
 
@@ -267,6 +266,37 @@
     else sel.value = "local";
   }
 
+  function setTsStatus(kind, text) {
+    var el = $("tsStatus");
+    if (!el) return;
+    el.className = "tool-status-pill";
+    if (kind === "ok") el.classList.add("tool-status-success");
+    else if (kind === "err") el.classList.add("tool-status-error");
+    else el.classList.add("tool-status-info");
+    el.textContent = text;
+  }
+
+  function renderTzCompare(date) {
+    var wrap = $("tzCompareWrap");
+    var body = $("tzCompareBody");
+    if (!wrap || !body) return;
+    body.innerHTML = COMPARE_ZONES.map(function (zone) {
+      return "<tr><td>" + escapeHtml(zone) + "</td><td>" + escapeHtml(formatInZone(date, zone)) + "</td></tr>";
+    }).join("");
+    wrap.hidden = false;
+  }
+
+  function switchTsTab(name) {
+    document.querySelectorAll("[data-ts-tab]").forEach(function (btn) {
+      var active = btn.getAttribute("data-ts-tab") === name;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    document.querySelectorAll("[data-ts-panel]").forEach(function (panel) {
+      panel.hidden = panel.getAttribute("data-ts-panel") !== name;
+    });
+  }
+
   function tickLive() {
     var now = new Date();
     var sec = Math.floor(now.getTime() / 1000);
@@ -293,7 +323,13 @@
     setText("outRfc", date.toUTCString().replace("GMT", "+0000"));
     setText("outHint", "输入按 " + unit + " 解析；目标时区：" + tz + "；本机时区：" +
       Intl.DateTimeFormat().resolvedOptions().timeZone + "。");
-    $("ts2dateOut").style.display = "block";
+    var out = $("ts2dateOut");
+    if (out) {
+      out.hidden = false;
+      out.style.display = "block";
+    }
+    renderTzCompare(date);
+    setTsStatus("ok", "转换成功：" + formatInZone(date, tz));
     updateCodeSnippets(Math.floor(date.getTime() / 1000));
   }
 
@@ -301,7 +337,10 @@
     var parsed = parseUnix($("tsInput").value, $("unitSelect").value);
     if (!parsed) {
       showError($("ts2dateError"), "请输入有效的 Unix 时间戳。支持秒、毫秒、微秒和纳秒。");
-      $("ts2dateOut").style.display = "none";
+      var out = $("ts2dateOut");
+      if (out) out.hidden = true;
+      if ($("tzCompareWrap")) $("tzCompareWrap").hidden = true;
+      setTsStatus("err", "时间戳格式无效");
       return;
     }
     showError($("ts2dateError"), "");
@@ -331,8 +370,10 @@
     setText("outMs", String(ms));
     setText("outUs", String(ms * 1000));
     setText("outNs", String(ms * 1000000));
+    $("date2tsOut").hidden = false;
     $("date2tsOut").style.display = "block";
     updateCodeSnippets(Math.floor(ms / 1000));
+    setTsStatus("ok", "已转换为时间戳：秒 " + Math.floor(ms / 1000));
     window.umamiTrack?.("tool_used", { tool: "timestamp", action: "date_to_ts" });
   }
 
@@ -406,17 +447,40 @@
   function applyUrlPrefill() {
     var tsParam = getQueryParam("ts");
     if (tsParam) {
+      switchTsTab("ts2date");
       $("tsInput").value = tsParam;
       runTsToDate();
     }
     var dateParam = getQueryParam("date");
     if (dateParam) {
+      switchTsTab("date2ts");
       $("dateTextInput").value = dateParam;
       runDateToTs();
     }
   }
 
   function bindEvents() {
+    document.querySelectorAll("[data-ts-tab]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        switchTsTab(btn.getAttribute("data-ts-tab"));
+      });
+    });
+
+    var tsDebounce;
+    var dateDebounce;
+    $("tsInput").addEventListener("input", function () {
+      clearTimeout(tsDebounce);
+      tsDebounce = setTimeout(function () {
+        if ($("tsInput").value.trim()) runTsToDate();
+        else {
+          $("ts2dateOut").hidden = true;
+          if ($("tzCompareWrap")) $("tzCompareWrap").hidden = true;
+          showError($("ts2dateError"), "");
+          setTsStatus("info", "输入时间戳后将自动转换");
+        }
+      }, 280);
+    });
+
     $("tsConvertBtn").addEventListener("click", runTsToDate);
     $("tsInput").addEventListener("keydown", function (e) { if (e.key === "Enter") runTsToDate(); });
     $("unitSelect").addEventListener("change", function () {
@@ -424,21 +488,36 @@
     });
     $("timezoneSelect").addEventListener("change", function () {
       tickLive();
-      if ($("ts2dateOut").style.display !== "none" && $("tsInput").value.trim()) runTsToDate();
+      var out = $("ts2dateOut");
+      if (out && !out.hidden && $("tsInput").value.trim()) runTsToDate();
       if ($("batchTableWrap").style.display !== "none") runBatch();
     });
     $("formatInput").addEventListener("input", function () {
-      if ($("ts2dateOut").style.display !== "none" && $("tsInput").value.trim()) runTsToDate();
+      var out = $("ts2dateOut");
+      if (out && !out.hidden && $("tsInput").value.trim()) runTsToDate();
     });
 
     $("tsClearBtn").addEventListener("click", function () {
       $("tsInput").value = "";
-      $("ts2dateOut").style.display = "none";
+      $("ts2dateOut").hidden = true;
+      if ($("tzCompareWrap")) $("tzCompareWrap").hidden = true;
       showError($("ts2dateError"), "");
+      setTsStatus("info", "已清空");
     });
     $("dtConvertBtn").addEventListener("click", runDateToTs);
     $("dateTextInput").addEventListener("keydown", function (e) { if (e.key === "Enter") runDateToTs(); });
-    $("useNowBtn").addEventListener("click", function () { fillDate(new Date()); runDateToTs(); });
+    $("dateTextInput").addEventListener("input", function () {
+      clearTimeout(dateDebounce);
+      dateDebounce = setTimeout(function () {
+        if ($("dateTextInput").value.trim() || $("dtLocal").value) runDateToTs();
+      }, 320);
+    });
+    $("dtLocal").addEventListener("change", runDateToTs);
+    $("useNowBtn").addEventListener("click", function () {
+      fillDate(new Date());
+      switchTsTab("date2ts");
+      runDateToTs();
+    });
 
     document.querySelectorAll("[data-fill-ts]").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -448,6 +527,7 @@
         if (kind === "nowMs") { $("tsInput").value = String(now); $("unitSelect").value = "ms"; }
         if (kind === "y2k") { $("tsInput").value = "946684800"; $("unitSelect").value = "s"; }
         if (kind === "unix0") { $("tsInput").value = "0"; $("unitSelect").value = "s"; }
+        switchTsTab("ts2date");
         runTsToDate();
       });
     });
@@ -456,6 +536,7 @@
       btn.addEventListener("click", function () {
         var d = new Date(Date.now() + Number(btn.getAttribute("data-shift")) * 1000);
         fillDate(d);
+        switchTsTab("date2ts");
         runDateToTs();
       });
     });
@@ -471,6 +552,7 @@
         if (kind === "monthStart") d = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
         if (kind === "yearStart") d = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
         fillDate(d);
+        switchTsTab("date2ts");
         runDateToTs();
       });
     });

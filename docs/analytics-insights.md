@@ -55,7 +55,7 @@ GROUP BY url_path ORDER BY views DESC LIMIT 20;"
 | **P1** | AI 详情页引导至横评专题 | template.html 流量高，避免停在「又一个 ChatGPT 链接」 |
 | **P2** | 统一 JSON 路径 | ✅ `pages/tools/json.html` 非 embed 时 302 到 `/tools/json/` |
 | **P2** | 增强 `tool_used` 埋点 + 中文展示 | ✅ 全工具走 `umamiTrack`，Umami 事件名为中文 |
-| **P3** | 时间戳/Cron 工具增强 | PV 个位数，低于 JSON 一个数量级 |
+| **P3** | 时间戳/Cron 工具增强 | ✅ Tab 工作台、多时区对照、URL 预填、表达式实时校验与预览 |
 
 ## 站点定位（数据 + 产品共识）
 
