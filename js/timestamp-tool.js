@@ -202,6 +202,8 @@
   function updateCodeSnippets(sec) {
     var el = $("codeSnippets");
     if (!el) return;
+    var section = document.getElementById("codeSnippetsSection");
+    if (section && section.hidden) return;
     var s = String(sec);
     el.textContent =
       "/* JavaScript */\n" +
@@ -306,7 +308,6 @@
     if ($("liveRelative")) {
       setText("liveRelative", relativeTime(new Date(0), now) + "（自 Unix 纪元）");
     }
-    updateCodeSnippets(sec);
   }
 
   function fillDate(date) {
@@ -566,6 +567,16 @@
     $("diffNowBtn").addEventListener("click", function () {
       $("diffEnd").value = String(Math.floor(Date.now() / 1000));
       runDiff();
+    });
+
+    document.body.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-section-toggle][aria-controls='codeSnippetsSection']");
+      if (!btn) return;
+      setTimeout(function () {
+        if (btn.getAttribute("aria-expanded") === "true") {
+          updateCodeSnippets(Math.floor(Date.now() / 1000));
+        }
+      }, 0);
     });
 
     document.body.addEventListener("click", function (e) {

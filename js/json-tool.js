@@ -44,11 +44,11 @@
   function getPrefs() {
     try {
       return Object.assign(
-        { indent: "2", autoFormat: false, relaxed: true },
+        { indent: "2", autoFormat: false, relaxed: true, keepEscape: false },
         JSON.parse(localStorage.getItem(PREFS_KEY) || "{}")
       );
     } catch (_) {
-      return { indent: "2", autoFormat: false, relaxed: true };
+      return { indent: "2", autoFormat: false, relaxed: true, keepEscape: false };
     }
   }
 
@@ -430,6 +430,22 @@
     });
   }
 
+  function highlightJson(text) {
+    var escaped = html(text);
+    return escaped.replace(
+      /("(\\u[\dA-Fa-f]{4}|\\[^u]|[^\\"])*")(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?/g,
+      function (m, str, _a, colon) {
+        if (str !== undefined) {
+          if (colon) return '<span class="json-hl-key">' + str + "</span>:";
+          return '<span class="json-hl-str">' + str + "</span>";
+        }
+        if (m === "true" || m === "false") return '<span class="json-hl-bool">' + m + "</span>";
+        if (m === "null") return '<span class="json-hl-null">' + m + "</span>";
+        return '<span class="json-hl-num">' + m + "</span>";
+      }
+    );
+  }
+
   // 树形视图
   function renderTree(data, depth) {
     depth = depth || 0;
@@ -494,6 +510,8 @@
     var indentSelect = document.getElementById("indentSelect");
     var autoFormatChk = document.getElementById("autoFormat");
     var relaxedChk = document.getElementById("relaxedParse");
+    var keepEscapeChk = document.getElementById("keepEscape");
+    var formattedOut = document.getElementById("jsonFormattedOut");
     var fileInput = document.getElementById("jsonFileInput");
     var tabBtns = document.querySelectorAll("[data-json-tab]");
     var viewPanels = document.querySelectorAll("[data-json-view]");
@@ -502,6 +520,27 @@
     if (indentSelect) indentSelect.value = prefs.indent;
     if (autoFormatChk) autoFormatChk.checked = prefs.autoFormat;
     if (relaxedChk) relaxedChk.checked = prefs.relaxed;
+    if (keepEscapeChk) keepEscapeChk.checked = prefs.keepEscape;
+
+    function getOutputPreviewText(data) {
+      if (!data) return "";
+      var pretty = stringify(data, prefs);
+      if (keepEscapeChk && keepEscapeChk.checked) pretty = escapeUnicode(pretty);
+      return pretty;
+    }
+
+    function refreshFormattedOut(data, errorText) {
+      if (!formattedOut) return;
+      if (errorText) {
+        formattedOut.innerHTML = '<span class="json-formatted-err">' + html(errorText) + "</span>";
+        return;
+      }
+      if (!data) {
+        formattedOut.innerHTML = '<span class="json-formatted-empty">解析成功后显示格式化结果。</span>';
+        return;
+      }
+      formattedOut.innerHTML = highlightJson(getOutputPreviewText(data));
+    }
 
     var saved = localStorage.getItem(STORAGE_KEY);
     if (saved && !new URLSearchParams(window.location.search).get("q")) {
@@ -598,9 +637,10 @@
     function validateAndMaybeFormat(silent) {
       var raw = getRaw();
       if (!raw.trim()) {
-        setStatus("info", "就绪：粘贴或输入 JSON，将实时校验语法。");
+        setStatus("info", "就绪：左侧输入 JSON，右侧实时预览格式化结果。");
         updateLineNums(null);
         if (treeEl) treeEl.innerHTML = '<p class="json-tree-empty">解析成功后显示树形结构。</p>';
+        refreshFormattedOut(null);
         refreshJsonPro(null, "支持 $.a[0].b");
         return null;
       }
@@ -624,6 +664,7 @@
           localStorage.setItem(STORAGE_KEY, raw);
         }
         refreshTree(r.data);
+        refreshFormattedOut(r.data);
         return r.data;
       }
 
@@ -632,6 +673,7 @@
       setStatus("err", "✗ 语法错误" + (extra ? "：" + extra : "") + " — " + info.msg);
       updateLineNums(info.line);
       refreshJsonPro(null, "校验失败");
+      refreshFormattedOut(null, info.msg);
       if (treeEl) treeEl.innerHTML = '<p class="json-tree-empty json-tree-err">无法生成树形视图，请先修复语法错误。</p>';
       if (!silent && info.line != null) {
         var pos = input.value.split("\n").slice(0, info.line - 1).join("\n").length + (info.line > 1 ? 1 : 0) + info.col - 1;
@@ -694,18 +736,20 @@
       window.umamiTrack?.("tool_used", { tool: "json", action: "repair" });
     }
 
-    function doCopy() {
-      var text = getRaw();
+    function doCopyOutput() {
+      var data = parseInputData();
+      var text = data ? getOutputPreviewText(data) : getRaw();
       if (!text.trim()) {
         setStatus("info", "没有可复制的内容。");
         return;
       }
       copyWithToast(text);
-      setStatus("ok", "已复制到剪贴板。");
+      setStatus("ok", "已复制右侧结果到剪贴板。");
     }
 
     function doDownload() {
-      var text = getRaw();
+      var data = parseInputData();
+      var text = data ? getOutputPreviewText(data) : getRaw();
       if (!text.trim()) return;
       var blob = new Blob([text], { type: "application/json;charset=utf-8" });
       var a = document.createElement("a");
@@ -722,11 +766,14 @@
       setStatus("info", "已清空。");
       updateLineNums(null);
       if (treeEl) treeEl.innerHTML = '<p class="json-tree-empty">解析成功后显示树形结构。</p>';
+      refreshFormattedOut(null);
     }
 
     function switchTab(name) {
       tabBtns.forEach(function (btn) {
-        btn.classList.toggle("is-active", btn.getAttribute("data-json-tab") === name);
+        var active = btn.getAttribute("data-json-tab") === name;
+        btn.classList.toggle("is-active", active);
+        btn.setAttribute("aria-selected", active ? "true" : "false");
       });
       viewPanels.forEach(function (panel) {
         panel.hidden = panel.getAttribute("data-json-view") !== name;
@@ -735,15 +782,27 @@
 
     function applyQueryParam() {
       var q = new URLSearchParams(window.location.search).get("q");
-      if (q === null || q === "") return;
-      input.value = q;
-      validateAndMaybeFormat(true);
+      if (q !== null && q !== "") {
+        input.value = q;
+        validateAndMaybeFormat(true);
+        return;
+      }
+      var hash = (location.hash || "").slice(1);
+      if (!hash) return;
+      if (hash.indexOf("data=") === 0) {
+        try {
+          input.value = decodeURIComponent(hash.slice(5));
+          validateAndMaybeFormat(true);
+          history.replaceState(null, "", location.pathname + location.search);
+        } catch (_) {}
+      }
     }
 
     function savePrefAndValidate() {
       prefs.indent = indentSelect ? indentSelect.value : "2";
       prefs.autoFormat = autoFormatChk ? autoFormatChk.checked : false;
       prefs.relaxed = relaxedChk ? relaxedChk.checked : true;
+      prefs.keepEscape = keepEscapeChk ? keepEscapeChk.checked : false;
       savePrefs(prefs);
       scheduleValidate();
     }
@@ -754,6 +813,7 @@
     if (indentSelect) indentSelect.addEventListener("change", savePrefAndValidate);
     if (autoFormatChk) autoFormatChk.addEventListener("change", savePrefAndValidate);
     if (relaxedChk) relaxedChk.addEventListener("change", savePrefAndValidate);
+    if (keepEscapeChk) keepEscapeChk.addEventListener("change", savePrefAndValidate);
 
     document.getElementById("btnFormat")?.addEventListener("click", doFormat);
     document.getElementById("btnMinify")?.addEventListener("click", doMinify);
@@ -762,7 +822,7 @@
       validateAndMaybeFormat(false);
       window.umamiTrack?.("tool_used", { tool: "json", action: "validate" });
     });
-    document.getElementById("btnCopy")?.addEventListener("click", doCopy);
+    document.getElementById("btnCopyOutput")?.addEventListener("click", doCopyOutput);
     document.getElementById("btnDownload")?.addEventListener("click", doDownload);
     document.getElementById("btnClear")?.addEventListener("click", doClear);
     document.getElementById("btnEscapeUnicode")?.addEventListener("click", function () {
@@ -864,7 +924,7 @@
         });
       }
 
-      document.getElementById("btnJsonProSort")?.addEventListener("click", function () {
+      document.getElementById("jsonProSort")?.addEventListener("click", function () {
         try {
           var data = parseInputData();
           if (!data) throw new Error("请先输入合法 JSON。");
@@ -877,7 +937,7 @@
         }
       });
 
-      document.getElementById("btnJsonProSample")?.addEventListener("click", function () {
+      document.getElementById("jsonProSample")?.addEventListener("click", function () {
         setInput(stringify(JSON_PRO_SAMPLE, prefs));
         setStatus("ok", "已填入复杂示例。");
       });
@@ -960,6 +1020,7 @@
     updateLineNums(null);
     if (!input.value.trim()) {
       if (treeEl) treeEl.innerHTML = '<p class="json-tree-empty">解析成功后显示树形结构。</p>';
+      refreshFormattedOut(null);
       refreshJsonPro(null, "支持 $.a[0].b");
     } else {
       scheduleValidate();

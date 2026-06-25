@@ -4149,6 +4149,10 @@ html.is-embed body.site-v2 .tool-panel {
   background: transparent !important;
 }
 
+html.is-embed body.site-v2 {
+  min-height: 0 !important;
+}
+
 .site-v2 .tool-textarea,
 .site-v2 .tool-result,
 .site-v2 .tool-input,

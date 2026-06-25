@@ -734,6 +734,169 @@
 /* ============================================================
    JSON 工具专属
    ============================================================ */
+.json-command-bar {
+  margin-bottom: 12px;
+}
+
+.json-split-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  min-height: 480px;
+  background: var(--bg-page);
+}
+
+.json-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.json-pane-input {
+  border-right: 1px solid var(--border-color);
+}
+
+.json-pane-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-card);
+}
+
+.json-pane-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.json-pane-head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.json-pane-head-actions .tool-btn {
+  min-height: 30px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.json-pane-input .json-editor-wrap {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  min-height: 420px;
+}
+
+.json-pane-input .json-textarea {
+  min-height: 420px;
+  max-height: none;
+  height: 100%;
+}
+
+.json-output-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-card);
+}
+
+.json-output-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.json-output-actions .tool-btn {
+  min-height: 30px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.json-output-side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.json-output-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.json-output-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.json-formatted-output {
+  flex: 1;
+  margin: 0;
+  padding: 14px 16px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 380px;
+  max-height: 560px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--text-primary);
+}
+
+.json-formatted-empty,
+.json-formatted-err {
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+.json-formatted-err {
+  color: #ef4444;
+}
+
+.json-hl-key { color: #a78bfa; }
+.json-hl-str { color: #34d399; }
+.json-hl-num { color: #60a5fa; }
+.json-hl-bool { color: #f59e0b; }
+.json-hl-null { color: #94a3b8; }
+
+.json-output-hint {
+  margin: 0;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-color);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.json-pane-output .json-tree-panel {
+  flex: 1;
+  min-height: 380px;
+  max-height: 560px;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
+
 .json-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -939,6 +1102,28 @@
 
 @media (max-width: 768px) {
   .json-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .json-split-workspace {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .json-pane-input {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .json-pane-input .json-textarea,
+  .json-formatted-output,
+  .json-pane-output .json-tree-panel {
+    min-height: 240px;
+    max-height: 360px;
+  }
+
+  .json-output-toolbar {
     flex-direction: column;
     align-items: stretch;
   }
@@ -1301,6 +1486,8 @@
 
 .is-embed body {
   background: var(--bg-card);
+  /* iframe 内 100vh 会随外壳逐帧变高，与 tools-shell 自动增高形成正反馈 */
+  min-height: 0;
 }
 
 .is-embed body > header,
@@ -2254,6 +2441,18 @@
 .is-embed .tool-module-primary .json-textarea {
   min-height: 360px;
   max-height: 640px;
+}
+
+.is-embed .json-split-workspace {
+  min-height: 520px;
+}
+
+.is-embed .json-pane-input .json-textarea,
+.is-embed .json-formatted-output,
+.is-embed .json-pane-output .json-tree-panel {
+  min-height: 420px;
+  max-height: 720px;
+}
 }
 
 .is-embed .tool-module-primary .json-editor-wrap {

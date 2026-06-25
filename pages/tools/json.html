@@ -82,15 +82,11 @@
       </p>
     </header>
 
-    <section class="tool-panel tool-module-primary" aria-labelledby="editor-heading">
-      <div class="tool-command-bar">
+    <section class="tool-panel tool-module-primary" aria-label="JSON 工作台">
+      <div class="tool-command-bar json-command-bar">
         <div class="tool-command-leading">
-          <div class="json-view-tabs" role="tablist" aria-label="视图切换">
-            <button type="button" class="json-view-tab is-active" data-json-tab="editor" role="tab" aria-selected="true">编辑器</button>
-            <button type="button" class="json-view-tab" data-json-tab="tree" role="tab" aria-selected="false">树形视图</button>
-          </div>
           <div id="statusMsg" class="tool-status-pill tool-status-info" role="status" aria-live="polite">
-            就绪：粘贴或输入 JSON，将实时校验语法。
+            就绪：左侧输入 JSON，右侧实时预览格式化结果。
           </div>
         </div>
         <div class="json-toolbar-options">
@@ -104,7 +100,7 @@
           </label>
           <label class="json-option">
             <input type="checkbox" id="autoFormat" />
-            <span>自动格式化</span>
+            <span>自动格式化左侧</span>
           </label>
           <label class="json-option" title="允许 // 注释、/* */ 注释、尾逗号、单引号">
             <input type="checkbox" id="relaxedParse" checked />
@@ -113,48 +109,68 @@
         </div>
       </div>
 
-      <div data-json-view="editor">
-        <label class="tool-label tool-sr-only" for="jsonInput" id="editor-heading">JSON 编辑器</label>
-        <div id="jsonEditorWrap" class="json-editor-wrap">
-          <div id="jsonLineNums" class="json-line-nums" aria-hidden="true">1</div>
-          <textarea
-            id="jsonInput"
-            class="json-textarea tool-textarea"
-            spellcheck="false"
-            autocomplete="off"
-            placeholder="粘贴 JSON，支持 // 注释与尾逗号。快捷键：Ctrl+Enter 格式化"
-            aria-describedby="statusMsg"
-          ></textarea>
+      <div class="json-split-workspace">
+        <div class="json-pane json-pane-input">
+          <div class="json-pane-head">
+            <span class="json-pane-title">请输入 JSON</span>
+            <div class="json-pane-head-actions">
+              <label class="tool-btn">
+                上传
+                <input id="jsonFileInput" type="file" accept=".json,.txt,application/json" hidden />
+              </label>
+              <button type="button" class="tool-btn" id="btnSample">示例</button>
+            </div>
+          </div>
+          <label class="tool-sr-only" for="jsonInput" id="editor-heading">JSON 输入</label>
+          <div id="jsonEditorWrap" class="json-editor-wrap">
+            <div id="jsonLineNums" class="json-line-nums" aria-hidden="true">1</div>
+            <textarea
+              id="jsonInput"
+              class="json-textarea tool-textarea"
+              spellcheck="false"
+              autocomplete="off"
+              placeholder="请输入 JSON 数据… 支持 // 注释与尾逗号。快捷键：Ctrl+Enter 格式化"
+              aria-describedby="statusMsg"
+            ></textarea>
+          </div>
         </div>
-      </div>
 
-      <div data-json-view="tree" hidden>
-        <h2 class="tool-panel-title">树形结构</h2>
-        <div id="jsonTree" class="json-tree-panel">
-          <p class="json-tree-empty">解析成功后显示树形结构。</p>
-        </div>
-      </div>
+        <div class="json-pane json-pane-output">
+          <div class="json-output-toolbar">
+            <div class="json-output-actions" role="toolbar" aria-label="JSON 操作">
+              <button type="button" class="tool-btn" id="btnDownload" title="下载">下载</button>
+              <button type="button" class="tool-btn" id="btnCopyOutput" title="复制右侧结果">复制</button>
+              <button type="button" class="tool-btn" id="btnClear" title="清空">清空</button>
+              <button type="button" class="tool-btn" id="btnMinify" title="压缩为一行">压缩</button>
+              <button type="button" class="tool-btn tool-btn-primary" id="btnFormat" title="格式化左侧">格式化</button>
+              <button type="button" class="tool-btn" id="btnRepair" title="修复注释与尾逗号">修复</button>
+              <button type="button" class="tool-btn" id="btnValidate" title="校验并定位错误">校验</button>
+              <button type="button" class="tool-btn" id="btnEscapeUnicode" title="Unicode 转义">转义</button>
+              <button type="button" class="tool-btn" id="btnUnescapeUnicode" title="Unicode 还原">还原</button>
+            </div>
+            <div class="json-output-side">
+              <div class="json-view-tabs" role="tablist" aria-label="右侧视图">
+                <button type="button" class="json-view-tab is-active" data-json-tab="formatted" role="tab" aria-selected="true">格式化</button>
+                <button type="button" class="json-view-tab" data-json-tab="tree" role="tab" aria-selected="false">树形</button>
+              </div>
+              <label class="json-option" title="格式化预览保留 \\uXXXX 形式">
+                <input type="checkbox" id="keepEscape" />
+                <span>保留转义</span>
+              </label>
+            </div>
+          </div>
 
-      <div class="tool-action-dock" aria-label="JSON 操作">
-        <div class="tool-action-group">
-          <button type="button" class="tool-btn tool-btn-primary" id="btnFormat">格式化</button>
-          <button type="button" class="tool-btn" id="btnMinify">压缩</button>
-          <button type="button" class="tool-btn" id="btnRepair">修复</button>
-          <button type="button" class="tool-btn" id="btnValidate">校验</button>
-        </div>
-        <div class="tool-action-group">
-          <button type="button" class="tool-btn" id="btnCopy">复制</button>
-          <button type="button" class="tool-btn" id="btnDownload">下载</button>
-          <label class="tool-btn">
-            上传
-            <input id="jsonFileInput" type="file" accept=".json,.txt,application/json" hidden />
-          </label>
-          <button type="button" class="tool-btn" id="btnEscapeUnicode">Unicode 转义</button>
-          <button type="button" class="tool-btn" id="btnUnescapeUnicode">Unicode 还原</button>
-          <button type="button" class="tool-btn" id="btnSample">示例</button>
-        </div>
-        <div class="tool-action-group tool-action-group-end">
-          <button type="button" class="tool-btn tool-btn-danger" id="btnClear">清空</button>
+          <div class="json-output-body">
+            <div data-json-view="formatted" class="json-output-view">
+              <pre id="jsonFormattedOut" class="json-formatted-output" aria-label="格式化预览">解析成功后显示格式化结果。</pre>
+            </div>
+            <div data-json-view="tree" class="json-output-view" hidden>
+              <div id="jsonTree" class="json-tree-panel">
+                <p class="json-tree-empty">解析成功后显示树形结构。</p>
+              </div>
+            </div>
+          </div>
+          <p class="json-output-hint">右侧实时预览 · 树形视图可折叠节点 · 数据仅在本地处理</p>
         </div>
       </div>
     </section>

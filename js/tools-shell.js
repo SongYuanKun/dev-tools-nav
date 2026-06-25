@@ -104,16 +104,36 @@
       frameUrl += frameUrl.indexOf("?") === -1 ? "?embed=1" : "&embed=1";
     }
 
+    var lastFrameHeight = 0;
+    var resizeTimer;
+    var resizeRaf;
+
+    function measureFrameContent(doc) {
+      var root = doc.querySelector(".tool-page") || doc.querySelector("main") || doc.body;
+      if (!root) return 0;
+      var rect = root.getBoundingClientRect();
+      return Math.ceil(rect.bottom + (root.offsetTop || 0));
+    }
+
     function resizeFrame() {
       try {
         var doc = frame.contentDocument || frame.contentWindow.document;
         if (!doc) return;
-        var height = Math.max(
-          doc.body ? doc.body.scrollHeight : 0,
-          doc.documentElement ? doc.documentElement.scrollHeight : 0
-        );
-        if (height > 0) frame.style.height = Math.min(Math.max(height + 16, 480), 3600) + "px";
+        var height = measureFrameContent(doc);
+        if (height <= 0) return;
+        height = Math.min(Math.max(height + 16, 480), 3600);
+        if (Math.abs(height - lastFrameHeight) < 6) return;
+        lastFrameHeight = height;
+        frame.style.height = height + "px";
       } catch (_) {}
+    }
+
+    function scheduleResizeFrame() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(resizeFrame);
+      }, 80);
     }
 
     frame.setAttribute("src", frameUrl);
@@ -123,10 +143,12 @@
       setTimeout(resizeFrame, 200);
       try {
         var doc = frame.contentDocument || frame.contentWindow.document;
-        if (doc && doc.body) new MutationObserver(resizeFrame).observe(doc.body, { childList: true, subtree: true, attributes: true });
+        if (doc && doc.body) {
+          new MutationObserver(scheduleResizeFrame).observe(doc.body, { childList: true, subtree: true, attributes: true });
+        }
       } catch (_) {}
     });
-    window.addEventListener("resize", resizeFrame);
+    window.addEventListener("resize", scheduleResizeFrame);
 
     frame.addEventListener("error", function () {
       errorEl.hidden = false;
