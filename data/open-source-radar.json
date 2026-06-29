@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-06-22T15:28:09+08:00",
-  "weekLabel": "2026-06-15 ~ 2026-06-22",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、调研 / 知识 等方向。代表项目包括 Agent-Reach、iptv、codebase-memory-mcp。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-06-29T14:52:07+08:00",
+  "weekLabel": "2026-06-22 ~ 2026-06-29",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 记忆 / Harness、调研 / 知识、Agent Skills 等方向。代表项目包括 OpenMontage、codebase-memory-mcp、Agent-Reach。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,125 +31,10 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "Panniantong/Agent-Reach",
-      "language": "Python",
-      "stars": 37219,
-      "weekStars": 8233,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：Agent-Reach — Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
-      "features": [
-        "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "Agent Reach"
-      ]
-    },
-    {
-      "rank": 2,
-      "repo": "iptv-org/iptv",
-      "language": "TypeScript",
-      "stars": 127251,
-      "weekStars": 7266,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：iptv — Collection of publicly available IPTV channels from all over the world",
-      "features": [
-        "Collection of publicly available IPTV channels from all over the world",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "iptv"
-      ]
-    },
-    {
-      "rank": 3,
-      "repo": "DeusData/codebase-memory-mcp",
-      "language": "C",
-      "stars": 10735,
-      "weekStars": 6372,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：codebase-memory-mcp — High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
-      "features": [
-        "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "codebase memory mcp"
-      ]
-    },
-    {
-      "rank": 4,
-      "repo": "addyosmani/agent-skills",
-      "language": "Shell",
-      "stars": 64985,
-      "weekStars": 5610,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：agent-skills — Production-grade engineering skills for AI coding agents.",
-      "features": [
-        "Production-grade engineering skills for AI coding agents.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "google-research/timesfm",
-      "language": "Python",
-      "stars": 24973,
-      "weekStars": 4114,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：timesfm — TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
-      "features": [
-        "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "timesfm"
-      ]
-    },
-    {
-      "rank": 6,
-      "repo": "NVIDIA/SkillSpector",
-      "language": "Python",
-      "stars": 9159,
-      "weekStars": 4055,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：SkillSpector — Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, and security risks.",
-      "features": [
-        "Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, and security risks.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "SkillSpector",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 7,
       "repo": "calesthio/OpenMontage",
       "language": "Python",
-      "stars": 9715,
-      "weekStars": 2867,
+      "stars": 27546,
+      "weekStars": 18703,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：OpenMontage — World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.",
@@ -165,10 +50,124 @@
       ]
     },
     {
+      "rank": 2,
+      "repo": "DeusData/codebase-memory-mcp",
+      "language": "C",
+      "stars": 20291,
+      "weekStars": 8926,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：codebase-memory-mcp — High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+      "features": [
+        "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "codebase memory mcp"
+      ]
+    },
+    {
+      "rank": 3,
+      "repo": "Panniantong/Agent-Reach",
+      "language": "Python",
+      "stars": 44864,
+      "weekStars": 7692,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：Agent-Reach — Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
+      "features": [
+        "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "Agent Reach"
+      ]
+    },
+    {
+      "rank": 4,
+      "repo": "ZhuLinsen/daily_stock_analysis",
+      "language": "Python",
+      "stars": 51354,
+      "weekStars": 7045,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：daily_stock_analysis — LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。 LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
+      "features": [
+        "LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。 LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "daily_stock_analysis"
+      ]
+    },
+    {
+      "rank": 5,
+      "repo": "google-labs-code/design.md",
+      "language": "TypeScript",
+      "stars": 22978,
+      "weekStars": 6728,
+      "trending": true,
+      "topic": "memory",
+      "summary": "本周 GitHub Trending：design.md — A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.",
+      "features": [
+        "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "记忆 / Harness",
+        "design.md"
+      ]
+    },
+    {
+      "rank": 6,
+      "repo": "topoteretes/cognee",
+      "language": "Python",
+      "stars": 25085,
+      "weekStars": 6064,
+      "trending": true,
+      "topic": "memory",
+      "summary": "本周 GitHub Trending：cognee — Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine.",
+      "features": [
+        "Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "记忆 / Harness",
+        "cognee"
+      ]
+    },
+    {
+      "rank": 7,
+      "repo": "JCodesMore/ai-website-cloner-template",
+      "language": "TypeScript",
+      "stars": 23123,
+      "weekStars": 5317,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：ai-website-cloner-template — Clone any website with one command using AI coding agents",
+      "features": [
+        "Clone any website with one command using AI coding agents",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "ai website cloner templa"
+      ]
+    },
+    {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 235379,
+      "stars": 240912,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -188,7 +187,7 @@
       "rank": 9,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 219513,
+      "stars": 223180,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -208,7 +207,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 199319,
+      "stars": 205194,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -228,7 +227,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 153675,
+      "stars": 156382,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -246,22 +245,21 @@
     },
     {
       "rank": 12,
-      "repo": "google-gemini/gemini-cli",
+      "repo": "iptv-org/iptv",
       "language": "TypeScript",
-      "stars": 105481,
+      "stars": 129130,
       "weekStars": 0,
       "trending": false,
-      "topic": "coding",
-      "summary": "Google 开源终端 Agent，把 Gemini 能力带进命令行与代码仓库。",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：iptv — Collection of publicly available IPTV channels from all over the world",
       "features": [
-        "与 Claude Code、Codex CLI 形成「终端 Agent 三足鼎立」格局。",
-        "适合已有 Gemini 生态或 Google Cloud 账户的开发者。",
-        "关注模型版本与配额策略变更，避免写死单一模型名。"
+        "Collection of publicly available IPTV channels from all over the world",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "终端 Agent",
-        "Gemini",
-        "开源 CLI"
+        "调研 / 知识",
+        "iptv"
       ]
     }
   ]
