@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-06-29T14:52:07+08:00",
-  "weekLabel": "2026-06-22 ~ 2026-06-29",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 记忆 / Harness、调研 / 知识、Agent Skills 等方向。代表项目包括 OpenMontage、codebase-memory-mcp、Agent-Reach。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-07-06T14:39:38+08:00",
+  "weekLabel": "2026-06-29 ~ 2026-07-06",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 调研 / 知识、Agent Skills 等方向。代表项目包括 agency-agents、strix、codebase-memory-mcp。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,10 +31,67 @@
   "projects": [
     {
       "rank": 1,
+      "repo": "msitarzewski/agency-agents",
+      "language": "Shell",
+      "stars": 127662,
+      "weekStars": 10637,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：agency-agents — A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.",
+      "features": [
+        "A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "agency agents"
+      ]
+    },
+    {
+      "rank": 2,
+      "repo": "usestrix/strix",
+      "language": "Python",
+      "stars": 37418,
+      "weekStars": 10338,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：strix — Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
+      "features": [
+        "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "strix"
+      ]
+    },
+    {
+      "rank": 3,
+      "repo": "DeusData/codebase-memory-mcp",
+      "language": "C",
+      "stars": 26918,
+      "weekStars": 7945,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：codebase-memory-mcp — High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+      "features": [
+        "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "codebase memory mcp"
+      ]
+    },
+    {
+      "rank": 4,
       "repo": "calesthio/OpenMontage",
       "language": "Python",
-      "stars": 27546,
-      "weekStars": 18703,
+      "stars": 33842,
+      "weekStars": 7353,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：OpenMontage — World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.",
@@ -50,124 +107,67 @@
       ]
     },
     {
-      "rank": 2,
-      "repo": "DeusData/codebase-memory-mcp",
-      "language": "C",
-      "stars": 20291,
-      "weekStars": 8926,
+      "rank": 5,
+      "repo": "xbtlin/ai-berkshire",
+      "language": "Python",
+      "stars": 10593,
+      "weekStars": 5038,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：ai-berkshire — AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built for Claude Code / Codex. 4 masters' methodologies + multi-agent adversarial analysis.",
+      "features": [
+        "AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built for Claude Code / Codex. 4 masters' methodologies + multi-agent adversarial analysis.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "ai berkshire"
+      ]
+    },
+    {
+      "rank": 6,
+      "repo": "diegosouzapw/OmniRoute",
+      "language": "TypeScript",
+      "stars": 12054,
+      "weekStars": 4411,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：codebase-memory-mcp — High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+      "summary": "本周 GitHub Trending：OmniRoute — Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline & Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA.",
       "features": [
-        "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+        "Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline & Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "codebase memory mcp"
-      ]
-    },
-    {
-      "rank": 3,
-      "repo": "Panniantong/Agent-Reach",
-      "language": "Python",
-      "stars": 44864,
-      "weekStars": 7692,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：Agent-Reach — Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
-      "features": [
-        "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "Agent Reach"
-      ]
-    },
-    {
-      "rank": 4,
-      "repo": "ZhuLinsen/daily_stock_analysis",
-      "language": "Python",
-      "stars": 51354,
-      "weekStars": 7045,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：daily_stock_analysis — LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。 LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
-      "features": [
-        "LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。 LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "daily_stock_analysis"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "google-labs-code/design.md",
-      "language": "TypeScript",
-      "stars": 22978,
-      "weekStars": 6728,
-      "trending": true,
-      "topic": "memory",
-      "summary": "本周 GitHub Trending：design.md — A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.",
-      "features": [
-        "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "记忆 / Harness",
-        "design.md"
-      ]
-    },
-    {
-      "rank": 6,
-      "repo": "topoteretes/cognee",
-      "language": "Python",
-      "stars": 25085,
-      "weekStars": 6064,
-      "trending": true,
-      "topic": "memory",
-      "summary": "本周 GitHub Trending：cognee — Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine.",
-      "features": [
-        "Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "记忆 / Harness",
-        "cognee"
+        "OmniRoute"
       ]
     },
     {
       "rank": 7,
-      "repo": "JCodesMore/ai-website-cloner-template",
-      "language": "TypeScript",
-      "stars": 23123,
-      "weekStars": 5317,
+      "repo": "browser-use/video-use",
+      "language": "Python",
+      "stars": 15160,
+      "weekStars": 4288,
       "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：ai-website-cloner-template — Clone any website with one command using AI coding agents",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：video-use — Edit videos with coding agents",
       "features": [
-        "Clone any website with one command using AI coding agents",
+        "Edit videos with coding agents",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "编程 Agent",
-        "ai website cloner templa"
+        "调研 / 知识",
+        "video use"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 240912,
+      "stars": 247160,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -187,7 +187,7 @@
       "rank": 9,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 223180,
+      "stars": 226402,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -207,7 +207,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 205194,
+      "stars": 209863,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -227,7 +227,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 156382,
+      "stars": 158532,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -247,7 +247,7 @@
       "rank": 12,
       "repo": "iptv-org/iptv",
       "language": "TypeScript",
-      "stars": 129130,
+      "stars": 130626,
       "weekStars": 0,
       "trending": false,
       "topic": "research",
