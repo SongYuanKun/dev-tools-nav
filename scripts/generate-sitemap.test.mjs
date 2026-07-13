@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { collectStaticUrls, xmlEscape } from "./generate-sitemap.mjs";
+import { collectStaticUrls, generateSitemap, xmlEscape } from "./generate-sitemap.mjs";
 
 test("xmlEscape escapes unsafe xml chars", () => {
   assert.equal(
@@ -10,17 +10,30 @@ test("xmlEscape escapes unsafe xml chars", () => {
   );
 });
 
-test("collectStaticUrls excludes blog post template and keeps sorted entries", () => {
-  const urls = collectStaticUrls(process.cwd()).map((item) => item.loc);
-  assert.ok(!urls.some((loc) => loc.endsWith("/pages/blog/post.html")));
+test("collectStaticUrls excludes templates and returns sorted unique locations", () => {
+  const urls = collectStaticUrls(process.cwd(), new Date("2026-07-13T00:00:00Z"));
+  const locations = urls.map((item) => item.loc);
 
-  const aiUrls = urls.filter((loc) => loc.includes("/pages/ai/"));
-  const sortedAiUrls = [...aiUrls].sort();
-  assert.deepEqual(aiUrls, sortedAiUrls);
+  assert.ok(!locations.some((loc) => loc.endsWith("/pages/blog/post.html")));
+  assert.ok(!locations.some((loc) => loc.endsWith("/pages/template.html")));
+  assert.equal(new Set(locations).size, locations.length);
+  assert.deepEqual(locations, [...locations].sort());
 });
 
-test("collectStaticUrls includes static online tool pages", () => {
-  const urls = collectStaticUrls(process.cwd()).map((item) => item.loc);
-  assert.ok(urls.includes("https://tools.songyuankun.top/tools/json/"));
-  assert.ok(urls.includes("https://tools.songyuankun.top/tools/regex/"));
+test("collectStaticUrls includes all ten canonical self-built tools", () => {
+  const locations = collectStaticUrls(process.cwd()).map((item) => item.loc);
+  const expected = [
+    "base64", "color", "cron", "diff", "json",
+    "jwt", "regex", "sql-formatter", "timestamp", "uuid",
+  ].map((slug) => `https://tools.songyuankun.top/tools/${slug}/`);
+
+  for (const location of expected) assert.ok(locations.includes(location), location);
+});
+
+test("generateSitemap XML-escapes query URLs", () => {
+  const xml = generateSitemap(process.cwd(), new Date("2026-07-13T00:00:00Z"));
+  assert.match(xml, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
+  assert.match(xml, /<\/urlset>$/);
+  assert.match(xml, /template\.html\?id=/);
+  assert.doesNotMatch(xml, /<loc>[^<]*&(?!amp;|lt;|gt;|quot;|apos;)[^<]*<\/loc>/);
 });
