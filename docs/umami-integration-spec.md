@@ -1,489 +1,114 @@
-# Umami 接入规范 — au_message + dev-tools-nav
+# dev-tools-nav Umami 当前接入规范
 
-> **目标**：为 au.songyuankun.top 和 tools.songyuankun.top 补充 Umami 自定义事件埋点，丰富数据分析维度。
->
-> **前置条件**：Umami 服务已在 `umami.songyuankun.top` 运行，基础 PV/UV 采集已生效。
->
-> **交付物**：
-> 1. `umami-helper.js` — 统一埋点工具文件（每个站点一份）
-> 2. 模板/页面中引入该文件的修改
-> 3. Umami 后台 Goals 配置指南
+## 当前架构
 
----
+- `js/base.js` 是全站入口，直接向 `https://umami.songyuankun.top/api/send` 发送 pageview、identify、事件和 performance 数据，并兼容 History API 导航。
+- `js/base.js` 依次加载 `js/umami-labels.js`、`js/umami-helper.js` 和彩蛋脚本。业务代码统一调用 `window.umamiTrack(internalKey, data)`。
+- `js/umami-labels.js` 把内部英文 key 转为中文事件名、中文属性和可读的 `描述`；`js/umami-helper.js` 用事件委托采集导航、工具卡、CTA、筛选、搜索、外链、滚动和离开事件。
+- 全站共用 Website ID `99e14cad-6300-4f3c-83d2-b3b71c7d6a25`。
+- 运营范围只有 `tools.songyuankun.top` 与 `songyuankun.github.io`。它们共享 Website ID，但必须按 hostname 分析。
 
-## 一、事件设计
+## 事件契约
 
-### 1.1 事件列表
+所有自定义事件至少包含中文属性 `描述`。下表列的是当前代码直接消费的属性；“必需中文属性”是写入 Umami 后的名称。
 
-两个站点共用以下事件名，事件属性按站点实际情况填充：
+| 内部 key | Umami 事件名 | 必需中文属性 | 触发 |
+|---|---|---|---|
+| `nav_click` | 导航点击 | `描述`、`链接`、`文字` | 点击站内导航 |
+| `tool_click` | 工具点击 | `描述`、`工具`、`分类` | 点击工具卡或工具入口 |
+| `theme_toggle` | 主题切换 | `描述`、`从`、`到` | 切换亮/暗主题 |
+| `cta_action` | 按钮点击 | `描述`、`动作`、`目标` | 首页 CTA、关注平台、支持作者 |
+| `category_click` | 分类筛选 | `描述`、`分类` | 首页或工具中心切换分类 |
+| `search_use` | 搜索使用 | `描述`、`关键词`、`结果数` | 输入至少两个字符并完成防抖 |
+| `external_link` | 外部链接 | `描述`、`地址`、`文字` | 点击站外链接 |
+| `tool_used` | 工具使用 | `描述`、`工具`、`操作` | 自研工具完成下节列出的核心动作 |
+| `favorite_toggle` | 收藏切换 | `描述`、`工具`、`动作` | 收藏或取消收藏工具 |
+| `copy_click` | 复制操作 | `描述`、`页面`、`按钮` | 通用复制按钮 |
+| `article_click` | 博客文章 | `描述`、`标题` | 点击博客文章卡片 |
+| `ai_path_click` | AI 学习路径 | `描述`、`标签`、`页面` | 点击学习路径步骤 |
+| `ai_nav_click` | AI 专题导航 | `描述`、`标签`、`页面` | 点击 AI 专题卡片 |
+| `ai_filter` | AI 场景筛选 | `描述`、`场景` | 切换 AI 速查筛选 |
+| `blog_filter` | 博客筛选 | `描述` | 切换博客分类；当前映射未保留原始分类属性 |
+| `radar_filter` | 雷达筛选 | `描述` | 切换开源雷达主题；当前映射未保留原始主题属性 |
+| `radar_copy_link` | 雷达复制链接 | `描述` | 复制雷达项目链接；当前映射未保留原始 repo 属性 |
+| `easter_egg_unlocked` | 彩蛋解锁 | `描述` | 解锁隐藏激活工具入口 |
+| `js_error` | JS 错误 | `描述`、`错误`、`来源`，可选 `行号` | 未捕获 error 或 Promise rejection |
+| `scroll_depth` | 滚动深度 | `描述`、`深度` | 首次到达 25/50/75/100% |
+| `page_exit` | 页面离开 | `描述`、`停留毫秒` | `pagehide` |
 
-| 事件名 | 中文描述 | 触发时机 | 事件属性 | 说明 |
-|--------|---------|---------|---------|------|
-| `nav_click` | 导航点击 | 点击导航链接 | `{ page, label, 描述 }` | 用户点了哪个导航 |
-| `tool_click` | 工具点击 | 点击工具/卡片/链接 | `{ name, category, 描述 }` | 用户点了哪个工具 |
-| `theme_toggle` | 主题切换 | 切换暗色/亮色主题 | `{ from, to, 描述 }` | 暗色 ↔ 亮色 |
-| `cta_action` | CTA 按钮 | 点击 CTA / 订阅 / 支持作者 | `{ action, target, 描述 }` | 核心转化行为 |
+`identify` 不是自定义事件；当前 session data 为 `主题`、`区域`、`回访`、`首访`、`嵌入`。Core Web Vitals 以 Umami `performance` 类型上报，不使用事件表中的 `页面性能` key。
 
-### 1.2 au_message 站点额外事件
+## 十个自研工具的有效使用动作
 
-| 事件名 | 触发时机 | 事件属性 |
-|--------|---------|---------|
-| `unit_switch` | 切换 USD/盎司 ↔ 人民币/克 | `{ from: string, to: string }` |
-| `calc_use` | 使用计算器任一工具 | `{ tool: string, metal: string }` |
-| `alert_action` | 订阅/取消订阅价格提醒 | `{ action: string, metal: string }` |
-| `chart_interact` | 图表时间范围/指标切换 | `{ metal: string, type: string, value: string }` |
+下表以当前 `js/*-tool.js` 的真实调用为准。`工具`/`操作`列同时给出内部值和当前中文映射结果；映射表没有条目时，Umami 保存内部值。
 
-### 1.3 dev-tools-nav 站点额外事件
+| 工具脚本 | `tool` → `工具` | 当前有效动作 `action` → `操作` |
+|---|---|---|
+| `js/json-tool.js` | `json` → JSON 格式化 | `format` → 格式化；`minify` → 压缩；`repair` → 修复；`validate` → 校验；`diff` → 时间差计算（当前通用映射） |
+| `js/timestamp-tool.js` | `timestamp` → 时间戳转换 | `ts_to_date` → 时间戳转日期；`date_to_ts` → 日期转时间戳；`batch` → 批量转换；`diff` → 时间差计算 |
+| `js/encoding-tool.js` | `base64` → Base64 | `encode` → 编码；`decode` → 解码；`hash` → `hash` |
+| `js/regex-tool.js` | `regex` → 正则表达式 | `template` → `template`；`replace` → 替换 |
+| `js/cron-tool.js` | `cron` → Cron 表达式 | `parse` → 解析；`apply` → `apply`；`copy` → 复制 |
+| `js/jwt-tool.js` | `jwt` → JWT 解码 | `verify` → 验签；`generate` → `generate`；`decode` → 解码 |
+| `js/sql-tool.js` | `sql_formatter` → SQL 格式化 | `format` → 格式化；`minify` → 压缩；`analyze` → 分析 |
+| `js/diff-tool.js` | `diff` → `diff` | `run` → `run` |
+| `js/uuid-tool.js` | `uuid` → `uuid` | `generate` → `generate` |
+| `js/color-tool.js` | — | 当前没有 `tool_used` 调用，因此不能从 Umami 计算有效使用 |
 
-| 事件名 | 中文描述 | 触发时机 | 事件属性 |
-|--------|---------|---------|---------|
-| `category_click` | 分类筛选 | 点击分类 Tab/筛选 | `{ category, 描述 }` |
-| `search_use` | 搜索使用 | 使用搜索功能 | `{ query, results, 描述 }` |
-| `external_link` | 外部链接 | 点击外部链接 | `{ url, label, 描述 }` |
-| `tool_used` | 工具使用 | 在线工具内执行操作 | `{ 工具, 操作, 描述 }`（中文属性） |
+这张表描述现状，不把“打开页面”“点击卡片”当成有效使用。补充或改名动作时，应同时修改业务调用、`js/umami-labels.js`、本表和报表契约测试。
 
-> **Umami 后台展示**：`js/umami-labels.js` 将事件名映射为中文（如 `tool_used` → **工具使用**），属性键亦为中文（`工具`、`操作`、`描述`）。请使用 `window.umamiTrack()` 上报，勿直接 `umami.track('tool_used')`。Goals 需按中文事件名重新配置。
+## Hostname 与路径报表规则
 
-**JSON 工具 `action` 取值**（代码内英文键，`umami-labels.js` 会转为中文「操作」）：
+可执行报表是 `scripts/umami-operations-report.sql`：
 
-| action | 触发操作 |
-|--------|----------|
-| `format` | 点击「格式化」 |
-| `minify` | 点击「压缩」 |
-| `repair` | 点击「修复」（去注释/尾逗号等） |
-| `validate` | 点击「校验」 |
+1. 只接收 psql 变量 `website_id`，标准调用值为共享 Website ID。
+2. 只选择两个目标 hostname，并在所有结果中保留 hostname 维度。
+3. 对 `songyuankun.github.io` 去掉路径开头的 `/dev-tools-nav`；正式域名路径不变。
+4. 输出最近 7 天、最近 30 天和此前 30 天，窗口均为执行时刻的滚动窗口。
+5. 页面指标和 `工具使用` 指标按 `period + hostname + normalized_path` 连接。
+6. 商业有效使用排除 KMS/JRebel。报表兼容原始值 `kms`/`jrebel` 和当前中文持久值 `KMS 激活`/`JRebel 激活`。
 
-> **Umami 后台查看**：每条自定义事件会自动附带 `描述` 字段（中文），在 Events → 点开事件 → Properties 中可见。事件名对照表见 `js/umami-labels.js`。
+Umami 3.2.0 实际 schema 已于 2026-07-13 在只读连接上验证：`event_data.website_event_id` 关联 `website_event.event_id`；文本事件属性保存在 `event_data.string_value`，属性名在 `event_data.data_key`。报表不得改用旧字段假设。
 
-### 1.4 dev-tools-nav 已启用的 Umami 平台能力
+## DNT、禁用与错误隔离
 
-| 能力 | 实现位置 | 后台查看位置 | 说明 |
-|------|---------|-------------|------|
-| **PV / UV** | `js/base.js` 自动 pageview | Overview → Pageviews / Visitors | UV 靠 `distinct_id` + IP/UA 去重 |
-| **访客识别** | `localStorage` 存 `umami.visitor-id`，`umami.identify()` | Sessions → 搜索 Distinct ID | 跨访问识别同一浏览器 |
-| **Session Data** | identify 附带 `主题/区域/回访/首访/嵌入` | Sessions → 点开会话 → Properties | 无需登录即可画像 |
-| **Tag 分组** | 按路径自动打标 `home/ai/tools/blog` | 可按 tag 筛选事件 | 等同官方 `data-tag` |
-| **Performance** | Core Web Vitals（LCP/INP/CLS/FCP/TTFB） | Performance 标签页 | `type: performance`，非自定义事件 |
-| **Goals** | 后台手动配置 | Settings → Goals | 见 §4.1 |
-| **Funnels** | 后台手动配置 | Reports → Funnel | 见 §4.2 |
-| **声明式埋点** | `data-umami-event="事件名"` | Events | 可选 `data-umami-event-foo="bar"` |
-| **JS 错误** | `error` + `unhandledrejection` | Events → `js_error` | 含 Promise 未捕获拒绝 |
-| **滚动深度** | `scroll_depth` 25/50/75/100% | Events | 参与度辅助指标 |
-| **页面停留** | `page_exit` 离开时上报 | Events | `duration` 毫秒 |
-| **DNT 尊重** | 检测 `navigator.doNotTrack` | — | 用户开启 DNT 时不采集 |
-| **禁用开关** | `localStorage.setItem('umami.disabled','1')` | — | 调试用 |
+- `navigator.doNotTrack`、`window.doNotTrack` 或 `navigator.msDoNotTrack` 为 `1`/`yes` 时，`js/base.js` 不初始化采集。
+- `localStorage.setItem('umami.disabled', '1')` 可在该浏览器禁用采集；删除该 key 后恢复。
+- localStorage 读写失败会被捕获；如果 DNT 未开启，采集仍可继续。
+- `window.umamiTrack`、中文映射和 helper 的调用均由 `try/catch` 隔离，分析故障不能阻断工具功能。
+- 网络发送使用 `fetch(..., { keepalive: true, credentials: 'omit' })`，失败最多重试两次；失败不会抛回业务事件处理器。
+- `window.umamiBeforeSend(type, payload)` 可返回空值丢弃单次发送；其自身异常会回退到原 payload。
 
-**PV vs UV 说明**：
+## Goals / Funnels
 
-- **PV**：每次 pageview 请求计 1（`website_event` 无 `event_name` 的记录）
-- **UV（Visitors）**：独立 `session`；启用 `umami.visitor-id` 后可在 Sessions 按 Distinct ID 聚合跨天回访
-- **Visits**：约 30 分钟无活动后新开 visit（Umami 服务端 JWT 管理）
+当前 Goals 与 Funnels 的数据库重建来源是 `scripts/rebuild-umami-goals.sql`。它使用中文事件名，并把工具路径更新到 `/tools/` 体系。该脚本包含写事务；日常只读验证和运营报表不要执行它。任何执行都应单独审批、备份并在目标 Umami 数据库核对 Website ID。
 
-**声明式埋点示例**（HTML 无需写 JS）：
+## 浏览器验证
 
-```html
-<button data-umami-event="cta_action"
-        data-umami-event-action="demo"
-        data-umami-event-target="hero">
-  立即体验
-</button>
+1. 在两个 hostname 各打开首页和一个工具页；确认网络请求发往 `https://umami.songyuankun.top/api/send`，payload 的 `website` 相同而 `hostname` 各自正确。
+2. 在 GitHub Pages 打开 `/dev-tools-nav/tools/json/`，确认浏览器上报原路径；路径归一化只发生在运营 SQL，不改采集 payload。
+3. 完成工具核心动作，确认 Umami Events 中出现 `工具使用`，Properties 至少有 `描述`、`工具`、`操作`。
+4. 设置 DNT 或 `localStorage.umami.disabled` 后刷新，确认没有新采集请求；验证完删除调试开关。
+5. 人为触发可控 JS error 时，只验证 `JS 错误` 事件，不让错误测试影响生产用户。
+
+## SQL 验证
+
+先运行契约测试：
+
+```bash
+node --test scripts/umami-operations-report.test.mjs
 ```
 
----
+再从仓库根目录执行只读明细查询：
 
-## 二、站点 A：au_message（au.songyuankun.top）
-
-### 2.1 技术背景
-
-- **技术栈**：Flask + Jinja2 服务端渲染
-- **Umami 状态**：3 个模板已有基础 script 标签：
-  ```html
-  <script defer src="https://umami.songyuankun.top/script.js"
-          data-website-id="0a0f5b9f-b2ca-41a5-a1d0-4ef7a6bbaad3"></script>
-  ```
-- **已知 data 属性**（已存在于 HTML 中）：
-  - `data-page` — 导航页标识
-  - `data-au-unit` — 当前单位（cny/gram 或 usd/oz）
-  - `data-calc-type` — 计算器金属类型 tab
-  - `data-calc-mode` — 计算器模式（diff/pnl/breakeven/dca）
-  - `data-alert-type` — 提醒类型 tab
-  - `data-metal` — 当前选中金属
-  - `data-range` — 图表时间范围
-  - `data-ind` — 图表技术指标
-
-### 2.2 创建 umami-helper.js
-
-在 `static/js/umami-helper.js`（相对于 Flask 项目根目录）创建：
-
-```javascript
-/**
- * au_message — Umami 自定义事件埋点
- * 零依赖，事件委托模式，不侵入业务代码
- */
-(function () {
-  'use strict';
-
-  /** 安全调用 umami.track，脚本未加载时静默 */
-  function track(name, props) {
-    try {
-      if (typeof umami !== 'undefined' && typeof umami.track === 'function') {
-        umami.track(name, props);
-      }
-    } catch (e) { /* 静默 */ }
-  }
-
-  /** 从元素或祖先链读取属性 */
-  function attr(el, name) {
-    if (!el) return '';
-    return el.getAttribute(name) || '';
-  }
-
-  // ==================== 1. 导航点击 ====================
-  document.addEventListener('click', function (e) {
-    var link = e.target.closest('a[data-page]');
-    if (link) {
-      track('nav_click', {
-        page: attr(link, 'data-page'),
-        label: link.textContent.trim().slice(0, 50)
-      });
-    }
-  });
-
-  // ==================== 2. 单位切换 ====================
-  document.addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-au-unit]');
-    if (btn) {
-      var active = document.querySelector('[data-au-unit].active');
-      var from = active ? attr(active, 'data-au-unit') : '';
-      var to = attr(btn, 'data-au-unit');
-      if (from && to && from !== to) {
-        track('unit_switch', { from: from, to: to });
-      }
-    }
-  });
-
-  // ==================== 3. 计算器使用 ====================
-  document.addEventListener('click', function (e) {
-    // 计算器模式切换
-    var modeBtn = e.target.closest('[data-calc-mode]');
-    if (modeBtn) {
-      var metalTab = document.querySelector('.calc-mode-panel .type-tab.active');
-      track('calc_use', {
-        tool: attr(modeBtn, 'data-calc-mode'),
-        metal: metalTab ? metalTab.textContent.trim().replace(/\s+/g, '') : ''
-      });
-    }
-    // 定投计算按钮
-    if (e.target.closest('#btnDcaCalc')) {
-      var metalTab2 = document.querySelector('.calc-mode-panel .type-tab.active');
-      track('calc_use', {
-        tool: 'dca_calculate',
-        metal: metalTab2 ? metalTab2.textContent.trim().replace(/\s+/g, '') : ''
-      });
-    }
-  });
-
-  // ==================== 4. 价格提醒 ====================
-  document.addEventListener('click', function (e) {
-    var action = null;
-    if (e.target.closest('#btnSubscribe')) action = 'subscribe';
-    if (e.target.closest('#btnUnsubscribe')) action = 'unsubscribe';
-    if (action) {
-      var metalTab = document.querySelector('[data-alert-type].active');
-      track('alert_action', {
-        action: action,
-        metal: metalTab ? metalTab.textContent.trim().replace(/\s+/g, '') : ''
-      });
-    }
-  });
-
-  // ==================== 5. 图表交互 ====================
-  document.addEventListener('click', function (e) {
-    // 时间范围切换
-    var rangeTab = e.target.closest('.range-tab');
-    if (rangeTab) {
-      track('chart_interact', {
-        metal: (document.querySelector('[data-metal].active') || {}).textContent || '',
-        type: 'range',
-        value: rangeTab.textContent.trim()
-      });
-    }
-    // 技术指标切换
-    var indBtn = e.target.closest('[data-ind]');
-    if (indBtn) {
-      track('chart_interact', {
-        metal: (document.querySelector('[data-metal].active') || {}).textContent || '',
-        type: 'indicator',
-        value: attr(indBtn, 'data-ind')
-      });
-    }
-  });
-
-  // ==================== 6. 主题切换 ====================
-  document.addEventListener('click', function (e) {
-    if (e.target.closest('#themeToggle')) {
-      var current = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = current === 'dark' ? 'light' : 'dark';
-      track('theme_toggle', { from: current, to: next });
-    }
-  });
-
-})();
+```bash
+docker exec -i 1Panel-postgresql-emsf sh -lc \
+  'psql -X -v ON_ERROR_STOP=1 -v website_id=99e14cad-6300-4f3c-83d2-b3b71c7d6a25 -U "$POSTGRES_USER" -d umami_wk4zs4 -P pager=off' \
+  < scripts/umami-operations-report.sql
 ```
 
-### 2.3 修改模板文件
+验收结果只能出现两个目标 hostname；GitHub Pages 的 `normalized_path` 不得以 `/dev-tools-nav` 开头；KMS/JRebel 行的商业 `effective_uses` 和 `effective_users` 必须为 0。
 
-在以下 3 个 Jinja2 模板的 `</body>` 前，Umami script 标签之后，添加：
+## 商业指标排除
 
-```html
-<script defer src="/static/js/umami-helper.js"></script>
-```
-
-需要修改的模板文件（请根据项目实际路径调整）：
-- `templates/index.html`
-- `templates/history.html`
-- `templates/analysis.html`
-
-修改后的完整 script 区域：
-```html
-<script defer src="https://umami.songyuankun.top/script.js"
-        data-website-id="0a0f5b9f-b2ca-41a5-a1d0-4ef7a6bbaad3"></script>
-<script defer src="/static/js/umami-helper.js"></script>
-```
-
----
-
-## 三、站点 B：dev-tools-nav（tools.songyuankun.top）
-
-### 3.1 技术背景
-
-- **技术栈**：纯静态 HTML + CSS + JS
-- **当前无任何分析脚本**
-- **Umami website-id**：需新创建，或与 au_message 共用同一个（推荐共用，通过 hostname 区分）
-- **JS 文件**：`js/base.js`（全站加载），`js/footer.js`
-- **页面结构**：首页 + `pages/ai/`（5 页）+ `pages/tools` + `pages/blog` + `tools/`（6 个工具子页面）
-
-### 3.2 在 Umami 后台新增网站
-
-如果还没有 tools.songyuankun.top 的 website-id：
-
-1. 登录 `umami.songyuankun.top`（admin 账户）
-2. Settings → Websites → Add website
-3. Domain 填 `tools.songyuankun.top`
-4. 记录生成的 **website-id**（格式：`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`）
-
-### 3.3 创建 umami-helper.js
-
-在 `js/umami-helper.js`（相对于站点根目录）创建：
-
-```javascript
-/**
- * dev-tools-nav — Umami 自定义事件埋点
- * 零依赖，事件委托模式
- */
-(function () {
-  'use strict';
-
-  function track(name, props) {
-    try {
-      if (typeof umami !== 'undefined' && typeof umami.track === 'function') {
-        umami.track(name, props);
-      }
-    } catch (e) { /* 静默 */ }
-  }
-
-  function attr(el, name) {
-    if (!el) return '';
-    return el.getAttribute(name) || '';
-  }
-
-  // ==================== 1. 导航点击 ====================
-  document.addEventListener('click', function (e) {
-    var link = e.target.closest('a');
-    if (!link) return;
-
-    var href = attr(link, 'href') || '';
-    var text = link.textContent.trim().slice(0, 50);
-
-    // 分类 Tab 点击
-    var catLink = link.closest('.category-tabs, .tab-nav, [data-category]');
-    if (catLink) {
-      track('category_click', {
-        category: text
-      });
-      return;
-    }
-
-    // 外部链接
-    if (href.startsWith('http') && !href.includes(location.hostname)) {
-      track('external_link', {
-        url: href.slice(0, 200),
-        label: text
-      });
-      return;
-    }
-
-    // 站内导航
-    if (link.closest('nav, .navbar, .sidebar, .header, .menu')) {
-      track('nav_click', {
-        page: href,
-        label: text
-      });
-      return;
-    }
-
-    // 工具/卡片链接
-    var card = link.closest('.card, .tool-card, .tool-item, .resource-item, [class*="card"], [class*="item"]');
-    if (card) {
-      track('tool_click', {
-        name: text,
-        category: card.getAttribute('data-category') || card.closest('[data-category]')?.getAttribute('data-category') || ''
-      });
-    }
-  });
-
-  // ==================== 2. 搜索使用（如存在） ====================
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      var input = e.target.closest('input[type="search"], input[placeholder*="搜索"], input[placeholder*="Search"]');
-      if (input) {
-        track('search_use', {
-          query: input.value.trim().slice(0, 100),
-          results: 0
-        });
-      }
-    }
-  });
-
-  // ==================== 3. 主题切换（如存在） ====================
-  document.addEventListener('click', function (e) {
-    if (e.target.closest('#themeToggle, [data-theme-toggle], .theme-switch')) {
-      var current = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = current === 'dark' ? 'light' : 'dark';
-      track('theme_toggle', { from: current, to: next });
-    }
-  });
-
-})();
-```
-
-### 3.4 修改 js/base.js
-
-在 `js/base.js` 文件末尾追加以下代码（通过动态注入 script 标签加载 Umami SDK 和 helper）：
-
-```javascript
-// ==================== Umami Analytics ====================
-(function () {
-  var websiteId = 'PASTE_YOUR_WEBSITE_ID_HERE'; // ← 替换为 tools.songyuankun.top 的 website-id
-
-  var script = document.createElement('script');
-  script.defer = true;
-  script.src = 'https://umami.songyuankun.top/script.js';
-  script.setAttribute('data-website-id', websiteId);
-  document.head.appendChild(script);
-
-  var helper = document.createElement('script');
-  helper.defer = true;
-  helper.src = '/js/umami-helper.js';
-  document.head.appendChild(helper);
-})();
-```
-
-> **注意**：也可以选择在每个 HTML 页面的 `</body>` 前直接加两个 `<script defer>` 标签，效果一样。但改 `base.js` 是最省事的方式——全站自动覆盖，不用逐页面改。
-
----
-
-## 四、Umami 后台配置（Goals + Funnels）
-
-### 4.1 创建 Goals
-
-登录 Umami → 对应网站 → Settings → Goals → Add Goal
-
-**au_message 站点的 Goals：**
-
-| Goal 名称 | 事件类型 | 事件名 | 附加条件（可选） |
-|-----------|---------|--------|----------------|
-| 使用计算器 | event | `calc_use` | — |
-| 订阅价格提醒 | event | `alert_action` | action = subscribe |
-| 切换单位 | event | `unit_switch` | — |
-| 图表交互 | event | `chart_interact` | — |
-
-**dev-tools-nav 站点的 Goals（已重建，事件名为中文）：**
-
-| Goal 名称 | 类型 | 匹配值 |
-|-----------|------|--------|
-| 点击工具 | event | `工具点击` |
-| 使用搜索 | event | `搜索使用` |
-| 外部链接点击 | event | `外部链接` |
-| CTA 转化 | event | `按钮点击` |
-| 工具实际使用 | event | `工具使用` |
-| 主题切换 | event | `主题切换` |
-| 滚动深度 | event | `滚动深度` |
-| JS 错误 | event | `JS 错误` |
-| 导航点击 | event | `导航点击` |
-| 分类筛选 | event | `分类筛选` |
-| 收藏切换 | event | `收藏切换` |
-| 彩蛋解锁 | event | `彩蛋解锁` |
-| AI 专题导航 | event | `AI 专题导航` |
-| 访问在线工具 | path | `/tools/` |
-| 使用 JSON 工具 | path | `/tools/json/` |
-
-服务器重建脚本：`scripts/rebuild-umami-goals.sql`（直接更新 Umami PostgreSQL `report` 表）。
-
-### 4.2 创建 Funnels
-
-**au_message 深度浏览漏斗：**
-
-| Step 1 | Step 2 | Step 3 |
-|--------|--------|--------|
-| `/` | `/history` | `/analysis` |
-
-**dev-tools-nav 深度浏览漏斗（已更新）：**
-
-| Step 1 | Step 2 | Step 3 |
-|--------|--------|--------|
-| `/` | `/pages/ai` | `/tools/` |
-
-**dev-tools-nav 工具使用漏斗（已更新）：**
-
-| Step 1 | Step 2 | Step 3 |
-|--------|--------|--------|
-| `/` | `/tools/` | `/tools/json/` |
-
----
-
-## 五、验证步骤
-
-部署完成后，按以下步骤验证：
-
-1. **打开浏览器 DevTools → Network 标签**
-2. **访问 au.songyuankun.top**，点击导航链接、切换单位、使用计算器
-3. **在 Network 中过滤 `collect` 请求**，检查是否有自定义事件数据
-4. **打开 Umami Dashboard** → Events 标签页，确认事件已出现
-5. **重复以上步骤验证 tools.songyuankun.top**
-
----
-
-## 六、文件清单
-
-| 文件路径（au_message 项目） | 操作 |
-|---------------------------|------|
-| `static/js/umami-helper.js` | **新建** |
-| `templates/index.html` | 修改（加 1 行 script 引用） |
-| `templates/history.html` | 修改（加 1 行 script 引用） |
-| `templates/analysis.html` | 修改（加 1 行 script 引用） |
-
-| 文件路径（dev-tools-nav 项目） | 操作 |
-|-------------------------------|------|
-| `js/umami-helper.js` | **新建** |
-| `js/base.js` | 修改（末尾追加 Umami SDK + helper 加载代码） |
-
----
-
-## 七、注意事项
-
-1. **umami-helper.js 使用 `defer` 加载**，会在 DOM 解析完成后执行，不会阻塞页面渲染
-2. **事件委托模式**：所有事件监听挂在 `document` 上，不需要在每个元素上绑定
-3. **安全调用**：如果 Umami 脚本加载失败（CDN 不可达等），`umami.track` 调用会被静默捕获，不影响网站正常运行
-4. **不需要任何额外的 data 属性**：代码复用 HTML 中已有的 data 属性，零改动现有 HTML 结构
-5. **两个站点的 helper.js 是独立的**，因为事件类型和 DOM 结构不同
+KMS 与 JRebel 是激活辅助入口，不属于十个自研工具的商业有效使用。它们的 pageview 可以保留用于风险和流量观察，但 `工具使用` 事件无论保存为 `kms`、`jrebel`、`KMS 激活` 还是 `JRebel 激活`，都必须从商业 `effective_uses` 和 `effective_users` 排除。

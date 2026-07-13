@@ -1,76 +1,55 @@
-# Umami 数据洞察与迭代优先级
+# Umami 运营快照与复盘
 
-> 数据来源：`umami.songyuankun.top`，网站 ID `99e14cad-6300-4f3c-83d2-b3b71c7d6a25`（tools.songyuankun.top）  
-> 快照日期：2026-06-09 · 统计窗口：近 90 天
+> Website ID：`99e14cad-6300-4f3c-83d2-b3b71c7d6a25` · 快照日期：2026-07-13 · 运营时区：Asia/Shanghai · 观察窗口：最近 7 天、最近 30 天、此前 30 天
 
-## 如何刷新本报告
+## 可信口径
 
-在服务器上查询 PostgreSQL（Umami 后端）：
+- 只统计 `tools.songyuankun.top` 与 `songyuankun.github.io`，并始终按 hostname 分行，禁止把两个入口直接合并成一个站点总数。
+- GitHub Pages 的 `/dev-tools-nav` 仓库前缀在报表中移除。例如 `/dev-tools-nav/tools/json/` 归一为 `/tools/json/`，从而可以与正式域名比较同一路径。
+- PV 是无事件名的 pageview；sessions 按页面、周期和 hostname 对 `session_id` 去重；visitors 通过 session 表的 `distinct_id` 去重。不同路径行的 sessions/visitors 不能相加当作全站去重值。
+- “有效使用”是中文事件 `工具使用`。`effective_uses` 计事件次数，`effective_users` 按 `session_id` 去重。
+- 商业有效使用排除 KMS/JRebel 激活工具。SQL 同时兼容历史原始值 `kms`/`jrebel` 与当前 `umami-labels.js` 写入的 `KMS 激活`/`JRebel 激活`，避免激活工具复制操作进入商业转化总量。
+
+可重复执行的明细查询是 [`scripts/umami-operations-report.sql`](../scripts/umami-operations-report.sql)。它输出：`period`、`hostname`、`normalized_path`、`pv`、`sessions`、`visitors`、`effective_uses`、`effective_users`。
+
+## 刷新命令
+
+在仓库根目录执行；密码由容器环境提供，命令和文档均不嵌入密码：
 
 ```bash
-# 页面 PV（90 天）
-docker exec -e PGPASSWORD='…' 1Panel-postgresql-emsf \
-  psql -U umami_hWTtkK -d umami_wk4zs4 -c "
-SELECT url_path, COUNT(*) AS views
-FROM website_event
-WHERE website_id = '99e14cad-6300-4f3c-83d2-b3b71c7d6a25'
-  AND event_type = 1 AND event_name IS NULL
-  AND created_at >= NOW() - INTERVAL '90 days'
-GROUP BY url_path ORDER BY views DESC LIMIT 20;"
+docker exec -i 1Panel-postgresql-emsf sh -lc \
+  'psql -X -v ON_ERROR_STOP=1 -v website_id=99e14cad-6300-4f3c-83d2-b3b71c7d6a25 -U "$POSTGRES_USER" -d umami_wk4zs4 -P pager=off' \
+  < scripts/umami-operations-report.sql
 ```
 
-也可登录 [Umami 后台](https://umami.songyuankun.top/) 查看 Pages / Events / Sessions。
+SQL 只有读取语句。审计时还可在容器命令中设置 `PGOPTIONS="-c default_transaction_read_only=on"`，由 PostgreSQL 强制只读。
 
-## 高访问页面（90 天 PV）
+## 2026-07-13 基线
 
-| 排名 | 路径 | PV | 解读 |
-|------|------|-----|------|
-| 1 | `/` | 347 | 首页入口，应突出自研工具与任务快捷区 |
-| 2 | `/pages/template.html` | 154 | 外链工具详情页，说明导航目录仍有价值 |
-| 3 | `/index.html` | 134 | 与 `/` 重复统计，需统一 canonical |
-| 4 | `/pages/ai/index.html` | 56 | AI 专题有需求，应用横评/工作流承接 |
-| 5 | **JSON 工具合计** | **~92** | `/pages/tools/json.html` 55 + `/tools/json/` 37，**站内最高价值自研页** |
-| 6 | `/pages/ai/open-source-radar.html` | 26 | 内容型页面表现好，可持续更新 |
-| 7 | `/pages/tools/index.html` | 22 | 在线工具汇总入口 |
-| 8 | `/pages/blog/index.html` | 20 | 博客信任背书 |
+以下是 2026-07-13 对正式域名 `tools.songyuankun.top` 的只读审计快照，不是永久值；刷新报表后应以新窗口结果替换当期运营记录：
 
-## 自定义事件（样本量仍小）
+| 窗口 | PV | Sessions |
+|---|---:|---:|
+| 最近 7 天 | 8 | 7 |
+| 最近 30 天 | 119 | 25 |
+| 此前 30 天 | 386 | 25 |
 
-| 事件 | 次数 | 说明 |
-|------|------|------|
-| `tool_used` (json) | 2 | JSON 工具改版后需观察增长 |
-| `tool_click` | 17 | 首页 v2 工具卡点击已采集 |
-| `category_switch` | 5 | 分类切换偶有使用 |
+基线适合回答“正式域名在当时的量级”，不能与另一个执行时刻的滚动窗口机械对比。按路径输出的 sessions 也不能跨行求和。
 
-> 事件总量偏低，说明近期以「直达 URL / SEO」流量为主，站内导流埋点需持续观察。
+## 数据限制
 
-## 优先级矩阵（已落地 2026-06-09）
+- 旧报告混合了正式域名和 GitHub Pages，且没有移除 `/dev-tools-nav` 前缀；旧总量不能直接作为新报表同比基线。
+- GitHub Pages 的开源雷达页出现过高 PV、几乎每次访问都新建 session 的模式，疑似低质量自动流量。运营结论必须先按 hostname 查看，不以该流量证明产品需求。
+- DNT、`localStorage` 禁用开关、拦截请求以及浏览器清理本地标识都会让行为事件或跨访问识别缺失。
+- Umami 只描述站内行为；自然搜索曝光和点击仍需 Search Console 补充。
 
-| 优先级 | 动作 | 依据 |
-|--------|------|------|
-| **P0** | JSON 工具重构（实时校验、树形视图） | JSON 合计 ~92 PV，最高自研页 |
-| **P0** | 首页「我想完成什么」任务入口 | README 待办 + 数据验证 JSON/JWT/AI 选型需求 |
-| **P1** | 降权头部 AI 外链精选（ChatGPT/Claude/DeepSeek 等） | 无稀缺性，不应占精选位 |
-| **P1** | 提升在线工具精选（JSON/JWT/SQL/正则/Base64） | 护城河内容 |
-| **P1** | AI 详情页引导至横评专题 | template.html 流量高，避免停在「又一个 ChatGPT 链接」 |
-| **P2** | 统一 JSON 路径 | ✅ `pages/tools/json.html` 非 embed 时 302 到 `/tools/json/` |
-| **P2** | 增强 `tool_used` 埋点 + 中文展示 | ✅ 全工具走 `umamiTrack`，Umami 事件名为中文 |
-| **P3** | 时间戳/Cron 工具增强 | ✅ Tab 工作台、多时区对照、URL 预填、表达式实时校验与预览 |
+## Monthly review
 
-## 站点定位（数据 + 产品共识）
+每月固定保存同一刷新命令的结果，并至少复盘四项：
 
-```
-访客路径：
-  SEO/收藏 → 首页或 JSON 工具（高频）
-  选型困惑 → AI 专题 / 横评（中频）
-  随便逛   → template 外链详情（中频，但不是差异化）
+1. **Effective users**：排除 KMS/JRebel 后，至少完成一次自研工具核心动作的去重 session 数。
+2. **Effective uses**：同一口径下的核心动作次数；与 effective users 一起看复用深度。
+3. **Search Console clicks**：按落地页和查询词查看自然搜索点击，不能用 Umami PV 代替。
+4. **30-day return rate**：最近 30 天内被识别为回访的访客占可识别访客的比例；同时记录分子、分母和身份丢失限制，避免只报百分比。
 
-应强化：自研在线工具 + AI 专题手册
-应降权：人人皆知的 AI 对话外链作为「精选」展示
-```
-
-## 下次复盘建议
-
-- **周期**：每月初看一次 Umami Pages Top 20 + `tool_used` 事件
-- **阈值**：某自研工具页连续 30 天 PV &lt; 5 → 考虑合并入口或停止迭代
-- **阈值**：某页面 bounce 率 &gt; 70% 且为落地页 → 检查首屏价值是否与搜索意图匹配
+复盘时先比较正式域名的最近 30 天与此前 30 天，再单独检查 GitHub Pages；任何跨 hostname 汇总都应显式标注。
