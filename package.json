@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "test": "node --test scripts/*.test.mjs",
+    "audit:tools": "node scripts/audit-tools.mjs",
     "capture-screenshots": "node scripts/capture-screenshots.mjs",
     "generate-sitemap": "node scripts/generate-sitemap.mjs",
     "build": "npm run generate-sitemap"

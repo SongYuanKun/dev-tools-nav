@@ -1,6 +1,10 @@
 # Koen's 工具箱 · 开发者工具导航站
 
-> 精选 **70** 款开发 & 建站管理常用工具，纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。
+> 目录收录 73 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。
+
+<!-- catalog-total: 73 -->
+<!-- catalog-self-built: 10 -->
+<!-- catalog-online-tools: 11 -->
 
 ## ⚠️ 产品设计源头
 
@@ -30,19 +34,22 @@
 - **精选标记**：高频推荐工具标注精选徽章
 - **🎮 彩蛋系统**：隐藏的"激活工具"分类，5 种趣味解锁方式！
 
-## 在线工具（`pages/tools/`）
+## 在线工具（`/tools/`）
 
 | 工具 | 路径 | 亮点 |
 |------|------|------|
-| **JSON 格式化** | `tools/json/` | 实时校验、行号定位、树形视图、宽松解析（注释/尾逗号）、修复/压缩、JSON Path 查询 |
-| 时间戳转换 | `pages/tools/timestamp.html` | 秒/毫秒、多时区 |
-| Cron 生成器 | `pages/tools/cron.html` | 表达式解析与下次执行时间 |
-| Base64 | `pages/tools/base64.html` | 编解码 + SHA 摘要 |
-| JWT 解码 | `pages/tools/jwt.html` | Header/Payload 解析 + HMAC 验签 |
-| SQL 格式化 | `pages/tools/sql-formatter.html` | 关键字大写、缩进、压缩 |
-| 正则测试 | `pages/tools/regex.html` | 匹配高亮 + JS/Java 代码生成 |
+| **JSON 格式化** | `/tools/json/` | 实时校验、行号定位、树形视图、宽松解析（注释/尾逗号）、修复/压缩、JSON Path 查询 |
+| 时间戳转换 | `/tools/timestamp/` | 秒/毫秒、多时区 |
+| Cron 生成器 | `/tools/cron/` | 表达式解析与下次执行时间 |
+| Base64 | `/tools/base64/` | 编解码 + SHA 摘要 |
+| JWT 解码 | `/tools/jwt/` | Header/Payload 解析 + HMAC 验签 |
+| SQL 格式化 | `/tools/sql-formatter/` | 关键字大写、缩进、压缩 |
+| 正则测试 | `/tools/regex/` | 匹配高亮 + JS/Java 代码生成 |
+| UUID 生成器 | `/tools/uuid/` | 批量生成 UUID |
+| 文本 Diff | `/tools/diff/` | 文本差异对比 |
+| 颜色工具 | `/tools/color/` | 颜色格式转换与预览 |
 
-各工具页由 `js/tool-chrome.js` 统一导航与复制反馈；能力分布在各 `js/*-tool.js` 中（Path 查询、验签、SQL 分析、Diff 等）。
+公开规范 URL 统一使用 `/tools/<slug>/`。`pages/tools/*.html` 是实现、嵌入或兼容页面，不是公开规范 URL。各工具页由 `js/tool-chrome.js` 统一导航与复制反馈；能力分布在各 `js/*-tool.js` 中（Path 查询、验签、SQL 分析、Diff 等）。
 
 ## 工具分类
 
@@ -56,9 +63,10 @@
 | 🔒 安全工具 | 6 | SSL Labs、VirusTotal、Bitwarden |
 | 📊 运维监控 | 7 | UptimeRobot、Grafana、Sentry |
 | 🎨 设计资源 | 7 | Figma、Iconify、Coolors、Google Fonts |
-| 🧰 在线工具 | 10 | **JSON 格式化**、JWT 解码、时间戳、Cron、SQL、正则（自研，站内最高访问） |
+| 🧰 在线工具 | 11 | **JSON 格式化**、JWT 解码、时间戳、Cron、SQL、正则（含 10 款自研工具） |
+| 🔑 激活工具（隐藏） | 2 | KMS、JRebel |
 
-> 合计 **70** 条。KMS / JRebel 现收录在「在线工具」；彩蛋解锁后会出现隐藏的「🔑 激活工具」分类 Tab（`CATEGORIES` 中 `hidden: true`）。
+> 目录合计 **73** 条。商业口径报告可排除 2 条隐藏激活记录，但它们不会从目录总数中静默移除；彩蛋解锁后会出现隐藏的「🔑 激活工具」分类 Tab（`CATEGORIES` 中 `hidden: true`）。
 
 ## 文件结构
 
@@ -90,14 +98,18 @@ dev-tools-nav/
 │   └── servers.json        # JRebel 等（可由 Actions 同步更新）
 ├── assets/                 # Logo、预览截图（screenshot*.png）
 ├── scripts/
-│   └── capture-screenshots.mjs  # Playwright 截取 README 用预览图
+│   ├── capture-screenshots.mjs  # Playwright 截取 README 用预览图
+│   ├── sync-csdn-rss.py         # 同步 CSDN RSS
+│   └── sync-open-source-radar.py # 同步 AI 开源项目雷达
 ├── docs/                   # 部署说明等（不随 Pages 发布，见 docs/README.md）
 ├── deploy.sh               # 同步到 1Panel 的本地脚本
 ├── package.json            # npm test、capture-screenshots（Playwright）
 └── .github/workflows/
     ├── deploy-pages.yml    # GitHub Pages 自动发布
     ├── deploy-1panel-ssh.yml  # 可选：SSH 同步到 1Panel
-    ├── update-screenshots.yml # 每周刷新 assets/screenshot*.png
+    ├── update-screenshots.yml # 每周计划运行；成功状态以 GitHub Actions 为准
+    ├── sync-csdn-rss.yml      # 定时同步 CSDN RSS
+    ├── sync-open-source-radar.yml # 每周同步 AI 开源项目雷达
     └── sync-jrebel.yml     # 定时同步 JRebel 配置
 ```
 
@@ -200,7 +212,7 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 | `assets/screenshot-json-tool.png` | JSON 工具（自动点「示例」） |
 | `assets/screenshot-blog.png` | 博客列表 |
 
-CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/update-screenshots.yml) 每周一也会自动刷新并提交。
+CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/update-screenshots.yml) 每周计划运行；成功状态以 GitHub Actions 为准。
 
 ## 部署到 GitHub Pages
 
