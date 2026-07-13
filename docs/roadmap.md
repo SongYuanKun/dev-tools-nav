@@ -16,7 +16,7 @@ last_verified: 2026-07-13
 - `tools.songyuankun.top` 与 `songyuankun.github.io/dev-tools-nav/` 两个 hostname 均保留，并继续共用现有 Umami website ID；运营查询必须分 hostname 展示。
 - 当前不展示广告，核心工具首屏始终无广告。
 - KMS、JRebel 等激活类内容继续保留入口，但不得进入首页精选，不展示广告、联盟或赞助内容，并从商业化转化指标中排除。
-- 原创正文以 `content/blog/*.md` 为唯一来源；HTML、博客索引、Feed、sitemap 元数据和结构化数据均由构建流程生成。
+- Markdown 单一来源是已批准的目标架构，列于 Phase 2 且状态为 `planned`；当前仍有手写 HTML 与人工同步内容，不把目标态写成已落地事实。
 
 ## Phase 1：可信基础
 
@@ -26,7 +26,7 @@ last_verified: 2026-07-13
 | 修复截图自动化 | in_progress | 本地与 Actions 均稳定生成首页、博客、JSON 三张有效 PNG；JSON 截图含示例内容；失败能定位页面与步骤 | [`capture-screenshots.mjs`](../scripts/capture-screenshots.mjs)、[截图工作流](../.github/workflows/update-screenshots.yml) |
 | 校验工具元数据与公开路径 | done | 工具总数 73、自研工具 10、`online-tools` 分类 11；ID 唯一；canonical 为 `/tools/*/` | [`audit-tools.mjs`](../scripts/audit-tools.mjs)、[`audit-tools.test.mjs`](../scripts/audit-tools.test.mjs) |
 | 建立双 hostname 运营报表 | done | 输出 hostname、规范化路径、PV、会话、访客、有效使用次数与用户数；商业口径排除激活类内容 | [运营 SQL](../scripts/umami-operations-report.sql)、[Umami 规范](./umami-integration-spec.md) |
-| 建立活跃文档单一事实源 | done | README、manual、roadmap、运营快照和 Umami 规范无已知事实矛盾；历史 Prompt 明确归档 | [文档一致性测试](../scripts/audit-tools.test.mjs)、[文档索引](./README.md) |
+| 建立活跃文档职责与一致性门禁 | done | 自动检查 README 路线源、AI 路线重复、部署 manifest 结论、Markdown 目标态和历史 Prompt 归档 | [文档一致性测试](../scripts/audit-tools.test.mjs)、[文档索引](./README.md) |
 
 ### Phase 1 总体验收
 
@@ -37,7 +37,7 @@ last_verified: 2026-07-13
 | 三张截图在本地和 Actions 稳定生成 | in_progress | 以 [Actions 截图工作流](../.github/workflows/update-screenshots.yml) 的成功记录为准 |
 | 两个 hostname 的统计可分别查看 | done | [运营 SQL](../scripts/umami-operations-report.sql)、[运营快照](./analytics-insights.md) |
 | 合计值等于两个目标 hostname 的分站值之和 | in_progress | 每次运营复盘保存分站结果并校验合计，不以混合 PV 代替 |
-| 活跃文档不存在已知事实矛盾 | done | [文档一致性测试](../scripts/audit-tools.test.mjs)、[使用手册](../manual.md) |
+| 关键活跃文档规则已纳入自动检查 | done | [文档一致性测试](../scripts/audit-tools.test.mjs)、[使用手册](../manual.md) |
 
 ## Phase 2：有效使用增长
 

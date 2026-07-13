@@ -1,6 +1,8 @@
 # 博客源文件目录
 
-将 Markdown 文件放在这里，CI 会自动转换为 `pages/blog/*.html`。
+此目录用于已接入 Markdown 构建脚本的文章；Pages 工作流会运行 `scripts/build-blog.mjs`，将这些源文件生成到 `pages/blog/*.html`。
+
+全站 Markdown 单一事实源是 [产品路线图](../../docs/roadmap.md) 中的 Phase 2 目标，尚未完成。当前仍有手写的 `pages/blog/*.html` 与人工同步内容，不能把本目录描述为已经覆盖全部博客正文的唯一来源。
 
 ## Frontmatter 格式
 
@@ -31,4 +33,4 @@ slug: custom-url-slug（可选，默认用文件名）
 - **AI 专题**：`/pages/ai/index.html` 及子页（横评、工作流、Prompt 库、新手入门等）
 - **在线工具**：`/pages/tools/index.html`（JSON 格式化、JWT、Cron 等）
 
-专题与全站的 **路线图 / 待办** 统一记在仓库根目录 **[README.md](../../README.md)** 的 **「AI 专题规划」** 一节，避免文档分叉。
+专题与全站的阶段、状态和待办统一记在 [产品路线图](../../docs/roadmap.md)，避免在 README 或内容目录维护第二份路线。

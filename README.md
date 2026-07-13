@@ -6,14 +6,9 @@
 <!-- catalog-self-built: 10 -->
 <!-- catalog-online-tools: 11 -->
 
-## ⚠️ 产品设计源头
+## 产品路线
 
-本项目的产品设计、需求优先级（P0/P1/P2）、路线图和品牌规范，均基于以下战略文档仓库：
-
-- **仓库**: [koen-content-strategy](https://git.songyuankun.top/123839070/koen-content-strategy)
-- **内容**: PRD(21条需求)、竞品分析(6竞品SWOT)、产品路线图(Phase 0/1/2)、14平台矩阵分发方案、AI上下文注入(品牌规范+写作风格)、自动化流水线设计、数据追踪体系
-- **最新方向**: Apple 风格极简 + 个人品牌温度；品牌色 `#C8956C`；定位"源码级探索者"；技术栈 Astro + Tailwind
-- **使用方式**: 任何 AI 或开发者对本项目做产品设计、功能规划、UI改版决策时，应先查阅此仓库中的 PRD 和品牌规范
+本项目唯一活跃的路线来源是 [产品路线图](docs/roadmap.md)。当前技术栈继续使用 Vanilla HTML、CSS 和 JavaScript；阶段状态、准入条件、验收证据与商业化约束均在该路线图维护。
 
 ## 预览
 
@@ -113,11 +108,9 @@ dev-tools-nav/
     └── sync-jrebel.yml     # 定时同步 JRebel 配置
 ```
 
-## AI 专题规划（`pages/ai` + `data/ai-compare.js`）
+## AI 专题（当前能力）
 
-便于后续迭代：下列为**已实现**与**计划/未完成**内容，设计取向为静态精选手册（不追日更资讯、不做大而全百科）。
-
-### 已完成
+AI 专题当前是静态精选手册，已上线能力如下。后续优先级与状态只在 [产品路线图](docs/roadmap.md) 维护，本节不保存第二份路线或待办。
 
 | 模块 | 说明 |
 |------|------|
@@ -135,45 +128,6 @@ dev-tools-nav/
 | **专题样式** `css/ai-topic.css` | 含 `ai-subnav`、changelog、场景速查内链、横评/工作流等各页布局；favicon 与徽章样式 |
 | **全站入口** | `index.html` 导航「AI 专题」、AI 分类下横幅等（与 `js/main.js` 联动） |
 | **SEO** | `scripts/generate-sitemap.mjs` 生成 `sitemap.xml` 时扫描 `pages/ai/*.html` 并写入 URL（CI 部署前执行） |
-
-### 未完成 / 待办（按优先级）
-
-**P0 — 已完成（2026）**
-
-- [x] **术语与选型**：独立页 `glossary.html` + 首页 `<details>` 折叠预览 + Hero 快捷链
-- [x] **隐私与安全清单**：独立页 `safety.html` + 首页与选型文末互链
-- [x] **学习路径时间线**：专题首页 Hero 下，`AI_LEARN_PATH_STEPS`（入门 → 工作流 → Prompt → 横评 → 本页价格锚点）
-
-**P1 — 已完成（2026-04）**
-
-- [x] **开发者向**：`pages/ai/dev-api.html` + 专题入口卡片 + glossary 延伸阅读链
-- [x] **AI 开源项目雷达**：`pages/ai/open-source-radar.html`，将 GitHub Trending Weekly 的 AI/ML/Agent 项目做成中文卡片页
-- [x] **更新说明**：首页展示 `AI_TOPIC_CHANGELOG`（由自动脚本生成，可人工兜底维护，不承诺日更）
-- [x] **场景速查 → 内链**：每张卡链到对应 `workflow#…`、`prompts#prompt-*`、`compare#compare-*`（「做视频」无单独工作流则仅链横评 + Prompt）
-- [x] **学习路径微调**：拆为 5 步（入门 → 工作流 → **Prompt** → 横评 → 价格）
-- [x] **专题内导航条**：各 AI 子页 header 下 `ai-subnav`（与 README 原「顶栏二级」等价落地为专题内条）
-
-**P2（可选）**
-
-- [x] **按角色推荐组合**：首页「按角色快选」卡片（`AI_ROLE_QUICK_PICK`）链到 workflow 锚点
-- [x] **专题内推荐阅读**：`js/ai-related-reads.js` + `AI_RELATED_READS_LINKS` / `AI_TRUST_STATEMENT`，各 AI 子页底部统一块
-- [x] **轻量交互**：专题首页「场景速查」——`AI_LOOKUP_SCENES` + 顶部筛选按钮；卡片内 **`AI_TOOL_INFO` 外链 chips**（`pages/ai/index.html` + [`css/ai-topic.css`](css/ai-topic.css)）
-- [x] **术语增强（首期）**：`AI_GLOSSARY_DATA` 增加可选 **`termEn` / `seeAlso`**，glossary 页展开区延伸阅读；首页折叠预览以小字展示 `termEn`（页内 TOC 已有）
-- [x] **更新说明自动化**：CI 部署前 `scripts/generate-ai-changelog.mjs` 从 git log 自动生成 `AI_TOPIC_CHANGELOG` 并写入 `data/ai-compare.js`
-
-**信息架构（可选）**
-
-- [x] 全站顶栏（`index.html` 根导航）下拉展示 AI 子页（`details.nav-menu`，无 JS，支持键盘/触屏）
-
-**下一阶段产品 TODO（待实现）**
-
-- [x] **任务入口区**：首页「我想完成什么」已上线（JSON / JWT / AI 横评 / 开源雷达），依据 [Umami 数据洞察](docs/analytics-insights.md)。
-- [x] **在线工具互链**：各工具页底部「相关在线工具」区已上线（JSON ↔ SQL/正则/时间戳等）。
-- [x] **数据驱动迭代**：首份 [Umami 数据洞察](docs/analytics-insights.md) 已建立；JSON 工具优先、头部 AI 外链降权已落地。
-
-**刻意不做（备忘）**
-
-- 每日 AI 资讯流、维基级模型百科、账号体系与后端 — 与静态站定位与维护成本不匹配。
 
 ---
 
@@ -216,7 +170,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 部署到 GitHub Pages
 
-仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后自动打包静态资源并发布（与 `deploy.sh` 排除规则一致，不包含 `docs/`、`.github` 等）。
+仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后自动打包静态资源并发布。Pages、本地 `deploy.sh` 与 1Panel SSH 三套部署 manifest 分别维护，排除范围并非逐字节一致；差异与核对方式见 [1Panel 部署说明](docs/deploy-1panel.md)。
 
 | 步骤 | 说明 |
 |------|------|
@@ -304,6 +258,7 @@ MIT
 ## 📁 相关文档
 
 - **[manual.md](manual.md)** — 简明使用说明（含在线工具与截图）  
+- **[docs/roadmap.md](docs/roadmap.md)** — 唯一活跃产品路线图
 - **[docs/README.md](docs/README.md)** — 文档索引  
 - **[docs/deploy-1panel.md](docs/deploy-1panel.md)** — 1Panel / 本机 `rsync` 部署  
 - **[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)** — GitHub Pages CI  
