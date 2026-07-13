@@ -609,7 +609,7 @@ WITH target_hosts(hostname) AS (
          ) AS effective_users
   FROM periods p
   JOIN normalized_events e ON e.created_at >= p.start_at AND e.created_at < p.end_at
-  LEFT JOIN event_data d ON d.event_id = e.event_id AND d.data_key = '工具'
+  LEFT JOIN event_data d ON d.website_event_id = e.event_id AND d.data_key = '工具'
   WHERE e.event_name = '工具使用'
   GROUP BY p.period, e.hostname, e.normalized_path
 )
@@ -621,7 +621,7 @@ LEFT JOIN effective_use eu USING (period, hostname, normalized_path)
 ORDER BY pv.period, pv.hostname, pv.pv DESC, pv.normalized_path;
 ```
 
-Before finalizing, inspect the live `event_data` schema read-only. If value columns differ from `string_value`, change only that column reference and record the verified schema in `docs/umami-integration-spec.md`.
+The live Umami 3.2.0 schema was verified on 2026-07-13: `event_data.website_event_id` references `website_event.event_id`, and event property text is stored in `event_data.string_value`. Record this verified schema in `docs/umami-integration-spec.md`.
 
 - [ ] **Step 4: Validate the SQL contract and execute it read-only against Umami**
 
