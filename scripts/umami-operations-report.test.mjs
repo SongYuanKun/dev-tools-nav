@@ -10,6 +10,10 @@ test("operations SQL separates hostnames and normalizes GitHub Pages paths", () 
   assert.match(sql, /\/dev-tools-nav/);
   assert.match(sql, /normalized_path/);
   assert.match(sql, /COUNT\(DISTINCT[^)]*session_id/si);
+  assert.match(
+    sql,
+    /COUNT\(DISTINCT\s+COALESCE\(\s*s\.distinct_id,\s*e\.session_id::text\s*\)\)/si,
+  );
 });
 
 test("operations SQL defines effective use and excludes activation tools commercially", () => {
@@ -21,4 +25,16 @@ test("operations SQL defines effective use and excludes activation tools commerc
   assert.match(sql, /jrebel/);
   assert.match(sql, /KMS 激活/);
   assert.match(sql, /JRebel 激活/);
+});
+
+test("operations SQL preserves effective-use keys without pageviews", () => {
+  const sql = readFileSync("scripts/umami-operations-report.sql", "utf-8");
+  assert.match(sql, /unified_keys\s+AS/si);
+  assert.match(
+    sql,
+    /SELECT\s+period,\s*hostname,\s*normalized_path\s+FROM\s+pageviews\s+UNION\s+SELECT\s+period,\s*hostname,\s*normalized_path\s+FROM\s+effective_use/si,
+  );
+  assert.match(sql, /FROM\s+unified_keys\s+keys/si);
+  assert.match(sql, /LEFT\s+JOIN\s+pageviews/si);
+  assert.match(sql, /LEFT\s+JOIN\s+effective_use/si);
 });

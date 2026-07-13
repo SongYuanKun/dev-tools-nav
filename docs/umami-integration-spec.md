@@ -65,8 +65,9 @@
 2. 只选择两个目标 hostname，并在所有结果中保留 hostname 维度。
 3. 对 `songyuankun.github.io` 去掉路径开头的 `/dev-tools-nav`；正式域名路径不变。
 4. 输出最近 7 天、最近 30 天和此前 30 天，窗口均为执行时刻的滚动窗口。
-5. 页面指标和 `工具使用` 指标按 `period + hostname + normalized_path` 连接。
-6. 商业有效使用排除 KMS/JRebel。报表兼容原始值 `kms`/`jrebel` 和当前中文持久值 `KMS 激活`/`JRebel 激活`。
+5. `unified_keys` 合并 pageview 与有效使用的 `period + hostname + normalized_path` 键，再分别 LEFT JOIN 两类指标；没有 pageview 的有效使用行仍会保留，因此 north-star 独立于 PV。
+6. visitors 是浏览器 `distinct_id`，缺失时按 `session_id` 回退的近似访客口径，即 `COUNT(DISTINCT COALESCE(s.distinct_id, e.session_id::text))`。
+7. 商业有效使用排除 KMS/JRebel。报表兼容原始值 `kms`/`jrebel` 和当前中文持久值 `KMS 激活`/`JRebel 激活`。
 
 Umami 3.2.0 实际 schema 已于 2026-07-13 在只读连接上验证：`event_data.website_event_id` 关联 `website_event.event_id`；文本事件属性保存在 `event_data.string_value`，属性名在 `event_data.data_key`。报表不得改用旧字段假设。
 

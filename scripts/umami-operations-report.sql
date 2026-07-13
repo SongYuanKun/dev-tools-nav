@@ -22,7 +22,7 @@ WITH target_hosts(hostname) AS (
   SELECT p.period, e.hostname, e.normalized_path,
          COUNT(*) AS pv,
          COUNT(DISTINCT e.session_id) AS sessions,
-         COUNT(DISTINCT s.distinct_id) AS visitors
+         COUNT(DISTINCT COALESCE(s.distinct_id, e.session_id::text)) AS visitors
   FROM periods p
   JOIN normalized_events e ON e.created_at >= p.start_at AND e.created_at < p.end_at
   LEFT JOIN session s USING (session_id)
@@ -45,10 +45,18 @@ WITH target_hosts(hostname) AS (
   LEFT JOIN event_data d ON d.website_event_id = e.event_id AND d.data_key = '工具'
   WHERE e.event_name = '工具使用'
   GROUP BY p.period, e.hostname, e.normalized_path
+), unified_keys AS (
+  SELECT period, hostname, normalized_path FROM pageviews
+  UNION
+  SELECT period, hostname, normalized_path FROM effective_use
 )
-SELECT pv.period, pv.hostname, pv.normalized_path, pv.pv, pv.sessions, pv.visitors,
+SELECT keys.period, keys.hostname, keys.normalized_path,
+       COALESCE(pv.pv, 0) AS pv,
+       COALESCE(pv.sessions, 0) AS sessions,
+       COALESCE(pv.visitors, 0) AS visitors,
        COALESCE(eu.effective_uses, 0) AS effective_uses,
        COALESCE(eu.effective_users, 0) AS effective_users
-FROM pageviews pv
+FROM unified_keys keys
+LEFT JOIN pageviews pv USING (period, hostname, normalized_path)
 LEFT JOIN effective_use eu USING (period, hostname, normalized_path)
-ORDER BY pv.period, pv.hostname, pv.pv DESC, pv.normalized_path;
+ORDER BY keys.period, keys.hostname, pv DESC, keys.normalized_path;
