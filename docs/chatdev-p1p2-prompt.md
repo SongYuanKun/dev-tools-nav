@@ -1,5 +1,9 @@
 # ChatDev 任务提示词：个人IP站点迭代升级（P1+P2）
 
+> **历史归档（不得作为当前实施依据）**
+>
+> 本文件保留早期 ChatDev 提示词，仅用于追溯。品牌色、页面范围、路线状态和测试现状均可能过时；当前决策以 `README.md`、`docs/roadmap.md` 和已批准设计文档为准。任何虚构推荐语均不得上线。
+
 以下提示词直接粘贴到 ChatDev 前端 UI 的任务输入框中，使用 `general_problem_solving_team.yaml` 工作流。
 
 ---

@@ -100,7 +100,7 @@ flowchart TB
 | Must-have | Should-have | Could-have | Won't-have |
 |-----------|-------------|------------|------------|
 | 首页分类与实时搜索可用 | AI 专题子站完整内链 | 首页顶栏 AI 下拉导航 | 直播/社群实时运营 |
-| 工具数据可维护 (`data/tools.js`) | 更多自研在线工具（SQL/正则等） | 纯前端场景高亮工具的扩展 | 用户账号体系与评论后端 |
+| 工具数据可维护 (`data/tools.js`) | 核心自研工具持续质量提升 | 纯前端场景高亮工具的扩展 | 用户账号体系与评论后端 |
 | 在线工具隐私边界清晰（纯前端） | 术语表持续补 `seeAlso` | 邮件订阅表单（第三方 embed） | 同时维护多套大型文档生成器 |
 | SEO：sitemap、meta、canonical 关键页 | Lighthouse/可访问性基线 CI | Affiliate 可追溯标注 | 「日更 AI 资讯流」 |
 | 双托管：Pages + 1Panel 备份部署 | Umami 自托管统计 | Playwright 关键路径冒烟 | 承诺合同级 SLA 与销售型 UAT |
@@ -213,30 +213,19 @@ ARTICLES / CSDN 同步 JSON
 
 ## 第三部分 《迭代开发计划》（两周 Sprint）
 
-以下为 **可直接抄到看板** 的示例排期（负责人填真实姓名）。“估时”为 **人天** 量级，适用于业余维护节奏。
+本节只定义交付模板，不保存活跃排期。当前迭代阶段、状态、准入条件与验收证据统一维护在 [产品路线图](./roadmap.md)。
 
-### Sprint 1（工具与导航）
+### 已完成能力基线
 
-| Story | Task | 估时 | DoD |
-|-------|------|------|-----|
-| 在线工具-SQL 格式化 | 页面 + `TOOLS_DATA` + sitemap | 1.5 | 三款浏览器手测通过；错误提示可读 |
-| 搜索体验 | main.js 防抖/无障碍标签复查 | 0.5 | 键盘可操作；无明暗对比失败 |
-| 文档 | README 与新工具占位说明 | 0.25 | MR 评审通过 |
+| 能力 | 现状 | 证据 |
+|---|---|---|
+| SQL 格式化 | 已完成格式化、压缩与分析能力，不再作为待开发 Story | [`tools/sql-formatter/`](../tools/sql-formatter/)、[`js/sql-tool.js`](../js/sql-tool.js) |
 
-### Sprint 2（内容与信任）
+### Sprint 看板模板
 
-| Story | Task | 估时 | DoD |
-|-------|------|------|-----|
-| 博客 canonical | 抽查所有 `pages/blog/*.html` | 0.5 | Search Console 无重复抓取告警（观察期） |
-| Affiliate 标注规范 | template 外链规则草拟 + README | 0.5 | 未来带参链接可追溯 |
-| Playwright 冒烟 | 首页 + AI 首页 + 1 在线工具 | 1 | Actions 绿灯 |
-
-### Sprint 3（质量与观测）
-
-| Story | Task | 估时 | DoD |
-|-------|------|------|-----|
-| Lighthouse CI | budget 阈值文件 + workflow | 1 | PR 不达标可失败或可警告（团队先约定） |
-| Umami 目标 | 关键转化事件（出站点击分类） | 0.5 | 面板可看图 |
+| Story | Task | 估时 | DoD | 路线图关联 |
+|---|---|---:|---|---|
+| `<用户价值>` | `<最小交付动作>` | `<人天>` | `<可重复验证的验收条件>` | `<docs/roadmap.md 工作项>` |
 
 ### 代码规范（建议）
 
@@ -264,7 +253,7 @@ ARTICLES / CSDN 同步 JSON
 | 企业默认 | 本项目等价 |
 |----------|------------|
 | SonarQube Major+ 清零 | **未接入**。可选：SonarLint 本地、`eslint`/`htmlhint` 择一渐进接入 |
-| 单测覆盖率 ≥80% | **当前无单元测试目录**。对等路径：抽出 `scripts/*.mjs` 纯函数后用 `node:test` / Vitest |
+| 单测覆盖率 ≥80% | 已有 Node 内置测试 `scripts/*.test.mjs`；当前尚无浏览器 UI 单元测试覆盖率指标 |
 
 ---
 
@@ -274,7 +263,8 @@ ARTICLES / CSDN 同步 JSON
 
 | 类型 | 目标 | 实现手段 |
 |------|------|----------|
-| 单元测试 | 对 **构建脚本** 与可选 **纯函数** 逐步达到 ≥80% | 新建 `tests/`、`npm test` |
+| Node 脚本测试 | 覆盖构建脚本、数据同步契约与纯函数 | Node 内置测试 `scripts/*.test.mjs`、`npm test` |
+| 浏览器 UI 单元测试 | 当前不声明覆盖率指标；后续先定义核心交互范围再设门禁 | Playwright 冒烟与人工验证补充 |
 | 核心路径 **100%** 覆盖 | Smoke：首页加载、搜索、打开一外链、一开站在线工具、一 AI 子页 | Playwright（仓库已有 playwright 依赖，可扩展 workflow） |
 | 性能 **≥ 预期 ×1.2** | 用 **Lighthouse 性能分数 / LCP ms** 代 TPS | 本地或 CI budgets |
 | 安全 **高危=0** | 依赖：`npm audit`；页面：外链与 `target=_blank`、博客用户生成内容风险控制 | 发布前自检表 |
@@ -345,7 +335,7 @@ ARTICLES / CSDN 同步 JSON
 
 | 要求原文 | 仓库现状 |
 |----------|----------|
-| 单元测试覆盖率 ≥80% | **未达到**；需新增测试 harness |
+| 单元测试覆盖率 ≥80% | 已有 Node 内置测试 `scripts/*.test.mjs`；尚未建立浏览器 UI 单元测试覆盖率指标 |
 | Sonar Major+ 清零 | **未接入** |
 | 接口自动化 + TPS | **不适用**；已文内替换 |
 | UAT 书面签字 | 模板已给；按需执行 |

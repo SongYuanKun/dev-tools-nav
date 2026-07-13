@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import {
   SELF_BUILT_TOOLS,
@@ -70,4 +71,17 @@ test("README states all three catalog counts and canonical URL policy", () => {
   const result = auditTools(process.cwd());
   assert.deepEqual(result.readmeCounts, { total: 73, selfBuilt: 10, onlineTools: 11 });
   assert.equal(result.readmeUsesCanonicalToolsPath, true);
+});
+
+test("active docs have one roadmap and archive the ChatDev prompt", () => {
+  const manual = readFileSync("manual.md", "utf-8");
+  const docsIndex = readFileSync("docs/README.md", "utf-8");
+  const roadmap = readFileSync("docs/roadmap.md", "utf-8");
+  const chatdev = readFileSync("docs/chatdev-p1p2-prompt.md", "utf-8");
+
+  assert.doesNotMatch(manual, /93% 用户|98\.6%|0 回头客/);
+  assert.match(docsIndex, /roadmap\.md/);
+  assert.match(roadmap, /北极星指标：有效工具使用次数/);
+  assert.match(chatdev, /历史归档/);
+  assert.match(chatdev, /不得作为当前实施依据/);
 });
