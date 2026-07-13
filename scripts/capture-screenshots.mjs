@@ -9,7 +9,7 @@
 import { chromium } from "playwright";
 import { mkdir, stat } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -17,59 +17,71 @@ const ASSETS = join(ROOT, "assets");
 
 const BASE_URL = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
+export async function prepareJsonSample(page) {
+  await page.locator(".json-more > summary").click();
+  await page.locator("#btnSample").waitFor({ state: "visible" });
+  await page.locator("#btnSample").click();
+  await page.waitForFunction(
+    (expected) => document.querySelector("#jsonInput")?.value.includes(expected),
+    "Koen Tools",
+  );
+}
+
 /** @type {{ path: string; file: string; fullPage?: boolean; prepare?: (page: import('playwright').Page) => Promise<void> }[]} */
-const TARGETS = [
+export const TARGETS = Object.freeze([
   { path: "/index.html", file: "screenshot.png", fullPage: false },
   { path: "/pages/blog/index.html", file: "screenshot-blog.png", fullPage: false },
   {
     path: "/pages/tools/json.html?embed=1",
     file: "screenshot-json-tool.png",
     fullPage: false,
-    async prepare(page) {
-      // 加载示例 JSON，展示新版编辑器、行号与实时校验状态
-      await page.click("#btnSample");
-      await page.waitForTimeout(600);
-    },
+    prepare: prepareJsonSample,
   },
-];
+]);
 
-async function main() {
+export async function main() {
   await mkdir(ASSETS, { recursive: true });
 
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({
-    viewport: { width: 1280, height: 800 },
-    colorScheme: "light",
-    deviceScaleFactor: 1,
-  });
+  try {
+    const context = await browser.newContext({
+      viewport: { width: 1280, height: 800 },
+      colorScheme: "light",
+      deviceScaleFactor: 1,
+    });
 
-  for (const t of TARGETS) {
-    const url = `${BASE_URL}${t.path.startsWith("/") ? t.path : `/${t.path}`}`;
-    const out = join(ASSETS, t.file);
-    const page = await context.newPage();
-    try {
-      const res = await page.goto(url, { waitUntil: "load", timeout: 60_000 });
-      if (!res || !res.ok()) {
-        throw new Error(`HTTP ${res?.status()} for ${url}`);
+    for (const t of TARGETS) {
+      const url = `${BASE_URL}${t.path.startsWith("/") ? t.path : `/${t.path}`}`;
+      const out = join(ASSETS, t.file);
+      const page = await context.newPage();
+      try {
+        const res = await page.goto(url, { waitUntil: "load", timeout: 60_000 });
+        if (!res || !res.ok()) {
+          throw new Error(`HTTP ${res?.status()} for ${url}`);
+        }
+        if (t.prepare) await t.prepare(page);
+        await new Promise((r) => setTimeout(r, 1200));
+        await page.screenshot({
+          path: out,
+          fullPage: Boolean(t.fullPage),
+          type: "png",
+        });
+        const st = await stat(out);
+        console.log(`OK ${t.file} (${st.size} bytes) <- ${url}`);
+      } catch (error) {
+        throw new Error(`Screenshot ${t.file} failed for ${url}: ${error.message}`, { cause: error });
+      } finally {
+        await page.close();
       }
-      if (t.prepare) await t.prepare(page);
-      await new Promise((r) => setTimeout(r, 1200));
-      await page.screenshot({
-        path: out,
-        fullPage: Boolean(t.fullPage),
-        type: "png",
-      });
-      const st = await stat(out);
-      console.log(`OK ${t.file} (${st.size} bytes) <- ${url}`);
-    } finally {
-      await page.close();
     }
+  } finally {
+    await browser.close();
   }
-
-  await browser.close();
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
