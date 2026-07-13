@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-07-06T14:39:38+08:00",
-  "weekLabel": "2026-06-29 ~ 2026-07-06",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 调研 / 知识、Agent Skills 等方向。代表项目包括 agency-agents、strix、codebase-memory-mcp。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-07-13T13:40:32+08:00",
+  "weekLabel": "2026-07-06 ~ 2026-07-13",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、调研 / 知识、多模态 等方向。代表项目包括 meetily、system_prompts_leaks、OfficeCLI。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,106 +31,67 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "msitarzewski/agency-agents",
-      "language": "Shell",
-      "stars": 127662,
-      "weekStars": 10637,
+      "repo": "Zackriya-Solutions/meetily",
+      "language": "Rust",
+      "stars": 23700,
+      "weekStars": 7440,
       "trending": true,
       "topic": "research",
-      "summary": "本周 GitHub Trending：agency-agents — A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.",
+      "summary": "本周 GitHub Trending：meetily — Privacy first, AI meeting assistant with 4x faster Parakeet/Whisper live transcription, speaker diarization, and Ollama summarization built on Rust. 100% local processing. no cloud required. Meetily (Meetly Ai - https://meetily.ai ) is the #1 Self-hosted, Open-source Ai meeting note taker for macOS & Windows. Understand How to write meeting minutes",
       "features": [
-        "A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.",
+        "Privacy first, AI meeting assistant with 4x faster Parakeet/Whisper live transcription, speaker diarization, and Ollama summarization built on Rust. 100% local processing. no cloud required. Meetily (Meetly Ai - https://meetily.ai ) is the #1 Self-hosted, Open-source Ai meeting note taker for macOS & Windows. Understand How to write meeting minutes",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "调研 / 知识",
-        "agency agents"
+        "meetily"
       ]
     },
     {
       "rank": 2,
-      "repo": "usestrix/strix",
-      "language": "Python",
-      "stars": 37418,
-      "weekStars": 10338,
+      "repo": "asgeirtj/system_prompts_leaks",
+      "language": "JavaScript",
+      "stars": 56836,
+      "weekStars": 7155,
       "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：strix — Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：system_prompts_leaks — Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude Design. OpenAI - ChatGPT GPT-5.6, Codex GPT-5.6, GPT-5.5. Google - Gemini 3.5 Flash, 3.1 Pro, Antigravity. xAI - Grok, Cursor, Copilot, VS Code, Perplexity, and more. Updated regularly.",
       "features": [
-        "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
+        "Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude Design. OpenAI - ChatGPT GPT-5.6, Codex GPT-5.6, GPT-5.5. Google - Gemini 3.5 Flash, 3.1 Pro, Antigravity. xAI - Grok, Cursor, Copilot, VS Code, Perplexity, and more. Updated regularly.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "调研 / 知识",
-        "strix"
+        "编程 Agent",
+        "system_prompts_leaks"
       ]
     },
     {
       "rank": 3,
-      "repo": "DeusData/codebase-memory-mcp",
-      "language": "C",
-      "stars": 26918,
-      "weekStars": 7945,
+      "repo": "iOfficeAI/OfficeCLI",
+      "language": "C#",
+      "stars": 15563,
+      "weekStars": 6978,
       "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：codebase-memory-mcp — High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：OfficeCLI — OfficeCLI is the first and best Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Free, open-source, single binary, no Office installation required.",
       "features": [
-        "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+        "OfficeCLI is the first and best Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Free, open-source, single binary, no Office installation required.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "Agent Skills",
-        "codebase memory mcp"
+        "编程 Agent",
+        "OfficeCLI"
       ]
     },
     {
       "rank": 4,
-      "repo": "calesthio/OpenMontage",
-      "language": "Python",
-      "stars": 33842,
-      "weekStars": 7353,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：OpenMontage — World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.",
-      "features": [
-        "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "OpenMontage",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "xbtlin/ai-berkshire",
-      "language": "Python",
-      "stars": 10593,
-      "weekStars": 5038,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：ai-berkshire — AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built for Claude Code / Codex. 4 masters' methodologies + multi-agent adversarial analysis.",
-      "features": [
-        "AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built for Claude Code / Codex. 4 masters' methodologies + multi-agent adversarial analysis.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "ai berkshire"
-      ]
-    },
-    {
-      "rank": 6,
       "repo": "diegosouzapw/OmniRoute",
       "language": "TypeScript",
-      "stars": 12054,
-      "weekStars": 4411,
+      "stars": 16346,
+      "weekStars": 4506,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：OmniRoute — Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline & Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA.",
@@ -145,29 +106,67 @@
       ]
     },
     {
-      "rank": 7,
-      "repo": "browser-use/video-use",
+      "rank": 5,
+      "repo": "stablyai/orca",
+      "language": "TypeScript",
+      "stars": 17343,
+      "weekStars": 4481,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：orca — Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop and mobile.",
+      "features": [
+        "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop and mobile.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "orca"
+      ]
+    },
+    {
+      "rank": 6,
+      "repo": "bradautomates/claude-video",
       "language": "Python",
-      "stars": 15160,
-      "weekStars": 4288,
+      "stars": 7890,
+      "weekStars": 4353,
+      "trending": true,
+      "topic": "multimodal",
+      "summary": "本周 GitHub Trending：claude-video — Give Claude the ability to watch any video. /watch downloads, extracts frames, transcribes, hands it all to Claude.",
+      "features": [
+        "Give Claude the ability to watch any video. /watch downloads, extracts frames, transcribes, hands it all to Claude.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "多模态",
+        "claude video"
+      ]
+    },
+    {
+      "rank": 7,
+      "repo": "usestrix/strix",
+      "language": "Python",
+      "stars": 40929,
+      "weekStars": 4143,
       "trending": true,
       "topic": "research",
-      "summary": "本周 GitHub Trending：video-use — Edit videos with coding agents",
+      "summary": "本周 GitHub Trending：strix — Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
       "features": [
-        "Edit videos with coding agents",
+        "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "调研 / 知识",
-        "video use"
+        "strix"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 247160,
+      "stars": 253207,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -187,7 +186,7 @@
       "rank": 9,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 226402,
+      "stars": 229010,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -207,7 +206,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 209863,
+      "stars": 213852,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -227,7 +226,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 158532,
+      "stars": 160640,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -247,7 +246,7 @@
       "rank": 12,
       "repo": "iptv-org/iptv",
       "language": "TypeScript",
-      "stars": 130626,
+      "stars": 132658,
       "weekStars": 0,
       "trending": false,
       "topic": "research",
