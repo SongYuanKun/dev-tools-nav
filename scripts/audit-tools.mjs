@@ -77,19 +77,40 @@ function literal(object, field) {
   return object.match(new RegExp(`^ {4}${field}: ["']([^"']+)["'],?`, "m"))?.[1];
 }
 
-function readmeCount(readme, name) {
-  const value = readme.match(new RegExp(`<!-- catalog-${name}: (\\d+) -->`))?.[1];
-  return value === undefined ? undefined : Number(value);
-}
-
-export function auditTools(root) {
-  const source = fs.readFileSync(path.join(root, "data", "tools.js"), "utf8");
-  const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
+export function parseToolCatalog(source) {
   const tools = topLevelToolObjects(source).map((object) => ({
     id: literal(object, "id"),
     category: literal(object, "category"),
     url: literal(object, "url"),
   }));
+  const requiredFields = ["id", "category", "url"];
+  const invalidTools = tools.flatMap((tool, index) => {
+    const missingFields = requiredFields.filter((field) => !tool[field]?.trim());
+    return missingFields.length ? [{ index, missingFields }] : [];
+  });
+
+  return { tools, invalidTools };
+}
+
+function readmeCount(readme, name) {
+  const value = readme.match(new RegExp(`<!-- catalog-${name}: (\\d+) -->`))?.[1];
+  return value === undefined ? undefined : Number(value);
+}
+
+export function readmeUsesCanonicalToolsPath(readme) {
+  const publicToolsSection = readme.match(/^## 在线工具[^\n]*\n([\s\S]*?)(?=^## |$(?![\s\S]))/m)?.[1] ?? "";
+  const publicToolsTable = publicToolsSection.split("\n")
+    .filter((line) => line.startsWith("|"))
+    .join("\n");
+  const canonicalPaths = SELF_BUILT_TOOLS.map((slug) => `/tools/${slug}/`);
+  return canonicalPaths.every((toolPath) => publicToolsTable.includes(`\`${toolPath}\``))
+    && !/pages\/tools\/[^\s`|]+\.html/.test(publicToolsTable);
+}
+
+export function auditTools(root) {
+  const source = fs.readFileSync(path.join(root, "data", "tools.js"), "utf8");
+  const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
+  const { tools, invalidTools } = parseToolCatalog(source);
   const seen = new Set();
   const duplicateIds = [];
   const categoryCounts = {};
@@ -103,20 +124,19 @@ export function auditTools(root) {
   const missingCanonical = SELF_BUILT_TOOLS.filter((slug) =>
     !fs.existsSync(path.join(root, "tools", slug, "index.html")),
   );
-  const canonicalPaths = SELF_BUILT_TOOLS.map((slug) => `/tools/${slug}/`);
-
   return {
     total: tools.length,
     selfBuilt: [...SELF_BUILT_TOOLS],
     categoryCounts,
     duplicateIds,
+    invalidTools,
     missingCanonical,
     readmeCounts: {
       total: readmeCount(readme, "total"),
       selfBuilt: readmeCount(readme, "self-built"),
       onlineTools: readmeCount(readme, "online-tools"),
     },
-    readmeUsesCanonicalToolsPath: canonicalPaths.every((toolPath) => readme.includes(`\`${toolPath}\``)),
+    readmeUsesCanonicalToolsPath: readmeUsesCanonicalToolsPath(readme),
   };
 }
 
@@ -125,6 +145,7 @@ function invariantsHold(result) {
     && result.selfBuilt.length === 10
     && result.categoryCounts["online-tools"] === 11
     && result.duplicateIds.length === 0
+    && result.invalidTools.length === 0
     && result.missingCanonical.length === 0
     && result.readmeCounts.total === 73
     && result.readmeCounts.selfBuilt === 10

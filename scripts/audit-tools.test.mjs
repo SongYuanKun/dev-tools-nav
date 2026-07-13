@@ -1,13 +1,60 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { auditTools } from "./audit-tools.mjs";
+import {
+  SELF_BUILT_TOOLS,
+  auditTools,
+  parseToolCatalog,
+  readmeUsesCanonicalToolsPath,
+} from "./audit-tools.mjs";
+
+test("parser counts only TOOLS_DATA top-level objects", () => {
+  const source = `const CATEGORIES = [{ id: "not-a-tool" }];
+const TOOLS_DATA = [
+  {
+    id: "alpha",
+    category: "dev",
+    url: "https://example.com",
+    content: { id: "nested-id" },
+  },
+];`;
+
+  assert.deepEqual(parseToolCatalog(source), {
+    tools: [{ id: "alpha", category: "dev", url: "https://example.com" }],
+    invalidTools: [],
+  });
+});
+
+test("parser reports missing top-level required fields", () => {
+  const source = `const TOOLS_DATA = [
+  {
+    id: "broken",
+    category: "dev",
+    content: { url: "https://nested.example.com" },
+  },
+];`;
+
+  assert.deepEqual(parseToolCatalog(source).invalidTools, [
+    { index: 0, missingFields: ["url"] },
+  ]);
+});
+
+test("README canonical policy rejects legacy paths in the public table", () => {
+  const paths = SELF_BUILT_TOOLS.map((slug) => `| tool | \`/tools/${slug}/\` | note |`).join("\n");
+  const readme = `## 在线工具（\`/tools/\`）\n\n${paths}\n\n公开规范 URL 统一使用。`;
+
+  assert.equal(readmeUsesCanonicalToolsPath(readme), true);
+  assert.equal(readmeUsesCanonicalToolsPath(
+    readme.replace("\n\n公开规范", "\n| legacy | \`pages/tools/legacy.html\` | note |\n\n公开规范"),
+  ), false);
+});
 
 test("catalog has the approved counts and unique IDs", () => {
   const result = auditTools(process.cwd());
   assert.equal(result.total, 73);
   assert.equal(result.categoryCounts["online-tools"], 11);
   assert.deepEqual(result.duplicateIds, []);
+  assert.deepEqual(result.invalidTools, []);
 });
 
 test("all ten self-built tools have canonical shells", () => {
