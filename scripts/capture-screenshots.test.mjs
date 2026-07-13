@@ -1,7 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 
 import { prepareJsonSample } from "./capture-screenshots.mjs";
+
+test("capture script can be imported when argv has no script path", () => {
+  const result = spawnSync(
+    process.execPath,
+    ["--input-type=module", "-e", "import('./scripts/capture-screenshots.mjs')"],
+    { cwd: process.cwd(), encoding: "utf8" },
+  );
+
+  assert.equal(result.status, 0, result.stderr);
+});
 
 test("prepareJsonSample opens the hidden menu before clicking the sample", async () => {
   const calls = [];
