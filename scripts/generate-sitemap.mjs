@@ -3,6 +3,8 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import { parseToolCatalog } from "./audit-tools.mjs";
+
 const MODULE_DIR = fileURLToPath(new URL(".", import.meta.url));
 const DEFAULT_ROOT = join(MODULE_DIR, "..");
 const BASE_URL = "https://tools.songyuankun.top";
@@ -63,11 +65,8 @@ function collectTemplateIds(root) {
   const toolsPath = join(root, "data", "tools.js");
   if (!existsSync(toolsPath)) return [];
 
-  const ids = [];
-  for (const match of readFileSync(toolsPath, "utf-8").matchAll(/id:\s*"([^"]+)"/g)) {
-    ids.push(match[1]);
-  }
-  return ids;
+  return parseToolCatalog(readFileSync(toolsPath, "utf-8")).tools
+    .map((tool) => tool.id);
 }
 
 export function collectStaticUrls(root, now = new Date()) {
@@ -105,7 +104,7 @@ ${urls.map((url) => `  <url>
 </urlset>`;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const xml = generateSitemap(DEFAULT_ROOT);
   writeFileSync(join(DEFAULT_ROOT, "sitemap.xml"), xml, "utf-8");
   console.log(`sitemap.xml generated — ${collectStaticUrls(DEFAULT_ROOT).length} URLs`);

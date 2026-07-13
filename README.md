@@ -222,7 +222,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 🎮 彩蛋系统
 
-导航栏中的「🔑 激活工具」分类 Tab 默认隐藏，需要通过有趣的解锁方式才会出现（KMS / JRebel 等入口在「在线工具」分类中）。
+导航栏中的「🔑 激活工具」分类 Tab 默认隐藏，需要通过有趣的解锁方式才会出现（KMS / JRebel 等入口属于隐藏的 `activate` 数据分类）。
 
 ### 解锁方式
 

@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 
 import { collectStaticUrls, generateSitemap, xmlEscape } from "./generate-sitemap.mjs";
 
@@ -30,10 +31,35 @@ test("collectStaticUrls includes all ten canonical self-built tools", () => {
   for (const location of expected) assert.ok(locations.includes(location), location);
 });
 
+test("collectStaticUrls creates template URLs only for catalog tools", () => {
+  const locations = collectStaticUrls(process.cwd()).map((item) => item.loc);
+  const leakedCategoryIds = [
+    "activate", "ai", "all", "design", "dev",
+    "hosting", "online-tools", "ops", "security",
+  ];
+
+  for (const id of leakedCategoryIds) {
+    assert.ok(
+      !locations.includes(`https://tools.songyuankun.top/pages/template.html?id=${id}`),
+      `category ID leaked into sitemap: ${id}`,
+    );
+  }
+});
+
 test("generateSitemap XML-escapes query URLs", () => {
   const xml = generateSitemap(process.cwd(), new Date("2026-07-13T00:00:00Z"));
   assert.match(xml, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
   assert.match(xml, /<\/urlset>$/);
   assert.match(xml, /template\.html\?id=/);
   assert.doesNotMatch(xml, /<loc>[^<]*&(?!amp;|lt;|gt;|quot;|apos;)[^<]*<\/loc>/);
+});
+
+test("module can be imported when argv has no script path", () => {
+  const result = spawnSync(
+    process.execPath,
+    ["--input-type=module", "--eval", 'import("./scripts/generate-sitemap.mjs")'],
+    { cwd: process.cwd(), encoding: "utf8" },
+  );
+
+  assert.equal(result.status, 0, result.stderr);
 });

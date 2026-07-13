@@ -12,7 +12,10 @@ WITH target_hosts(hostname) AS (
     e.*,
     CASE
       WHEN e.hostname = 'songyuankun.github.io'
-        THEN regexp_replace(e.url_path, '^/dev-tools-nav(?=/|$)', '')
+        THEN COALESCE(
+          NULLIF(regexp_replace(e.url_path, '^/dev-tools-nav(?=/|$)', ''), ''),
+          '/'
+        )
       ELSE e.url_path
     END AS normalized_path
   FROM website_event e

@@ -16,6 +16,14 @@ test("operations SQL separates hostnames and normalizes GitHub Pages paths", () 
   );
 });
 
+test("operations SQL normalizes the exact GitHub Pages prefix to root", () => {
+  const sql = readFileSync("scripts/umami-operations-report.sql", "utf-8");
+  assert.match(
+    sql,
+    /COALESCE\(\s*NULLIF\(\s*regexp_replace\([^)]*'\^\/dev-tools-nav\(\?=\/\|\$\)'[^)]*\),\s*''\s*\),\s*'\/'\s*\)/si,
+  );
+});
+
 test("operations SQL defines effective use and excludes activation tools commercially", () => {
   const sql = readFileSync("scripts/umami-operations-report.sql", "utf-8");
   assert.match(sql, /工具使用/);

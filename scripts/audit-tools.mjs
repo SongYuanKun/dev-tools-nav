@@ -7,6 +7,19 @@ export const SELF_BUILT_TOOLS = Object.freeze([
   "jwt", "regex", "sql-formatter", "timestamp", "uuid",
 ]);
 
+const SELF_BUILT_CATALOG = Object.freeze([
+  { slug: "base64", id: "online-base64", url: "tools/base64/" },
+  { slug: "color", id: "online-color", url: "tools/color/" },
+  { slug: "cron", id: "online-cron", url: "tools/cron/" },
+  { slug: "diff", id: "online-diff", url: "tools/diff/" },
+  { slug: "json", id: "online-json", url: "tools/json/" },
+  { slug: "jwt", id: "online-jwt", url: "tools/jwt/" },
+  { slug: "regex", id: "online-regex", url: "tools/regex/" },
+  { slug: "sql-formatter", id: "online-sql", url: "tools/sql-formatter/" },
+  { slug: "timestamp", id: "online-timestamp", url: "tools/timestamp/" },
+  { slug: "uuid", id: "online-uuid", url: "tools/uuid/" },
+]);
+
 function topLevelToolObjects(source) {
   const declaration = source.indexOf("const TOOLS_DATA = [");
   if (declaration === -1) return [];
@@ -107,6 +120,30 @@ export function readmeUsesCanonicalToolsPath(readme) {
     && !/pages\/tools\/[^\s`|]+\.html/.test(publicToolsTable);
 }
 
+function selfBuiltCatalogErrors(tools) {
+  return SELF_BUILT_CATALOG.flatMap((expected) => {
+    const actual = tools.find((tool) => tool.id === expected.id);
+    if (!actual) return [{ slug: expected.slug, issue: "missing catalog record" }];
+    if (actual.category !== "online-tools") {
+      return [{
+        slug: expected.slug,
+        issue: "category",
+        expected: "online-tools",
+        actual: actual.category,
+      }];
+    }
+    if (actual.url !== expected.url) {
+      return [{
+        slug: expected.slug,
+        issue: "url",
+        expected: expected.url,
+        actual: actual.url,
+      }];
+    }
+    return [];
+  });
+}
+
 export function auditTools(root) {
   const source = fs.readFileSync(path.join(root, "data", "tools.js"), "utf8");
   const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
@@ -131,6 +168,7 @@ export function auditTools(root) {
     duplicateIds,
     invalidTools,
     missingCanonical,
+    selfBuiltCatalogErrors: selfBuiltCatalogErrors(tools),
     readmeCounts: {
       total: readmeCount(readme, "total"),
       selfBuilt: readmeCount(readme, "self-built"),
@@ -147,6 +185,7 @@ function invariantsHold(result) {
     && result.duplicateIds.length === 0
     && result.invalidTools.length === 0
     && result.missingCanonical.length === 0
+    && result.selfBuiltCatalogErrors.length === 0
     && result.readmeCounts.total === 73
     && result.readmeCounts.selfBuilt === 10
     && result.readmeCounts.onlineTools === 11

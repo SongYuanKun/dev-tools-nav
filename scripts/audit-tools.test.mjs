@@ -1,6 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 import {
   SELF_BUILT_TOOLS,
@@ -8,6 +16,38 @@ import {
   parseToolCatalog,
   readmeUsesCanonicalToolsPath,
 } from "./audit-tools.mjs";
+
+const SELF_BUILT_RECORDS = [
+  ["base64", "online-base64", "tools/base64/"],
+  ["color", "online-color", "tools/color/"],
+  ["cron", "online-cron", "tools/cron/"],
+  ["diff", "online-diff", "tools/diff/"],
+  ["json", "online-json", "tools/json/"],
+  ["jwt", "online-jwt", "tools/jwt/"],
+  ["regex", "online-regex", "tools/regex/"],
+  ["sql-formatter", "online-sql", "tools/sql-formatter/"],
+  ["timestamp", "online-timestamp", "tools/timestamp/"],
+  ["uuid", "online-uuid", "tools/uuid/"],
+];
+
+function withCatalogFixture(records, callback) {
+  const root = mkdtempSync(join(tmpdir(), "audit-tools-"));
+  try {
+    mkdirSync(join(root, "data"));
+    writeFileSync(
+      join(root, "data", "tools.js"),
+      `const TOOLS_DATA = [\n${records.map(([, id, url, category = "online-tools"]) => `  {\n    id: "${id}",\n    category: "${category}",\n    url: "${url}",\n  },`).join("\n")}\n];\n`,
+    );
+    writeFileSync(join(root, "README.md"), "");
+    for (const [slug] of SELF_BUILT_RECORDS) {
+      mkdirSync(join(root, "tools", slug), { recursive: true });
+      writeFileSync(join(root, "tools", slug, "index.html"), "");
+    }
+    callback(auditTools(root));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
 
 test("parser counts only TOOLS_DATA top-level objects", () => {
   const source = `const CATEGORIES = [{ id: "not-a-tool" }];
@@ -67,10 +107,48 @@ test("all ten self-built tools have canonical shells", () => {
   assert.deepEqual(result.missingCanonical, []);
 });
 
+test("audit reports a missing self-built catalog record", () => {
+  withCatalogFixture(SELF_BUILT_RECORDS.slice(1), (result) => {
+    assert.deepEqual(result.selfBuiltCatalogErrors, [
+      { slug: "base64", issue: "missing catalog record" },
+    ]);
+  });
+});
+
+test("audit reports a self-built tool in the wrong category", () => {
+  const records = SELF_BUILT_RECORDS.map((record) =>
+    record[0] === "json" ? [...record, "dev"] : record
+  );
+  withCatalogFixture(records, (result) => {
+    assert.deepEqual(result.selfBuiltCatalogErrors, [
+      { slug: "json", issue: "category", expected: "online-tools", actual: "dev" },
+    ]);
+  });
+});
+
+test("audit reports a self-built tool with the wrong catalog URL", () => {
+  const records = SELF_BUILT_RECORDS.map((record) =>
+    record[0] === "uuid" ? [record[0], record[1], "pages/tools/uuid.html"] : record
+  );
+  withCatalogFixture(records, (result) => {
+    assert.deepEqual(result.selfBuiltCatalogErrors, [
+      { slug: "uuid", issue: "url", expected: "tools/uuid/", actual: "pages/tools/uuid.html" },
+    ]);
+  });
+});
+
 test("README states all three catalog counts and canonical URL policy", () => {
   const result = auditTools(process.cwd());
   assert.deepEqual(result.readmeCounts, { total: 73, selfBuilt: 10, onlineTools: 11 });
   assert.equal(result.readmeUsesCanonicalToolsPath, true);
+});
+
+test("README places KMS and JRebel in the hidden activate category", () => {
+  const readme = readFileSync("README.md", "utf-8");
+  const easterEggSection = readme.match(/^## 🎮 彩蛋系统\n([\s\S]*?)(?=^## |$(?![\s\S]))/m)?.[1] ?? "";
+
+  assert.match(easterEggSection, /KMS \/ JRebel[^\n]*隐藏的 `activate` 数据分类/);
+  assert.doesNotMatch(easterEggSection, /KMS \/ JRebel[^\n]*在线工具/);
 });
 
 test("active docs have one roadmap and archive the ChatDev prompt", () => {
