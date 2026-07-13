@@ -151,6 +151,15 @@ test("README places KMS and JRebel in the hidden activate category", () => {
   assert.doesNotMatch(easterEggSection, /KMS \/ JRebel[^\n]*在线工具/);
 });
 
+test("README documents the actual Logo unlock timing and source", () => {
+  const readme = readFileSync("README.md", "utf-8");
+  const easterEggSection = readme.match(/^## 🎮 彩蛋系统\n([\s\S]*?)(?=^## |$(?![\s\S]))/m)?.[1] ?? "";
+
+  assert.match(easterEggSection, /Logo 相邻点击间隔不超过1\.5秒，共7次/);
+  assert.match(easterEggSection, /`js\/easter-egg\.js`/);
+  assert.doesNotMatch(easterEggSection, /Logo 7 次（3 秒内）|`js\/main\.js`/);
+});
+
 test("active docs have one roadmap and archive the ChatDev prompt", () => {
   const manual = readFileSync("manual.md", "utf-8");
   const docsIndex = readFileSync("docs/README.md", "utf-8");

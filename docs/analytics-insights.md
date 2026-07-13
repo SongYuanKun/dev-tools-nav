@@ -4,14 +4,14 @@
 
 ## 可信口径
 
-- 只统计 `tools.songyuankun.top` 与 `songyuankun.github.io`，并始终按 hostname 分行，禁止把两个入口直接合并成一个站点总数。
+- 只统计 `tools.songyuankun.top` 与 `songyuankun.github.io`。报表同时提供分路径、分 hostname 和 all-hosts 三层结果，汇总层必须从原始事件重算，不能把明细行相加。
 - GitHub Pages 的 `/dev-tools-nav` 仓库前缀在报表中移除。例如 `/dev-tools-nav/tools/json/` 归一为 `/tools/json/`，从而可以与正式域名比较同一路径。
-- PV 是无事件名的 pageview；sessions 按页面、周期和 hostname 对 `session_id` 去重；visitors 是浏览器 `distinct_id`，缺失时按 `session_id` 回退的近似访客口径。不同路径行的 sessions/visitors 不能相加当作全站去重值。
-- “有效使用”是中文事件 `工具使用`。`effective_uses` 计事件次数，`effective_users` 按 `session_id` 去重。
+- PV 是无事件名的 pageview；sessions 按相应报表层级对 `session_id` 去重；visitors 是浏览器 `distinct_id`，缺失时按 `session_id` 回退的近似访客口径。
+- “有效使用”是中文事件 `工具使用`。`effective_uses` 计通过白名单的事件次数；`effective_users` 对 `COALESCE(session.distinct_id, session_id::text)` 去重，不是 session 数。
 - 报表从 pageview 与有效使用的键集合出发；即使某周期、hostname、路径只有有效使用事件而没有 pageview，也会保留该行，north-star 指标不依附于 PV。
-- 商业有效使用排除 KMS/JRebel 激活工具。SQL 同时兼容历史原始值 `kms`/`jrebel` 与当前 `umami-labels.js` 写入的 `KMS 激活`/`JRebel 激活`，避免激活工具复制操作进入商业转化总量。
+- 商业有效使用采用 fail-closed 白名单，只接受当前持久值：`JSON 格式化`、`时间戳转换`、`Base64`、`正则表达式`、`Cron 表达式`、`JWT 解码`、`SQL 格式化`、`diff`、`uuid`。Color 当前没有 `tool_used` 上报；缺失工具属性、未知值及 KMS/JRebel 激活值都计为 0。
 
-可重复执行的明细查询是 [`scripts/umami-operations-report.sql`](../scripts/umami-operations-report.sql)。它输出：`period`、`hostname`、`normalized_path`、`pv`、`sessions`、`visitors`、`effective_uses`、`effective_users`。
+可重复执行的查询是 [`scripts/umami-operations-report.sql`](../scripts/umami-operations-report.sql)。它输出 `report_level`、`period`、`hostname`、`normalized_path`、`pv`、`sessions`、`visitors`、`effective_uses`、`effective_users`。`report_level` 包含 `detail`、`hostname_summary`、`all_hosts_summary`；后两层的 sessions、visitors、effective_users 都从原始事件重新去重。
 
 ## 刷新命令
 
@@ -42,15 +42,16 @@ SQL 只有读取语句。审计时还可在容器命令中设置 `PGOPTIONS="-c 
 - 旧报告混合了正式域名和 GitHub Pages，且没有移除 `/dev-tools-nav` 前缀；旧总量不能直接作为新报表同比基线。
 - GitHub Pages 的开源雷达页出现过高 PV、几乎每次访问都新建 session 的模式，疑似低质量自动流量。运营结论必须先按 hostname 查看，不以该流量证明产品需求。
 - DNT、`localStorage` 禁用开关、拦截请求以及浏览器清理本地标识都会让行为事件或跨访问识别缺失。
+- 跨 hostname 时浏览器存储隔离会让同一人通常获得不同 `distinct_id`；因此 `all_hosts_summary` 是现有标识下的去重近似值，可能高估真实跨站独立用户，不能宣称完成了跨域身份合并。
 - Umami 只描述站内行为；自然搜索曝光和点击仍需 Search Console 补充。
 
 ## Monthly review
 
 每月固定保存同一刷新命令的结果，并至少复盘四项：
 
-1. **Effective users**：排除 KMS/JRebel 后，至少完成一次自研工具核心动作的去重 session 数。
+1. **Effective users**：只引用 `hostname_summary` 或带身份限制说明的 `all_hosts_summary` 独立有效工具用户；商业化 1,000/5,000 阈值不得引用或相加 `detail` 行。
 2. **Effective uses**：同一口径下的核心动作次数；与 effective users 一起看复用深度。
 3. **Search Console clicks**：按落地页和查询词查看自然搜索点击，不能用 Umami PV 代替。
 4. **30-day return rate**：最近 30 天内被识别为回访的访客占可识别访客的比例；同时记录分子、分母和身份丢失限制，避免只报百分比。
 
-复盘时先比较正式域名的最近 30 天与此前 30 天，再单独检查 GitHub Pages；任何跨 hostname 汇总都应显式标注。
+复盘时先比较正式域名的最近 30 天与此前 30 天，再单独检查 GitHub Pages；任何跨 hostname 汇总都应显式标注浏览器身份隔离限制。

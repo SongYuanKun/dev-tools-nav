@@ -231,7 +231,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
    http://your-site.com/?devtools2024=unlock
    ```
 
-2. **Logo 连击** ⭐⭐ - 点击页面 Logo 7 次（3 秒内）
+2. **Logo 连击** ⭐⭐ - Logo 相邻点击间隔不超过1.5秒，共7次
 
 3. **Konami 代码** ⭐⭐⭐⭐ - 输入 ↑↑↓↓←→←→BA
 
@@ -241,7 +241,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ### 更多信息
 
-解锁逻辑与持久化见源码 **`js/main.js`**（搜索「彩蛋」相关注释）。
+解锁逻辑与持久化见源码 **`js/easter-egg.js`**。
 
 解锁后会显示：
 - 🎊 撒花动画
