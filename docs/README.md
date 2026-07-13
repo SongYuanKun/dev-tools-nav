@@ -2,7 +2,7 @@
 
 | 文档 | 说明 |
 |------|------|
-| [../README.md](../README.md) | 仓库主说明；含 **「AI 专题规划」**、**在线工具**、**预览截图**更新步骤 |
+| [../README.md](../README.md) | 仓库主说明；含 **「AI 专题当前能力」**、**在线工具**、**预览截图**更新步骤 |
 | [../manual.md](../manual.md) | 简明使用说明（导航站 + 在线工具 + 截图 + 部署） |
 | [roadmap.md](./roadmap.md) | 唯一活跃产品路线图：阶段、状态、验收标准、指标与商业化约束 |
 | [deploy-1panel.md](./deploy-1panel.md) | 同步到 1Panel 静态站（tools.songyuankun.top）的步骤与 rsync 示例 |
