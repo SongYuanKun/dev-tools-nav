@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -115,6 +115,17 @@ test("generateSitemap is deterministic for the same Git commit", () => {
   const first = generateSitemap(process.cwd());
   const second = generateSitemap(process.cwd());
   assert.equal(second, first);
+});
+
+test("both deployment workflows generate sitemap before publishing", () => {
+  const pages = readFileSync(".github/workflows/deploy-pages.yml", "utf8");
+  const onePanel = readFileSync(".github/workflows/deploy-1panel-ssh.yml", "utf8");
+  const command = "node scripts/generate-sitemap.mjs";
+
+  assert.ok(pages.includes(command));
+  assert.ok(onePanel.includes(command));
+  assert.ok(pages.indexOf(command) < pages.indexOf("Assemble site"));
+  assert.ok(onePanel.indexOf(command) < onePanel.indexOf("Sync site to temp dir"));
 });
 
 test("module can be imported when argv has no script path", () => {

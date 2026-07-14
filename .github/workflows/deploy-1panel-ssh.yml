@@ -27,6 +27,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate dynamic sitemap
+        run: node scripts/generate-sitemap.mjs
+
       - name: Check deploy config
         run: |
           if [[ -z "$ONEPANEL_HOST" || -z "$ONEPANEL_USER" || -z "$ONEPANEL_PATH" || -z "$ONEPANEL_SSH_KEY" ]]; then
