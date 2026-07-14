@@ -37,6 +37,24 @@ SQL 只有读取语句。审计时还可在容器命令中设置 `PGOPTIONS="-c 
 
 基线适合回答“正式域名在当时的量级”，不能与另一个执行时刻的滚动窗口机械对比。按路径输出的 sessions 也不能跨行求和。
 
+## 2026-07-14 双站汇总验收
+
+以下结果由刷新命令在 PostgreSQL 强制只读事务中生成，用于验收 `hostname_summary` 与 `all_hosts_summary`。数值是执行时刻的滚动窗口快照，不替代后续月度复盘。
+
+| 窗口 | hostname | PV | Sessions | Visitors | Effective uses | Effective users |
+|---|---|---:|---:|---:|---:|---:|
+| 最近 7 天 | `songyuankun.github.io` | 72 | 66 | 66 | 0 | 0 |
+| 最近 7 天 | `tools.songyuankun.top` | 14 | 8 | 8 | 0 | 0 |
+| 最近 7 天 | `all` | 86 | 74 | 74 | 0 | 0 |
+| 最近 30 天 | `songyuankun.github.io` | 905 | 857 | 857 | 1 | 1 |
+| 最近 30 天 | `tools.songyuankun.top` | 98 | 28 | 28 | 8 | 1 |
+| 最近 30 天 | `all` | 1003 | 885 | 885 | 9 | 2 |
+| 此前 30 天 | `songyuankun.github.io` | 216 | 102 | 102 | 0 | 0 |
+| 此前 30 天 | `tools.songyuankun.top` | 414 | 26 | 26 | 0 | 0 |
+| 此前 30 天 | `all` | 630 | 124 | 124 | 0 | 0 |
+
+本次三个窗口中，PV 与 effective uses 的 `all` 值都等于两个 hostname 对应值之和，可加口径校验通过。Sessions、visitors 与 effective users 则由原始事件在 all-hosts 层重新去重：此前 30 天的两个分站 Sessions/Visitors 各自相加为 128，而 all-hosts 正确结果是 124。这个差异证明独立指标不能相加路径或分站汇总得到；未来复盘也必须保留同样的重新去重规则。
+
 ## 数据限制
 
 - 旧报告混合了正式域名和 GitHub Pages，且没有移除 `/dev-tools-nav` 前缀；旧总量不能直接作为新报表同比基线。

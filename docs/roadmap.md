@@ -36,7 +36,7 @@ last_verified: 2026-07-14
 | CI 在 push 和 pull request 上运行 | done | [测试工作流](../.github/workflows/test.yml) |
 | 三张截图在本地和 Actions 稳定生成 | done | [2026-07-14 Actions 成功记录](https://github.com/SongYuanKun/dev-tools-nav/actions/runs/29305839196)：首页、博客、JSON 三张 PNG 均生成并提交 |
 | 两个 hostname 的统计可分别查看 | done | [运营 SQL](../scripts/umami-operations-report.sql)、[运营快照](./analytics-insights.md) |
-| 合计值等于两个目标 hostname 的分站值之和 | in_progress | 每次运营复盘保存分站结果并校验合计，不以混合 PV 代替 |
+| 双 hostname 汇总口径完成验收 | done | [2026-07-14 双站汇总验收](./analytics-insights.md#2026-07-14-双站汇总验收)：三期快照逐项核对；可加指标校验分站和，独立指标坚持从原始事件重新去重 |
 | 关键活跃文档规则已纳入自动检查 | done | [文档一致性测试](../scripts/audit-tools.test.mjs)、[使用手册](../manual.md) |
 
 ## Phase 2：有效使用增长
