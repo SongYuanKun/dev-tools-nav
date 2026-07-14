@@ -30,6 +30,9 @@ function pageMeta(pathname) {
   if (pathname === "/") return { priority: 1, changefreq: "daily" };
   if (pathname.startsWith("/pages/blog/")) return { priority: 0.9, changefreq: "weekly" };
   if (pathname.startsWith("/pages/ai/")) return { priority: 0.85, changefreq: "weekly" };
+  if (pathname.startsWith("/pages/template.html?id=")) {
+    return { priority: 0.5, changefreq: "monthly" };
+  }
   if (pathname.startsWith("/pages/") || pathname.startsWith("/tools/")) {
     return { priority: 0.7, changefreq: "weekly" };
   }

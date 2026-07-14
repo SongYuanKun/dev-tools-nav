@@ -54,6 +54,17 @@ test("collectStaticUrls creates template URLs only for catalog tools", () => {
   }
 });
 
+test("collectStaticUrls keeps template URLs at monthly priority 0.5", () => {
+  const templates = collectStaticUrls(process.cwd())
+    .filter(({ loc }) => loc.includes("/pages/template.html?id="));
+
+  assert.ok(templates.length > 0);
+  for (const template of templates) {
+    assert.equal(template.changefreq, "monthly", template.loc);
+    assert.equal(template.priority, 0.5, template.loc);
+  }
+});
+
 test("collectStaticUrls resolves lastmod from each URL's content source", () => {
   const resolved = new Map();
   const urls = collectStaticUrls(process.cwd(), {
