@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -10,6 +11,7 @@ const DEFAULT_ROOT = join(MODULE_DIR, "..");
 const BASE_URL = "https://tools.songyuankun.top";
 const EXCLUDED_NAMES = new Set(["node_modules", ".git", ".github", "docs"]);
 const EXCLUDED_FILES = new Set(["template.html", "post.html"]);
+const LASTMOD_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 export function xmlEscape(value) {
   return String(value)
@@ -47,7 +49,7 @@ function walkHtml(root, relativePath = "") {
     if (stat.isDirectory()) {
       entries.push(...walkHtml(root, childRelativePath));
     } else if (name.endsWith(".html") && !EXCLUDED_FILES.has(name)) {
-      entries.push({ path: childRelativePath, mtime: stat.mtime });
+      entries.push({ path: childRelativePath });
     }
   }
   return entries;
@@ -69,43 +71,65 @@ function collectTemplateIds(root) {
     .map((tool) => tool.id);
 }
 
-export function collectStaticUrls(root, now = new Date()) {
-  const today = now.toISOString().split("T")[0];
+export function resolveGitLastmod(root, relativeSourcePath) {
+  try {
+    const value = execFileSync(
+      "git",
+      ["log", "-1", "--format=%cs", "--", relativeSourcePath],
+      { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    ).trim();
+    return LASTMOD_PATTERN.test(value) ? value : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export function collectStaticUrls(root, options = {}) {
+  const resolveLastmod = options.resolveLastmod
+    ?? ((sourcePath) => resolveGitLastmod(root, sourcePath));
   const urls = [];
 
-  const addUrl = (pathname, lastmod) => {
+  const addUrl = (pathname, sourcePath) => {
+    const candidate = resolveLastmod(sourcePath);
+    const lastmod = LASTMOD_PATTERN.test(candidate ?? "") ? candidate : undefined;
     const meta = pageMeta(pathname);
-    urls.push({ loc: `${BASE_URL}${pathname}`, lastmod, ...meta });
+    urls.push({
+      loc: `${BASE_URL}${pathname}`,
+      ...(lastmod ? { lastmod } : {}),
+      ...meta,
+    });
   };
 
-  addUrl("/", today);
+  addUrl("/", "index.html");
   for (const entry of walkHtml(root)) {
     const pathname = pathnameFor(entry.path);
-    if (pathname !== "/") addUrl(pathname, entry.mtime.toISOString().split("T")[0]);
+    if (pathname !== "/") addUrl(pathname, entry.path);
   }
   for (const id of collectTemplateIds(root)) {
-    addUrl(`/pages/template.html?id=${id}`, today);
+    addUrl(`/pages/template.html?id=${id}`, "data/tools.js");
   }
 
   return [...new Map(urls.map((url) => [url.loc, url])).values()]
     .sort((a, b) => a.loc.localeCompare(b.loc));
 }
 
-export function generateSitemap(root = DEFAULT_ROOT, now = new Date()) {
-  const urls = collectStaticUrls(root, now);
+export function renderSitemap(urls) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((url) => `  <url>
     <loc>${xmlEscape(url.loc)}</loc>
-    <lastmod>${xmlEscape(url.lastmod)}</lastmod>
-    <changefreq>${xmlEscape(url.changefreq)}</changefreq>
+${url.lastmod ? `    <lastmod>${xmlEscape(url.lastmod)}</lastmod>\n` : ""}    <changefreq>${xmlEscape(url.changefreq)}</changefreq>
     <priority>${xmlEscape(url.priority.toFixed(1))}</priority>
   </url>`).join("\n")}
 </urlset>`;
 }
 
+export function generateSitemap(root = DEFAULT_ROOT, options = {}) {
+  return renderSitemap(collectStaticUrls(root, options));
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const xml = generateSitemap(DEFAULT_ROOT);
-  writeFileSync(join(DEFAULT_ROOT, "sitemap.xml"), xml, "utf-8");
-  console.log(`sitemap.xml generated — ${collectStaticUrls(DEFAULT_ROOT).length} URLs`);
+  const urls = collectStaticUrls(DEFAULT_ROOT);
+  writeFileSync(join(DEFAULT_ROOT, "sitemap.xml"), renderSitemap(urls), "utf-8");
+  console.log(`sitemap.xml generated — ${urls.length} URLs`);
 }
