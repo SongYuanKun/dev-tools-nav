@@ -94,7 +94,7 @@ test("resolveGitLastmod returns the content source commit date", () => {
   const root = mkdtempSync(join(tmpdir(), "sitemap-git-"));
   try {
     writeFileSync(join(root, "index.html"), "<h1>fixture</h1>");
-    execFileSync("git", ["init"], { cwd: root });
+    execFileSync("git", ["init", "-b", "main"], { cwd: root });
     execFileSync("git", ["config", "user.name", "Sitemap Test"], { cwd: root });
     execFileSync("git", ["config", "user.email", "sitemap@example.test"], { cwd: root });
     execFileSync("git", ["add", "index.html"], { cwd: root });
