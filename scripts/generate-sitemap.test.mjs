@@ -20,7 +20,7 @@ test("xmlEscape escapes unsafe xml chars", () => {
 });
 
 test("collectStaticUrls excludes templates and returns sorted unique locations", () => {
-  const urls = collectStaticUrls(process.cwd(), new Date("2026-07-13T00:00:00Z"));
+  const urls = collectStaticUrls(process.cwd(), { resolveLastmod: () => undefined });
   const locations = urls.map((item) => item.loc);
 
   assert.ok(!locations.some((loc) => loc.endsWith("/pages/blog/post.html")));
@@ -115,7 +115,7 @@ test("resolveGitLastmod returns the content source commit date", () => {
 });
 
 test("generateSitemap XML-escapes query URLs", () => {
-  const xml = generateSitemap(process.cwd(), new Date("2026-07-13T00:00:00Z"));
+  const xml = generateSitemap(process.cwd(), { resolveLastmod: () => undefined });
   assert.match(xml, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
   assert.match(xml, /<\/urlset>$/);
   assert.match(xml, /template\.html\?id=/);
