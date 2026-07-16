@@ -622,6 +622,27 @@ export function mountJsonWorkbench(mount) {
   const preferences = safePreferences();
   let currentError = null;
   let diagnosticTimer;
+  let repairReturnFocus = null;
+
+  const bindDialogFocus = (dialog, returnFocus) => {
+    if (!dialog) return;
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key !== "Tab") return;
+      const focusable = [...dialog.querySelectorAll("button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [href], [tabindex]:not([tabindex='-1'])")]
+        .filter((node) => node.getClientRects().length > 0);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+    dialog.addEventListener("close", () => returnFocus()?.focus());
+  };
 
   const announce = (message, error = false) => {
     if (!feedback) return;
@@ -834,6 +855,7 @@ export function mountJsonWorkbench(mount) {
         }
         repairDialog.querySelector("[data-json-repair-summary]").textContent = differenceSummary(source(), result.text);
         repairDialog.dataset.repairedText = result.text;
+        repairReturnFocus = control;
         repairDialog.showModal();
       }
     });
@@ -847,8 +869,9 @@ export function mountJsonWorkbench(mount) {
   });
 
   const settingsTrigger = document.querySelector("[data-json-settings]");
+  bindDialogFocus(settingsDialog, () => settingsTrigger);
+  bindDialogFocus(repairDialog, () => repairReturnFocus);
   settingsTrigger?.addEventListener("click", () => settingsDialog.showModal());
-  settingsDialog?.addEventListener("close", () => settingsTrigger.focus());
   settingsDialog?.querySelectorAll("input").forEach((input) => {
     if (input.name === "indent") input.checked = Number(input.value) === preferences.indent;
     else input.checked = preferences[input.name] === true;

@@ -51,9 +51,11 @@ after(async () => {
   assert.deepEqual(errors, [], `browser emitted errors:\n${errors.join("\n")}`);
 });
 
-async function openWorkbench({ storageThrows = false, viewport } = {}) {
+async function openWorkbench({ colorScheme = "dark", reducedMotion = "no-preference", storageThrows = false, viewport } = {}) {
   const context = await browser.newContext({
+    colorScheme,
     permissions: ["clipboard-read", "clipboard-write"],
+    reducedMotion,
     ...(viewport ? { viewport } : {}),
   });
   const events = [];
@@ -99,6 +101,13 @@ async function openWorkbench({ storageThrows = false, viewport } = {}) {
   return { context, events, page };
 }
 
+async function selectTheme(page, theme) {
+  if (await page.locator("html").getAttribute("data-theme") !== theme) {
+    await page.locator("#themeToggle").click();
+  }
+  assert.equal(await page.locator("html").getAttribute("data-theme"), theme);
+}
+
 async function setDocument(page, value) {
   const editor = page.locator("[data-json-editor] .cm-content");
   await editor.click();
@@ -111,6 +120,55 @@ async function setDocument(page, value) {
 async function documentText(page) {
   const text = await page.locator("[data-json-editor] .cm-content").innerText();
   return text === "\n" ? "" : text;
+}
+
+async function assertVisibleFocus(control) {
+  const focus = await control.evaluate((node) => {
+    node.focus();
+    const target = node.closest(".cm-editor, .json-file-button") ?? node;
+    const style = getComputedStyle(target);
+    const pixel = (color) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      context.clearRect(0, 0, 1, 1);
+      context.fillStyle = color;
+      context.fillRect(0, 0, 1, 1);
+      return [...context.getImageData(0, 0, 1, 1).data];
+    };
+    const composite = (foreground, background) => {
+      const alpha = foreground[3] / 255;
+      return [
+        ...foreground.slice(0, 3).map((channel, index) => Math.round(channel * alpha + background[index] * (1 - alpha))),
+        255,
+      ];
+    };
+    const backgroundAt = (start) => {
+      const layers = [];
+      for (let current = start; current; current = current.parentElement) layers.push(pixel(getComputedStyle(current).backgroundColor));
+      return layers.reverse().reduce((background, layer) => composite(layer, background), [255, 255, 255, 255]);
+    };
+    const luminance = (color) => color.slice(0, 3)
+      .map((channel) => channel / 255)
+      .map((channel) => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
+      .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
+    const background = backgroundAt(Number.parseFloat(style.outlineOffset) < 0 ? target : target.parentElement);
+    const renderedOutline = composite(pixel(style.outlineColor), background);
+    const values = [luminance(background), luminance(renderedOutline)].sort((left, right) => right - left);
+    return {
+      active: document.activeElement === node || node.contains(document.activeElement),
+      contrast: (values[0] + 0.05) / (values[1] + 0.05),
+      outlineStyle: style.outlineStyle,
+      outlineWidth: style.outlineWidth,
+      boxShadow: style.boxShadow,
+    };
+  });
+  assert.equal(focus.active, true, `control did not receive focus: ${await control.getAttribute("aria-label") || await control.textContent()}`);
+  assert.ok(
+    (focus.outlineStyle !== "none" && Number.parseFloat(focus.outlineWidth) >= 2) || focus.boxShadow !== "none",
+    `missing visible focus: ${await control.getAttribute("aria-label") || await control.textContent()} ${JSON.stringify(focus)}`,
+  );
+  assert.ok(focus.contrast >= 3, `focus contrast below 3:1: ${await control.getAttribute("aria-label") || await control.textContent()} ${JSON.stringify(focus)}`);
 }
 
 test("core commands, shortcuts, undo, feedback, status, and private analytics work", async () => {
@@ -531,5 +589,227 @@ test("analysis modes remain usable without horizontal page overflow at 390px", a
   }));
   assert.equal(editorPositions.length, 2);
   assert.ok(editorPositions[1].top >= editorPositions[0].bottom - 1, JSON.stringify(editorPositions));
+  await context.close();
+});
+
+for (const scenario of [
+  { name: "desktop dark", viewport: { width: 1440, height: 900 }, theme: "dark" },
+  { name: "desktop light", viewport: { width: 1440, height: 900 }, theme: "light" },
+  { name: "mobile dark", viewport: { width: 390, height: 844 }, theme: "dark" },
+  { name: "mobile light", viewport: { width: 390, height: 844 }, theme: "light" },
+]) {
+  test(`${scenario.name} layout has no overflow traps and keeps primary controls usable`, async () => {
+    const { context, page } = await openWorkbench({ colorScheme: scenario.theme, viewport: scenario.viewport });
+    await selectTheme(page, scenario.theme);
+    await setDocument(page, JSON.stringify({ items: Array.from({ length: 40 }, (_, index) => ({ index, enabled: true })) }));
+    await page.getByRole("button", { name: /^格式化/ }).click();
+
+    const layout = await page.evaluate(() => {
+      const app = document.querySelector(".json-app");
+      return {
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+        appHasVerticalScroll: app.scrollHeight > app.clientHeight + 1,
+      };
+    });
+    assert.ok(layout.documentWidth <= layout.viewportWidth, JSON.stringify(layout));
+    assert.equal(layout.appHasVerticalScroll, false, JSON.stringify(layout));
+
+    for (const mode of ["格式化", "树视图", "JSONPath", "YAML", "对比"]) {
+      await page.getByRole("tab", { name: mode }).click();
+      if (mode === "YAML") await page.getByRole("button", { name: "JSON 转为 YAML" }).click();
+      const scrollState = await page.getByRole("tabpanel", { name: mode }).evaluate((panel) => {
+        const actualScrollers = [...panel.querySelectorAll("*")].filter((node) => {
+          const style = getComputedStyle(node);
+          return /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 1;
+        });
+        const nested = actualScrollers.filter((node) => actualScrollers.some((ancestor) => ancestor !== node && ancestor.contains(node)));
+        return {
+          documentWidth: document.documentElement.scrollWidth,
+          viewportWidth: document.documentElement.clientWidth,
+          panelScrolls: panel.scrollHeight > panel.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(panel).overflowY),
+          scrollers: actualScrollers.map((node) => node.className),
+          nested: nested.map((node) => node.className),
+        };
+      });
+      assert.ok(scrollState.documentWidth <= scrollState.viewportWidth, `${mode}: ${JSON.stringify(scrollState)}`);
+      assert.equal(scrollState.panelScrolls, false, `${mode}: ${JSON.stringify(scrollState)}`);
+      assert.deepEqual(scrollState.nested, [], `${mode}: ${JSON.stringify(scrollState)}`);
+    }
+
+    const primarySizes = await page.locator(".json-primary-actions .json-button").evaluateAll((controls) => controls.map((control) => {
+      const box = control.getBoundingClientRect();
+      return { height: box.height, width: box.width, name: control.textContent.trim() };
+    }));
+    assert.ok(primarySizes.every(({ height, width }) => height >= 44 && width >= 44), JSON.stringify(primarySizes));
+
+    const touchTargets = await page.locator("a[href]:visible, button:visible, input:visible, summary:visible, [tabindex='0']:visible").evaluateAll((controls) => {
+      const targets = [...new Set(controls.map((control) => control.closest("label") ?? control.closest(".cm-editor") ?? control))];
+      return targets.map((target) => {
+        const box = target.getBoundingClientRect();
+        return { height: box.height, width: box.width, name: target.getAttribute("aria-label") || target.textContent?.trim().slice(0, 40) };
+      });
+    });
+    assert.ok(touchTargets.every(({ height, width }) => height >= 44 && width >= 44), JSON.stringify(touchTargets.filter(({ height, width }) => height < 44 || width < 44)));
+
+    const focusable = page.locator(".json-app button:visible, .json-app input:visible, .json-app [tabindex='0']:visible");
+    for (let index = 0; index < await focusable.count(); index += 1) {
+      await assertVisibleFocus(focusable.nth(index));
+    }
+    await context.close();
+  });
+}
+
+test("interactive controls in every mode and dialog expose a strong focus indicator", async () => {
+  const { context, page } = await openWorkbench();
+  await setDocument(page, '{"items":[{"name":"one"}],"enabled":true}');
+  await page.getByRole("tab", { name: "树视图" }).click();
+  await page.getByRole("tab", { name: "JSONPath" }).click();
+  const query = page.getByLabel("JSONPath 表达式");
+  await query.fill("$.enabled");
+  await query.press("Enter");
+  for (const mode of ["格式化", "树视图", "JSONPath", "YAML", "对比"]) {
+    await page.getByRole("tab", { name: mode }).click();
+    const panel = page.getByRole("tabpanel", { name: mode });
+    const controls = panel.locator("button:visible, input:visible, .cm-content:visible, [tabindex='0']:visible");
+    for (let index = 0; index < await controls.count(); index += 1) await assertVisibleFocus(controls.nth(index));
+  }
+
+  await page.getByRole("button", { name: "设置" }).click();
+  const settingsControls = page.getByRole("dialog", { name: "JSON 设置" }).locator("button:visible, input:visible");
+  for (let index = 0; index < await settingsControls.count(); index += 1) await assertVisibleFocus(settingsControls.nth(index));
+  await page.keyboard.press("Escape");
+
+  await page.getByRole("tab", { name: "格式化" }).click();
+  await setDocument(page, "{'repair':true,}");
+  await page.getByRole("button", { name: "安全修复" }).click();
+  const repairControls = page.getByRole("dialog", { name: "确认安全修复" }).locator("button:visible");
+  for (let index = 0; index < await repairControls.count(); index += 1) await assertVisibleFocus(repairControls.nth(index));
+  await page.keyboard.press("Escape");
+
+  const pageControls = page.locator(".json-favorite:visible, .json-back:visible, .json-faq-list summary:visible, .json-related-grid a:visible");
+  for (let index = 0; index < await pageControls.count(); index += 1) await assertVisibleFocus(pageControls.nth(index));
+  const chromeControls = page.locator("body > header a:visible, body > header button:visible, body > footer a:visible");
+  for (let index = 0; index < await chromeControls.count(); index += 1) await assertVisibleFocus(chromeControls.nth(index));
+  await context.close();
+});
+
+test("semantic structure, names, tabs, live regions, and heading order are accessible", async () => {
+  const { context, page } = await openWorkbench();
+  const semantics = await page.evaluate(() => {
+    const ids = [...document.querySelectorAll("[id]")].map((node) => node.id);
+    const headings = [...document.querySelectorAll("h1,h2,h3,h4,h5,h6")].map((node) => Number(node.tagName.slice(1)));
+    const unnamed = [...document.querySelectorAll("button,input,select,textarea,a[href]")].filter((node) => {
+      if (node.matches('input[type="hidden"]')) return false;
+      const labelledBy = node.getAttribute("aria-labelledby");
+      const label = node.id && document.querySelector(`label[for="${CSS.escape(node.id)}"]`);
+      const wrappingLabel = node.closest("label")?.textContent?.trim();
+      return !(node.getAttribute("aria-label") || labelledBy || label || wrappingLabel || node.textContent?.trim() || node.getAttribute("title"));
+    }).map((node) => node.outerHTML);
+    return {
+      headings,
+      duplicateIds: ids.filter((id, index) => ids.indexOf(id) !== index),
+      unnamed,
+      mainCount: document.querySelectorAll("main").length,
+      navNames: [...document.querySelectorAll("nav")].map((node) => node.getAttribute("aria-label") || node.getAttribute("aria-labelledby") || ""),
+      footerCount: document.querySelectorAll("body > footer").length,
+      liveCount: document.querySelectorAll('[aria-live], [role="status"], [role="alert"]').length,
+    };
+  });
+  assert.equal(semantics.mainCount, 1);
+  assert.ok(semantics.navNames.length >= 1);
+  assert.ok(semantics.navNames.every(Boolean), JSON.stringify(semantics.navNames));
+  assert.equal(semantics.footerCount, 1);
+  assert.deepEqual(semantics.duplicateIds, []);
+  assert.deepEqual(semantics.unnamed, []);
+  assert.ok(semantics.liveCount >= 3);
+  assert.equal(semantics.headings[0], 1);
+  for (let index = 1; index < semantics.headings.length; index += 1) {
+    assert.ok(semantics.headings[index] <= semantics.headings[index - 1] + 1, `heading order: ${semantics.headings.join(",")}`);
+  }
+
+  const tabs = page.getByRole("tab");
+  for (let index = 0; index < await tabs.count(); index += 1) {
+    const tab = tabs.nth(index);
+    const panelId = await tab.getAttribute("aria-controls");
+    const tabId = await tab.getAttribute("id");
+    assert.ok(panelId && tabId);
+    assert.equal(await page.locator(`#${panelId}`).getAttribute("aria-labelledby"), tabId);
+  }
+  await context.close();
+});
+
+test("dialogs trap keyboard focus, close with Escape, and return focus to their triggers", async () => {
+  const { context, page } = await openWorkbench();
+  const trigger = page.getByRole("button", { name: "设置" });
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  const dialog = page.getByRole("dialog", { name: "JSON 设置" });
+  await dialog.waitFor({ state: "visible" });
+  for (let index = 0; index < 10; index += 1) {
+    await page.keyboard.press("Tab");
+    assert.equal(await page.evaluate(() => document.activeElement?.closest("dialog[open]") !== null), true);
+  }
+  await page.keyboard.press("Escape");
+  assert.equal(await trigger.evaluate((node) => document.activeElement === node), true);
+
+  await setDocument(page, "{'repair':true,}");
+  const repairTrigger = page.getByRole("button", { name: "安全修复" });
+  await repairTrigger.focus();
+  await page.keyboard.press("Enter");
+  await page.getByRole("dialog", { name: "确认安全修复" }).waitFor({ state: "visible" });
+  await page.keyboard.press("Escape");
+  assert.equal(await repairTrigger.evaluate((node) => document.activeElement === node), true);
+  await context.close();
+});
+
+test("keyboard-only core flow and reduced-motion preferences remain usable", async () => {
+  const { context, page } = await openWorkbench({ reducedMotion: "reduce" });
+  await page.locator(".cm-content").focus();
+  await page.keyboard.insertText('{"keyboard":true}');
+  await page.keyboard.press("Control+Enter");
+  assert.match(await documentText(page), /\n  "keyboard"/);
+  await page.getByRole("tab", { name: "格式化" }).focus();
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Enter");
+  assert.equal(await page.getByRole("tab", { name: "树视图" }).getAttribute("aria-selected"), "true");
+  const motion = await page.locator(".json-button").first().evaluate((node) => {
+    const style = getComputedStyle(node);
+    return { animation: style.animationDuration, transition: style.transitionDuration };
+  });
+  assert.ok(Number.parseFloat(motion.animation) <= 0.01, JSON.stringify(motion));
+  assert.ok(Number.parseFloat(motion.transition) <= 0.01, JSON.stringify(motion));
+  await context.close();
+});
+
+test("user content never enters request payloads or persistent storage", async () => {
+  const { context, page } = await openWorkbench();
+  const sentinel = "PRIVATE_SENTINEL_7f4cf1";
+  const requests = [];
+  page.on("request", (request) => requests.push({ url: request.url(), body: request.postData() ?? "" }));
+  await setDocument(page, JSON.stringify({ secret: sentinel }));
+  await page.getByRole("button", { name: /^格式化/ }).click();
+  await page.getByRole("button", { name: "校验" }).click();
+  await page.getByRole("tab", { name: "树视图" }).click();
+  await page.waitForTimeout(100);
+  const storage = await page.evaluate(() => JSON.stringify({ local: localStorage, session: sessionStorage }));
+  assert.doesNotMatch(storage, new RegExp(sentinel));
+  assert.ok(requests.every(({ url, body }) => !url.includes(sentinel) && !body.includes(sentinel)), JSON.stringify(requests));
+  await context.close();
+});
+
+test("representative large JSON formats successfully and reports diagnostic timing", async (t) => {
+  const { context, page } = await openWorkbench({ viewport: { width: 1440, height: 900 } });
+  const fixture = JSON.stringify({
+    rows: Array.from({ length: 8_000 }, (_, index) => ({ index, label: `item-${index}`, active: index % 2 === 0 })),
+  });
+  assert.ok(new TextEncoder().encode(fixture).byteLength < 1024 * 1024);
+  await setDocument(page, fixture);
+  const started = performance.now();
+  await page.getByRole("button", { name: /^格式化/ }).click();
+  const elapsed = Math.round(performance.now() - started);
+  t.diagnostic(`representative ${fixture.length}-character JSON formatted in ${elapsed} ms`);
+  assert.match(await documentText(page), /\n  "rows": \[/);
+  assert.match(await page.locator("[data-json-status]").textContent(), /JSON 有效|有效 JSON/);
   await context.close();
 });

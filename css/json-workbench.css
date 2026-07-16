@@ -8,6 +8,7 @@
   --jw-text: #e8eef8;
   --jw-muted: #8e9caf;
   --jw-accent: #7c9cff;
+  --jw-focus: #7c9cff;
   --jw-accent-strong: #9ab1ff;
   --jw-accent-soft: rgba(124, 156, 255, 0.14);
   --jw-good: #42d3a0;
@@ -26,6 +27,7 @@
   --jw-text: #152033;
   --jw-muted: #64748b;
   --jw-accent: #315ee7;
+  --jw-focus: #315ee7;
   --jw-accent-strong: #2449bb;
   --jw-accent-soft: rgba(49, 94, 231, 0.1);
   --jw-good: #087d5a;
@@ -57,6 +59,17 @@ body.json-page {
 .json-hero-copy { max-width: 780px; }
 .json-back { color: var(--jw-muted); font-size: 0.88rem; text-decoration: none; }
 .json-back:hover { color: var(--jw-text); }
+body.json-page .navbar a,
+body.json-page .navbar summary,
+body.json-page .theme-toggle,
+body.json-page .json-back,
+body.json-page .json-site-footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+}
 .json-eyebrow, .json-section-heading > p {
   margin: 22px 0 8px;
   color: var(--jw-accent-strong);
@@ -170,7 +183,7 @@ body.json-page {
 .json-button-danger { color: var(--jw-danger); }
 .json-button kbd { padding: 2px 5px; border: 1px solid rgba(255,255,255,.2); border-radius: 4px; background: rgba(0,0,0,.14); font: 0.68rem ui-monospace, monospace; }
 .json-file-button { position: relative; }
-.json-file-button:focus-within { outline: 3px solid color-mix(in srgb, var(--jw-accent) 56%, transparent); outline-offset: 3px; }
+.json-file-button:focus-within { outline: 3px solid var(--jw-focus); outline-offset: 3px; }
 .json-visually-hidden {
   position: absolute;
   width: 1px;
@@ -217,6 +230,12 @@ body.json-page {
 .json-editor-heading span:first-child { color: var(--jw-text); font-weight: 700; }
 .json-editor-shell { min-height: clamp(410px, 57vh, 710px); }
 .json-editor-shell .cm-editor { min-height: inherit; background: transparent; color: #dbe7f7; font-size: 14px; }
+.json-editor-shell .cm-editor:focus-within,
+.json-secondary-editor .cm-editor:focus-within,
+.json-merge-shell .cm-editor:focus-within {
+  outline: 3px solid var(--jw-focus);
+  outline-offset: -3px;
+}
 [data-theme="light"] .json-editor-shell .cm-editor { color: #1e293b; }
 .json-editor-shell .cm-scroller { min-height: inherit; padding: 12px 0 28px; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; line-height: 1.7; }
 .json-editor-shell .cm-gutters { border-right: 1px solid var(--jw-border); background: transparent; color: #536277; }
@@ -315,13 +334,41 @@ body.json-page {
 .json-related-grid b { position: absolute; top: 24px; right: 24px; color: var(--jw-accent-strong); }
 
 .json-button:focus-visible,
+.json-button:focus,
 .json-mode-tabs [role="tab"]:focus-visible,
+.json-mode-tabs [role="tab"]:focus,
 .json-error-locate:focus-visible,
+.json-error-locate:focus,
 .json-related-grid a:focus-visible,
+.json-related-grid a:focus,
 .json-faq-list summary:focus-visible,
+.json-faq-list summary:focus,
 .json-back:focus-visible,
-.json-mode-layout input:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--jw-accent) 56%, transparent);
+.json-back:focus,
+.json-mode-layout input:focus-visible,
+.json-mode-layout input:focus,
+.json-mode-layout pre:focus-visible,
+.json-mode-layout pre:focus,
+.json-favorite:focus-visible,
+.json-favorite:focus,
+.json-tree-toggle:focus-visible,
+.json-tree-toggle:focus,
+.json-tree-copy:focus-visible,
+.json-tree-copy:focus,
+.json-history-chip:focus-visible,
+.json-history-chip:focus,
+.json-dialog button:focus-visible,
+.json-dialog button:focus,
+.json-dialog input:focus-visible,
+.json-dialog input:focus {
+  outline: 3px solid var(--jw-focus);
+  outline-offset: 3px;
+}
+body.json-page .navbar a:focus,
+body.json-page .navbar summary:focus,
+body.json-page .theme-toggle:focus,
+body.json-page .json-site-footer a:focus {
+  outline: 3px solid var(--jw-focus);
   outline-offset: 3px;
 }
 
