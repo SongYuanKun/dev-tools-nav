@@ -588,6 +588,21 @@ function parseJsonPath(path) {
           index += 1;
           if (index >= source.length) break;
           const escaped = source[index];
+          if (escaped === "u") {
+            const hex = source.slice(index + 1, index + 5);
+            if (!/^[0-9a-fA-F]{4}$/.test(hex)) {
+              return fail("INVALID_PATH", "属性名中包含无效的 Unicode 转义", index - 1);
+            }
+            key += String.fromCharCode(Number.parseInt(hex, 16));
+            index += 5;
+            continue;
+          }
+          const simpleEscapes = { b: "\b", f: "\f", n: "\n", r: "\r", t: "\t", "/": "/" };
+          if (escaped in simpleEscapes) {
+            key += simpleEscapes[escaped];
+            index += 1;
+            continue;
+          }
           if (escaped !== quote && escaped !== "\\") {
             return fail("INVALID_PATH", "属性名中包含不支持的转义", index - 1);
           }

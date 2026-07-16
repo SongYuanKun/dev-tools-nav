@@ -3,18 +3,24 @@ import { isolateHistory } from "@codemirror/commands";
 import { Compartment, EditorState } from "@codemirror/state";
 import { json } from "@codemirror/lang-json";
 import { forceLinting, linter } from "@codemirror/lint";
+import { MergeView } from "@codemirror/merge";
 import {
+  diffJson,
   escapeUnicode,
   formatJson,
+  jsonToYaml,
   minifyJson,
   parseJson,
+  queryJsonPath,
   repairJson,
   sortJsonKeys,
   unescapeUnicode,
+  yamlToJson,
 } from "./json-core.mjs";
 
 const AUTO_DIAGNOSTIC_LIMIT = 1024 * 1024;
 const UPLOAD_LIMIT = 5 * 1024 * 1024;
+const TREE_NODE_LIMIT = 2_000;
 const PREFS_KEY = "json-workbench-prefs-v1";
 const SAMPLE = JSON.stringify({ project: "JSON 工作台", private: true, features: ["格式化", "校验", "本地处理"] });
 const DEFAULT_PREFS = Object.freeze({ indent: 2, relaxed: false, escapeUnicode: false });
@@ -99,6 +105,7 @@ function initializeModeTabs() {
       const active = panel.dataset.jsonPanel === mode;
       panel.hidden = !active;
     }
+    document.dispatchEvent(new CustomEvent("json-mode-change", { detail: { mode } }));
     if (focus) tab.focus();
   };
   tabs.forEach((tab, index) => {
@@ -115,6 +122,468 @@ function initializeModeTabs() {
     });
   });
   tablist.dataset.ready = "true";
+}
+
+function jsonPathFor(parent, key) {
+  if (parent === "$" && typeof key === "number") return `$[${key}]`;
+  if (typeof key === "number") return `${parent}[${key}]`;
+  if (/^[A-Za-z_$][\w$]*$/.test(key)) return `${parent}.${key}`;
+  return `${parent}[${JSON.stringify(key)}]`;
+}
+
+function valueType(value) {
+  if (Array.isArray(value)) return "array";
+  if (value === null) return "null";
+  return typeof value;
+}
+
+function renderTreePanel(panel, text, preferences, announce, force = false) {
+  panel.replaceChildren();
+  if (!force && bytes(text) > AUTO_DIAGNOSTIC_LIMIT) {
+    const empty = document.createElement("div");
+    empty.className = "json-empty-state";
+    const heading = document.createElement("h2");
+    heading.textContent = "数据超过 1 MiB";
+    const message = document.createElement("p");
+    message.textContent = "为避免页面卡顿，树视图需要手动生成。";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "json-button json-button-primary";
+    button.textContent = "仍然生成树";
+    button.addEventListener("click", () => renderTreePanel(panel, text, preferences, announce, true));
+    empty.append(heading, message, button);
+    panel.append(empty);
+    return;
+  }
+  const parsed = parseJson(text, { relaxed: preferences.relaxed });
+  if (!parsed.ok) {
+    const empty = document.createElement("div");
+    empty.className = "json-empty-state";
+    const heading = document.createElement("h2");
+    heading.textContent = "无法生成树";
+    const message = document.createElement("p");
+    message.textContent = `JSON 无效：${parsed.error.message}`;
+    empty.append(heading, message);
+    panel.append(empty);
+    return;
+  }
+
+  const setTreeExpanded = (toggle, group, expanded) => {
+    const path = toggle.dataset.jsonTreePath ?? "$";
+    toggle.setAttribute("aria-expanded", String(expanded));
+    toggle.textContent = expanded ? "▾" : "▸";
+    toggle.setAttribute("aria-label", `${expanded ? "折叠" : "展开"} ${path}`);
+    group.hidden = !expanded;
+  };
+  const toolbar = document.createElement("div");
+  toolbar.className = "json-mode-toolbar";
+  for (const [label, expanded] of [["全部展开", true], ["全部折叠", false]]) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "json-button";
+    button.textContent = label;
+    button.addEventListener("click", () => {
+      panel.querySelectorAll(".json-tree-toggle").forEach((toggle) => {
+        const group = document.getElementById(toggle.getAttribute("aria-controls"));
+        if (group) setTreeExpanded(toggle, group, expanded);
+      });
+    });
+    toolbar.append(button);
+  }
+
+  const tree = document.createElement("div");
+  tree.className = "json-tree";
+  tree.setAttribute("role", "tree");
+  tree.setAttribute("aria-label", "JSON 数据树");
+  let nodeId = 0;
+  let renderedNodes = 0;
+  let treeTruncated = false;
+  const makeNode = (key, value, path, root = false) => {
+    renderedNodes += 1;
+    const item = document.createElement("div");
+    item.className = "json-tree-item";
+    item.setAttribute("role", "treeitem");
+    const row = document.createElement("div");
+    row.className = "json-tree-row";
+    const type = valueType(value);
+    const container = type === "object" || type === "array";
+    let group;
+    if (container) {
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "json-tree-toggle";
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", `折叠 ${path}`);
+      toggle.dataset.jsonTreePath = path;
+      const id = `json-tree-group-${nodeId += 1}`;
+      toggle.setAttribute("aria-controls", id);
+      toggle.textContent = "▾";
+      toggle.addEventListener("click", () => {
+        const next = toggle.getAttribute("aria-expanded") !== "true";
+        setTreeExpanded(toggle, group, next);
+      });
+      row.append(toggle);
+      group = document.createElement("div");
+      group.id = id;
+      group.className = "json-tree-group";
+      group.setAttribute("role", "group");
+    }
+    const keyNode = document.createElement("span");
+    keyNode.className = "json-tree-key";
+    keyNode.textContent = root ? "$" : String(key);
+    const typeNode = document.createElement("span");
+    typeNode.className = `json-tree-type json-tree-type-${type}`;
+    const count = container ? ` · ${Object.keys(value).length} 项` : "";
+    typeNode.textContent = `${type}${count}`;
+    row.append(keyNode, typeNode);
+    if (!container) {
+      const valueNode = document.createElement("span");
+      valueNode.className = "json-tree-value";
+      valueNode.textContent = typeof value === "string" ? JSON.stringify(value) : String(value);
+      row.append(valueNode);
+    }
+    const copy = document.createElement("button");
+    copy.type = "button";
+    copy.className = "json-tree-copy";
+    copy.setAttribute("aria-label", `复制路径 ${path}`);
+    copy.textContent = path;
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(path);
+        announce(`已复制路径 ${path}`);
+      } catch {
+        announce("复制路径失败，请检查剪贴板权限。", true);
+      }
+    });
+    row.append(copy);
+    item.append(row);
+    if (container) {
+      const keys = Object.keys(value);
+      for (const childKey of keys) {
+        if (renderedNodes >= TREE_NODE_LIMIT) {
+          if (!treeTruncated) {
+            const notice = document.createElement("p");
+            notice.className = "json-mode-hint";
+            notice.setAttribute("role", "status");
+            notice.textContent = `为保证流畅，仅显示前 ${TREE_NODE_LIMIT} 个节点。`;
+            group.append(notice);
+            treeTruncated = true;
+          }
+          break;
+        }
+        const normalizedKey = Array.isArray(value) ? Number(childKey) : childKey;
+        group.append(makeNode(normalizedKey, value[childKey], jsonPathFor(path, normalizedKey)));
+      }
+      item.append(group);
+    }
+    return item;
+  };
+  tree.append(makeNode("$", parsed.value, "$", true));
+  panel.append(toolbar, tree);
+}
+
+function initializeJsonPathPanel(panel, source, preferences, announce) {
+  if (panel.dataset.ready === "true") return;
+  panel.replaceChildren();
+  panel.dataset.ready = "true";
+  const layout = document.createElement("div");
+  layout.className = "json-mode-layout jsonpath-layout";
+  const controls = document.createElement("div");
+  const label = document.createElement("label");
+  label.htmlFor = "jsonPathInput";
+  label.textContent = "JSONPath 表达式";
+  const input = document.createElement("input");
+  input.id = "jsonPathInput";
+  input.dataset.jsonpathInput = "";
+  input.value = "$";
+  input.autocomplete = "off";
+  const hint = document.createElement("p");
+  hint.className = "json-mode-hint";
+  hint.textContent = "支持对象键、数组下标和带引号的属性名；按 Enter 查询。";
+  const history = document.createElement("div");
+  history.className = "jsonpath-history";
+  history.setAttribute("aria-label", "本次会话查询历史");
+  controls.append(label, input, hint, history);
+
+  const output = document.createElement("div");
+  const heading = document.createElement("div");
+  heading.className = "json-mode-result-heading";
+  const count = document.createElement("strong");
+  count.dataset.jsonpathCount = "";
+  count.textContent = "尚未查询";
+  const copy = document.createElement("button");
+  copy.type = "button";
+  copy.className = "json-button";
+  copy.textContent = "复制结果";
+  copy.setAttribute("aria-label", "复制 JSONPath 结果");
+  copy.disabled = true;
+  heading.append(count, copy);
+  const error = document.createElement("p");
+  error.className = "json-mode-error";
+  error.dataset.jsonpathError = "";
+  error.setAttribute("role", "alert");
+  const results = document.createElement("pre");
+  results.dataset.jsonpathResults = "";
+  results.tabIndex = 0;
+  output.append(heading, error, results);
+  layout.append(controls, output);
+  panel.append(layout);
+
+  let resultText = "";
+  const queries = [];
+  const renderHistory = () => {
+    history.replaceChildren();
+    for (const query of queries) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "json-history-chip";
+      button.textContent = query;
+      button.setAttribute("aria-label", `历史：${query}`);
+      button.addEventListener("click", () => {
+        input.value = query;
+        input.focus();
+      });
+      history.append(button);
+    }
+  };
+  const run = () => {
+    const rawQuery = input.value;
+    const query = rawQuery.trim();
+    if (query && !queries.includes(query)) {
+      queries.unshift(query);
+      if (queries.length > 8) queries.pop();
+      renderHistory();
+    }
+    results.textContent = "";
+    resultText = "";
+    copy.disabled = true;
+    const parsed = parseJson(source(), { relaxed: preferences.relaxed });
+    if (!parsed.ok) {
+      count.textContent = "0 个匹配";
+      error.textContent = `主 JSON 无效：${parsed.error.message}`;
+      return;
+    }
+    const result = queryJsonPath(parsed.value, rawQuery);
+    if (!result.ok) {
+      count.textContent = "0 个匹配";
+      const position = typeof result.error.offset === "number" ? `（位置 ${result.error.offset + 1}）` : "";
+      error.textContent = `${result.error.message}${position}`;
+      return;
+    }
+    error.textContent = "";
+    resultText = JSON.stringify(result.value, null, 2);
+    count.textContent = "1 个匹配";
+    results.textContent = `${query}\n${resultText}`;
+    copy.disabled = false;
+  };
+  input.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    run();
+  });
+  copy.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(resultText);
+      announce("已复制 JSONPath 结果");
+    } catch {
+      announce("复制结果失败，请检查剪贴板权限。", true);
+    }
+  });
+}
+
+function initializeYamlPanel(panel, source, replaceDocument, preferences, announce) {
+  if (panel.dataset.ready === "true") return;
+  panel.replaceChildren();
+  panel.dataset.ready = "true";
+  const toolbar = document.createElement("div");
+  toolbar.className = "json-mode-toolbar";
+  const refresh = document.createElement("button");
+  refresh.type = "button";
+  refresh.className = "json-button json-button-primary";
+  refresh.textContent = "JSON → YAML";
+  refresh.setAttribute("aria-label", "JSON 转为 YAML");
+  const apply = document.createElement("button");
+  apply.type = "button";
+  apply.className = "json-button";
+  apply.textContent = "应用为 JSON";
+  apply.setAttribute("aria-label", "应用 YAML 为 JSON");
+  toolbar.append(refresh, apply);
+  const error = document.createElement("p");
+  error.className = "json-mode-error";
+  error.dataset.yamlError = "";
+  error.setAttribute("role", "alert");
+  const mount = document.createElement("div");
+  mount.className = "json-secondary-editor";
+  mount.dataset.yamlEditor = "";
+  panel.append(toolbar, error, mount);
+  const yamlView = new EditorView({
+    state: EditorState.create({
+      doc: "",
+      extensions: [basicSetup, EditorView.contentAttributes.of({ "aria-label": "YAML 编辑器" })],
+    }),
+    parent: mount,
+  });
+  const yamlSource = () => yamlView.state.doc.toString();
+  const replaceYaml = (text) => yamlView.dispatch({
+    changes: { from: 0, to: yamlView.state.doc.length, insert: text },
+    selection: { anchor: 0 },
+  });
+  refresh.addEventListener("click", () => {
+    const parsed = parseJson(source(), { relaxed: preferences.relaxed });
+    if (!parsed.ok) {
+      error.textContent = `JSON 转换失败：${parsed.error.message}`;
+      return;
+    }
+    replaceYaml(jsonToYaml(parsed.value));
+    error.textContent = "";
+    announce("已从主 JSON 刷新 YAML");
+  });
+  apply.addEventListener("click", () => {
+    const result = yamlToJson(yamlSource());
+    if (!result.ok) {
+      error.textContent = `YAML 转换失败：${result.error.message}`;
+      return;
+    }
+    replaceDocument(JSON.stringify(result.value, null, preferences.indent));
+    error.textContent = "";
+    announce("已将 YAML 应用为主 JSON");
+  });
+}
+
+function initializeDiffPanel(panel, source, replaceDocument, preferences, announce, force = false) {
+  if (panel.dataset.ready === "true") return;
+  panel.replaceChildren();
+  const initialSource = source();
+  if (!force && bytes(initialSource) > AUTO_DIAGNOSTIC_LIMIT) {
+    const empty = document.createElement("div");
+    empty.className = "json-empty-state";
+    const heading = document.createElement("h2");
+    heading.textContent = "数据超过 1 MiB";
+    const message = document.createElement("p");
+    message.textContent = "为避免页面卡顿，Diff 需要手动打开。";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "json-button json-button-primary";
+    button.textContent = "仍然打开对比";
+    button.addEventListener("click", () => initializeDiffPanel(panel, source, replaceDocument, preferences, announce, true));
+    empty.append(heading, message, button);
+    panel.append(empty);
+    return;
+  }
+  panel.dataset.ready = "true";
+  const toolbar = document.createElement("div");
+  toolbar.className = "json-mode-toolbar json-diff-toolbar";
+  const controls = [
+    ["以主 JSON 重置左侧", "重置左侧"],
+    ["应用左侧为主 JSON", "应用左侧"],
+    ["应用右侧为主 JSON", "应用右侧"],
+    ["更新结构差异汇总", "更新汇总"],
+  ].map(([label, text]) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `json-button${label.startsWith("以主") ? " json-button-primary" : ""}`;
+    button.setAttribute("aria-label", label);
+    button.textContent = text;
+    toolbar.append(button);
+    return button;
+  });
+  const summary = document.createElement("p");
+  summary.className = "json-diff-summary";
+  summary.dataset.diffSummary = "";
+  summary.setAttribute("role", "status");
+  const error = document.createElement("p");
+  error.className = "json-mode-error";
+  error.dataset.diffError = "";
+  error.setAttribute("role", "alert");
+  const mount = document.createElement("div");
+  mount.className = "json-merge-shell";
+  mount.dataset.diffMerge = "";
+  panel.append(toolbar, summary, error, mount);
+  let merge;
+  let diffTracked = false;
+  let summaryTimer;
+  const renderSummary = (forceSummary = false) => {
+    if (!merge) return;
+    const left = merge.a.state.doc.toString();
+    const right = merge.b.state.doc.toString();
+    if (!right.trim()) {
+      summary.textContent = "在右侧输入 JSON 后显示结构差异";
+      return;
+    }
+    if (!forceSummary && bytes(left) + bytes(right) > AUTO_DIAGNOSTIC_LIMIT) {
+      summary.textContent = "内容超过 1 MiB，已暂停自动结构汇总；可手动更新。";
+      return;
+    }
+    const leftParsed = parseJson(left, { relaxed: preferences.relaxed });
+    const rightParsed = parseJson(right, { relaxed: preferences.relaxed });
+    if (!leftParsed.ok || !rightParsed.ok) {
+      summary.textContent = "等待两侧有效 JSON";
+      return;
+    }
+    if (right.trim() && !diffTracked) {
+      track("diff");
+      diffTracked = true;
+    }
+    const changes = diffJson(leftParsed.value, rightParsed.value).changes;
+    if (changes.length === 0) {
+      summary.textContent = "无结构差异";
+      return;
+    }
+    const counts = { added: 0, removed: 0, changed: 0 };
+    changes.forEach((change) => { counts[change.type] += 1; });
+    summary.textContent = `新增 ${counts.added} · 删除 ${counts.removed} · 修改 ${counts.changed}`;
+  };
+  const scheduleSummary = () => {
+    clearTimeout(summaryTimer);
+    summaryTimer = setTimeout(renderSummary, 220);
+  };
+  const updateSummary = EditorView.updateListener.of((update) => {
+    if (update.docChanged) scheduleSummary();
+  });
+  merge = new MergeView({
+    a: {
+      doc: initialSource,
+      extensions: [basicSetup, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 左侧 JSON 编辑器" })],
+    },
+    b: {
+      doc: "",
+      extensions: [basicSetup, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 右侧 JSON 编辑器" })],
+    },
+    parent: mount,
+    orientation: "a-b",
+    gutter: true,
+    highlightChanges: true,
+    diffConfig: { scanLimit: 500, timeout: 100 },
+  });
+  merge.a.dom.dataset.diffLeft = "";
+  merge.b.dom.dataset.diffRight = "";
+  renderSummary();
+  const replaceSide = (view, text) => view.dispatch({
+    changes: { from: 0, to: view.state.doc.length, insert: text },
+    selection: { anchor: 0 },
+  });
+  controls[0].addEventListener("click", () => {
+    replaceSide(merge.a, source());
+    error.textContent = "";
+    announce("左侧已重置为当前主 JSON");
+  });
+  const applySide = (side, label) => {
+    const text = side.state.doc.toString();
+    const parsed = parseJson(text, { relaxed: preferences.relaxed });
+    if (!parsed.ok) {
+      error.textContent = `${label} JSON 无效：${parsed.error.message}`;
+      return;
+    }
+    replaceDocument(text);
+    error.textContent = "";
+    announce(`已应用${label}为主 JSON`);
+  };
+  controls[1].addEventListener("click", () => applySide(merge.a, "左侧"));
+  controls[2].addEventListener("click", () => applySide(merge.b, "右侧"));
+  controls[3].addEventListener("click", () => {
+    clearTimeout(summaryTimer);
+    renderSummary(true);
+  });
 }
 
 function updateSelectionStatus(view, node) {
@@ -228,6 +697,15 @@ export function mountJsonWorkbench(mount) {
     ],
   });
   const view = new EditorView({ state, parent: mount });
+
+  document.addEventListener("json-mode-change", (event) => {
+    const mode = event.detail?.mode;
+    const panel = document.querySelector(`[data-json-panel="${mode}"]`);
+    if (mode === "tree" && panel) renderTreePanel(panel, source(), preferences, announce);
+    if (mode === "jsonpath" && panel) initializeJsonPathPanel(panel, source, preferences, announce);
+    if (mode === "yaml" && panel) initializeYamlPanel(panel, source, replaceDocument, preferences, announce);
+    if (mode === "diff" && panel) initializeDiffPanel(panel, source, replaceDocument, preferences, announce);
+  });
 
   const transform = (action) => {
     const result = action === "format"
@@ -401,6 +879,11 @@ export function mountJsonWorkbench(mount) {
     } else if (event.key.toLowerCase() === "m" && event.shiftKey && (event.metaKey || event.ctrlKey) && !event.altKey) {
       event.preventDefault();
       transform("minify");
+    } else if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey) && !event.altKey) {
+      event.preventDefault();
+      const tab = document.querySelector('[role="tab"][data-json-mode="jsonpath"]');
+      tab?.click();
+      document.querySelector("[data-jsonpath-input]")?.focus();
     }
   });
 

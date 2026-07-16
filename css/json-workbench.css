@@ -237,6 +237,36 @@ body.json-page {
 .json-mode-layout > div { padding: 22px; border: 1px solid var(--jw-border); border-radius: 14px; background: var(--jw-surface); }
 .json-mode-layout label { display: block; margin-bottom: 10px; color: var(--jw-text); font-weight: 700; }
 .json-mode-layout input { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--jw-border-strong); border-radius: 8px; background: var(--jw-surface-2); color: var(--jw-text); font: 0.9rem ui-monospace, monospace; }
+.json-mode-toolbar { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--jw-border); background: var(--jw-surface-2); }
+.json-mode-hint { margin: 12px 0 0; color: var(--jw-muted); font-size: .8rem; line-height: 1.6; }
+.json-mode-error { min-height: 24px; margin: 0; padding: 10px 20px; color: var(--jw-danger); font-size: .82rem; overflow-wrap: anywhere; }
+.json-mode-result-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; color: var(--jw-text); }
+.json-mode-layout pre { min-height: 260px; margin: 0; padding: 16px; overflow: auto; border: 1px solid var(--jw-border); border-radius: 10px; background: #080d15; color: #dbe7f7; font: .86rem/1.65 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+[data-theme="light"] .json-mode-layout pre { background: #f8fafc; color: #1e293b; }
+.jsonpath-history { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.json-history-chip { min-height: 44px; max-width: 100%; padding: 0 10px; overflow: hidden; border: 1px solid var(--jw-border); border-radius: 999px; background: var(--jw-surface-2); color: var(--jw-muted); font: .74rem ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+
+.json-tree { padding: 14px 18px 26px; overflow: auto; color: var(--jw-text); font: .82rem/1.55 ui-monospace, monospace; }
+.json-tree-item { min-width: max-content; }
+.json-tree-group { margin-left: 20px; border-left: 1px solid var(--jw-border); padding-left: 8px; }
+.json-tree-row { display: flex; align-items: center; gap: 9px; min-height: 38px; border-radius: 7px; }
+.json-tree-row:hover { background: var(--jw-accent-soft); }
+.json-tree-toggle, .json-tree-copy { border: 0; background: transparent; color: var(--jw-muted); cursor: pointer; }
+.json-tree-toggle { width: 44px; min-width: 44px; min-height: 44px; font-size: 1rem; }
+.json-tree-key { color: var(--jw-accent-strong); font-weight: 700; }
+.json-tree-type { padding: 2px 7px; border: 1px solid var(--jw-border); border-radius: 999px; color: var(--jw-muted); font-size: .68rem; }
+.json-tree-value { max-width: min(48vw, 620px); overflow: hidden; color: #9fd5b3; text-overflow: ellipsis; white-space: nowrap; }
+[data-theme="light"] .json-tree-value { color: #166534; }
+.json-tree-copy { min-height: 44px; padding: 0 8px; opacity: .72; font: .68rem ui-monospace, monospace; }
+.json-tree-copy:hover { opacity: 1; color: var(--jw-accent-strong); }
+
+.json-secondary-editor, .json-merge-shell { min-height: clamp(380px, 52vh, 650px); }
+.json-secondary-editor .cm-editor, .json-merge-shell .cm-editor { min-height: inherit; background: #080d15; color: #dbe7f7; font-size: 13px; }
+[data-theme="light"] .json-secondary-editor .cm-editor, [data-theme="light"] .json-merge-shell .cm-editor { background: #fbfcff; color: #1e293b; }
+.json-secondary-editor .cm-scroller, .json-merge-shell .cm-scroller { min-height: inherit; font-family: "SFMono-Regular", Consolas, monospace; line-height: 1.65; }
+.json-merge-shell .cm-mergeView { height: clamp(380px, 52vh, 650px); overflow: auto; }
+.json-merge-shell .cm-mergeViewEditor { min-width: 0; }
+.json-diff-summary { margin: 0; padding: 12px 20px; border-bottom: 1px solid var(--jw-border); color: var(--jw-text); font: .8rem ui-monospace, monospace; }
 .json-statusbar { min-height: 44px; border-top: 1px solid var(--jw-border); border-bottom: 0; background: var(--jw-surface-2); color: var(--jw-muted); font: 0.72rem ui-monospace, SFMono-Regular, Menlo, monospace; }
 .json-statusbar > span { white-space: nowrap; }
 .json-validity { display: inline-flex; align-items: center; gap: 7px; margin-right: auto; color: var(--jw-text); }
@@ -328,6 +358,17 @@ body.json-page {
   .json-guide, .json-faq, .json-related { padding-top: 64px; }
   .json-guide-grid li, .json-related-grid a { padding: 20px; }
   .json-mode-layout { padding: 12px; }
+  .json-mode-layout > div { min-width: 0; padding: 16px; }
+  .json-mode-toolbar { padding: 12px; }
+  .json-tree { padding-inline: 10px; }
+  .json-tree-item { min-width: 0; }
+  .json-tree-row { flex-wrap: wrap; }
+  .json-tree-value { max-width: calc(100vw - 100px); overflow-wrap: anywhere; white-space: normal; }
+  .json-tree-copy { max-width: calc(100vw - 90px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .json-merge-shell .cm-mergeViewEditors { display: block; }
+  .json-merge-shell .cm-mergeViewEditor { width: 100%; }
+  .json-merge-shell .cm-editor, .json-merge-shell .cm-scroller { min-height: 260px; }
+  .json-merge-shell .cm-mergeView { height: min(660px, 78vh); }
 }
 
 @media (prefers-reduced-motion: reduce) {

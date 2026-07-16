@@ -311,6 +311,15 @@ test("queryJsonPath rejects prototype-pollution segments", () => {
   }
 });
 
+test("queryJsonPath accepts JSON string escapes in quoted property names", () => {
+  const value = { "line\nbreak\t😀": "found" };
+  assert.deepEqual(queryJsonPath(value, String.raw`$["line\nbreak\t\ud83d\ude00"]`), {
+    ok: true,
+    value: "found",
+    path: ["line\nbreak\t😀"],
+  });
+});
+
 test("queryJsonPath reports offsets in the untrimmed original path", () => {
   const malformedPath = "  $.users[*]  ";
   const malformed = queryJsonPath({}, malformedPath);
