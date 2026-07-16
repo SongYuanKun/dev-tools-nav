@@ -122,6 +122,13 @@ async function documentText(page) {
   return text === "\n" ? "" : text;
 }
 
+async function waitForDocumentText(page, expected) {
+  await page.waitForFunction((value) => {
+    const text = document.querySelector("[data-json-editor] .cm-content")?.innerText ?? "";
+    return (text === "\n" ? "" : text) === value;
+  }, expected);
+}
+
 async function assertVisibleFocus(control) {
   const focus = await control.evaluate((node) => {
     node.focus();
@@ -300,14 +307,18 @@ test("valid uploads load locally, oversized uploads are rejected, and download i
   await writeFile(invalidYaml, "broken: [\n");
   const upload = page.locator('[data-json-action="upload"]');
   await upload.setInputFiles(valid);
+  await waitForDocumentText(page, '{"uploaded":true}');
   assert.equal(await documentText(page), '{"uploaded":true}');
   await upload.setInputFiles(oversized);
   assert.match(await page.locator("[data-json-feedback]").textContent(), /不能超过 5 MiB/);
   assert.equal(await documentText(page), '{"uploaded":true}');
   await upload.setInputFiles(yaml);
-  assert.equal(await documentText(page), '{\n  "uploaded": true,\n  "items": [\n    1\n  ]\n}');
+  const convertedYaml = '{\n  "uploaded": true,\n  "items": [\n    1\n  ]\n}';
+  await waitForDocumentText(page, convertedYaml);
+  assert.equal(await documentText(page), convertedYaml);
   const beforeInvalidYaml = await documentText(page);
   await upload.setInputFiles(invalidYaml);
+  await page.locator("[data-json-feedback]").filter({ hasText: /YAML.+失败|无法转换 YAML/ }).waitFor();
   assert.equal(await documentText(page), beforeInvalidYaml);
   assert.match(await page.locator("[data-json-feedback]").textContent(), /YAML.+失败|无法转换 YAML/);
   const downloadPromise = page.waitForEvent("download");
