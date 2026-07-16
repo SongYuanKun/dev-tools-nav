@@ -27,8 +27,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate dynamic sitemap
-        run: node scripts/generate-sitemap.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
 
       - name: Check deploy config
         run: |

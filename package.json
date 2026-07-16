@@ -6,12 +6,22 @@
     "audit:tools": "node scripts/audit-tools.mjs",
     "capture-screenshots": "node scripts/capture-screenshots.mjs",
     "generate-sitemap": "node scripts/generate-sitemap.mjs",
-    "build": "npm run generate-sitemap"
+    "build:json": "rollup --config",
+    "build": "npm run build:json && node scripts/build-blog.mjs && npm run generate-sitemap",
+    "check:generated": "npm run build && node scripts/check-generated.mjs"
   },
   "devDependencies": {
-    "playwright": "^1.51.0"
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^1.0.0",
+    "playwright": "^1.51.0",
+    "rollup": "^4.62.2"
   },
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.2",
+    "@codemirror/lint": "^6.9.7",
+    "@codemirror/merge": "^6.12.2",
+    "@codemirror/state": "^6.7.1",
+    "codemirror": "^6.0.2",
     "yaml": "^2.9.0"
   }
 }

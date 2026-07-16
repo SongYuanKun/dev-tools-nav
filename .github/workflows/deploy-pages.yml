@@ -34,11 +34,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build blog posts from Markdown
-        run: node scripts/build-blog.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
 
-      - name: Generate dynamic sitemap
-        run: node scripts/generate-sitemap.mjs
+      - run: npm ci
+
+      - run: npm run build
 
       - name: Generate AI topic changelog
         run: node scripts/generate-ai-changelog.mjs
@@ -60,6 +63,7 @@ jobs:
             --exclude='content' \
             --exclude='package.json' \
             --exclude='package-lock.json' \
+            --exclude='node_modules' \
             --exclude='deploy.sh' \
             --exclude='logs' \
             --exclude='*.bak' \

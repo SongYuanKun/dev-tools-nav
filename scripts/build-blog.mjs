@@ -16,7 +16,7 @@
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs'
 import { join, basename } from 'path'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -393,13 +393,19 @@ function renderPage(meta, slug, contentHtml) {
 }
 
 // ── 主流程 ────────────────────────────────────────────────────────────────────
+export function selectBlogMarkdownFiles(files) {
+  return files
+    .filter(file => file.endsWith('.md') && file.toLowerCase() !== 'readme.md')
+    .sort()
+}
+
 function main() {
   if (!existsSync(CONTENT_DIR)) {
     console.log('content/blog/ not found, skipping blog build.')
     return
   }
 
-  const files = readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md'))
+  const files = selectBlogMarkdownFiles(readdirSync(CONTENT_DIR))
   if (!files.length) {
     console.log('No markdown files in content/blog/, skipping.')
     return
@@ -423,4 +429,6 @@ function main() {
   console.log(`blog build: ${count} post(s) generated.`)
 }
 
-main()
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main()
+}

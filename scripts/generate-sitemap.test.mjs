@@ -131,8 +131,10 @@ test("generateSitemap is deterministic for the same Git commit", () => {
 test("both deployment workflows generate sitemap before publishing", () => {
   const pages = readFileSync(".github/workflows/deploy-pages.yml", "utf8");
   const onePanel = readFileSync(".github/workflows/deploy-1panel-ssh.yml", "utf8");
-  const command = "node scripts/generate-sitemap.mjs";
+  const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
+  const command = "npm run build";
 
+  assert.match(packageJson.scripts.build, /npm run generate-sitemap/);
   assert.ok(pages.includes(command));
   assert.ok(onePanel.includes(command));
   assert.ok(pages.indexOf(command) < pages.indexOf("Assemble site"));
