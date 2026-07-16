@@ -47,6 +47,13 @@ python3 -m http.server 8080
 
 Umami 自定义事件在后台以**中文**展示（如「工具使用」「导航点击」），详见 `js/umami-labels.js`。
 
+### 技术博客维护
+
+- 站内原创正文只编辑 `content/blog/*.md`；Frontmatter 字段和约束见 `content/blog/README.md`。
+- 编辑后执行 `npm run build`，生成文章 HTML、博客索引、manifest、列表数据、Atom Feed 与 sitemap。
+- 不要直接维护生成文件；提交前执行 `npm run check:generated`，确认生成物与 Markdown 源一致。
+- CSDN 外部文章由 `scripts/sync-csdn-rss.py` 同步，只用于博客索引，不进入站内 Atom Feed。
+
 ## 4. 预览截图
 
 README 与小红书稿使用的截图位于 `assets/`：
@@ -96,3 +103,4 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 - 语法检查：`node --check js/*-tool.js js/tool-chrome.js` 通过。
 - 页面冒烟：本地静态服务下 `curl -I /index.html` 返回 `200`。
 - JSON 工作台：非法 JSON 可定位行列；宽松模式支持注释/尾逗号；树视图、JSONPath、YAML 与 Diff 均在浏览器本地运行。
+- 博客流水线：`npm run build` 与 `npm run check:generated` 通过；文章集合和日期由 `content/blog/*.md` 统一生成。
