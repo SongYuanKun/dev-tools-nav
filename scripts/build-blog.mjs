@@ -8,14 +8,14 @@
  *   title       文章标题（必填）
  *   date        发布日期 YYYY-MM-DD（必填）
  *   description SEO 描述（必填）
- *   keywords    SEO 关键词，逗号分隔
- *   tags        标签数组 [tag1, tag2]
- *   kicker      文章小标题，如「自托管首发 · 独立开发」
- *   section     Schema.org articleSection
- *   slug        自定义 URL slug（可选，默认为文件名去掉 .md）
+ *   category    文章分类（必填）
+ *   tags        非空标签数组 [tag1, tag2]（必填）
+ *   slug        仅含小写字母、数字和连字符（必填）
+ *   updated     修改日期 YYYY-MM-DD（可选）
+ *   keywords、kicker、featured（可选）
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs'
-import { join, basename } from 'path'
+import { join } from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -34,45 +34,203 @@ function esc(s) {
 }
 
 // ── Frontmatter 解析 ───────────────────────────────────────────────────────────
-function parseFrontmatter(raw) {
+const REQUIRED_FRONTMATTER_FIELDS = [
+  'title',
+  'date',
+  'description',
+  'category',
+  'tags',
+  'slug',
+]
+const OPTIONAL_FRONTMATTER_FIELDS = [
+  'updated',
+  'keywords',
+  'kicker',
+  'featured',
+]
+const ALLOWED_FRONTMATTER_FIELDS = new Set([
+  ...REQUIRED_FRONTMATTER_FIELDS,
+  ...OPTIONAL_FRONTMATTER_FIELDS,
+])
+
+function sourceError(sourceFile, message) {
+  return new Error(`${sourceFile}: ${message}`)
+}
+
+function parseScalar(value, sourceFile, field) {
+  if (!value) return ''
+  const quote = value[0]
+  if (quote === '"' || quote === "'") {
+    if (value.at(-1) !== quote) {
+      throw sourceError(sourceFile, `unterminated quoted value for "${field}"`)
+    }
+    return value.slice(1, -1)
+  }
+  return value
+}
+
+function parseFrontmatter(raw, sourceFile) {
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
-  if (!m) return { meta: {}, body: raw }
+  if (!m) throw sourceError(sourceFile, 'frontmatter is required')
 
   const meta = {}
   for (const line of m[1].split(/\r?\n/)) {
     const sep = line.indexOf(':')
-    if (sep < 0) continue
+    if (sep < 1) throw sourceError(sourceFile, `invalid frontmatter line "${line}"`)
     const key = line.slice(0, sep).trim()
     const val = line.slice(sep + 1).trim()
+    if (!ALLOWED_FRONTMATTER_FIELDS.has(key)) {
+      throw sourceError(sourceFile, `unknown frontmatter field "${key}"`)
+    }
+    if (Object.hasOwn(meta, key)) {
+      throw sourceError(sourceFile, `duplicate frontmatter field "${key}"`)
+    }
     if (key === 'tags') {
-      const inner = val.match(/^\[(.+)\]$/)
+      const inner = val.match(/^\[(.*)\]$/)
       meta.tags = inner
-        ? inner[1].split(',').map(t => t.trim().replace(/^["']|["']$/g, ''))
-        : val.split(',').map(t => t.trim().replace(/^["']|["']$/g, ''))
+        ? inner[1].split(',').map(tag => parseScalar(tag.trim(), sourceFile, key))
+        : null
     } else {
-      meta[key] = val.replace(/^["']|["']$/g, '')
+      meta[key] = parseScalar(val, sourceFile, key)
     }
   }
   return { meta, body: m[2] }
 }
 
+export function parseBlogSource(sourceFile, raw, { today } = {}) {
+  const { meta, body } = parseFrontmatter(raw, sourceFile)
+  for (const field of REQUIRED_FRONTMATTER_FIELDS) {
+    const value = meta[field]
+    if (
+      value === undefined ||
+      (typeof value === 'string' && !value.trim()) ||
+      (Array.isArray(value) && !value.length)
+    ) {
+      throw sourceError(sourceFile, `missing required field "${field}"`)
+    }
+  }
+
+  if (!Array.isArray(meta.tags) || meta.tags.some(tag => !tag.trim())) {
+    throw sourceError(sourceFile, 'tags must be a non-empty array of non-empty strings')
+  }
+
+  const buildDate = today || new Date().toISOString().slice(0, 10)
+  for (const field of ['date', 'updated']) {
+    const value = meta[field]
+    if (value === undefined) continue
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+    const parsed = match && new Date(`${value}T00:00:00Z`)
+    if (
+      !match ||
+      Number.isNaN(parsed.getTime()) ||
+      parsed.getUTCFullYear() !== Number(match[1]) ||
+      parsed.getUTCMonth() + 1 !== Number(match[2]) ||
+      parsed.getUTCDate() !== Number(match[3])
+    ) {
+      throw sourceError(sourceFile, `invalid ${field} "${value}"`)
+    }
+    if (value > buildDate) {
+      throw sourceError(sourceFile, `${field} cannot be in the future`)
+    }
+  }
+
+  if (meta.updated && meta.updated < meta.date) {
+    throw sourceError(sourceFile, 'updated cannot be earlier than date')
+  }
+
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(meta.slug)) {
+    throw sourceError(sourceFile, `invalid slug "${meta.slug}"`)
+  }
+  if (meta.featured !== undefined && !['true', 'false'].includes(meta.featured)) {
+    throw sourceError(sourceFile, 'featured must be true or false')
+  }
+
+  return {
+    sourceFile,
+    title: meta.title,
+    date: meta.date,
+    updated: meta.updated || meta.date,
+    description: meta.description,
+    category: meta.category,
+    tags: meta.tags,
+    slug: meta.slug,
+    keywords: meta.keywords || '',
+    kicker: meta.kicker || '',
+    featured: meta.featured === 'true',
+    body: body.trim(),
+  }
+}
+
+export function buildBlogContentModel(sources, options = {}) {
+  const posts = sources.map(({ sourceFile, raw }) =>
+    parseBlogSource(sourceFile, raw, options))
+  const slugs = new Map()
+
+  for (const post of posts) {
+    const previousSource = slugs.get(post.slug)
+    if (previousSource) {
+      throw new Error(
+        `duplicate slug "${post.slug}" in ${previousSource} and ${post.sourceFile}`,
+      )
+    }
+    slugs.set(post.slug, post.sourceFile)
+  }
+
+  return posts.sort((left, right) => {
+    if (left.date !== right.date) return left.date < right.date ? 1 : -1
+    if (left.slug === right.slug) return 0
+    return left.slug < right.slug ? -1 : 1
+  })
+}
+
 // ── 行内格式 ──────────────────────────────────────────────────────────────────
-function inline(text) {
-  return text
+function isSafeLinkDestination(href) {
+  return /^(?:https?:\/\/|mailto:|\/(?!\/)|\.\.?\/|#|\?)/i.test(href)
+}
+
+function formatInlineText(text) {
+  return esc(text)
     .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*\n]+?)\*/g, '<em>$1</em>')
     .replace(/~~(.+?)~~/g, '<del>$1</del>')
-    .replace(/`([^`]+)`/g, (_, c) => `<code>${esc(c)}</code>`)
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) =>
-      `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`)
+}
+
+function inline(text) {
+  const protectedMarkup = []
+  let rendered = String(text).replace(/`([^`]+)`/g, (_, code) => {
+    const index = protectedMarkup.length
+    protectedMarkup.push(`<code>${esc(code)}</code>`)
+    return `\x00INLINE${index}\x00`
+  })
+
+  rendered = rendered.replace(
+    /\[([^\]]+)\]\(([^()\s]*(?:\([^()]*\)[^()\s]*)*)\)/g,
+    (_, label, href) => {
+      const destination = href.trim()
+      const safeLabel = formatInlineText(label)
+      const markup = isSafeLinkDestination(destination)
+        ? `<a href="${esc(destination)}" target="_blank" rel="noopener noreferrer">${safeLabel}</a>`
+        : safeLabel
+      const index = protectedMarkup.length
+      protectedMarkup.push(markup)
+      return `\x00INLINE${index}\x00`
+    },
+  )
+
+  rendered = formatInlineText(rendered)
+
+  for (let index = protectedMarkup.length - 1; index >= 0; index--) {
+    rendered = rendered.replace(`\x00INLINE${index}\x00`, protectedMarkup[index])
+  }
+  return rendered
 }
 
 // ── Markdown 块级解析 → HTML ────────────────────────────────────────────────────
-function mdToHtml(md) {
+export function renderMarkdown(md) {
   // 保护代码块
   const codeBlocks = []
-  md = md.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) => {
+  md = md.replace(/```(\w*)\r?\n?([\s\S]*?)```/g, (_, lang, code) => {
     const i = codeBlocks.length
     codeBlocks.push(
       `<pre><code${lang ? ` class="language-${esc(lang)}"` : ''}>` +
@@ -411,22 +569,18 @@ function main() {
     return
   }
 
-  let count = 0
-  for (const file of files) {
-    const raw = readFileSync(join(CONTENT_DIR, file), 'utf8')
-    const { meta, body } = parseFrontmatter(raw)
-    if (!meta.title) {
-      console.warn(`  ⚠ ${file}: missing 'title' in frontmatter, skipping.`)
-      continue
-    }
-    const slug = meta.slug || basename(file, '.md')
-    const contentHtml = mdToHtml(body)
-    const html = renderPage(meta, slug, contentHtml)
-    writeFileSync(join(OUTPUT_DIR, `${slug}.html`), html, 'utf8')
-    console.log(`  ✓ ${file} → pages/blog/${slug}.html`)
-    count++
+  const posts = buildBlogContentModel(files.map(sourceFile => ({
+    sourceFile,
+    raw: readFileSync(join(CONTENT_DIR, sourceFile), 'utf8'),
+  })))
+
+  for (const post of posts) {
+    const contentHtml = renderMarkdown(post.body)
+    const html = renderPage({ ...post, section: post.category }, post.slug, contentHtml)
+    writeFileSync(join(OUTPUT_DIR, `${post.slug}.html`), html, 'utf8')
+    console.log(`  ✓ ${post.sourceFile} → pages/blog/${post.slug}.html`)
   }
-  console.log(`blog build: ${count} post(s) generated.`)
+  console.log(`blog build: ${posts.length} post(s) generated.`)
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

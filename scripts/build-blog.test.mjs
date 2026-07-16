@@ -1,11 +1,128 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { selectBlogMarkdownFiles } from "./build-blog.mjs";
+import {
+  buildBlogContentModel,
+  parseBlogSource,
+  renderMarkdown,
+  selectBlogMarkdownFiles,
+} from "./build-blog.mjs";
+
+const VALID_FRONTMATTER = `---
+title: A useful post
+date: 2026-03-01
+description: A precise description
+category: Engineering
+tags: [Node.js, Testing]
+slug: useful-post
+---
+
+Post body.`;
 
 test("blog source selection excludes README documentation", () => {
   assert.deepEqual(
     selectBlogMarkdownFiles(["z-post.md", "README.md", "asset.txt", "a-post.md"]),
     ["a-post.md", "z-post.md"],
   );
+});
+
+test("content model sorts newest first with a stable slug tie-breaker", () => {
+  const sourceFor = (slug, date) => ({
+    sourceFile: `${slug}.md`,
+    raw: VALID_FRONTMATTER
+      .replace("date: 2026-03-01", `date: ${date}`)
+      .replace("slug: useful-post", `slug: ${slug}`),
+  });
+
+  const posts = buildBlogContentModel([
+    sourceFor("z-last", "2026-03-01"),
+    sourceFor("newest", "2026-04-01"),
+    sourceFor("a-first", "2026-03-01"),
+  ], { today: "2026-07-16" });
+
+  assert.deepEqual(posts.map(post => post.slug), ["newest", "a-first", "z-last"]);
+});
+
+test("content model rejects duplicate output slugs", () => {
+  assert.throws(
+    () => buildBlogContentModel([
+      { sourceFile: "first.md", raw: VALID_FRONTMATTER },
+      { sourceFile: "second.md", raw: VALID_FRONTMATTER },
+    ], { today: "2026-07-16" }),
+    /duplicate slug "useful-post" in first\.md and second\.md/,
+  );
+});
+
+test("valid blog source becomes a normalized content record", () => {
+  const post = parseBlogSource("source.md", VALID_FRONTMATTER, {
+    today: "2026-07-16",
+  });
+
+  assert.deepEqual(post, {
+    sourceFile: "source.md",
+    title: "A useful post",
+    date: "2026-03-01",
+    updated: "2026-03-01",
+    description: "A precise description",
+    category: "Engineering",
+    tags: ["Node.js", "Testing"],
+    slug: "useful-post",
+    keywords: "",
+    kicker: "",
+    featured: false,
+    body: "Post body.",
+  });
+});
+
+test("invalid frontmatter fails with the source file and exact reason", () => {
+  const cases = [
+    ["missing frontmatter", "Post body.", /bad\.md: frontmatter is required/],
+    ["missing required field", VALID_FRONTMATTER.replace("title: A useful post\n", ""), /bad\.md: missing required field "title"/],
+    ["blank required field", VALID_FRONTMATTER.replace("title: A useful post", "title: \"   \""), /bad\.md: missing required field "title"/],
+    ["unknown field", VALID_FRONTMATTER.replace("slug: useful-post", "slug: useful-post\nauthor: somebody"), /bad\.md: unknown frontmatter field "author"/],
+    ["duplicate field", VALID_FRONTMATTER.replace("slug: useful-post", "slug: useful-post\nslug: another-post"), /bad\.md: duplicate frontmatter field "slug"/],
+    ["invalid date shape", VALID_FRONTMATTER.replace("2026-03-01", "2026-3-1"), /bad\.md: invalid date "2026-3-1"/],
+    ["invalid calendar date", VALID_FRONTMATTER.replace("2026-03-01", "2026-02-30"), /bad\.md: invalid date "2026-02-30"/],
+    ["future date", VALID_FRONTMATTER.replace("2026-03-01", "2026-07-17"), /bad\.md: date cannot be in the future/],
+    ["updated before publication", VALID_FRONTMATTER.replace("date: 2026-03-01", "date: 2026-03-01\nupdated: 2026-02-28"), /bad\.md: updated cannot be earlier than date/],
+    ["invalid slug", VALID_FRONTMATTER.replace("useful-post", "Useful_Post"), /bad\.md: invalid slug "Useful_Post"/],
+    ["empty tag", VALID_FRONTMATTER.replace("[Node.js, Testing]", "[Node.js, ]"), /bad\.md: tags must be a non-empty array of non-empty strings/],
+    ["invalid featured", VALID_FRONTMATTER.replace("slug: useful-post", "slug: useful-post\nfeatured: yes"), /bad\.md: featured must be true or false/],
+  ];
+
+  for (const [name, source, expected] of cases) {
+    assert.throws(
+      () => parseBlogSource("bad.md", source, { today: "2026-07-16" }),
+      expected,
+      name,
+    );
+  }
+});
+
+test("Markdown rendering escapes raw HTML and unsafe link destinations", () => {
+  const html = renderMarkdown(`## <img src=x onerror=alert(1)>
+
+Open [safe <b>label</b>](https://example.com/?a=1&b=2), [local](/tools/json/), and [bad](javascript:alert(1)).
+
+\`<script>alert(1)</script>\`
+
+\`\`\`html
+<script>alert(2)</script>
+\`\`\``);
+
+  assert.doesNotMatch(html, /<script|<img|javascript:/i);
+  assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.match(html, /<a href="https:\/\/example\.com\/\?a=1&amp;b=2"/);
+  assert.match(html, /safe &lt;b&gt;label&lt;\/b&gt;/);
+  assert.match(html, /<a href="\/tools\/json\/"/);
+  assert.match(html, /and bad\./);
+  assert.match(html, /<code>&lt;script&gt;alert\(1\)&lt;\/script&gt;<\/code>/);
+  assert.match(html, /<pre><code class="language-html">&lt;script&gt;alert\(2\)&lt;\/script&gt;<\/code><\/pre>/);
+});
+
+test("Markdown formatting markers in a URL cannot alter generated markup", () => {
+  const html = renderMarkdown("[docs](https://example.com/**section**)");
+
+  assert.match(html, /href="https:\/\/example\.com\/\*\*section\*\*"/);
+  assert.doesNotMatch(html, /href="[^"]*<strong>/);
 });
