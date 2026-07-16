@@ -90,12 +90,22 @@ jobs:
         if: env.DEPLOY_ENABLED == 'true'
         run: |
           ssh -p "${ONEPANEL_PORT:-22}" "$ONEPANEL_USER@$ONEPANEL_HOST" \
-            "docker exec 1Panel-openresty-rRvM rm -rf /tmp/dev-tools-nav-next && \
-             docker exec 1Panel-openresty-rRvM mkdir -p /tmp/dev-tools-nav-next && \
-             docker cp $ONEPANEL_PATH/. 1Panel-openresty-rRvM:/tmp/dev-tools-nav-next/ && \
-             docker exec 1Panel-openresty-rRvM sh -c 'target=/www/sites/tools.songyuankun.top/index; \
-               find \"\$target\" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +; \
-               cp -a /tmp/dev-tools-nav-next/. \"\$target\"/; \
-               rm -rf /tmp/dev-tools-nav-next; \
-               chown -R ubuntu:ubuntu \"\$target\"' && \
+            "docker exec 1Panel-openresty-rRvM sh -ec 'if [ ! -d /www/sites/tools.songyuankun.top/index ] && [ -d /www/sites/tools.songyuankun.top/.index-old ]; then \
+               mv /www/sites/tools.songyuankun.top/.index-old /www/sites/tools.songyuankun.top/index; \
+             fi; \
+             rm -rf /www/sites/tools.songyuankun.top/.index-next; \
+             mkdir -p /www/sites/tools.songyuankun.top/.index-next' && \
+             docker cp $ONEPANEL_PATH/. 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/.index-next/ && \
+             docker exec 1Panel-openresty-rRvM sh -ec 'target=/www/sites/tools.songyuankun.top/index; \
+               next=/www/sites/tools.songyuankun.top/.index-next; \
+               old=/www/sites/tools.songyuankun.top/.index-old; \
+               chown -R ubuntu:ubuntu \"\$next\"; \
+               rm -rf \"\$old\"; \
+               mv \"\$target\" \"\$old\"; \
+               if mv \"\$next\" \"\$target\"; then \
+                 rm -rf \"\$old\"; \
+               else \
+                 mv \"\$old\" \"\$target\"; \
+                 exit 1; \
+               fi' && \
              echo '✅ Container sync done'"
