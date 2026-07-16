@@ -113,8 +113,14 @@ test("blog index is canonicalized and article lastmod comes from Markdown metada
 });
 
 test("generateSitemap omits missing and invalid lastmod values", () => {
-  const missing = generateSitemap(process.cwd(), { resolveLastmod: () => undefined });
-  const invalid = generateSitemap(process.cwd(), { resolveLastmod: () => "today" });
+  const missing = generateSitemap(process.cwd(), {
+    resolveLastmod: () => undefined,
+    blogPosts: [],
+  });
+  const invalid = generateSitemap(process.cwd(), {
+    resolveLastmod: () => "today",
+    blogPosts: [],
+  });
 
   assert.doesNotMatch(missing, /<lastmod>/);
   assert.doesNotMatch(invalid, /<lastmod>/);
