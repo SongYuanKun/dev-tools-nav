@@ -67,7 +67,18 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           PORT="${ONEPANEL_PORT:-22}"
-          ssh-keyscan -p "$PORT" -H "$ONEPANEL_HOST" >> ~/.ssh/known_hosts
+          HOST_KEYS="$(mktemp)"
+          trap 'rm -f "$HOST_KEYS"' EXIT
+          for attempt in 1 2 3; do
+            if ssh-keyscan -T 10 -p "$PORT" -H "$ONEPANEL_HOST" > "$HOST_KEYS"; then
+              cat "$HOST_KEYS" >> ~/.ssh/known_hosts
+              exit 0
+            fi
+            echo "ssh-keyscan attempt $attempt failed" >&2
+            sleep 5
+          done
+          echo "Unable to obtain the 1Panel SSH host key after 3 attempts." >&2
+          exit 1
 
       - name: Sync site to temp dir
         if: env.DEPLOY_ENABLED == 'true'
