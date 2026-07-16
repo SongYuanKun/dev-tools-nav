@@ -1,17 +1,88 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="description" content="在线工具" />
-  <title>在线工具 · Koen的工具箱</title>
+  <meta name="description" content="免费在线 JSON 工作台：格式化、校验、树视图、JSONPath、YAML 互转与结构对比。CodeMirror 专业编辑体验，数据仅在浏览器本地处理。" />
+  <meta name="keywords" content="JSON格式化,JSON校验,JSONPath,JSON树视图,YAML,JSON Diff,在线JSON工具" />
+  <meta property="og:title" content="JSON 工作台 - 格式化、校验与结构分析 | Koen的工具箱" />
+  <meta property="og:description" content="一站式 JSON 编辑与分析：准确错误定位、树视图、JSONPath、YAML 互转和结构对比，全程本地处理。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/tools/json/" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/screenshot-json-tool.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="JSON 工作台 | Koen的工具箱" />
+  <meta name="twitter:description" content="专业、快速、只在本地运行的 JSON 编辑与分析工作台。" />
+  <meta name="twitter:image" content="https://tools.songyuankun.top/assets/screenshot-json-tool.png" />
+  <link rel="canonical" href="https://tools.songyuankun.top/tools/json/" />
+  <title>JSON 工作台 - 在线格式化、校验、JSONPath 与 YAML | Koen的工具箱</title>
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="../../css/tools.css" />
+  <link rel="stylesheet" href="../../css/json-workbench.css" />
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "JSON 工作台",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and HTML5",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+      "description": "在浏览器本地完成 JSON 格式化、校验、树形浏览、JSONPath 查询、YAML 互转和结构对比。",
+      "url": "https://tools.songyuankun.top/tools/json/",
+      "author": { "@type": "Person", "name": "Koen" },
+      "inLanguage": "zh-CN"
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "如何使用 JSON 工作台",
+      "step": [
+        { "@type": "HowToStep", "name": "粘贴或上传 JSON", "text": "把 JSON 粘贴到编辑器，或从本地选择文件。" },
+        { "@type": "HowToStep", "name": "校验并格式化", "text": "检查错误提示，然后选择格式化、压缩或安全修复。" },
+        { "@type": "HowToStep", "name": "切换分析模式", "text": "使用树视图、JSONPath、YAML 或对比模式分析数据。" }
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "输入的 JSON 会上传到服务器吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不会。输入、转换和对比都只在当前浏览器中处理。" }
+        },
+        {
+          "@type": "Question",
+          "name": "宽松解析会修改哪些内容？",
+          "acceptedAnswer": { "@type": "Answer", "text": "宽松解析只接受注释和尾逗号；单引号转换必须由你明确选择安全修复。" }
+        },
+        {
+          "@type": "Question",
+          "name": "JSON 与 YAML 转换是否完全无损？",
+          "acceptedAnswer": { "@type": "Answer", "text": "工具会拒绝 JSON 无法无损表示的 YAML 类型、复杂键、多文档和别名。" }
+        },
+        {
+          "@type": "Question",
+          "name": "如何快速定位 JSON 错误？",
+          "acceptedAnswer": { "@type": "Answer", "text": "错误横幅会显示行列；选择定位即可把光标移动到首个错误字符。" }
+        }
+      ]
+    }
+  </script>
   <script defer src="../../js/base.js"></script>
 </head>
-<body>
+<body class="json-page">
+  <a class="skip-link" href="#json-workbench">跳到 JSON 工作台</a>
+
   <header>
     <nav class="navbar" role="navigation" aria-label="主导航">
       <div class="navbar-inner">
@@ -21,57 +92,152 @@
         </a>
         <div class="nav-links">
           <a href="../../index.html" class="nav-link">首页</a>
+          <a href="../" class="nav-link active" aria-current="page">在线工具</a>
+          <a href="../../pages/blog/index.html" class="nav-link">技术博客</a>
         </div>
-        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+        <button type="button" id="themeToggle" class="theme-toggle" aria-label="切换到亮色模式" title="切换到亮色模式">☀️</button>
       </div>
     </nav>
   </header>
 
-  <main class="tool-workbench" id="toolWorkbench">
-    <header class="tool-workbench-bar">
-      <div class="tool-workbench-leading">
-        <a class="tool-workbench-back" href="../" aria-label="返回在线工具">← 工具</a>
-        <div class="tool-workbench-identity">
-          <h1 id="toolTitle" class="tool-workbench-title">加载中…</h1>
-          <div id="toolTags" class="tool-workbench-tags" aria-label="标签"></div>
-        </div>
+  <main id="json-workbench" class="json-page-main">
+    <header class="json-hero">
+      <div class="json-hero-copy">
+        <a class="json-back" href="../">← 全部工具</a>
+        <p class="json-eyebrow">Developer workspace · JSON</p>
+        <h1>JSON 工作台</h1>
+        <p>从粘贴到定位错误，再到查询、转换和对比，在一个安静、专业的工作区完成。</p>
       </div>
-      <div class="tool-workbench-actions">
-        <button id="favBtn" type="button" class="tool-workbench-icon-btn" aria-label="收藏" title="收藏">☆</button>
-        <a id="legacyLink" class="tool-workbench-icon-btn" href="#" target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开" title="在新标签页打开">↗</a>
+      <div class="json-hero-aside">
+        <div class="json-privacy" role="note">
+          <span class="json-privacy-dot" aria-hidden="true"></span>
+          <span><strong>本地优先</strong>数据仅在浏览器本地处理，不会上传</span>
+        </div>
+        <button type="button" class="json-favorite" data-json-favorite aria-pressed="false">
+          <span class="json-favorite-icon" aria-hidden="true"></span><span data-json-favorite-label>收藏这个工具</span>
+        </button>
       </div>
     </header>
-    <p id="toolDesc" class="tool-workbench-desc"></p>
-    <div id="toolError" class="tools-empty" hidden>加载失败，可尝试在新标签页打开。</div>
-    <div class="tool-workbench-stage">
-      <iframe id="toolFrame" class="tool-workbench-frame" title="在线工具"></iframe>
-    </div>
-    <footer class="tool-workbench-foot">
-      <span class="tool-workbench-privacy">数据仅在浏览器本地处理，不会上传</span>
-    </footer>
+
+    <section class="json-app" aria-label="JSON 编辑与分析">
+      <div class="json-app-topbar">
+        <div class="json-mode-tabs" role="tablist" aria-label="JSON 工作模式">
+          <button type="button" role="tab" data-json-mode="format" id="json-tab-format" aria-controls="json-panel-format" aria-selected="true" tabindex="0">格式化</button>
+          <button type="button" role="tab" data-json-mode="tree" id="json-tab-tree" aria-controls="json-panel-tree" aria-selected="false" tabindex="-1">树视图</button>
+          <button type="button" role="tab" data-json-mode="jsonpath" id="json-tab-jsonpath" aria-controls="json-panel-jsonpath" aria-selected="false" tabindex="-1">JSONPath</button>
+          <button type="button" role="tab" data-json-mode="yaml" id="json-tab-yaml" aria-controls="json-panel-yaml" aria-selected="false" tabindex="-1">YAML</button>
+          <button type="button" role="tab" data-json-mode="diff" id="json-tab-diff" aria-controls="json-panel-diff" aria-selected="false" tabindex="-1">对比</button>
+        </div>
+        <span class="json-file-state">未命名.json</span>
+      </div>
+
+      <div class="json-command-area">
+        <div class="json-primary-actions" aria-label="主要操作">
+          <button type="button" class="json-button json-button-primary" data-json-action="format">格式化 <kbd>⌘↵</kbd></button>
+          <button type="button" class="json-button" data-json-action="minify">压缩</button>
+          <button type="button" class="json-button" data-json-action="copy">复制</button>
+          <button type="button" class="json-button json-button-danger" data-json-action="clear">清空</button>
+        </div>
+        <div class="json-secondary-actions" aria-label="更多操作">
+          <label class="json-button json-file-button">
+            上传
+            <input type="file" accept=".json,.yaml,.yml,.txt,application/json,text/plain" class="json-visually-hidden" data-json-action="upload" />
+          </label>
+          <button type="button" class="json-button" data-json-action="download">下载</button>
+          <button type="button" class="json-button" data-json-action="sample">示例</button>
+          <button type="button" class="json-button" data-json-action="unicode">Unicode</button>
+          <button type="button" class="json-button" data-json-action="sort">Key 排序</button>
+          <button type="button" class="json-button" data-json-action="repair">安全修复</button>
+          <button type="button" class="json-button json-settings-trigger" data-json-settings aria-haspopup="dialog">设置</button>
+        </div>
+      </div>
+
+      <div class="json-error-banner" data-json-error role="alert" aria-live="assertive" hidden>
+        <div>
+          <strong>JSON 语法有误</strong>
+          <span data-json-error-message>等待诊断</span>
+        </div>
+        <button type="button" class="json-error-locate" data-json-locate>定位错误</button>
+      </div>
+
+      <div class="json-panels">
+        <section id="json-panel-format" role="tabpanel" aria-labelledby="json-tab-format" data-json-panel="format">
+          <div class="json-editor-heading">
+            <span>JSON 编辑器</span>
+            <span>支持搜索、折叠、撤销与实时校验</span>
+          </div>
+          <div class="json-editor-shell" data-json-editor data-initial-value=""></div>
+        </section>
+
+        <section id="json-panel-tree" role="tabpanel" aria-labelledby="json-tab-tree" data-json-panel="tree" hidden>
+          <div class="json-empty-state"><span aria-hidden="true">{ }</span><h2>浏览数据结构</h2><p>解析成功后，可在这里展开节点并复制 JSONPath。</p></div>
+        </section>
+
+        <section id="json-panel-jsonpath" role="tabpanel" aria-labelledby="json-tab-jsonpath" data-json-panel="jsonpath" hidden>
+          <div class="json-mode-layout"><div><label for="jsonPathInput">JSONPath 表达式</label><input id="jsonPathInput" type="text" value="$." autocomplete="off" /></div><div class="json-mode-placeholder"><h2>查询结果</h2><p>支持对象键、数组下标和带引号的属性名。</p></div></div>
+        </section>
+
+        <section id="json-panel-yaml" role="tabpanel" aria-labelledby="json-tab-yaml" data-json-panel="yaml" hidden>
+          <div class="json-empty-state"><span aria-hidden="true">YAML</span><h2>在两种表示间转换</h2><p>转换失败不会覆盖 JSON 或 YAML 原文。</p></div>
+        </section>
+
+        <section id="json-panel-diff" role="tabpanel" aria-labelledby="json-tab-diff" data-json-panel="diff" hidden>
+          <div class="json-empty-state"><span aria-hidden="true">±</span><h2>比较两个 JSON 版本</h2><p>左右差异只在你明确应用时才会更新主文档。</p></div>
+        </section>
+      </div>
+
+      <footer class="json-statusbar">
+        <span class="json-validity" data-json-status role="status" aria-live="polite"><i aria-hidden="true"></i>等待输入</span>
+        <span data-json-selection-status>第 1 行，第 1 列</span>
+        <span data-json-counts>0 字符 · 0 B</span>
+        <span>缩进 2 空格</span>
+      </footer>
+    </section>
+
+    <section class="json-guide" aria-labelledby="json-guide-title">
+      <div class="json-section-heading">
+        <p>QUICK START</p>
+        <h2 id="json-guide-title">JSON 工作台怎么用</h2>
+        <span>所有步骤都在当前浏览器中完成。</span>
+      </div>
+      <ol class="json-guide-grid">
+        <li><span>01</span><div><h3>粘贴或上传 JSON</h3><p>直接粘贴文本，或选择不超过 5 MiB 的本地 JSON、YAML 与文本文件。</p></div></li>
+        <li><span>02</span><div><h3>校验并格式化</h3><p>先看编辑器诊断，再选择格式化、压缩、Key 排序或安全修复。</p></div></li>
+        <li><span>03</span><div><h3>切换分析模式</h3><p>用树视图理解层级，以 JSONPath 取值，或进入 YAML 和对比模式。</p></div></li>
+      </ol>
+    </section>
+
+    <section class="json-faq" aria-labelledby="json-faq-title">
+      <div class="json-section-heading"><p>FAQ</p><h2 id="json-faq-title">常见问题</h2></div>
+      <div class="json-faq-list">
+        <details open><summary>输入的 JSON 会上传到服务器吗？</summary><p>不会。输入、转换和对比都只在当前浏览器中处理。</p></details>
+        <details><summary>宽松解析会修改哪些内容？</summary><p>宽松解析只接受注释和尾逗号；单引号转换必须由你明确选择安全修复。</p></details>
+        <details><summary>JSON 与 YAML 转换是否完全无损？</summary><p>工具会拒绝 JSON 无法无损表示的 YAML 类型、复杂键、多文档和别名。</p></details>
+        <details><summary>如何快速定位 JSON 错误？</summary><p>错误横幅会显示行列；选择定位即可把光标移动到首个错误字符。</p></details>
+      </div>
+    </section>
+
+    <section class="json-related" aria-labelledby="related-tools-title">
+      <div class="json-section-heading"><p>KEEP BUILDING</p><h2 id="related-tools-title">相关工具</h2></div>
+      <div class="json-related-grid">
+        <a href="../diff/"><strong>文本对比</strong><span>逐行查看任意文本差异</span><b aria-hidden="true">↗</b></a>
+        <a href="../jwt/"><strong>JWT 解码</strong><span>检查 Header 与 Payload</span><b aria-hidden="true">↗</b></a>
+        <a href="../base64/"><strong>Base64</strong><span>编码与解码文本数据</span><b aria-hidden="true">↗</b></a>
+      </div>
+    </section>
   </main>
 
-  <footer class="footer">
+  <footer class="footer json-site-footer">
     <div class="footer-content">
-      <div class="footer-brand">
-        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
-        <span class="footer-brand-name">Koen's 工具箱</span>
-      </div>
-      <div class="footer-links">
-        <a href="../../index.html">首页</a>
-        <span class="footer-divider">|</span>
-        <span class="footer-divider">|</span>
-        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </div>
-      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
+      <div class="footer-brand"><img src="../../assets/logo.svg" alt="K" class="footer-logo" /><span class="footer-brand-name">Koen's 工具箱</span></div>
+      <div class="footer-links"><a href="../../index.html">首页</a><span class="footer-divider">|</span><a href="../">在线工具</a><span class="footer-divider">|</span><a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      <p class="footer-copyright">Made with code by Koen · 数据仅在本地处理</p>
     </div>
   </footer>
 
-  <script src="../../data/tools.js"></script>
   <script src="../../js/theme-mini.js"></script>
   <script src="../../js/tools-prefs.js"></script>
-  <script src="../../js/tools-shell.js"></script>
+  <script type="module" src="../../js/json-workbench.bundle.js"></script>
   <script defer src="../../js/footer.js"></script>
 </body>
 </html>
-
