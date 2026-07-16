@@ -99,6 +99,10 @@ test("blog index is canonicalized and article lastmod comes from Markdown metada
   assert.ok(urls.some(({ loc }) => loc === "https://tools.songyuankun.top/pages/blog/"));
   assert.ok(!urls.some(({ loc }) => loc.endsWith("/pages/blog/index.html")));
   assert.equal(
+    urls.find(({ loc }) => loc === "https://tools.songyuankun.top/pages/blog/")?.lastmod,
+    "2026-03-30",
+  );
+  assert.equal(
     urls.find(({ loc }) => loc.endsWith("/pages/blog/why-build-dev-tools-nav.html"))?.lastmod,
     "2026-03-20",
   );

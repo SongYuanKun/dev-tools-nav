@@ -139,6 +139,12 @@ test("Markdown formatting markers in a URL cannot alter generated markup", () =>
   assert.doesNotMatch(html, /href="[^"]*<strong>/);
 });
 
+test("Markdown hard breaks render explicitly without trailing whitespace", () => {
+  const html = renderMarkdown("First line  \nSecond line");
+  assert.match(html, /First line<br \/>\nSecond line/);
+  assert.doesNotMatch(html, / +$/m);
+});
+
 function normalizedPost(slug, date, overrides = {}) {
   return {
     sourceFile: `${slug}.md`,
@@ -215,6 +221,8 @@ test("article, index, manifest, compatibility data, and Atom share canonical pos
   for (const post of posts) assert.match(index, new RegExp(`href="${post.slug}\\.html"`));
   assert.match(index, /src="\.\.\/\.\.\/data\/blog-posts\.js"/);
   assert.match(index, /src="\.\.\/\.\.\/js\/blog-list\.js"/);
+  assert.match(index, /<footer class="footer"><\/footer>/);
+  assert.match(index, /href="https:\/\/blog\.csdn\.net\/syk123839070"/);
 
   const feed = artifacts["feed.xml"];
   assert.match(feed, /<title>Use &lt;JSON&gt; &amp; APIs<\/title>/);

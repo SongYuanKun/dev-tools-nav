@@ -854,3 +854,38 @@ test("representative large JSON formats successfully and reports diagnostic timi
   assert.match(await page.locator("[data-json-status]").textContent(), /JSON 有效|有效 JSON/);
   await context.close();
 });
+
+test("generated blog index merges canonical posts with real CSDN articles", async () => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(`${origin}/pages/blog/`);
+  await page.locator(".blog-card").first().waitFor();
+
+  const internalHrefs = await page.locator('.blog-card:not([target="_blank"])').evaluateAll((links) =>
+    links.map((link) => link.getAttribute("href")));
+  assert.deepEqual(internalHrefs.sort(), [
+    "ai-free-tokens-handbook.html",
+    "java-source-mybatis.html",
+    "why-build-dev-tools-nav.html",
+  ]);
+  const externalHrefs = await page.locator('.blog-card[target="_blank"]').evaluateAll((links) =>
+    links.map((link) => link.getAttribute("href")));
+  assert.ok(externalHrefs.length > 0);
+  assert.ok(externalHrefs.every((href) => /\/article\/details\//.test(href)));
+  assert.equal(await page.locator("footer.footer").count(), 1);
+  await context.close();
+});
+
+test("generated MyBatis article is a standalone canonical page", async () => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(`${origin}/pages/blog/java-source-mybatis.html`);
+  assert.equal(await page.locator('link[rel="canonical"]').count(), 1);
+  assert.match(await page.locator("h1").textContent(), /MyBatis 源码解析/);
+  assert.match(await page.locator("article").textContent(), /MapperProxy\.invoke/);
+  assert.equal(
+    await page.locator('link[type="application/atom+xml"]').getAttribute("href"),
+    "https://tools.songyuankun.top/feed.xml",
+  );
+  await context.close();
+});

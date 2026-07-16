@@ -108,11 +108,16 @@ export function resolveGitLastmod(root, relativeSourcePath) {
 export function collectStaticUrls(root, options = {}) {
   const resolveLastmod = options.resolveLastmod
     ?? ((sourcePath) => resolveGitLastmod(root, sourcePath));
+  const blogPosts = options.blogPosts ?? readBlogPosts(root);
   const blogLastmods = new Map(
-    (options.blogPosts ?? readBlogPosts(root))
+    blogPosts
       .filter((post) => typeof post?.slug === "string")
       .map((post) => [post.slug, post.updated]),
   );
+  const blogIndexLastmod = blogPosts.reduce(
+    (latest, post) => LASTMOD_PATTERN.test(post?.updated ?? "") && post.updated > latest ? post.updated : latest,
+    "",
+  ) || undefined;
   const urls = [];
 
   const addUrl = (pathname, sourcePath, explicitLastmod) => {
@@ -131,7 +136,9 @@ export function collectStaticUrls(root, options = {}) {
     if (isNoindexPage(root, entry.path)) continue;
     const pathname = pathnameFor(entry.path);
     const blogMatch = /^pages\/blog\/([a-z0-9-]+)\.html$/.exec(entry.path);
-    const blogLastmod = blogMatch ? blogLastmods.get(blogMatch[1]) : undefined;
+    const blogLastmod = entry.path === "pages/blog/index.html"
+      ? blogIndexLastmod
+      : (blogMatch ? blogLastmods.get(blogMatch[1]) : undefined);
     if (pathname !== "/") addUrl(pathname, entry.path, blogLastmod);
   }
   for (const id of collectTemplateIds(root)) {

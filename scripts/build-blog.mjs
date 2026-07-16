@@ -230,7 +230,7 @@ function inline(text) {
     },
   )
 
-  rendered = formatInlineText(rendered)
+  rendered = formatInlineText(rendered).replace(/ {2,}\n/g, '<br />\n')
 
   for (let index = protectedMarkup.length - 1; index >= 0; index--) {
     rendered = rendered.replace(`\x00INLINE${index}\x00`, protectedMarkup[index])
@@ -652,7 +652,16 @@ function renderBlogIndex(posts) {
     <div class="blog-list" id="blogList">${staticLinks}
     </div>
     <div class="blog-empty" id="blogEmpty" style="display:none;">暂无匹配文章。</div>
+    <section class="blog-subscribe" aria-label="关注更新">
+      <h2>关注更新</h2>
+      <p>长文会同步发布到 CSDN，站内也提供 Atom 订阅。</p>
+      <div class="blog-subscribe-links">
+        <a href="${BASE_URL}/feed.xml" class="blog-subscribe-link">Atom Feed</a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="blog-subscribe-link">CSDN 博客</a>
+      </div>
+    </section>
   </main>
+  <footer class="footer"></footer>
   <script src="../../data/blog-posts.js"></script>
   <script src="../../js/blog-list.js"></script>
   <script defer src="../../js/footer.js"></script>
