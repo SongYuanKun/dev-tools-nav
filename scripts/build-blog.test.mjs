@@ -2,7 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildBlogArtifacts,
   buildBlogContentModel,
+  calculateStaleBlogArticlePaths,
   parseBlogSource,
   renderMarkdown,
   selectBlogMarkdownFiles,
@@ -50,6 +52,16 @@ test("content model rejects duplicate output slugs", () => {
       { sourceFile: "second.md", raw: VALID_FRONTMATTER },
     ], { today: "2026-07-16" }),
     /duplicate slug "useful-post" in first\.md and second\.md/,
+  );
+});
+
+test("content model rejects slugs owned by fixed blog pages", () => {
+  assert.throws(
+    () => buildBlogContentModel([{
+      sourceFile: "index.md",
+      raw: VALID_FRONTMATTER.replace("slug: useful-post", "slug: index"),
+    }], { today: "2026-07-16" }),
+    /index\.md: slug "index" conflicts with a fixed blog output/,
   );
 });
 
@@ -125,4 +137,101 @@ test("Markdown formatting markers in a URL cannot alter generated markup", () =>
 
   assert.match(html, /href="https:\/\/example\.com\/\*\*section\*\*"/);
   assert.doesNotMatch(html, /href="[^"]*<strong>/);
+});
+
+function normalizedPost(slug, date, overrides = {}) {
+  return {
+    sourceFile: `${slug}.md`,
+    title: `Title ${slug}`,
+    date,
+    updated: date,
+    description: `Description ${slug}`,
+    category: "Engineering",
+    tags: ["Node.js", "Testing"],
+    slug,
+    keywords: "node, testing",
+    kicker: "Self hosted",
+    featured: false,
+    body: `## ${slug}\n\nBody **${slug}**.`,
+    ...overrides,
+  };
+}
+
+test("artifact map deterministically contains every blog output and no body copies in data", () => {
+  const posts = [
+    normalizedPost("newest", "2026-03-03", { featured: true }),
+    normalizedPost("middle", "2026-03-02"),
+    normalizedPost("oldest", "2026-03-01"),
+  ];
+
+  const first = buildBlogArtifacts(posts);
+  const second = buildBlogArtifacts(structuredClone(posts));
+
+  assert.deepEqual(Object.keys(first), [
+    "pages/blog/newest.html",
+    "pages/blog/middle.html",
+    "pages/blog/oldest.html",
+    "pages/blog/index.html",
+    "data/blog-manifest.json",
+    "data/blog-posts.js",
+    "feed.xml",
+  ]);
+  assert.deepEqual(second, first);
+
+  const manifest = JSON.parse(first["data/blog-manifest.json"]);
+  assert.equal(manifest.version, 1);
+  assert.deepEqual(manifest.posts.map(post => post.slug), ["newest", "middle", "oldest"]);
+  assert.ok(manifest.posts.every(post => !("body" in post)));
+  assert.doesNotMatch(first["data/blog-posts.js"], /BLOG_POSTS_DATA|content:|csdn\.net/i);
+  assert.match(first["data/blog-posts.js"], /^var BLOG_POSTS = /);
+  assert.match(first["data/blog-posts.js"], /var BLOG_CATEGORIES = /);
+});
+
+test("article, index, manifest, compatibility data, and Atom share canonical posts and dates", () => {
+  const posts = [
+    normalizedPost("first", "2026-03-03", {
+      updated: "2026-03-05",
+      title: "Use <JSON> & APIs",
+      description: "A <safe> & useful summary",
+    }),
+    normalizedPost("second", "2026-03-02"),
+    normalizedPost("third", "2026-03-01"),
+  ];
+  const artifacts = buildBlogArtifacts(posts);
+  const html = artifacts["pages/blog/first.html"];
+  const canonical = "https://tools.songyuankun.top/pages/blog/first.html";
+
+  assert.equal((html.match(/rel="canonical"/g) || []).length, 1);
+  assert.match(html, /rel="alternate" type="application\/atom\+xml" href="https:\/\/tools\.songyuankun\.top\/feed\.xml"/);
+  const jsonLdText = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];
+  const jsonLd = JSON.parse(jsonLdText);
+  assert.equal(jsonLd.headline, "Use <JSON> & APIs");
+  assert.equal(jsonLd.datePublished, "2026-03-03");
+  assert.equal(jsonLd.dateModified, "2026-03-05");
+  assert.equal(jsonLd.mainEntityOfPage["@id"], canonical);
+  assert.match(html, /href="https:\/\/tools\.songyuankun\.top\/pages\/blog\/second\.html"/);
+
+  const index = artifacts["pages/blog/index.html"];
+  for (const post of posts) assert.match(index, new RegExp(`href="${post.slug}\\.html"`));
+  assert.match(index, /src="\.\.\/\.\.\/data\/blog-posts\.js"/);
+  assert.match(index, /src="\.\.\/\.\.\/js\/blog-list\.js"/);
+
+  const feed = artifacts["feed.xml"];
+  assert.match(feed, /<title>Use &lt;JSON&gt; &amp; APIs<\/title>/);
+  assert.match(feed, /<summary>A &lt;safe&gt; &amp; useful summary<\/summary>/);
+  assert.match(feed, /<published>2026-03-03T00:00:00Z<\/published>/);
+  assert.match(feed, /<updated>2026-03-05T00:00:00Z<\/updated>/);
+  assert.match(feed, new RegExp(`<id>${canonical}<\\/id>`));
+});
+
+test("stale cleanup is owned by the previous manifest and preserves index and compatibility page", () => {
+  const previous = {
+    version: 1,
+    posts: [{ slug: "kept" }, { slug: "removed" }, { slug: "index" }, { slug: "post" }],
+  };
+  const current = [normalizedPost("kept", "2026-03-01")];
+
+  assert.deepEqual(calculateStaleBlogArticlePaths(previous, current), [
+    "pages/blog/removed.html",
+  ]);
 });

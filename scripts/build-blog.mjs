@@ -14,14 +14,20 @@
  *   updated     修改日期 YYYY-MM-DD（可选）
  *   keywords、kicker、featured（可选）
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs'
-import { join } from 'path'
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  unlinkSync,
+  writeFileSync,
+} from 'fs'
+import { dirname, join } from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const ROOT = join(__dirname, '..')
 const CONTENT_DIR = join(ROOT, 'content', 'blog')
-const OUTPUT_DIR = join(ROOT, 'pages', 'blog')
 const BASE_URL = 'https://tools.songyuankun.top'
 
 // ── HTML 转义 ─────────────────────────────────────────────────────────────────
@@ -167,6 +173,12 @@ export function buildBlogContentModel(sources, options = {}) {
   const slugs = new Map()
 
   for (const post of posts) {
+    if (post.slug === 'index' || post.slug === 'post') {
+      throw sourceError(
+        post.sourceFile,
+        `slug "${post.slug}" conflicts with a fixed blog output`,
+      )
+    }
     const previousSource = slugs.get(post.slug)
     if (previousSource) {
       throw new Error(
@@ -342,20 +354,58 @@ function readingTime(html) {
   return `约 ${Math.max(1, Math.round(len / 500))} 分钟阅读`
 }
 
+function readingMinutes(markdown) {
+  const text = String(markdown).replace(/[`#>*_~\[\]()\-]/g, '')
+  return Math.max(1, Math.round(text.replace(/\s+/g, '').length / 500))
+}
+
+function jsonForHtml(value) {
+  return JSON.stringify(value, null, 2)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+}
+
+function xmlEsc(value) {
+  return esc(value).replace(/'/g, '&apos;')
+}
+
 // ── HTML 页面模板 ──────────────────────────────────────────────────────────────
-function renderPage(meta, slug, contentHtml) {
+function renderPage(meta, slug, contentHtml, relatedPosts = []) {
   const {
     title = '无标题',
     date = new Date().toISOString().slice(0, 10),
+    updated = date,
     description = '',
     keywords = '',
     tags = [],
     kicker = '自托管首发',
-    section = '技术',
+    category = '技术',
   } = meta
 
   const pageUrl = `${BASE_URL}/pages/blog/${slug}.html`
   const tagsHtml = tags.map(t => `<span class="tag">${esc(t)}</span>`).join('\n          ')
+  const articleJsonLd = jsonForHtml({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'zh-CN',
+    datePublished: date,
+    dateModified: updated,
+    author: { '@type': 'Person', name: 'Koen', url: 'https://koen.songyuankun.top/' },
+    publisher: {
+      '@type': 'Organization',
+      name: "Koen's 工具箱",
+      logo: { '@type': 'ImageObject', url: `${BASE_URL}/assets/logo.svg` },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+    image: [`${BASE_URL}/assets/avatar.jpg`],
+    articleSection: category,
+  })
+  const relatedHtml = relatedPosts.map(post =>
+    `<a href="${BASE_URL}/pages/blog/${post.slug}.html">${esc(post.title)}<span>${esc(post.category)}</span></a>`
+  ).join('\n          ')
 
   return `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -372,34 +422,17 @@ function renderPage(meta, slug, contentHtml) {
   <meta property="og:url" content="${esc(pageUrl)}" />
   <meta property="og:image" content="${BASE_URL}/assets/avatar.jpg" />
   <meta property="article:published_time" content="${esc(date)}" />
+  <meta property="article:modified_time" content="${esc(updated)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(description)}" />
   <link rel="canonical" href="${esc(pageUrl)}" />
+  <link rel="alternate" type="application/atom+xml" href="${BASE_URL}/feed.xml" title="Koen 的技术博客" />
   <title>${esc(title)} · Koen的工具箱</title>
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../css/style.css" />
   <script>(function(){var t=localStorage.getItem('dev-tools-theme');if(t){document.documentElement.setAttribute('data-theme',t)}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}})();</script>
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "${esc(title)}",
-      "description": "${esc(description)}",
-      "inLanguage": "zh-CN",
-      "datePublished": "${esc(date)}",
-      "dateModified": "${esc(date)}",
-      "author": { "@type": "Person", "name": "Koen", "url": "https://koen.songyuankun.top/" },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Koen's 工具箱",
-        "logo": { "@type": "ImageObject", "url": "${BASE_URL}/assets/logo.svg" }
-      },
-      "mainEntityOfPage": { "@type": "WebPage", "@id": "${esc(pageUrl)}" },
-      "image": ["${BASE_URL}/assets/avatar.jpg"],
-      "articleSection": "${esc(section)}"
-    }
-  </script>
+  <script type="application/ld+json">${articleJsonLd}</script>
   <script defer src="../../js/base.js"></script>
   <style>
     .blog-post-page { max-width: 720px; margin: 0 auto; padding: 24px 24px 80px; }
@@ -492,8 +525,7 @@ function renderPage(meta, slug, contentHtml) {
         <h2>相关文章</h2>
         <div class="blog-related-list">
           <a href="index.html">← 返回技术博客列表<span>站内文章与外链索引</span></a>
-          <a href="ai-free-tokens-handbook.html">AI 免费 Token / 额度薅羊毛手册<span>站内 · AI 实践</span></a>
-          <a href="why-build-dev-tools-nav.html">为什么一个程序员，会花3天做一个导航站？<span>站内 · 独立开发</span></a>
+          ${relatedHtml}
         </div>
       </section>
     </article>
@@ -550,6 +582,192 @@ function renderPage(meta, slug, contentHtml) {
 </html>`
 }
 
+function sortNormalizedPosts(posts) {
+  return [...posts].sort((left, right) => {
+    if (left.date !== right.date) return left.date < right.date ? 1 : -1
+    if (left.slug === right.slug) return 0
+    return left.slug < right.slug ? -1 : 1
+  })
+}
+
+function manifestPost(post) {
+  return {
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    updated: post.updated,
+    description: post.description,
+    category: post.category,
+    tags: [...post.tags],
+    keywords: post.keywords,
+    kicker: post.kicker,
+    featured: post.featured,
+    readTime: readingMinutes(post.body),
+    url: `/pages/blog/${post.slug}.html`,
+    canonicalUrl: `${BASE_URL}/pages/blog/${post.slug}.html`,
+    sourceFile: post.sourceFile,
+  }
+}
+
+function renderBlogIndex(posts) {
+  const staticLinks = posts.map(post => `
+        <a class="blog-card" href="${post.slug}.html">
+          <span class="blog-card-category">${esc(post.category)}</span>
+          <h2 class="blog-card-title">${esc(post.title)}</h2>
+          <p class="blog-card-desc">${esc(post.description)}</p>
+        </a>`).join('')
+  const blogJsonLd = jsonForHtml({
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Koen 的技术博客',
+    url: `${BASE_URL}/pages/blog/`,
+    inLanguage: 'zh-CN',
+  })
+
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Koen 的技术博客：Java 源码、独立开发与 AI 实践。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="${BASE_URL}/pages/blog/" />
+  <link rel="alternate" type="application/atom+xml" href="${BASE_URL}/feed.xml" title="Koen 的技术博客" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/blog.css" />
+  <title>技术博客 · Koen的工具箱</title>
+  <script type="application/ld+json">${blogJsonLd}</script>
+  <script defer src="../../js/base.js"></script>
+</head>
+<body class="site-v2">
+  <header><nav class="navbar" aria-label="主导航"><a href="../../index.html" class="logo">Koen's 工具箱</a></nav></header>
+  <main class="blog-page">
+    <header class="blog-header"><h1>技术博客</h1><p>Java 源码、独立开发与 AI 实践。</p></header>
+    <div class="blog-stats"><span id="blogStatTotal">${posts.length} 篇文章</span><span id="blogStatShown"></span></div>
+    <div class="blog-toolbar">
+      <label class="blog-search" for="blogSearch"><span class="visually-hidden">搜索文章</span><input id="blogSearch" type="search" placeholder="搜索标题、标签或摘要…" /></label>
+      <div class="blog-categories" id="blogCategories"></div>
+    </div>
+    <section class="blog-featured" id="blogFeatured" hidden></section>
+    <div class="blog-list" id="blogList">${staticLinks}
+    </div>
+    <div class="blog-empty" id="blogEmpty" style="display:none;">暂无匹配文章。</div>
+  </main>
+  <script src="../../data/blog-posts.js"></script>
+  <script src="../../js/blog-list.js"></script>
+  <script defer src="../../js/footer.js"></script>
+</body>
+</html>`
+}
+
+function renderBlogData(posts) {
+  const compatiblePosts = posts.map(post => ({
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    updated: post.updated,
+    category: post.category,
+    tags: [...post.tags],
+    description: post.description,
+    readTime: readingMinutes(post.body),
+    featured: post.featured,
+    status: 'published',
+    url: `${post.slug}.html`,
+  }))
+  const categories = [
+    { id: 'all', label: '全部' },
+    ...[...new Set(posts.map(post => post.category))]
+      .sort()
+      .map(category => ({ id: category, label: category })),
+  ]
+  return `var BLOG_POSTS = ${JSON.stringify(compatiblePosts, null, 2)};\n\nvar BLOG_CATEGORIES = ${JSON.stringify(categories, null, 2)};\n`
+}
+
+function renderAtomFeed(posts) {
+  const feedUpdated = posts.reduce(
+    (latest, post) => post.updated > latest ? post.updated : latest,
+    '1970-01-01',
+  )
+  const entries = posts.map(post => {
+    const url = `${BASE_URL}/pages/blog/${post.slug}.html`
+    return `  <entry>
+    <title>${xmlEsc(post.title)}</title>
+    <id>${xmlEsc(url)}</id>
+    <link href="${xmlEsc(url)}" />
+    <published>${post.date}T00:00:00Z</published>
+    <updated>${post.updated}T00:00:00Z</updated>
+    <summary>${xmlEsc(post.description)}</summary>
+  </entry>`
+  }).join('\n')
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Koen 的技术博客</title>
+  <id>${BASE_URL}/pages/blog/</id>
+  <link href="${BASE_URL}/feed.xml" rel="self" />
+  <link href="${BASE_URL}/pages/blog/" />
+  <updated>${feedUpdated}T00:00:00Z</updated>
+${entries}
+</feed>
+`
+}
+
+export function buildBlogArtifacts(normalizedPosts) {
+  const posts = sortNormalizedPosts(normalizedPosts)
+  const artifacts = {}
+
+  posts.forEach((post, index) => {
+    const relatedPosts = [posts[index - 1], posts[index + 1]].filter(Boolean)
+    artifacts[`pages/blog/${post.slug}.html`] = renderPage(
+      post,
+      post.slug,
+      renderMarkdown(post.body),
+      relatedPosts,
+    )
+  })
+  artifacts['pages/blog/index.html'] = renderBlogIndex(posts)
+  artifacts['data/blog-manifest.json'] = `${JSON.stringify({
+    version: 1,
+    posts: posts.map(manifestPost),
+  }, null, 2)}\n`
+  artifacts['data/blog-posts.js'] = renderBlogData(posts)
+  artifacts['feed.xml'] = renderAtomFeed(posts)
+  return artifacts
+}
+
+export function calculateStaleBlogArticlePaths(previousManifest, currentPosts) {
+  const currentSlugs = new Set(currentPosts.map(post => post.slug))
+  const reserved = new Set(['index', 'post'])
+  const previousPosts = previousManifest?.version === 1 && Array.isArray(previousManifest.posts)
+    ? previousManifest.posts
+    : []
+  return previousPosts
+    .map(post => post?.slug)
+    .filter(slug =>
+      typeof slug === 'string' &&
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) &&
+      !reserved.has(slug) &&
+      !currentSlugs.has(slug))
+    .sort()
+    .map(slug => `pages/blog/${slug}.html`)
+}
+
+export function writeBlogArtifacts(root, artifacts, previousManifest = null) {
+  const nextManifest = JSON.parse(artifacts['data/blog-manifest.json'])
+  const stalePaths = calculateStaleBlogArticlePaths(previousManifest, nextManifest.posts)
+
+  for (const [relativePath, content] of Object.entries(artifacts)) {
+    const outputPath = join(root, relativePath)
+    mkdirSync(dirname(outputPath), { recursive: true })
+    writeFileSync(outputPath, content, 'utf8')
+  }
+  for (const relativePath of stalePaths) {
+    const outputPath = join(root, relativePath)
+    if (existsSync(outputPath)) unlinkSync(outputPath)
+  }
+  return stalePaths
+}
+
 // ── 主流程 ────────────────────────────────────────────────────────────────────
 export function selectBlogMarkdownFiles(files) {
   return files
@@ -573,14 +791,15 @@ function main() {
     sourceFile,
     raw: readFileSync(join(CONTENT_DIR, sourceFile), 'utf8'),
   })))
+  const manifestPath = join(ROOT, 'data', 'blog-manifest.json')
+  const previousManifest = existsSync(manifestPath)
+    ? JSON.parse(readFileSync(manifestPath, 'utf8'))
+    : null
+  const artifacts = buildBlogArtifacts(posts)
+  const removed = writeBlogArtifacts(ROOT, artifacts, previousManifest)
 
-  for (const post of posts) {
-    const contentHtml = renderMarkdown(post.body)
-    const html = renderPage({ ...post, section: post.category }, post.slug, contentHtml)
-    writeFileSync(join(OUTPUT_DIR, `${post.slug}.html`), html, 'utf8')
-    console.log(`  ✓ ${post.sourceFile} → pages/blog/${post.slug}.html`)
-  }
-  console.log(`blog build: ${posts.length} post(s) generated.`)
+  console.log(`blog build: ${posts.length} post(s), ${Object.keys(artifacts).length} artifact(s) generated.`)
+  if (removed.length) console.log(`blog build: removed ${removed.join(', ')}`)
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
