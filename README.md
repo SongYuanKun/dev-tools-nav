@@ -12,7 +12,7 @@
 
 ## 预览
 
-| 首页导航 | JSON 工具（实时校验 + 行号） | 技术博客 |
+| 首页导航 | JSON 工作台（树视图 / JSONPath / YAML / Diff） | 技术博客 |
 |----------|------------------------------|----------|
 | ![首页](assets/screenshot.png) | ![JSON 工具](assets/screenshot-json-tool.png) | ![博客](assets/screenshot-blog.png) |
 
@@ -33,7 +33,7 @@
 
 | 工具 | 路径 | 亮点 |
 |------|------|------|
-| **JSON 格式化** | `/tools/json/` | 实时校验、行号定位、树形视图、宽松解析（注释/尾逗号）、修复/压缩、JSON Path 查询 |
+| **JSON 工作台** | `/tools/json/` | CodeMirror 实时诊断、树视图、JSONPath、YAML 双向转换、结构 Diff、宽松解析与安全修复 |
 | 时间戳转换 | `/tools/timestamp/` | 秒/毫秒、多时区 |
 | Cron 生成器 | `/tools/cron/` | 表达式解析与下次执行时间 |
 | Base64 | `/tools/base64/` | 编解码 + SHA 摘要 |
@@ -79,7 +79,7 @@ dev-tools-nav/
 │   ├── json-core.mjs       # JSON 解析、转换、查询与 Diff 纯逻辑
 │   ├── json-workbench.mjs  # JSON 工作台交互与 CodeMirror 状态
 │   ├── tool-chrome.js      # 在线工具共享壳层（导航、Toast、本地处理提示）
-│   ├── *-tool.js           # 各工具独立逻辑（json、timestamp、cron 等）
+│   ├── *-tool.js           # 其他工具独立逻辑（timestamp、cron 等）
 │   ├── tools-hub.js        # 工具汇总页交互
 │   └── ai-related-reads.js # AI 子页底部「延伸阅读」注入
 ├── pages/

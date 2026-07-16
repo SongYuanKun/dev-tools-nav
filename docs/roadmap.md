@@ -1,5 +1,5 @@
 ---
-last_verified: 2026-07-14
+last_verified: 2026-07-16
 ---
 
 # 产品路线图
@@ -41,13 +41,14 @@ last_verified: 2026-07-14
 
 ## Phase 2：有效使用增长
 
-| 工作项 | 状态 | 准入 / 验收标准 |
-|---|---|---|
-| 强化核心工具：JSON、JWT、SQL、Regex、Cron、Timestamp | planned | 每个工具具备 canonical 页、问题型教程、FAQ、真实可复制示例、相关工具互链和适用的结构化数据 |
-| 建立 Markdown 单一来源流水线 | planned | `content/blog/*.md` 生成文章 HTML、博客索引、RSS/Atom、sitemap 的真实 `lastmod`、Open Graph 与结构化数据；生成物不得成为第二人工正文源 |
-| 接入搜索复盘 | planned | 联合观察查询词、页面、曝光、点击、CTR、收录状态、独立有效工具用户、有效使用次数和 30 天回访 |
+| 工作项 | 状态 | 准入 / 验收标准 | 证据 |
+|---|---|---|---|
+| 强化核心工具：JSON 工作台 | done | canonical 页直接运行，无 iframe；具备实时诊断、树视图、JSONPath、YAML、Diff、教程、FAQ、相关工具、结构化数据和隐私/性能/无障碍门禁 | [规范页](../tools/json/index.html)、[浏览器回归](../scripts/json-workbench.browser.test.mjs)、[核心逻辑测试](../scripts/json-core.test.mjs)、[构建门禁](../scripts/json-build.test.mjs)、[截图](../assets/screenshot-json-tool.png) |
+| 强化核心工具：JWT、SQL、Regex、Cron、Timestamp | planned | 每个工具具备 canonical 页、问题型教程、FAQ、真实可复制示例、相关工具互链和适用的结构化数据 | — |
+| 建立 Markdown 单一来源流水线 | planned | `content/blog/*.md` 生成文章 HTML、博客索引、RSS/Atom、sitemap 的真实 `lastmod`、Open Graph 与结构化数据；生成物不得成为第二人工正文源 | — |
+| 接入搜索复盘 | planned | 联合观察查询词、页面、曝光、点击、CTR、收录状态、独立有效工具用户、有效使用次数和 30 天回访 | — |
 
-Phase 2 不在本阶段实施。连续 30 天有效使用用户过低的工具停止功能扩张；有曝光但 CTR 低的页面优化标题摘要；有访问但无有效使用的工具优先检查搜索意图、首屏价值和操作路径。
+Phase 2 已交付 JSON 工作台这一首个增量，其余项目仍按准入条件推进。连续 30 天有效使用用户过低的工具停止功能扩张；有曝光但 CTR 低的页面优化标题摘要；有访问但无有效使用的工具优先检查搜索意图、首屏价值和操作路径。
 
 ## Phase 3：商业化准备
 

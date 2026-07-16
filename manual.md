@@ -85,7 +85,7 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 
 ## 7. 稳定性说明
 
-`js/main.js` 使用 `SafeStorage` 封装 `localStorage`，在隐私模式或存储受限时页面仍可正常加载。在线工具内容自动保存在浏览器本地（JSON 工具键名 `dev-tools-json-content`）。
+`js/main.js` 使用 `SafeStorage` 封装 `localStorage`，在隐私模式或存储受限时页面仍可正常加载。JSON 工作台专属设置只保存缩进、宽松解析和 Unicode 显示偏好，不保存编辑内容；全站另保存主题、收藏和最近使用记录，刷新页面后 JSON 编辑器仍从空白文档开始。
 
 ## 8. 产品路线
 
@@ -95,4 +95,4 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 
 - 语法检查：`node --check js/*-tool.js js/tool-chrome.js` 通过。
 - 页面冒烟：本地静态服务下 `curl -I /index.html` 返回 `200`。
-- JSON 工具：非法 JSON 可定位行号；宽松模式下注释/尾逗号可解析。
+- JSON 工作台：非法 JSON 可定位行列；宽松模式支持注释/尾逗号；树视图、JSONPath、YAML 与 Diff 均在浏览器本地运行。

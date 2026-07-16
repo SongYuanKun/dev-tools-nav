@@ -44,7 +44,7 @@
 
 | 工具脚本 | `tool` → `工具` | 当前有效动作 `action` → `操作` |
 |---|---|---|
-| `js/json-tool.js` | `json` → JSON 格式化 | `format` → 格式化；`minify` → 压缩；`repair` → 修复；`validate` → 校验；`diff` → 时间差计算（当前通用映射） |
+| `js/json-workbench.mjs` | `json` → JSON 格式化 | `format` → 格式化；`minify` → 压缩；`repair` → 修复；`validate` → 校验；`diff` → 结构对比 |
 | `js/timestamp-tool.js` | `timestamp` → 时间戳转换 | `ts_to_date` → 时间戳转日期；`date_to_ts` → 日期转时间戳；`batch` → 批量转换；`diff` → 时间差计算 |
 | `js/encoding-tool.js` | `base64` → Base64 | `encode` → 编码；`decode` → 解码；`hash` → `hash` |
 | `js/regex-tool.js` | `regex` → 正则表达式 | `template` → `template`；`replace` → 替换 |
