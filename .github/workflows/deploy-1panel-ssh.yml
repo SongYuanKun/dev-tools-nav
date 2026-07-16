@@ -11,6 +11,10 @@ name: "Deploy to 1Panel (SSH + rsync)"
 permissions:
   contents: read
 
+concurrency:
+  group: deploy-1panel
+  cancel-in-progress: false
+
 jobs:
   deploy:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'

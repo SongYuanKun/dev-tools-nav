@@ -32,6 +32,7 @@ test("deploy workflows install dependencies and build before publishing", () => 
 
   const onePanel = readFileSync(".github/workflows/deploy-1panel-ssh.yml", "utf-8");
   assert.match(onePanel, /node-version: ["']24["']/);
+  assert.match(onePanel, /concurrency:\s*\n\s+group: deploy-1panel\s*\n\s+cancel-in-progress: false/);
   assertStepsInOrder(onePanel, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Sync site to temp dir"]);
   assert.match(onePanel, /name: Sync site to temp dir[\s\S]*?--exclude='node_modules'[\s\S]*?ONEPANEL_PATH/);
   assertStepsInOrder(onePanel, [
