@@ -92,16 +92,18 @@ done
 required_lines="$(printf '%s\n' "${required[@]}")"
 "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" sh -ec '
   target=$1; next=$2; old=$3; marker=$4; required=$5; owner=$6
-  switched=0
+  committed=0
   rollback() {
     status=$?
     trap - EXIT
-    if [ "$switched" -eq 1 ]; then
-      rm -rf "$target"
-      [ ! -d "$old" ] || mv "$old" "$target"
+    if [ "$committed" -eq 0 ]; then
+      if [ -e "$marker" ] && [ -d "$old" ]; then
+        rm -rf "$target"
+        mv "$old" "$target"
+      fi
+      rm -rf "$next"
+      rm -f "$marker"
     fi
-    rm -rf "$next"
-    rm -f "$marker"
     exit "$status"
   }
   trap rollback EXIT
@@ -110,7 +112,6 @@ required_lines="$(printf '%s\n' "${required[@]}")"
   : > "$marker"
   if [ -d "$target" ]; then mv "$target" "$old"; fi
   mv "$next" "$target"
-  switched=1
   failed=0
   while IFS= read -r relative; do
     [ -z "$relative" ] || [ -f "$target/$relative" ] || failed=1
@@ -120,7 +121,7 @@ EOF
   [ "$failed" -eq 0 ] || exit 1
   rm -rf "$old"
   rm -f "$marker"
-  switched=0
+  committed=1
   trap - EXIT
 ' _ "$TARGET" "$NEXT" "$OLD" "$MARKER" "$required_lines" "$SITE_OWNER"
 

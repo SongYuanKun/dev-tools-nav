@@ -92,6 +92,19 @@ case "$command" in
 esac
 `);
   chmodSync(fakeDocker, 0o755);
+  const fakeMv = join(bin, "mv");
+  writeFileSync(fakeMv, `#!/usr/bin/env bash
+set -euo pipefail
+if [[ -n "\${FAKE_MV_FAIL_ON_CALL:-}" ]]; then
+  count=0
+  if [[ -f "\${FAKE_MV_STATE}" ]]; then read -r count < "\${FAKE_MV_STATE}"; fi
+  count=$((count + 1))
+  printf '%s\n' "$count" > "\${FAKE_MV_STATE}"
+  if [[ "$count" == "\${FAKE_MV_FAIL_ON_CALL}" ]]; then exit 66; fi
+fi
+exec /bin/mv "$@"
+`);
+  chmodSync(fakeMv, 0o755);
   return { root, repo, site, fakeDocker };
 }
 
@@ -105,6 +118,7 @@ function deploy({ repo, site, fakeDocker }, extraEnv = {}) {
       OPENRESTY_CONTAINER: "fixture-openresty",
       SITE_BASE: site,
       SITE_OWNER: `${process.getuid()}:${process.getgid()}`,
+      PATH: `${dirname(fakeDocker)}:${process.env.PATH}`,
       ...extraEnv,
     },
   });
@@ -167,6 +181,23 @@ test("restores the previous release when post-copy verification fails", () => {
     assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
     assert.equal(existsSync(join(data.site, ".index-next")), false);
     assert.equal(existsSync(join(data.site, ".index-old")), false);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("restores the previous release when the new release move fails", () => {
+  const data = fixture();
+  try {
+    const result = deploy(data, {
+      FAKE_MV_FAIL_ON_CALL: "2",
+      FAKE_MV_STATE: join(data.root, "mv-state"),
+    });
+    assert.notEqual(result.status, 0);
+    assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+    assert.equal(existsSync(join(data.site, ".deploy-in-progress")), false);
+    assert.equal(existsSync(join(data.site, ".index-old")), false);
+    assert.equal(existsSync(join(data.site, ".index-next")), false);
   } finally {
     rmSync(data.root, { recursive: true, force: true });
   }
