@@ -60,10 +60,22 @@ function walkHtml(root, relativePath = "") {
 
 function pathnameFor(path) {
   if (path === "index.html") return "/";
+  if (path === "pages/blog/index.html") return "/pages/blog/";
   if (path.startsWith("tools/") && path.endsWith("/index.html")) {
     return `/${path.slice(0, -"index.html".length)}`;
   }
   return `/${path}`;
+}
+
+function readBlogPosts(root) {
+  const manifestPath = join(root, "data", "blog-manifest.json");
+  if (!existsSync(manifestPath)) return [];
+  try {
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    return Array.isArray(manifest) ? manifest : (Array.isArray(manifest.posts) ? manifest.posts : []);
+  } catch {
+    return [];
+  }
 }
 
 function isNoindexPage(root, path) {
@@ -96,10 +108,15 @@ export function resolveGitLastmod(root, relativeSourcePath) {
 export function collectStaticUrls(root, options = {}) {
   const resolveLastmod = options.resolveLastmod
     ?? ((sourcePath) => resolveGitLastmod(root, sourcePath));
+  const blogLastmods = new Map(
+    (options.blogPosts ?? readBlogPosts(root))
+      .filter((post) => typeof post?.slug === "string")
+      .map((post) => [post.slug, post.updated]),
+  );
   const urls = [];
 
-  const addUrl = (pathname, sourcePath) => {
-    const candidate = resolveLastmod(sourcePath);
+  const addUrl = (pathname, sourcePath, explicitLastmod) => {
+    const candidate = explicitLastmod ?? resolveLastmod(sourcePath);
     const lastmod = LASTMOD_PATTERN.test(candidate ?? "") ? candidate : undefined;
     const meta = pageMeta(pathname);
     urls.push({
@@ -113,7 +130,9 @@ export function collectStaticUrls(root, options = {}) {
   for (const entry of walkHtml(root)) {
     if (isNoindexPage(root, entry.path)) continue;
     const pathname = pathnameFor(entry.path);
-    if (pathname !== "/") addUrl(pathname, entry.path);
+    const blogMatch = /^pages\/blog\/([a-z0-9-]+)\.html$/.exec(entry.path);
+    const blogLastmod = blogMatch ? blogLastmods.get(blogMatch[1]) : undefined;
+    if (pathname !== "/") addUrl(pathname, entry.path, blogLastmod);
   }
   for (const id of collectTemplateIds(root)) {
     addUrl(`/pages/template.html?id=${id}`, "data/tools.js");

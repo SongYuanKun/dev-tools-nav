@@ -87,6 +87,27 @@ test("collectStaticUrls resolves lastmod from each URL's content source", () => 
   assert.ok(resolved.has("data/tools.js"));
 });
 
+test("blog index is canonicalized and article lastmod comes from Markdown metadata", () => {
+  const urls = collectStaticUrls(process.cwd(), {
+    resolveLastmod: () => "2025-01-02",
+    blogPosts: [
+      { slug: "why-build-dev-tools-nav", updated: "2026-03-20" },
+      { slug: "ai-free-tokens-handbook", updated: "2026-03-30" },
+    ],
+  });
+
+  assert.ok(urls.some(({ loc }) => loc === "https://tools.songyuankun.top/pages/blog/"));
+  assert.ok(!urls.some(({ loc }) => loc.endsWith("/pages/blog/index.html")));
+  assert.equal(
+    urls.find(({ loc }) => loc.endsWith("/pages/blog/why-build-dev-tools-nav.html"))?.lastmod,
+    "2026-03-20",
+  );
+  assert.equal(
+    urls.find(({ loc }) => loc.endsWith("/pages/blog/ai-free-tokens-handbook.html"))?.lastmod,
+    "2026-03-30",
+  );
+});
+
 test("generateSitemap omits missing and invalid lastmod values", () => {
   const missing = generateSitemap(process.cwd(), { resolveLastmod: () => undefined });
   const invalid = generateSitemap(process.cwd(), { resolveLastmod: () => "today" });
