@@ -5,32 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="description" content="从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、彩蛋和部署体验的过程。" />
-  <meta name="keywords" content="独立开发, 工具导航站, 个人项目, 程序员副业, SEO" />
-  <meta property="og:title" content="为什么一个程序员，会花3天做一个导航站？ · Koen的工具箱" />
-  <meta property="og:description" content="从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、彩蛋和部署体验的过程。" />
+  <meta name="description" content="从一个 mapper.selectById() 调用出发，追踪 MyBatis 内部的完整执行链路：代理、SqlSession、Executor、StatementHandler 与 JDBC。" />
+  <meta name="keywords" content="Java, MyBatis, 源码解析, SQL 执行, JDBC" />
+  <meta property="og:title" content="MyBatis 源码解析：SQL 是如何执行的 · Koen的工具箱" />
+  <meta property="og:description" content="从一个 mapper.selectById() 调用出发，追踪 MyBatis 内部的完整执行链路：代理、SqlSession、Executor、StatementHandler 与 JDBC。" />
   <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://tools.songyuankun.top/pages/blog/why-build-dev-tools-nav.html" />
+  <meta property="og:url" content="https://tools.songyuankun.top/pages/blog/java-source-mybatis.html" />
   <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
-  <meta property="article:published_time" content="2026-03-20" />
-  <meta property="article:modified_time" content="2026-03-20" />
+  <meta property="article:published_time" content="2024-08-20" />
+  <meta property="article:modified_time" content="2024-08-20" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="为什么一个程序员，会花3天做一个导航站？" />
-  <meta name="twitter:description" content="从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、彩蛋和部署体验的过程。" />
-  <link rel="canonical" href="https://tools.songyuankun.top/pages/blog/why-build-dev-tools-nav.html" />
+  <meta name="twitter:title" content="MyBatis 源码解析：SQL 是如何执行的" />
+  <meta name="twitter:description" content="从一个 mapper.selectById() 调用出发，追踪 MyBatis 内部的完整执行链路：代理、SqlSession、Executor、StatementHandler 与 JDBC。" />
+  <link rel="canonical" href="https://tools.songyuankun.top/pages/blog/java-source-mybatis.html" />
   <link rel="alternate" type="application/atom+xml" href="https://tools.songyuankun.top/feed.xml" title="Koen 的技术博客" />
-  <title>为什么一个程序员，会花3天做一个导航站？ · Koen的工具箱</title>
+  <title>MyBatis 源码解析：SQL 是如何执行的 · Koen的工具箱</title>
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../css/style.css" />
   <script>(function(){var t=localStorage.getItem('dev-tools-theme');if(t){document.documentElement.setAttribute('data-theme',t)}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}})();</script>
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "为什么一个程序员，会花3天做一个导航站？",
-  "description": "从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、彩蛋和部署体验的过程。",
+  "headline": "MyBatis 源码解析：SQL 是如何执行的",
+  "description": "从一个 mapper.selectById() 调用出发，追踪 MyBatis 内部的完整执行链路：代理、SqlSession、Executor、StatementHandler 与 JDBC。",
   "inLanguage": "zh-CN",
-  "datePublished": "2026-03-20",
-  "dateModified": "2026-03-20",
+  "datePublished": "2024-08-20",
+  "dateModified": "2024-08-20",
   "author": {
     "@type": "Person",
     "name": "Koen",
@@ -46,12 +46,12 @@
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://tools.songyuankun.top/pages/blog/why-build-dev-tools-nav.html"
+    "@id": "https://tools.songyuankun.top/pages/blog/java-source-mybatis.html"
   },
   "image": [
     "https://tools.songyuankun.top/assets/avatar.jpg"
   ],
-  "articleSection": "独立开发"
+  "articleSection": "Java 源码"
 }</script>
   <script defer src="../../js/base.js"></script>
   <style>
@@ -117,49 +117,120 @@
   <main class="blog-post-page">
     <article>
       <header class="blog-post-header">
-        <p class="blog-post-kicker">自托管首发 · 独立开发</p>
-        <h1>为什么一个程序员，会花3天做一个导航站？</h1>
+        <p class="blog-post-kicker">源码级探索 · Java</p>
+        <h1>MyBatis 源码解析：SQL 是如何执行的</h1>
         <div class="blog-post-meta">
-          <time datetime="2026-03-20">2026-03-20</time>
+          <time datetime="2024-08-20">2024-08-20</time>
           <span>作者 Koen</span>
-          <span>约 1 分钟阅读</span>
+          <span>约 6 分钟阅读</span>
         </div>
         <div class="blog-post-tags" aria-label="文章标签">
-          <span class="tag">独立开发</span>
-          <span class="tag">个人项目</span>
-          <span class="tag">思考</span>
+          <span class="tag">Java</span>
+          <span class="tag">MyBatis</span>
+          <span class="tag">源码解析</span>
+          <span class="tag">数据库</span>
         </div>
       </header>
 
       <div class="about-section blog-post-content">
         <section>
-<h2>1. 起因很简单</h2>
-<p>浏览器书签里堆满了链接，分类却越来越乱；群里偶尔有人求推荐工具，我翻半天才能丢出一串网址。那一刻想的是：<strong>与其每次临时拼凑，不如做一个自己能维护的清单</strong>。导航站听起来「老派」，但对每天和工具打交道的人来说，一个干净、可搜索的入口反而更实在。</p>
+<h2>前言</h2>
+<p>MyBatis 可能是 Java 后端开发用得最多的 ORM 框架之一。但你有没有想过：当你调用 <code>userMapper.selectById(1)</code> 的时候，MyBatis 内部到底发生了什么？</p>
+<p>今天我们就从源码层面，完整追踪一条 SQL 从 Mapper 接口到数据库的执行全链路。</p>
 </section>
 <section>
-<h2>2. 做着做着就认真了</h2>
-<p>本来只想静态罗列链接，结果一路加上了搜索、工具详情页、暗色/亮色主题，还有几处藏得很深的小互动。不是因为「必须」，而是写前端时手痒——<strong>既然要做，就做成自己愿意天天打开的样子</strong>。</p>
+<h2>一、Mapper 接口的代理机制</h2>
+<p>你写的 Mapper 接口没有实现类，但为什么能调用方法？答案是 <strong>JDK 动态代理</strong>。</p>
+<pre><code class="language-java">// MapperProxyFactory.java
+public T newInstance(SqlSession sqlSession) {
+    final MapperProxy&lt;T&gt; mapperProxy = new MapperProxy&lt;&gt;(sqlSession, mapperInterface, methodCache);
+    return (T) Proxy.newProxyInstance(
+        mapperInterface.getClassLoader(),
+        new Class[]{mapperInterface},
+        mapperProxy
+    );
+}</code></pre>
+<p>每个 Mapper 接口在运行时都会被 <code>MapperProxyFactory</code> 创建一个代理对象。当你调用接口方法时，实际执行的是 <code>MapperProxy.invoke()</code>。</p>
 </section>
 <section>
-<h2>3. 关于那个彩蛋系统</h2>
-<p>站点里埋了一套彩蛋：<strong>5 种解锁方式</strong>，触发时会有礼花（confetti）动画，状态记在 <code>localStorage</code> 里，下次访问还能保留进度。它没什么业务价值，但做独立项目时，这种「只有认真逛站的人才能发现」的细节，本身就是乐趣。</p>
-<blockquote><p>小彩蛋是对耐心读者的奖励，也是对自己别把事情写得太无聊的提醒。</p></blockquote>
+<h2>二、MapperProxy → MapperMethod</h2>
+<p><code>MapperProxy</code> 拦截到方法调用后，会委托给 <code>MapperMethod</code> 处理：</p>
+<pre><code class="language-java">// MapperProxy.java
+@Override
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    if (Object.class.equals(method.getDeclaringClass())) {
+        return method.invoke(this, args);
+    }
+    final MapperMethodInvoker invoker = cachedInvoker(method);
+    return invoker.invoke(proxy, method, args, sqlSession);
+}</code></pre>
+<p><code>MapperMethod</code> 会根据 SQL 类型（SELECT/INSERT/UPDATE/DELETE）决定调用 SqlSession 的哪个方法。</p>
 </section>
 <section>
-<h2>4. 目前的情况</h2>
-<p>实话实说：<strong>流量不高</strong>。但它仍然值得持续更新——因为每一次加工具、改文案、调样式，都是在练产品感觉、部署和体验，而不是停在「想做一个东西」的阶段。</p>
+<h2>三、SqlSession → Executor</h2>
+<p>SqlSession 是 MyBatis 的核心门面，但它不直接执行 SQL。真正的执行者是 <code>Executor</code>：</p>
+<ul><li><code>SimpleExecutor</code>：每次执行都创建新的 Statement</li><li><code>ReuseExecutor</code>：复用 Statement（相同 SQL 共享）</li><li><code>BatchExecutor</code>：批量执行模式</li><li><code>CachingExecutor</code>：包装器，增加二级缓存能力</li></ul>
+<pre><code class="language-java">// DefaultSqlSession.java
+@Override
+public &lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter, RowBounds rowBounds) {
+    MappedStatement ms = configuration.getMappedStatement(statement);
+    return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
+}</code></pre>
 </section>
 <section>
-<h2>5. 一些数据</h2>
-<ul><li><strong>60+</strong> 次 Git 提交</li><li><strong>2000+</strong> 行量级的前端与数据代码（随迭代增长）</li><li><strong>61</strong> 款收录工具</li><li>用 <strong>GitHub Actions</strong> 做自动化，和主站、镜像部署配合</li></ul>
+<h2>四、Executor → StatementHandler</h2>
+<p>Executor 拿到 <code>MappedStatement</code>（包含 SQL 模板、参数映射、结果映射），接下来要：</p>
+<ol><li>检查一级缓存（PerpetualCache）</li><li>缓存未命中，创建 <code>StatementHandler</code></li><li>StatementHandler 负责：创建 JDBC Statement → 设置参数 → 执行 SQL → 处理结果集</li></ol>
+<pre><code class="language-java">// SimpleExecutor.java
+private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
+    Statement stmt;
+    Connection connection = getConnection(statementLog);
+    stmt = handler.prepare(connection, transaction.getTimeout());
+    handler.parameterize(stmt);  // 设置参数
+    return stmt;
+}</code></pre>
 </section>
 <section>
-<h2>6. 下一步计划</h2>
-<ul><li>继续补充高质量工具与分类</li><li>优化交互与可读性（尤其是移动端）</li><li>系统学习 <strong>SEO</strong>，让有需要的人更容易搜到</li></ul>
+<h2>五、参数设置：ParameterHandler</h2>
+<p>SQL 中的 <code>#{id}</code> 是怎么变成实际值的？<code>ParameterHandler</code> 负责这件事：</p>
+<pre><code class="language-java">// DefaultParameterHandler.java
+@Override
+public void setParameters(PreparedStatement ps) {
+    List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();
+    for (int i = 0; i &lt; parameterMappings.size(); i++) {
+        ParameterMapping parameterMapping = parameterMappings.get(i);
+        Object value = /* 通过反射从参数对象中取值 */;
+        TypeHandler typeHandler = parameterMapping.getTypeHandler();
+        typeHandler.setParameter(ps, i + 1, value, parameterMapping.getJdbcType());
+    }
+}</code></pre>
+<p>核心机制：通过 <code>TypeHandler</code> 实现 Java 类型到 JDBC 类型的转换。</p>
 </section>
 <section>
-<h2>7. 写在最后</h2>
-<p>如果你也有一个「不大但想做」的念头——导航、清单、小工具、读书笔记站——<strong>先做出来比完美重要</strong>。三天可以只是一个开始；这篇文，就算我给同样在路上的人一点鼓劲。</p>
+<h2>六、结果集映射：ResultSetHandler</h2>
+<p>SQL 执行完，JDBC 返回 <code>ResultSet</code>，MyBatis 需要把它映射成 Java 对象：</p>
+<ul><li>根据 <code>&lt;resultMap&gt;</code> 或注解确定映射规则</li><li>通过反射创建目标对象</li><li>逐列调用 <code>TypeHandler.getResult()</code> 取值并设置属性</li><li>处理嵌套查询、延迟加载等复杂场景</li></ul>
+</section>
+<section>
+<h2>七、完整调用链</h2>
+<pre><code class="language-text">userMapper.selectById(1)
+  → MapperProxy.invoke()
+    → MapperMethod.execute()
+      → SqlSession.selectOne()
+        → CachingExecutor.query()      // 检查二级缓存
+          → BaseExecutor.query()       // 检查一级缓存
+            → SimpleExecutor.doQuery()
+              → StatementHandler.prepare()    // 创建 Statement
+              → ParameterHandler.setParameters() // 设置参数
+              → StatementHandler.query()      // 执行 SQL
+              → ResultSetHandler.handleResultSets() // 映射结果</code></pre>
+</section>
+<section>
+<h2>总结</h2>
+<p>MyBatis 的设计思路非常清晰：<strong>职责分离 + 模板方法</strong>。每一层只做一件事：</p>
+<ul><li><code>MapperProxy</code>：接口代理入口</li><li><code>SqlSession</code>：API 门面</li><li><code>Executor</code>：执行策略（缓存/复用/批量）</li><li><code>StatementHandler</code>：JDBC 操作封装</li><li><code>ParameterHandler</code> / <code>ResultSetHandler</code>：类型转换</li></ul>
+<p>理解了这个链路，你再遇到 MyBatis 的问题（缓存失效、参数绑定异常、结果映射错误），就知道该去哪一层找原因了。</p>
+<blockquote><p>源码不是用来背的，是用来解决问题的。当你遇到 bug 时能直接定位到对应的源码位置，这才是读源码的价值。</p></blockquote>
 </section>
       </div>
 
@@ -175,8 +246,7 @@
         <h2>相关文章</h2>
         <div class="blog-related-list">
           <a href="index.html">← 返回技术博客列表<span>站内文章与外链索引</span></a>
-          <a href="https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html">AI 免费 Token / 额度薅羊毛手册<span>AI 实践</span></a>
-          <a href="https://tools.songyuankun.top/pages/blog/java-source-mybatis.html">MyBatis 源码解析：SQL 是如何执行的<span>Java 源码</span></a>
+          <a href="https://tools.songyuankun.top/pages/blog/why-build-dev-tools-nav.html">为什么一个程序员，会花3天做一个导航站？<span>独立开发</span></a>
         </div>
       </section>
     </article>

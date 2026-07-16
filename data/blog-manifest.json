@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "posts": [
+    {
+      "slug": "ai-free-tokens-handbook",
+      "title": "AI 免费 Token / 额度薅羊毛手册",
+      "date": "2026-03-30",
+      "updated": "2026-03-30",
+      "description": "面向新手整理 AI API 免费额度、限流、绑卡与密钥安全的实用手册，帮助你低成本试用 Gemini、OpenAI、Claude、DeepSeek 与 Groq。",
+      "category": "AI 实践",
+      "tags": [
+        "AI",
+        "API",
+        "新手向"
+      ],
+      "keywords": "AI 免费额度, API Token, Gemini, OpenAI, Claude, DeepSeek, Groq",
+      "kicker": "自托管首发 · AI 实践",
+      "featured": true,
+      "readTime": 9,
+      "url": "/pages/blog/ai-free-tokens-handbook.html",
+      "canonicalUrl": "https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html",
+      "sourceFile": "ai-free-tokens-handbook.md"
+    },
+    {
+      "slug": "why-build-dev-tools-nav",
+      "title": "为什么一个程序员，会花3天做一个导航站？",
+      "date": "2026-03-20",
+      "updated": "2026-03-20",
+      "description": "从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、彩蛋和部署体验的过程。",
+      "category": "独立开发",
+      "tags": [
+        "独立开发",
+        "个人项目",
+        "思考"
+      ],
+      "keywords": "独立开发, 工具导航站, 个人项目, 程序员副业, SEO",
+      "kicker": "自托管首发 · 独立开发",
+      "featured": false,
+      "readTime": 1,
+      "url": "/pages/blog/why-build-dev-tools-nav.html",
+      "canonicalUrl": "https://tools.songyuankun.top/pages/blog/why-build-dev-tools-nav.html",
+      "sourceFile": "why-build-dev-tools-nav.md"
+    },
+    {
+      "slug": "java-source-mybatis",
+      "title": "MyBatis 源码解析：SQL 是如何执行的",
+      "date": "2024-08-20",
+      "updated": "2024-08-20",
+      "description": "从一个 mapper.selectById() 调用出发，追踪 MyBatis 内部的完整执行链路：代理、SqlSession、Executor、StatementHandler 与 JDBC。",
+      "category": "Java 源码",
+      "tags": [
+        "Java",
+        "MyBatis",
+        "源码解析",
+        "数据库"
+      ],
+      "keywords": "Java, MyBatis, 源码解析, SQL 执行, JDBC",
+      "kicker": "源码级探索 · Java",
+      "featured": false,
+      "readTime": 6,
+      "url": "/pages/blog/java-source-mybatis.html",
+      "canonicalUrl": "https://tools.songyuankun.top/pages/blog/java-source-mybatis.html",
+      "sourceFile": "java-source-mybatis.md"
+    }
+  ]
+}

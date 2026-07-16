@@ -3,116 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="author" content="Koen" />
+  <meta name="description" content="Koen 的技术博客：Java 源码、独立开发与 AI 实践。" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="description" content="Koen 的技术博客 - Java 源码深度解析、后端架构设计、独立开发实践、AI 应用与工具箱迭代分享。" />
-  <meta name="keywords" content="技术博客,Java源码,后端架构,独立开发,Koen,Spring Boot,MySQL,AI" />
-  <meta property="og:title" content="技术博客 · Koen的工具箱" />
-  <meta property="og:description" content="Java 源码、后端架构、独立开发与 AI 实践" />
-  <meta property="og:type" content="blog" />
-  <meta property="og:url" content="https://tools.songyuankun.top/pages/blog/" />
-  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="技术博客 · Koen的工具箱" />
-  <meta name="twitter:description" content="Java 源码、后端架构、独立开发与 AI 实践" />
   <link rel="canonical" href="https://tools.songyuankun.top/pages/blog/" />
-  <title>技术博客 · Koen的工具箱</title>
-  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="alternate" type="application/atom+xml" href="https://tools.songyuankun.top/feed.xml" title="Koen 的技术博客" />
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="../../css/blog.css" />
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Blog",
-      "name": "Koen 的技术博客",
-      "url": "https://tools.songyuankun.top/pages/blog/",
-      "description": "Java 源码深度解析、后端架构设计、独立开发实践分享",
-      "author": {
-        "@type": "Person",
-        "name": "Koen",
-        "url": "https://koen.songyuankun.top/"
-      },
-      "inLanguage": "zh-CN"
-    }
-  </script>
+  <title>技术博客 · Koen的工具箱</title>
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Koen 的技术博客",
+  "url": "https://tools.songyuankun.top/pages/blog/",
+  "inLanguage": "zh-CN"
+}</script>
   <script defer src="../../js/base.js"></script>
 </head>
 <body class="site-v2">
-
-  <header>
-    <nav class="navbar" role="navigation" aria-label="主导航">
-      <div class="navbar-inner">
-        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
-          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
-          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
-        </a>
-        <div class="nav-links">
-          <a href="../../index.html" class="nav-link">首页</a>
-          <a href="../tools/json.html" class="nav-link">在线工具</a>
-          <a href="index.html" class="nav-link active">技术博客</a>
-        </div>
-        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
-      </div>
-    </nav>
-  </header>
-
+  <header><nav class="navbar" aria-label="主导航"><a href="../../index.html" class="logo">Koen's 工具箱</a></nav></header>
   <main class="blog-page">
-    <header class="blog-header">
-      <h1>技术博客</h1>
-      <p>Java 源码、后端架构、独立开发与 AI 实践 — 记录工具箱背后的思考与踩坑。</p>
-      <div class="blog-stats" aria-label="文章统计">
-        <span class="blog-stat" id="blogStatTotal">加载中…</span>
-        <span class="blog-stat" id="blogStatShown"></span>
-      </div>
-    </header>
-
-    <nav class="blog-quick-links" aria-label="相关入口">
-      <a class="blog-quick-link" href="../../tools/json/">JSON 格式化工具</a>
-      <a class="blog-quick-link" href="../ai/open-source-radar.html">AI 开源雷达</a>
-      <a class="blog-quick-link" href="../ai/compare.html">AI 工具横评</a>
-    </nav>
-
+    <header class="blog-header"><h1>技术博客</h1><p>Java 源码、独立开发与 AI 实践。</p></header>
+    <div class="blog-stats"><span id="blogStatTotal">3 篇文章</span><span id="blogStatShown"></span></div>
     <div class="blog-toolbar">
-      <label class="blog-search" for="blogSearch">
-        <span class="visually-hidden">搜索文章</span>
-        <input id="blogSearch" type="search" placeholder="搜索标题、标签或摘要…" autocomplete="off" />
-      </label>
+      <label class="blog-search" for="blogSearch"><span class="visually-hidden">搜索文章</span><input id="blogSearch" type="search" placeholder="搜索标题、标签或摘要…" /></label>
       <div class="blog-categories" id="blogCategories"></div>
     </div>
-
     <section class="blog-featured" id="blogFeatured" hidden></section>
-    <div class="blog-list" id="blogList"></div>
-    <div class="blog-empty" id="blogEmpty" style="display:none;">暂无匹配文章，试试更换分类或清空搜索。</div>
-
-    <div class="blog-subscribe">
-      <h3>关注更新</h3>
-      <p>长文会同步发布到 CSDN，工具与雷达页在站内持续更新</p>
+    <div class="blog-list" id="blogList">
+        <a class="blog-card" href="ai-free-tokens-handbook.html">
+          <span class="blog-card-category">AI 实践</span>
+          <h2 class="blog-card-title">AI 免费 Token / 额度薅羊毛手册</h2>
+          <p class="blog-card-desc">面向新手整理 AI API 免费额度、限流、绑卡与密钥安全的实用手册，帮助你低成本试用 Gemini、OpenAI、Claude、DeepSeek 与 Groq。</p>
+        </a>
+        <a class="blog-card" href="why-build-dev-tools-nav.html">
+          <span class="blog-card-category">独立开发</span>
+          <h2 class="blog-card-title">为什么一个程序员，会花3天做一个导航站？</h2>
+          <p class="blog-card-desc">从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、彩蛋和部署体验的过程。</p>
+        </a>
+        <a class="blog-card" href="java-source-mybatis.html">
+          <span class="blog-card-category">Java 源码</span>
+          <h2 class="blog-card-title">MyBatis 源码解析：SQL 是如何执行的</h2>
+          <p class="blog-card-desc">从一个 mapper.selectById() 调用出发，追踪 MyBatis 内部的完整执行链路：代理、SqlSession、Executor、StatementHandler 与 JDBC。</p>
+        </a>
+    </div>
+    <div class="blog-empty" id="blogEmpty" style="display:none;">暂无匹配文章。</div>
+    <section class="blog-subscribe" aria-label="关注更新">
+      <h2>关注更新</h2>
+      <p>长文会同步发布到 CSDN，站内也提供 Atom 订阅。</p>
       <div class="blog-subscribe-links">
-        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="blog-subscribe-link">
-          CSDN 博客
-        </a>
-        <a href="https://github.com/SongYuanKun/dev-tools-nav" target="_blank" rel="noopener noreferrer" class="blog-subscribe-link">
-          GitHub 仓库
-        </a>
+        <a href="https://tools.songyuankun.top/feed.xml" class="blog-subscribe-link">Atom Feed</a>
+        <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener noreferrer" class="blog-subscribe-link">CSDN 博客</a>
       </div>
-    </div>
+    </section>
   </main>
-
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-brand">
-        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
-        <span class="footer-brand-name">Koen's 工具箱</span>
-      </div>
-      <div class="footer-links">
-        <a href="../../index.html">首页</a>
-        <span class="footer-divider">|</span>
-        <a href="../tools/json.html">在线工具</a>
-      </div>
-      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
-    </div>
-  </footer>
-
+  <footer class="footer"></footer>
   <script src="../../data/blog-posts.js"></script>
   <script src="../../js/blog-list.js"></script>
   <script defer src="../../js/footer.js"></script>

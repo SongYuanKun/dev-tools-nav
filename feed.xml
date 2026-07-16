@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Koen 的技术博客</title>
+  <id>https://tools.songyuankun.top/pages/blog/</id>
+  <link href="https://tools.songyuankun.top/feed.xml" rel="self" />
+  <link href="https://tools.songyuankun.top/pages/blog/" />
+  <updated>2026-03-30T00:00:00Z</updated>
+  <entry>
+    <title>AI 免费 Token / 额度薅羊毛手册</title>
+    <id>https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html</id>
+    <link href="https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html" />
+    <published>2026-03-30T00:00:00Z</published>
+    <updated>2026-03-30T00:00:00Z</updated>
+    <summary>面向新手整理 AI API 免费额度、限流、绑卡与密钥安全的实用手册，帮助你低成本试用 Gemini、OpenAI、Claude、DeepSeek 与 Groq。</summary>
+  </entry>
+  <entry>
+    <title>为什么一个程序员，会花3天做一个导航站？</title>
+    <id>https://tools.songyuankun.top/pages/blog/why-build-dev-tools-nav.html</id>
+    <link href="https://tools.songyuankun.top/pages/blog/why-build-dev-tools-nav.html" />
+    <published>2026-03-20T00:00:00Z</published>
+    <updated>2026-03-20T00:00:00Z</updated>
+    <summary>从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、彩蛋和部署体验的过程。</summary>
+  </entry>
+  <entry>
+    <title>MyBatis 源码解析：SQL 是如何执行的</title>
+    <id>https://tools.songyuankun.top/pages/blog/java-source-mybatis.html</id>
+    <link href="https://tools.songyuankun.top/pages/blog/java-source-mybatis.html" />
+    <published>2024-08-20T00:00:00Z</published>
+    <updated>2024-08-20T00:00:00Z</updated>
+    <summary>从一个 mapper.selectById() 调用出发，追踪 MyBatis 内部的完整执行链路：代理、SqlSession、Executor、StatementHandler 与 JDBC。</summary>
+  </entry>
+</feed>
