@@ -167,7 +167,7 @@ test("generateSitemap is deterministic for the same Git commit", () => {
 
 test("both deployment workflows generate sitemap before publishing", () => {
   const pages = readFileSync(".github/workflows/deploy-pages.yml", "utf8");
-  const onePanel = readFileSync(".github/workflows/deploy-1panel-ssh.yml", "utf8");
+  const onePanel = readFileSync(".github/workflows/deploy-1panel.yml", "utf8");
   const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
   const command = "npm run build";
 
@@ -175,7 +175,7 @@ test("both deployment workflows generate sitemap before publishing", () => {
   assert.ok(pages.includes(command));
   assert.ok(onePanel.includes(command));
   assert.ok(pages.indexOf(command) < pages.indexOf("Assemble site"));
-  assert.ok(onePanel.indexOf(command) < onePanel.indexOf("Sync site to temp dir"));
+  assert.ok(onePanel.indexOf(command) < onePanel.indexOf("./scripts/deploy-1panel-local.sh"));
 });
 
 test("module can be imported when argv has no script path", () => {

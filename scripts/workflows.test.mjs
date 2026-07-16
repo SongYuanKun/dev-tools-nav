@@ -30,23 +30,21 @@ test("deploy workflows install dependencies and build before publishing", () => 
   assertStepsInOrder(pages, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Assemble site"]);
   assert.match(pages, /name: Assemble site[\s\S]*?--exclude='node_modules'[\s\S]*?\.\/ _site\//);
 
-  const onePanel = readFileSync(".github/workflows/deploy-1panel-ssh.yml", "utf-8");
+  const onePanel = readFileSync(".github/workflows/deploy-1panel.yml", "utf-8");
+  assert.match(onePanel, /name: ["']?Deploy to 1Panel \(GTR self-hosted\)["']?/);
   assert.match(onePanel, /node-version: ["']24["']/);
+  assert.match(onePanel, /runs-on:\s*\[self-hosted, linux, x64, gtr\]/);
   assert.match(onePanel, /concurrency:\s*\n\s+group: deploy-1panel\s*\n\s+cancel-in-progress: false/);
-  assert.match(onePanel, /for attempt in 1 2 3/);
-  assert.match(onePanel, /if ssh-keyscan -T 10 -p "\$PORT" -H "\$ONEPANEL_HOST"/);
-  assert.match(onePanel, /sleep 5/);
-  assertStepsInOrder(onePanel, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Sync site to temp dir"]);
-  assert.match(onePanel, /name: Sync site to temp dir[\s\S]*?--exclude='node_modules'[\s\S]*?ONEPANEL_PATH/);
   assertStepsInOrder(onePanel, [
-    "mkdir -p /www/sites/tools.songyuankun.top/.index-next",
-    "docker cp $ONEPANEL_PATH/. 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/.index-next/",
-    "sh -ec",
-    "mv \\\"\\$target\\\" \\\"\\$old\\\"",
-    "if mv \\\"\\$next\\\" \\\"\\$target\\\"; then",
-    "mv \\\"\\$old\\\" \\\"\\$target\\\"",
+    "run: npm ci",
+    "name: Generate AI topic changelog",
+    "name: Refresh CSDN articles from RSS",
+    "run: npm run build",
+    "run: npm run check:generated",
+    "run: ./scripts/deploy-1panel-local.sh",
   ]);
-  assert.doesNotMatch(onePanel, /find .*target.*-exec rm -rf/);
+  assert.doesNotMatch(onePanel, /ubuntu-latest|ssh-keyscan|ssh-agent|rsync|ONEPANEL_/);
+  assert.doesNotMatch(onePanel, /pull_request:/);
 });
 
 test("screenshot workflow builds generated assets before serving the site", () => {
