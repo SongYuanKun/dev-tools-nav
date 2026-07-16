@@ -241,6 +241,26 @@ body.json-page {
 .json-statusbar > span { white-space: nowrap; }
 .json-validity { display: inline-flex; align-items: center; gap: 7px; margin-right: auto; color: var(--jw-text); }
 .json-validity i { width: 7px; height: 7px; border-radius: 50%; background: var(--jw-muted); }
+.json-validity[data-valid="true"] i { background: var(--jw-good); }
+.json-validity[data-valid="false"] i { background: var(--jw-danger); }
+.json-feedback { min-height: 24px; margin: 0; padding: 6px 18px; border-top: 1px solid var(--jw-border); color: var(--jw-good); font-size: .78rem; }
+.json-feedback[data-kind="error"] { color: var(--jw-danger); }
+
+.json-dialog { width: min(92vw, 520px); padding: 0; border: 1px solid var(--jw-border-strong); border-radius: 16px; background: var(--jw-surface); color: var(--jw-text); box-shadow: var(--jw-shadow); }
+.json-dialog::backdrop { background: rgba(2, 6, 14, .76); backdrop-filter: blur(4px); }
+.json-dialog form { display: grid; gap: 18px; padding: 24px; }
+.json-dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.json-dialog-heading p { margin: 0 0 5px; color: var(--jw-accent-strong); font: 700 .68rem ui-monospace, monospace; letter-spacing: .12em; }
+.json-dialog-heading h2 { margin: 0; font-size: 1.35rem; }
+.json-dialog-heading button { width: 44px; height: 44px; border: 0; background: transparent; color: var(--jw-muted); font-size: 1.5rem; cursor: pointer; }
+.json-dialog fieldset { display: flex; gap: 20px; margin: 0; padding: 16px; border: 1px solid var(--jw-border); border-radius: 10px; }
+.json-dialog fieldset label { display: inline-flex; align-items: center; min-height: 44px; }
+.json-dialog legend { padding: 0 6px; color: var(--jw-muted); font-size: .78rem; }
+.json-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 52px; }
+.json-setting-row span, .json-setting-row small { display: block; }
+.json-setting-row small, .json-dialog-note { color: var(--jw-muted); font-size: .78rem; line-height: 1.6; }
+.json-dialog-note { margin: 0; }
+.json-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
 .json-guide, .json-faq, .json-related { padding-top: 88px; }
 .json-section-heading { max-width: 680px; margin-bottom: 28px; }

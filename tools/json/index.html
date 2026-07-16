@@ -133,8 +133,9 @@
 
       <div class="json-command-area">
         <div class="json-primary-actions" aria-label="主要操作">
-          <button type="button" class="json-button json-button-primary" data-json-action="format">格式化 <kbd>⌘↵</kbd></button>
-          <button type="button" class="json-button" data-json-action="minify">压缩</button>
+          <button type="button" class="json-button json-button-primary" data-json-action="format">格式化 <kbd>Ctrl/⌘ ↵</kbd></button>
+          <button type="button" class="json-button" data-json-action="minify">压缩 <kbd>Ctrl/⌘ ⇧ M</kbd></button>
+          <button type="button" class="json-button" data-json-action="validate">校验</button>
           <button type="button" class="json-button" data-json-action="copy">复制</button>
           <button type="button" class="json-button json-button-danger" data-json-action="clear">清空</button>
         </div>
@@ -190,9 +191,30 @@
         <span class="json-validity" data-json-status role="status" aria-live="polite"><i aria-hidden="true"></i>等待输入</span>
         <span data-json-selection-status>第 1 行，第 1 列</span>
         <span data-json-counts>0 字符 · 0 B</span>
-        <span>缩进 2 空格</span>
+        <span data-json-indent-status>缩进 2 空格</span>
       </footer>
+      <p class="json-feedback" data-json-feedback role="status" aria-live="polite"></p>
     </section>
+
+    <dialog class="json-dialog" data-json-settings-dialog aria-labelledby="json-settings-title">
+      <form method="dialog">
+        <div class="json-dialog-heading"><div><p>EDITOR</p><h2 id="json-settings-title">JSON 设置</h2></div><button type="button" data-dialog-close aria-label="关闭设置">×</button></div>
+        <fieldset><legend>缩进</legend><label><input type="radio" name="indent" value="2" /> 2 空格</label><label><input type="radio" name="indent" value="4" /> 4 空格</label></fieldset>
+        <label class="json-setting-row"><span><strong>宽松解析</strong><small>允许注释和尾逗号</small></span><input type="checkbox" name="relaxed" /></label>
+        <label class="json-setting-row"><span><strong>保留 Unicode 转义</strong><small>格式化时输出 ASCII 转义</small></span><input type="checkbox" name="escapeUnicode" /></label>
+        <p class="json-dialog-note">仅保存以上三项偏好，不保存编辑器内容。</p>
+        <button type="button" class="json-button json-button-primary" data-dialog-close>完成</button>
+      </form>
+    </dialog>
+
+    <dialog class="json-dialog" data-json-repair-dialog aria-labelledby="json-repair-title">
+      <form method="dialog">
+        <div class="json-dialog-heading"><div><p>SAFE REPAIR</p><h2 id="json-repair-title">确认安全修复</h2></div><button type="button" data-dialog-close aria-label="取消修复">×</button></div>
+        <p data-json-repair-summary>将显示修复摘要。</p>
+        <p class="json-dialog-note">应用前原文不会改变，修复后仍可撤销。</p>
+        <div class="json-dialog-actions"><button type="button" class="json-button" data-dialog-close>取消</button><button type="button" class="json-button json-button-primary" data-json-repair-apply>应用修复</button></div>
+      </form>
+    </dialog>
 
     <section class="json-guide" aria-labelledby="json-guide-title">
       <div class="json-section-heading">
