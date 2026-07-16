@@ -5,7 +5,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
-import { findGeneratedDrift } from "./check-generated.mjs";
+import { findGeneratedDrift, findMissingGeneratedFiles } from "./check-generated.mjs";
 
 function git(root, ...args) {
   execFileSync("git", args, { cwd: root, stdio: "ignore" });
@@ -43,6 +43,19 @@ test("generated drift reports untracked target files", () => {
     assert.deepEqual(
       findGeneratedDrift(root, ["js/json-workbench.bundle.js", "feed.xml"]),
       { modified: [], untracked: ["feed.xml"] },
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("generated gate reports required artifacts that do not exist", () => {
+  const root = makeRepository();
+  try {
+    writeFileSync(join(root, "feed.xml"), "feed\n");
+    assert.deepEqual(
+      findMissingGeneratedFiles(root, ["feed.xml", "data/blog-manifest.json"]),
+      ["data/blog-manifest.json"],
     );
   } finally {
     rmSync(root, { recursive: true, force: true });
