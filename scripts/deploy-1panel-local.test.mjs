@@ -17,6 +17,31 @@ const verificationFiles = [
   "baidu_verify_codeva-TByQYpVHM2.html",
   "googleb710668c9aa28d4e.html",
 ];
+const publishedRootFiles = [
+  "index.html",
+  "favicon.ico",
+  "favicon.svg",
+  "feed.xml",
+  "robots.txt",
+  "sitemap.xml",
+];
+const publishedDirectoryFiles = [
+  "assets/app.txt",
+  "css/app.css",
+  "data/app.json",
+  "js/app.js",
+  "pages/blog/java-source-mybatis.html",
+  "tools/json/index.html",
+];
+const unpublishedFiles = [
+  ".env.production",
+  "manual.md",
+  "rollup.config.mjs",
+  ".superpowers/private.md",
+  "content/blog/private.md",
+  "docs/private.md",
+  "node_modules/pkg/index.js",
+];
 
 function write(root, relative, content = relative) {
   const path = join(root, relative);
@@ -33,9 +58,10 @@ function fixture() {
   mkdirSync(join(site, "index"), { recursive: true });
   mkdirSync(bin, { recursive: true });
   for (const file of requiredFiles) write(repo, file, `new:${file}`);
-  write(repo, "content/blog/private.md", "must not deploy");
-  write(repo, "docs/private.md", "must not deploy");
-  write(repo, "node_modules/pkg/index.js", "must not deploy");
+  for (const file of publishedRootFiles) write(repo, file, `new:${file}`);
+  for (const file of publishedDirectoryFiles) write(repo, file, `new:${file}`);
+  for (const file of unpublishedFiles) write(repo, file, "must not deploy");
+  for (const file of verificationFiles) write(repo, file, `repo:${file}`);
   write(join(site, "index"), "marker.txt", "old release");
   for (const file of verificationFiles) write(join(site, "index"), file, `verify:${file}`);
   cpSync("scripts/deploy-1panel-local.sh", join(repo, "scripts/deploy-1panel-local.sh"));
@@ -45,6 +71,7 @@ function fixture() {
 set -euo pipefail
 command="$1"
 shift
+if [[ -n "\${FAKE_DOCKER_LOG:-}" ]]; then printf '%s\n' "$command" >> "\$FAKE_DOCKER_LOG"; fi
 case "$command" in
   exec)
     container="$1"; shift
@@ -53,6 +80,7 @@ case "$command" in
   cp)
     source="$1"
     destination="\${2#*:}"
+    if [[ "\${FAKE_DOCKER_FAIL_CP:-0}" == "1" ]]; then exit 65; fi
     mkdir -p "$destination"
     cp -a "\${source%/.}/." "$destination/"
     if [[ "\${FAKE_DOCKER_DROP_FEED:-0}" == "1" ]]; then rm -f "$destination/feed.xml"; fi
@@ -87,15 +115,45 @@ test("deploys only the static payload and preserves verification files", () => {
   try {
     const result = deploy(data);
     assert.equal(result.status, 0, result.stderr);
-    assert.equal(readFileSync(join(data.site, "index/index.html"), "utf8"), "new:index.html");
-    assert.equal(existsSync(join(data.site, "index/content")), false);
-    assert.equal(existsSync(join(data.site, "index/docs")), false);
-    assert.equal(existsSync(join(data.site, "index/node_modules")), false);
+    for (const file of [...publishedRootFiles, ...publishedDirectoryFiles]) {
+      assert.equal(readFileSync(join(data.site, "index", file), "utf8"), `new:${file}`);
+    }
+    for (const file of unpublishedFiles) {
+      assert.equal(existsSync(join(data.site, "index", file)), false, `${file} must not deploy`);
+    }
     for (const file of verificationFiles) {
       assert.equal(readFileSync(join(data.site, "index", file), "utf8"), `verify:${file}`);
     }
     assert.equal(existsSync(join(data.site, ".index-next")), false);
     assert.equal(existsSync(join(data.site, ".index-old")), false);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("does not call Docker when a required local artifact is missing", () => {
+  const data = fixture();
+  try {
+    rmSync(join(data.repo, "feed.xml"));
+    const dockerLog = join(data.root, "docker.log");
+    const result = deploy(data, { FAKE_DOCKER_LOG: dockerLog });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Missing build artifact: feed\.xml/);
+    assert.equal(existsSync(dockerLog), false);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("clears a stale marker without deleting an index when no old release exists", () => {
+  const data = fixture();
+  try {
+    write(data.site, ".deploy-in-progress", "");
+    const result = deploy(data, { FAKE_DOCKER_FAIL_CP: "1" });
+    assert.notEqual(result.status, 0);
+    assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+    assert.equal(existsSync(join(data.site, ".deploy-in-progress")), false);
+    assert.equal(existsSync(join(data.site, ".index-next")), false);
   } finally {
     rmSync(data.root, { recursive: true, force: true });
   }
@@ -114,13 +172,17 @@ test("restores the previous release when post-copy verification fails", () => {
   }
 });
 
-test("recovers an interrupted old release before deploying", () => {
+test("restores the marked old release before a deployment that later fails", () => {
   const data = fixture();
   try {
     renameSync(join(data.site, "index"), join(data.site, ".index-old"));
-    const result = deploy(data);
-    assert.equal(result.status, 0, result.stderr);
-    assert.equal(readFileSync(join(data.site, "index/index.html"), "utf8"), "new:index.html");
+    write(join(data.site, "index"), "marker.txt", "unverified release");
+    write(data.site, ".deploy-in-progress", "");
+    const result = deploy(data, { FAKE_DOCKER_DROP_FEED: "1" });
+    assert.notEqual(result.status, 0);
+    assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+    assert.equal(existsSync(join(data.site, ".deploy-in-progress")), false);
+    assert.equal(existsSync(join(data.site, ".index-next")), false);
     assert.equal(existsSync(join(data.site, ".index-old")), false);
   } finally {
     rmSync(data.root, { recursive: true, force: true });

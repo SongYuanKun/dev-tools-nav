@@ -9,8 +9,30 @@ SITE_OWNER="${SITE_OWNER:-ubuntu:ubuntu}"
 TARGET="$SITE_BASE/index"
 NEXT="$SITE_BASE/.index-next"
 OLD="$SITE_BASE/.index-old"
+MARKER="$SITE_BASE/.deploy-in-progress"
 STAGE="$(mktemp -d)"
-trap 'rm -rf "$STAGE"' EXIT
+REMOTE_DIRTY=0
+
+cleanup() {
+  status=$?
+  trap - EXIT
+  rm -rf "$STAGE"
+  if [[ "$REMOTE_DIRTY" == "1" ]]; then
+    "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" sh -ec '
+      target=$1; next=$2; old=$3; marker=$4
+      if [ -e "$marker" ]; then
+        if [ -d "$old" ]; then
+          rm -rf "$target"
+          mv "$old" "$target"
+        fi
+        rm -f "$marker"
+      fi
+      rm -rf "$next"
+    ' _ "$TARGET" "$NEXT" "$OLD" "$MARKER" >/dev/null 2>&1 || true
+  fi
+  exit "$status"
+}
+trap cleanup EXIT
 
 required=(
   index.html sitemap.xml feed.xml favicon.svg
@@ -27,22 +49,36 @@ for relative in "${required[@]}"; do
 done
 
 rsync -a --delete \
-  --exclude='.git' --exclude='.github' --exclude='README.md' --exclude='.gitignore' \
-  --exclude='docs' --exclude='content' --exclude='package.json' --exclude='package-lock.json' \
-  --exclude='node_modules' --exclude='scripts' --exclude='deploy.sh' --exclude='logs' \
-  --exclude='*.bak' --exclude='.DS_Store' \
-  --exclude='baidu_verify_codeva-TByQYpVHM2.html' \
-  --exclude='googleb710668c9aa28d4e.html' \
+  --include='/assets/***' \
+  --include='/css/***' \
+  --include='/data/***' \
+  --include='/js/***' \
+  --include='/pages/***' \
+  --include='/tools/***' \
+  --include='/index.html' \
+  --include='/favicon.ico' \
+  --include='/favicon.svg' \
+  --include='/feed.xml' \
+  --include='/robots.txt' \
+  --include='/sitemap.xml' \
+  --exclude='*' \
   "$ROOT_DIR/" "$STAGE/"
 
-[[ ! -e "$STAGE/content" ]] || { echo "Source content leaked into deployment payload" >&2; exit 1; }
-
+REMOTE_DIRTY=1
 "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" sh -ec '
-  target=$1; next=$2; old=$3
-  if [ ! -d "$target" ] && [ -d "$old" ]; then mv "$old" "$target"; fi
+  target=$1; next=$2; old=$3; marker=$4
+  if [ -e "$marker" ]; then
+    if [ -d "$old" ]; then
+      rm -rf "$target"
+      mv "$old" "$target"
+    fi
+    rm -f "$marker"
+  elif [ ! -d "$target" ] && [ -d "$old" ]; then
+    mv "$old" "$target"
+  fi
   rm -rf "$next"
   mkdir -p "$next"
-' _ "$TARGET" "$NEXT" "$OLD"
+' _ "$TARGET" "$NEXT" "$OLD" "$MARKER"
 
 "$DOCKER_BIN" cp "$STAGE/." "$OPENRESTY_CONTAINER:$NEXT/"
 
@@ -55,26 +91,38 @@ done
 
 required_lines="$(printf '%s\n' "${required[@]}")"
 "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" sh -ec '
-  target=$1; next=$2; old=$3; required=$4; owner=$5
+  target=$1; next=$2; old=$3; marker=$4; required=$5; owner=$6
+  switched=0
+  rollback() {
+    status=$?
+    trap - EXIT
+    if [ "$switched" -eq 1 ]; then
+      rm -rf "$target"
+      [ ! -d "$old" ] || mv "$old" "$target"
+    fi
+    rm -rf "$next"
+    rm -f "$marker"
+    exit "$status"
+  }
+  trap rollback EXIT
   chown -R "$owner" "$next"
   rm -rf "$old"
+  : > "$marker"
   if [ -d "$target" ]; then mv "$target" "$old"; fi
-  if ! mv "$next" "$target"; then
-    [ ! -d "$old" ] || mv "$old" "$target"
-    exit 1
-  fi
+  mv "$next" "$target"
+  switched=1
   failed=0
   while IFS= read -r relative; do
     [ -z "$relative" ] || [ -f "$target/$relative" ] || failed=1
   done <<EOF
 $required
 EOF
-  if [ "$failed" -ne 0 ] || [ -e "$target/content" ]; then
-    rm -rf "$target"
-    [ ! -d "$old" ] || mv "$old" "$target"
-    exit 1
-  fi
+  [ "$failed" -eq 0 ] || exit 1
   rm -rf "$old"
-' _ "$TARGET" "$NEXT" "$OLD" "$required_lines" "$SITE_OWNER"
+  rm -f "$marker"
+  switched=0
+  trap - EXIT
+' _ "$TARGET" "$NEXT" "$OLD" "$MARKER" "$required_lines" "$SITE_OWNER"
 
+REMOTE_DIRTY=0
 echo "Deployed to $OPENRESTY_CONTAINER:$TARGET"
