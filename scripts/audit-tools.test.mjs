@@ -195,18 +195,19 @@ test("README documents separate deployment manifests", () => {
   assert.match(readme, /docs\/deploy-1panel\.md/);
 });
 
-test("content docs describe Markdown single-source as a Phase 2 target", () => {
-  const handbook = readFileSync("docs/ai-free-tokens-handbook.md", "utf-8");
+test("content docs record the delivered Markdown single-source pipeline", () => {
+  const handbook = readFileSync("content/blog/ai-free-tokens-handbook.md", "utf-8");
   const contentReadme = readFileSync("content/blog/README.md", "utf-8");
   const roadmap = readFileSync("docs/roadmap.md", "utf-8");
 
-  assert.match(handbook, /\[产品路线图\]\(\.\/roadmap\.md\)/);
+  assert.match(handbook, /^slug: ai-free-tokens-handbook$/m);
   assert.match(contentReadme, /\[产品路线图\]\(\.\.\/\.\.\/docs\/roadmap\.md\)/);
-  assert.match(contentReadme, /Phase 2 目标/);
-  assert.match(contentReadme, /当前仍有手写的 `pages\/blog\/\*\.html` 与人工同步内容/);
-  assert.doesNotMatch(contentReadme, /CI 会自动转换为/);
-  assert.match(roadmap, /已批准的目标架构[^\n]*Phase 2[^\n]*`planned`/);
-  assert.doesNotMatch(roadmap, /原创正文以 `content\/blog\/\*\.md` 为唯一来源；HTML、博客索引、Feed、sitemap 元数据和结构化数据均由构建流程生成/);
+  assert.match(contentReadme, /原创博客正文的唯一人工维护来源/);
+  assert.match(contentReadme, /`npm run check:generated`/);
+  assert.match(contentReadme, /`data\/blog-manifest\.json`/);
+  assert.match(roadmap, /原创正文以 `content\/blog\/\*\.md` 为唯一来源/);
+  assert.match(roadmap, /\| 建立 Markdown 单一来源流水线 \| done \|/);
+  assert.match(roadmap, /\[Atom Feed\]\(\.\.\/feed\.xml\)/);
 });
 
 test("roadmap tables use approved statuses and evidence every done row", () => {

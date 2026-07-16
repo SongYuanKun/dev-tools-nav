@@ -25,6 +25,7 @@
 - **暗色模式**：跟随系统偏好 + 手动切换，偏好持久化
 - **工具详情页**：每个工具独立详情页，含同类推荐
 - **在线工具集**：10 款浏览器内工具（JSON / 时间戳 / Cron / Base64 / JWT / SQL / 正则 / UUID / Diff / 颜色），纯前端、数据不出站
+- **Markdown 博客流水线**：原创正文单一来源，自动生成文章、索引、Atom Feed、结构化数据与 sitemap 日期
 - **响应式设计**：移动端、平板、桌面全适配
 - **精选标记**：高频推荐工具标注精选徽章
 - **🎮 彩蛋系统**：隐藏的"激活工具"分类，5 种趣味解锁方式！
@@ -87,19 +88,24 @@ dev-tools-nav/
 │   ├── ai/                 # AI 专题子页
 │   ├── blog/               # 技术博客
 │   └── tools/              # 在线工具（json、timestamp、cron 等）
+├── content/blog/           # 站内原创博客 Markdown 唯一人工维护源
 ├── data/
 │   ├── tools.js            # 工具数据 TOOLS_DATA
 │   ├── ai-compare.js       # AI 专题数据（横评、工作流、Prompt、入门、价格、AI_TOOL_INFO）
+│   ├── blog-manifest.json  # 构建生成的站内文章清单
+│   ├── blog-posts.js       # 构建生成的博客列表数据
 │   ├── articles.js         # 首页「最新动态」文章区
 │   └── servers.json        # JRebel 等（可由 Actions 同步更新）
 ├── assets/                 # Logo、预览截图（screenshot*.png）
 ├── scripts/
+│   ├── build-blog.mjs           # 生成文章、索引、清单与 Atom Feed
 │   ├── capture-screenshots.mjs  # Playwright 截取 README 用预览图
 │   ├── sync-csdn-rss.py         # 同步 CSDN RSS
 │   └── sync-open-source-radar.py # 同步 AI 开源项目雷达
 ├── docs/                   # 部署说明等（不随 Pages 发布，见 docs/README.md）
 ├── deploy.sh               # 同步到 1Panel 的本地脚本
 ├── package.json            # npm test、capture-screenshots（Playwright）
+├── feed.xml                # 构建生成的 Atom Feed
 └── .github/workflows/
     ├── deploy-pages.yml    # GitHub Pages 自动发布
     ├── deploy-1panel-ssh.yml  # 可选：SSH 同步到 1Panel

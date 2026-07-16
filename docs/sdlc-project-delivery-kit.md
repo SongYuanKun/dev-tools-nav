@@ -170,14 +170,15 @@ flowchart LR
 - `index.html`：首页；查询参数与 hash 若使用须文档化（如 `template.html?id=`）。
 - `pages/tools/*.html`：各在线工具；可选 `?q=` 等由页面脚本约定。
 - `pages/ai/*.html`：AI 专题；锚点 `id` 与 `data/ai-compare.js` 中链接一致。
-- `pages/blog/*.html`：博客；列表由 `data/blog-posts.js` 驱动。
+- `content/blog/*.md`：站内原创博客的人工维护源；构建后发布为 `pages/blog/*.html`。
+- `pages/blog/index.html`：博客索引；站内文章来自构建清单，CSDN 外部文章来自 RSS 同步数据。
 
 **脚本契约（摘录）**
 
 | 脚本 | 输入 | 输出 |
 |------|------|------|
-| `generate-sitemap.mjs` | 仓库内 HTML 路径、`BASE_URL` | `sitemap.xml` |
-| `build-blog.mjs` | `content/` 下 Markdown（若启用） | `pages/blog/*.html` |
+| `generate-sitemap.mjs` | 仓库内 HTML 路径、`data/blog-manifest.json`、`BASE_URL` | `sitemap.xml`（博客日期来自内容元数据） |
+| `build-blog.mjs` | `content/blog/*.md` | 文章 HTML、博客索引、文章清单、列表数据、Atom Feed |
 | `generate-ai-changelog.mjs` | `git log` 限定路径 | 覆写 `data/ai-compare.js` 中 `AI_TOPIC_CHANGELOG` |
 
 ### 2.4 逻辑数据模型（概念层）
@@ -192,8 +193,11 @@ CATEGORIES[]
 AI_COMPARE_DATA[], AI_WORKFLOW_DATA[], AI_GLOSSARY_DATA[]
   （专题域模型，详见 data/ai-compare.js）
 
-BLOG_POSTS[]
-  id, title, date, url | externalUrl, category, ...
+BLOG_MANIFEST.posts[]
+  slug, title, date, updated, description, category, tags, url, ...
+
+BLOG_POSTS[]（由 manifest 派生，供浏览器渲染）
+  id, slug, title, date, updated, url, category, ...
 
 ARTICLES / CSDN 同步 JSON
   （首页动态区数据源）
