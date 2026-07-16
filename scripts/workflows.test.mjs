@@ -27,12 +27,12 @@ test("test workflow gates pushes and pull requests with npm ci and npm test", ()
 test("deploy workflows install dependencies and build before publishing", () => {
   const pages = readFileSync(".github/workflows/deploy-pages.yml", "utf-8");
   assert.match(pages, /node-version: ["']24["']/);
-  assertStepsInOrder(pages, ["run: npm ci", "run: npm run build", "name: Assemble site"]);
+  assertStepsInOrder(pages, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Assemble site"]);
   assert.match(pages, /name: Assemble site[\s\S]*?--exclude='node_modules'[\s\S]*?\.\/ _site\//);
 
   const onePanel = readFileSync(".github/workflows/deploy-1panel-ssh.yml", "utf-8");
   assert.match(onePanel, /node-version: ["']24["']/);
-  assertStepsInOrder(onePanel, ["run: npm ci", "run: npm run build", "name: Sync site to temp dir"]);
+  assertStepsInOrder(onePanel, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Sync site to temp dir"]);
   assert.match(onePanel, /name: Sync site to temp dir[\s\S]*?--exclude='node_modules'[\s\S]*?ONEPANEL_PATH/);
 });
 
