@@ -54,6 +54,12 @@ test("collectStaticUrls creates template URLs only for catalog tools", () => {
   }
 });
 
+test("collectStaticUrls excludes noindex compatibility pages", () => {
+  const locations = collectStaticUrls(process.cwd()).map(({ loc }) => loc);
+  assert.ok(locations.includes("https://tools.songyuankun.top/tools/json/"));
+  assert.ok(!locations.includes("https://tools.songyuankun.top/pages/tools/json.html"));
+});
+
 test("collectStaticUrls keeps template URLs at monthly priority 0.5", () => {
   const templates = collectStaticUrls(process.cwd())
     .filter(({ loc }) => loc.includes("/pages/template.html?id="));

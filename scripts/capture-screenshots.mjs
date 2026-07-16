@@ -18,12 +18,10 @@ const ASSETS = join(ROOT, "assets");
 const BASE_URL = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
 export async function prepareJsonSample(page) {
-  await page.locator(".json-more > summary").click();
-  await page.locator("#btnSample").waitFor({ state: "visible" });
-  await page.locator("#btnSample").click();
+  await page.locator('[data-json-action="sample"]').click();
   await page.waitForFunction(
-    (expected) => document.querySelector("#jsonInput")?.value.includes(expected),
-    "Koen Tools",
+    (expected) => document.querySelector("[data-json-editor] .cm-content")?.textContent.includes(expected),
+    "JSON 工作台",
   );
 }
 
@@ -32,7 +30,7 @@ export const TARGETS = Object.freeze([
   { path: "/index.html", file: "screenshot.png", fullPage: false },
   { path: "/pages/blog/index.html", file: "screenshot-blog.png", fullPage: false },
   {
-    path: "/pages/tools/json.html?embed=1",
+    path: "/tools/json/",
     file: "screenshot-json-tool.png",
     fullPage: false,
     prepare: prepareJsonSample,

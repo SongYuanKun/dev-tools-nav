@@ -66,6 +66,12 @@ function pathnameFor(path) {
   return `/${path}`;
 }
 
+function isNoindexPage(root, path) {
+  const source = readFileSync(join(root, path), "utf8");
+  return /<meta\b(?=[^>]*\bname=["']robots["'])(?=[^>]*\bcontent=["'][^"']*\bnoindex\b)[^>]*>/i.test(source)
+    || /<meta\b(?=[^>]*\bcontent=["'][^"']*\bnoindex\b)(?=[^>]*\bname=["']robots["'])[^>]*>/i.test(source);
+}
+
 function collectTemplateIds(root) {
   const toolsPath = join(root, "data", "tools.js");
   if (!existsSync(toolsPath)) return [];
@@ -105,6 +111,7 @@ export function collectStaticUrls(root, options = {}) {
 
   addUrl("/", "index.html");
   for (const entry of walkHtml(root)) {
+    if (isNoindexPage(root, entry.path)) continue;
     const pathname = pathnameFor(entry.path);
     if (pathname !== "/") addUrl(pathname, entry.path);
   }

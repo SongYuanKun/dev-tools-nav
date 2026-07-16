@@ -895,6 +895,10 @@ export function mountJsonWorkbench(mount) {
 
 function mountAvailableEditors() {
   document.querySelectorAll("[data-json-editor]").forEach((mount) => {
+    const queryValue = new URLSearchParams(window.location.search).get("q");
+    if (queryValue !== null && mount.dataset.initialValue === "") {
+      mount.dataset.initialValue = queryValue;
+    }
     if (!mount.querySelector(".cm-editor")) mountJsonWorkbench(mount);
   });
   initializeModeTabs();

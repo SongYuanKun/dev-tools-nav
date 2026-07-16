@@ -1,10 +1,25 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
+import vm from "node:vm";
 
 const html = await readFile(new URL("../tools/json/index.html", import.meta.url), "utf8");
 const css = await readFile(new URL("../css/json-workbench.css", import.meta.url), "utf8").catch(() => "");
 const workbenchSource = await readFile(new URL("../js/json-workbench.mjs", import.meta.url), "utf8");
+const legacyHtml = await readFile(new URL("../pages/tools/json.html", import.meta.url), "utf8");
+
+async function collectHtmlFiles(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await collectHtmlFiles(path));
+    else if (entry.isFile() && entry.name.endsWith(".html")) files.push(path);
+  }
+  return files;
+}
 
 function count(pattern) {
   return [...html.matchAll(pattern)].length;
@@ -21,6 +36,43 @@ test("canonical JSON page loads the direct workbench without an iframe", () => {
   assert.match(html, /<link[^>]+rel=["']canonical["'][^>]+href=["']https:\/\/tools\.songyuankun\.top\/tools\/json\/["']/i);
   assert.match(html, /href=["']\.\.\/\.\.\/css\/json-workbench\.css["']/i);
   assert.match(html, /src=["']\.\.\/\.\.\/js\/json-workbench\.bundle\.js["']/i);
+});
+
+test("legacy JSON page is a noindex redirect that preserves non-embed query parameters", async () => {
+  assert.match(legacyHtml, /<meta[^>]+name=["']robots["'][^>]+content=["']noindex(?:,\s*nofollow)?["']/i);
+  assert.doesNotMatch(legacyHtml, /json-workbench|json-tool\.js|data-json-editor|<textarea\b/i);
+
+  const script = legacyHtml.match(/<script>([\s\S]*?)<\/script>/i)?.[1];
+  assert.ok(script, "legacy redirect script is missing");
+  const redirects = [];
+  vm.runInNewContext(script, {
+    URLSearchParams,
+    location: {
+      search: "?embed=1&q=%7B%22a%22%3A1%7D&mode=tree&embed=0",
+      replace(value) { redirects.push(value); },
+    },
+  });
+  assert.deepEqual(redirects, ["../../tools/json/?q=%7B%22a%22%3A1%7D&mode=tree"]);
+  assert.match(legacyHtml, /<a[^>]+href=["']\.\.\/\.\.\/tools\/json\/["'][^>]*>[^<]+<\/a>/i);
+  const redirect = redirects[0];
+  assert.equal(
+    new URL(redirect, "https://tools.songyuankun.top/pages/tools/json.html").href,
+    "https://tools.songyuankun.top/tools/json/?q=%7B%22a%22%3A1%7D&mode=tree",
+  );
+  assert.equal(
+    new URL(redirect, "https://songyuankun.github.io/dev-tools-nav/pages/tools/json.html").href,
+    "https://songyuankun.github.io/dev-tools-nav/tools/json/?q=%7B%22a%22%3A1%7D&mode=tree",
+  );
+});
+
+test("repository HTML no longer references the legacy JSON implementation or embed URL", async () => {
+  const root = fileURLToPath(new URL("..", import.meta.url));
+  const htmlFiles = await collectHtmlFiles(root);
+  for (const path of htmlFiles) {
+    const source = await readFile(path, "utf8");
+    assert.doesNotMatch(source, /(?:\.\.\/)*js\/json-tool\.js/i, `${path} references json-tool.js`);
+    assert.doesNotMatch(source, /pages\/tools\/json\.html[^"'\s>]*[?&]embed=1/i, `${path} references the legacy JSON embed`);
+  }
 });
 
 test("workbench exposes one editor, five accessible modes, and complete command groups", () => {

@@ -281,6 +281,19 @@ test("settings controls keep 44px touch targets on a narrow viewport", async () 
   await context.close();
 });
 
+test("legacy q deep links redirect and initialize the canonical editor byte for byte", async () => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  const value = '{"plus":"a+b","unicode":"中文"}';
+  await page.goto(`${origin}/pages/tools/json.html?embed=1&q=${encodeURIComponent(value)}&mode=tree`);
+  await page.waitForURL(/\/tools\/json\/\?q=/);
+  await page.locator("[data-json-editor] .cm-content").waitFor();
+  assert.equal(await documentText(page), value);
+  assert.match(page.url(), /mode=tree/);
+  assert.doesNotMatch(page.url(), /embed=/);
+  await context.close();
+});
+
 test("switching every analysis mode preserves the main JSON byte for byte", async () => {
   const { context, page } = await openWorkbench();
   const sentinel = '{\n  "untouched": [3, 2, 1],\n  "spacing": true\n}';

@@ -76,7 +76,8 @@ dev-tools-nav/
 ├── js/
 │   ├── main.js             # 搜索过滤、分类、彩蛋、侧栏等
 │   ├── base.js             # 全站导航注入、主题、Umami 统计
-│   ├── json-tool.js        # JSON 工具核心逻辑（实时校验、树形视图、宽松解析）
+│   ├── json-core.mjs       # JSON 解析、转换、查询与 Diff 纯逻辑
+│   ├── json-workbench.mjs  # JSON 工作台交互与 CodeMirror 状态
 │   ├── tool-chrome.js      # 在线工具共享壳层（导航、Toast、本地处理提示）
 │   ├── *-tool.js           # 各工具独立逻辑（json、timestamp、cron 等）
 │   ├── tools-hub.js        # 工具汇总页交互
