@@ -1,6 +1,6 @@
 # Markdown 博客单一来源流水线实施计划
 
-日期：2026-07-16  
+日期：2026-07-16
 对应设计：`docs/superpowers/specs/2026-07-16-markdown-blog-pipeline-design.md`
 
 ## Task 1：锁定内容模型和生成契约

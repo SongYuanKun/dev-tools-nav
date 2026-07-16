@@ -22,7 +22,7 @@ import {
   unlinkSync,
   writeFileSync,
 } from 'fs'
-import { dirname, join } from 'path'
+import { basename, dirname, join } from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -173,6 +173,13 @@ export function buildBlogContentModel(sources, options = {}) {
   const slugs = new Map()
 
   for (const post of posts) {
+    const sourceSlug = basename(post.sourceFile, '.md')
+    if (post.slug !== sourceSlug) {
+      throw sourceError(
+        post.sourceFile,
+        `slug "${post.slug}" must match the source filename "${sourceSlug}"`,
+      )
+    }
     if (post.slug === 'index' || post.slug === 'post') {
       throw sourceError(
         post.sourceFile,
@@ -713,6 +720,10 @@ function renderAtomFeed(posts) {
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Koen 的技术博客</title>
   <id>${BASE_URL}/pages/blog/</id>
+  <author>
+    <name>Koen</name>
+    <uri>https://koen.songyuankun.top/</uri>
+  </author>
   <link href="${BASE_URL}/feed.xml" rel="self" />
   <link href="${BASE_URL}/pages/blog/" />
   <updated>${feedUpdated}T00:00:00Z</updated>
@@ -744,14 +755,20 @@ export function buildBlogArtifacts(normalizedPosts) {
   return artifacts
 }
 
-export function calculateStaleBlogArticlePaths(previousManifest, currentPosts) {
+export function calculateStaleBlogArticlePaths(
+  previousManifest,
+  currentPosts,
+  existingBlogFiles = [],
+) {
   const currentSlugs = new Set(currentPosts.map(post => post.slug))
   const reserved = new Set(['index', 'post'])
   const previousPosts = previousManifest?.version === 1 && Array.isArray(previousManifest.posts)
     ? previousManifest.posts
     : []
-  return previousPosts
-    .map(post => post?.slug)
+  const previousSlugs = previousPosts.map(post => post?.slug)
+  const filesystemSlugs = existingBlogFiles
+    .map(file => /^([a-z0-9]+(?:-[a-z0-9]+)*)\.html$/.exec(file)?.[1])
+  return [...new Set([...previousSlugs, ...filesystemSlugs])]
     .filter(slug =>
       typeof slug === 'string' &&
       /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) &&
@@ -763,7 +780,13 @@ export function calculateStaleBlogArticlePaths(previousManifest, currentPosts) {
 
 export function writeBlogArtifacts(root, artifacts, previousManifest = null) {
   const nextManifest = JSON.parse(artifacts['data/blog-manifest.json'])
-  const stalePaths = calculateStaleBlogArticlePaths(previousManifest, nextManifest.posts)
+  const blogDirectory = join(root, 'pages', 'blog')
+  const existingBlogFiles = existsSync(blogDirectory) ? readdirSync(blogDirectory) : []
+  const stalePaths = calculateStaleBlogArticlePaths(
+    previousManifest,
+    nextManifest.posts,
+    existingBlogFiles,
+  )
 
   for (const [relativePath, content] of Object.entries(artifacts)) {
     const outputPath = join(root, relativePath)
@@ -785,30 +808,27 @@ export function selectBlogMarkdownFiles(files) {
 }
 
 function main() {
-  if (!existsSync(CONTENT_DIR)) {
-    console.log('content/blog/ not found, skipping blog build.')
-    return
-  }
+  const { posts, artifacts, removed } = buildBlogSite(ROOT)
+  console.log(`blog build: ${posts.length} post(s), ${Object.keys(artifacts).length} artifact(s) generated.`)
+  if (removed.length) console.log(`blog build: removed ${removed.join(', ')}`)
+}
 
-  const files = selectBlogMarkdownFiles(readdirSync(CONTENT_DIR))
-  if (!files.length) {
-    console.log('No markdown files in content/blog/, skipping.')
-    return
-  }
-
+export function buildBlogSite(root, options = {}) {
+  const contentDirectory = join(root, 'content', 'blog')
+  const files = existsSync(contentDirectory)
+    ? selectBlogMarkdownFiles(readdirSync(contentDirectory))
+    : []
   const posts = buildBlogContentModel(files.map(sourceFile => ({
     sourceFile,
-    raw: readFileSync(join(CONTENT_DIR, sourceFile), 'utf8'),
-  })))
-  const manifestPath = join(ROOT, 'data', 'blog-manifest.json')
+    raw: readFileSync(join(contentDirectory, sourceFile), 'utf8'),
+  })), options)
+  const manifestPath = join(root, 'data', 'blog-manifest.json')
   const previousManifest = existsSync(manifestPath)
     ? JSON.parse(readFileSync(manifestPath, 'utf8'))
     : null
   const artifacts = buildBlogArtifacts(posts)
-  const removed = writeBlogArtifacts(ROOT, artifacts, previousManifest)
-
-  console.log(`blog build: ${posts.length} post(s), ${Object.keys(artifacts).length} artifact(s) generated.`)
-  if (removed.length) console.log(`blog build: removed ${removed.join(', ')}`)
+  const removed = writeBlogArtifacts(root, artifacts, previousManifest)
+  return { posts, artifacts, removed }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

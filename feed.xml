@@ -2,6 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Koen 的技术博客</title>
   <id>https://tools.songyuankun.top/pages/blog/</id>
+  <author>
+    <name>Koen</name>
+    <uri>https://koen.songyuankun.top/</uri>
+  </author>
   <link href="https://tools.songyuankun.top/feed.xml" rel="self" />
   <link href="https://tools.songyuankun.top/pages/blog/" />
   <updated>2026-03-30T00:00:00Z</updated>

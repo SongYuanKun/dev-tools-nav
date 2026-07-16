@@ -90,6 +90,12 @@ jobs:
         if: env.DEPLOY_ENABLED == 'true'
         run: |
           ssh -p "${ONEPANEL_PORT:-22}" "$ONEPANEL_USER@$ONEPANEL_HOST" \
-            "docker cp $ONEPANEL_PATH/. 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/index/ && \
-             docker exec 1Panel-openresty-rRvM chown -R ubuntu:ubuntu /www/sites/tools.songyuankun.top/index/ && \
+            "docker exec 1Panel-openresty-rRvM rm -rf /tmp/dev-tools-nav-next && \
+             docker exec 1Panel-openresty-rRvM mkdir -p /tmp/dev-tools-nav-next && \
+             docker cp $ONEPANEL_PATH/. 1Panel-openresty-rRvM:/tmp/dev-tools-nav-next/ && \
+             docker exec 1Panel-openresty-rRvM sh -c 'target=/www/sites/tools.songyuankun.top/index; \
+               find \"\$target\" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +; \
+               cp -a /tmp/dev-tools-nav-next/. \"\$target\"/; \
+               rm -rf /tmp/dev-tools-nav-next; \
+               chown -R ubuntu:ubuntu \"\$target\"' && \
              echo '✅ Container sync done'"

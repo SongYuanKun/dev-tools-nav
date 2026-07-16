@@ -1,9 +1,20 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import {
+  existsSync,
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 import {
   buildBlogArtifacts,
   buildBlogContentModel,
+  buildBlogSite,
   calculateStaleBlogArticlePaths,
   parseBlogSource,
   renderMarkdown,
@@ -48,10 +59,10 @@ test("content model sorts newest first with a stable slug tie-breaker", () => {
 test("content model rejects duplicate output slugs", () => {
   assert.throws(
     () => buildBlogContentModel([
-      { sourceFile: "first.md", raw: VALID_FRONTMATTER },
-      { sourceFile: "second.md", raw: VALID_FRONTMATTER },
+      { sourceFile: "useful-post.md", raw: VALID_FRONTMATTER },
+      { sourceFile: "useful-post.md", raw: VALID_FRONTMATTER },
     ], { today: "2026-07-16" }),
-    /duplicate slug "useful-post" in first\.md and second\.md/,
+    /duplicate slug "useful-post" in useful-post\.md and useful-post\.md/,
   );
 });
 
@@ -62,6 +73,16 @@ test("content model rejects slugs owned by fixed blog pages", () => {
       raw: VALID_FRONTMATTER.replace("slug: useful-post", "slug: index"),
     }], { today: "2026-07-16" }),
     /index\.md: slug "index" conflicts with a fixed blog output/,
+  );
+});
+
+test("content model requires the slug to match its Markdown filename", () => {
+  assert.throws(
+    () => buildBlogContentModel([{
+      sourceFile: "different-name.md",
+      raw: VALID_FRONTMATTER,
+    }], { today: "2026-07-16" }),
+    /different-name\.md: slug "useful-post" must match the source filename/,
   );
 });
 
@@ -225,6 +246,7 @@ test("article, index, manifest, compatibility data, and Atom share canonical pos
   assert.match(index, /href="https:\/\/blog\.csdn\.net\/syk123839070"/);
 
   const feed = artifacts["feed.xml"];
+  assert.match(feed, /<author>\s*<name>Koen<\/name>\s*<uri>https:\/\/koen\.songyuankun\.top\/<\/uri>\s*<\/author>/);
   assert.match(feed, /<title>Use &lt;JSON&gt; &amp; APIs<\/title>/);
   assert.match(feed, /<summary>A &lt;safe&gt; &amp; useful summary<\/summary>/);
   assert.match(feed, /<published>2026-03-03T00:00:00Z<\/published>/);
@@ -232,14 +254,51 @@ test("article, index, manifest, compatibility data, and Atom share canonical pos
   assert.match(feed, new RegExp(`<id>${canonical}<\\/id>`));
 });
 
-test("stale cleanup is owned by the previous manifest and preserves index and compatibility page", () => {
+test("stale cleanup removes manifest and filesystem orphans while preserving fixed pages", () => {
   const previous = {
     version: 1,
     posts: [{ slug: "kept" }, { slug: "removed" }, { slug: "index" }, { slug: "post" }],
   };
   const current = [normalizedPost("kept", "2026-03-01")];
 
-  assert.deepEqual(calculateStaleBlogArticlePaths(previous, current), [
+  assert.deepEqual(calculateStaleBlogArticlePaths(previous, current, [
+    "kept.html", "orphan.html", "index.html", "post.html", "notes.txt",
+  ]), [
+    "pages/blog/orphan.html",
     "pages/blog/removed.html",
   ]);
+});
+
+test("an empty Markdown source set rebuilds empty artifacts and removes every old article", () => {
+  const root = mkdtempSync(join(tmpdir(), "blog-empty-"));
+  try {
+    mkdirSync(join(root, "content", "blog"), { recursive: true });
+    mkdirSync(join(root, "data"), { recursive: true });
+    mkdirSync(join(root, "pages", "blog"), { recursive: true });
+    writeFileSync(join(root, "content", "blog", "README.md"), "documentation only\n");
+    writeFileSync(join(root, "pages", "blog", "old-post.html"), "old body\n");
+    writeFileSync(join(root, "pages", "blog", "orphan.html"), "orphan body\n");
+    writeFileSync(join(root, "pages", "blog", "post.html"), "compatibility\n");
+    writeFileSync(join(root, "data", "blog-manifest.json"), JSON.stringify({
+      version: 1,
+      posts: [{ slug: "old-post" }],
+    }));
+
+    const result = buildBlogSite(root, { today: "2026-07-16" });
+
+    assert.equal(result.posts.length, 0);
+    assert.deepEqual(result.removed, [
+      "pages/blog/old-post.html",
+      "pages/blog/orphan.html",
+    ]);
+    assert.deepEqual(
+      JSON.parse(readFileSync(join(root, "data", "blog-manifest.json"), "utf8")).posts,
+      [],
+    );
+    assert.equal(existsSync(join(root, "pages", "blog", "old-post.html")), false);
+    assert.equal(existsSync(join(root, "pages", "blog", "orphan.html")), false);
+    assert.equal(existsSync(join(root, "pages", "blog", "post.html")), true);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });

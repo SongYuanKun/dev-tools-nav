@@ -34,6 +34,11 @@ test("deploy workflows install dependencies and build before publishing", () => 
   assert.match(onePanel, /node-version: ["']24["']/);
   assertStepsInOrder(onePanel, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Sync site to temp dir"]);
   assert.match(onePanel, /name: Sync site to temp dir[\s\S]*?--exclude='node_modules'[\s\S]*?ONEPANEL_PATH/);
+  assertStepsInOrder(onePanel, [
+    "docker cp $ONEPANEL_PATH/. 1Panel-openresty-rRvM:/tmp/dev-tools-nav-next/",
+    "find \\\"\\$target\\\" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +",
+    "cp -a /tmp/dev-tools-nav-next/. \\\"\\$target\\\"/",
+  ]);
 });
 
 test("screenshot workflow builds generated assets before serving the site", () => {

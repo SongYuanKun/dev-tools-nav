@@ -148,9 +148,12 @@
         (typeof BLOG_POSTS !== "undefined" ? BLOG_POSTS : []).forEach(function (p) {
           if (p.externalUrl) existingUrls[p.externalUrl] = true;
         });
-        dynamicPosts = (data.items || [])
-          .filter(function (article) { return article.url && !existingUrls[article.url]; })
-          .map(normalizeCsdnArticle);
+        dynamicPosts = [];
+        (data.items || []).forEach(function (article) {
+          if (!article.url || existingUrls[article.url]) return;
+          existingUrls[article.url] = true;
+          dynamicPosts.push(normalizeCsdnArticle(article));
+        });
         renderPosts();
       })
       .catch(function () {

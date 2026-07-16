@@ -876,6 +876,35 @@ test("generated blog index merges canonical posts with real CSDN articles", asyn
   await context.close();
 });
 
+test("blog index deduplicates repeated CSDN URLs at runtime", async () => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  const duplicateUrl = "https://blog.csdn.net/syk123839070/article/details/duplicate";
+  await page.route("**/data/csdn-articles.json", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({
+      items: [
+        { title: "First", url: duplicateUrl, date: "2026-07-01" },
+        { title: "Second", url: duplicateUrl, date: "2026-07-02" },
+      ],
+    }),
+  }));
+  await page.goto(`${origin}/pages/blog/`);
+  await page.locator(`a[href="${duplicateUrl}"]`).waitFor();
+  assert.equal(await page.locator(`a[href="${duplicateUrl}"]`).count(), 1);
+  await context.close();
+});
+
+test("legacy blog slug performs a real browser redirect", async () => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(`${origin}/pages/blog/post.html?slug=java-source-mybatis`);
+  await page.waitForURL("**/pages/blog/java-source-mybatis.html");
+  assert.match(await page.locator("h1").textContent(), /MyBatis 源码解析/);
+  await context.close();
+});
+
 test("generated MyBatis article is a standalone canonical page", async () => {
   const context = await browser.newContext();
   const page = await context.newPage();
