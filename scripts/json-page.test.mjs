@@ -52,16 +52,16 @@ test("legacy JSON page is a noindex redirect that preserves non-embed query para
       replace(value) { redirects.push(value); },
     },
   });
-  assert.deepEqual(redirects, ["../../tools/json/?q=%7B%22a%22%3A1%7D&mode=tree"]);
+  assert.deepEqual(redirects, ["../../tools/json/?mode=tree#data=%7B%22a%22%3A1%7D"]);
   assert.match(legacyHtml, /<a[^>]+href=["']\.\.\/\.\.\/tools\/json\/["'][^>]*>[^<]+<\/a>/i);
   const redirect = redirects[0];
   assert.equal(
     new URL(redirect, "https://tools.songyuankun.top/pages/tools/json.html").href,
-    "https://tools.songyuankun.top/tools/json/?q=%7B%22a%22%3A1%7D&mode=tree",
+    "https://tools.songyuankun.top/tools/json/?mode=tree#data=%7B%22a%22%3A1%7D",
   );
   assert.equal(
     new URL(redirect, "https://songyuankun.github.io/dev-tools-nav/pages/tools/json.html").href,
-    "https://songyuankun.github.io/dev-tools-nav/tools/json/?q=%7B%22a%22%3A1%7D&mode=tree",
+    "https://songyuankun.github.io/dev-tools-nav/tools/json/?mode=tree#data=%7B%22a%22%3A1%7D",
   );
 });
 

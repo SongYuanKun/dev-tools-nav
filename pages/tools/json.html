@@ -9,9 +9,12 @@
   <script>
     (function () {
       var params = new URLSearchParams(location.search);
+      var legacyData = params.get("q");
       params.delete("embed");
+      params.delete("q");
       var query = params.toString();
-      location.replace("../../tools/json/" + (query ? "?" + query : ""));
+      var fragment = legacyData ? "#data=" + encodeURIComponent(legacyData) : "";
+      location.replace("../../tools/json/" + (query ? "?" + query : "") + fragment);
     })();
   </script>
 </head>

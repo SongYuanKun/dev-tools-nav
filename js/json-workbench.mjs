@@ -193,7 +193,7 @@ function renderTreePanel(panel, text, preferences, announce, force = false) {
 
   const tree = document.createElement("div");
   tree.className = "json-tree";
-  tree.setAttribute("role", "tree");
+  tree.setAttribute("role", "list");
   tree.setAttribute("aria-label", "JSON 数据树");
   let nodeId = 0;
   let renderedNodes = 0;
@@ -202,7 +202,7 @@ function renderTreePanel(panel, text, preferences, announce, force = false) {
     renderedNodes += 1;
     const item = document.createElement("div");
     item.className = "json-tree-item";
-    item.setAttribute("role", "treeitem");
+    item.setAttribute("role", "listitem");
     const row = document.createElement("div");
     row.className = "json-tree-row";
     const type = valueType(value);
@@ -226,7 +226,7 @@ function renderTreePanel(panel, text, preferences, announce, force = false) {
       group = document.createElement("div");
       group.id = id;
       group.className = "json-tree-group";
-      group.setAttribute("role", "group");
+      group.setAttribute("role", "list");
     }
     const keyNode = document.createElement("span");
     keyNode.className = "json-tree-key";
@@ -524,14 +524,19 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
       track("diff");
       diffTracked = true;
     }
-    const changes = diffJson(leftParsed.value, rightParsed.value).changes;
+    const difference = diffJson(leftParsed.value, rightParsed.value, {
+      includeValues: false,
+      maxChanges: 1_000,
+      maxWork: 10_000,
+    });
+    const changes = difference.changes;
     if (changes.length === 0) {
-      summary.textContent = "无结构差异";
+      summary.textContent = difference.truncated ? "已达到统计上限，未完成结构扫描" : "无结构差异";
       return;
     }
     const counts = { added: 0, removed: 0, changed: 0 };
     changes.forEach((change) => { counts[change.type] += 1; });
-    summary.textContent = `新增 ${counts.added} · 删除 ${counts.removed} · 修改 ${counts.changed}`;
+    summary.textContent = `新增 ${counts.added} · 删除 ${counts.removed} · 修改 ${counts.changed}${difference.truncated ? " · 已达到统计上限" : ""}`;
   };
   const scheduleSummary = () => {
     clearTimeout(summaryTimer);
@@ -763,7 +768,18 @@ export function mountJsonWorkbench(mount) {
           return;
         }
         try {
-          replaceDocument(await file.text());
+          const fileText = await file.text();
+          const isYaml = /\.ya?ml$/i.test(file.name) || ["application/yaml", "text/yaml"].includes(file.type);
+          if (isYaml) {
+            const converted = yamlToJson(fileText);
+            if (!converted.ok) {
+              announce(`无法转换 YAML：${converted.error.message}`, true);
+              return;
+            }
+            replaceDocument(JSON.stringify(converted.value, null, preferences.indent));
+          } else {
+            replaceDocument(fileText);
+          }
           const fileState = document.querySelector(".json-file-state");
           if (fileState) fileState.textContent = file.name;
           track("upload");
@@ -917,10 +933,18 @@ export function mountJsonWorkbench(mount) {
 }
 
 function mountAvailableEditors() {
+  let migratedValue = null;
+  if (window.location.hash.startsWith("#data=")) {
+    try {
+      migratedValue = decodeURIComponent(window.location.hash.slice("#data=".length));
+    } catch {
+      migratedValue = null;
+    }
+    history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  }
   document.querySelectorAll("[data-json-editor]").forEach((mount) => {
-    const queryValue = new URLSearchParams(window.location.search).get("q");
-    if (queryValue !== null && mount.dataset.initialValue === "") {
-      mount.dataset.initialValue = queryValue;
+    if (migratedValue !== null && mount.dataset.initialValue === "") {
+      mount.dataset.initialValue = migratedValue;
     }
     if (!mount.querySelector(".cm-editor")) mountJsonWorkbench(mount);
   });

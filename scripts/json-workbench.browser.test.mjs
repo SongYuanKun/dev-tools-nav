@@ -292,14 +292,24 @@ test("valid uploads load locally, oversized uploads are rejected, and download i
   const directory = await mkdtemp(join(tmpdir(), "json-workbench-"));
   const valid = join(directory, "input.json");
   const oversized = join(directory, "oversized.json");
+  const yaml = join(directory, "input.yaml");
+  const invalidYaml = join(directory, "invalid.yaml");
   await writeFile(valid, '{"uploaded":true}');
   await writeFile(oversized, Buffer.alloc(5 * 1024 * 1024 + 1, 32));
+  await writeFile(yaml, "uploaded: true\nitems:\n  - 1\n");
+  await writeFile(invalidYaml, "broken: [\n");
   const upload = page.locator('[data-json-action="upload"]');
   await upload.setInputFiles(valid);
   assert.equal(await documentText(page), '{"uploaded":true}');
   await upload.setInputFiles(oversized);
   assert.match(await page.locator("[data-json-feedback]").textContent(), /不能超过 5 MiB/);
   assert.equal(await documentText(page), '{"uploaded":true}');
+  await upload.setInputFiles(yaml);
+  assert.equal(await documentText(page), '{\n  "uploaded": true,\n  "items": [\n    1\n  ]\n}');
+  const beforeInvalidYaml = await documentText(page);
+  await upload.setInputFiles(invalidYaml);
+  assert.equal(await documentText(page), beforeInvalidYaml);
+  assert.match(await page.locator("[data-json-feedback]").textContent(), /YAML.+失败|无法转换 YAML/);
   const downloadPromise = page.waitForEvent("download");
   await page.evaluate(() => {
     const createObjectURL = URL.createObjectURL.bind(URL);
@@ -316,7 +326,7 @@ test("valid uploads load locally, oversized uploads are rejected, and download i
     let output = "";
     for await (const chunk of stream) output += chunk;
     return output;
-  }), '{"uploaded":true}');
+  }), beforeInvalidYaml);
   await context.close();
 });
 
@@ -339,16 +349,24 @@ test("settings controls keep 44px touch targets on a narrow viewport", async () 
   await context.close();
 });
 
-test("legacy q deep links redirect and initialize the canonical editor byte for byte", async () => {
+test("legacy q deep links migrate through a fragment, clean the URL, and do not restore on refresh", async () => {
   const context = await browser.newContext();
   const page = await context.newPage();
   const value = '{"plus":"a+b","unicode":"中文"}';
+  const requests = [];
+  page.on("request", (request) => requests.push(request.url()));
   await page.goto(`${origin}/pages/tools/json.html?embed=1&q=${encodeURIComponent(value)}&mode=tree`);
-  await page.waitForURL(/\/tools\/json\/\?q=/);
+  await page.waitForURL(/\/tools\/json\/\?mode=tree$/);
   await page.locator("[data-json-editor] .cm-content").waitFor();
   assert.equal(await documentText(page), value);
   assert.match(page.url(), /mode=tree/);
-  assert.doesNotMatch(page.url(), /embed=/);
+  assert.doesNotMatch(page.url(), /embed=|[?#]data=|[?&]q=/);
+  const contentRequests = requests.filter((url) => url.includes(encodeURIComponent(value)) || url.includes("unicode"));
+  assert.equal(contentRequests.length, 1, JSON.stringify(contentRequests));
+  assert.match(contentRequests[0], /\/pages\/tools\/json\.html/);
+  await page.reload();
+  await page.locator("[data-json-editor] .cm-content").waitFor();
+  assert.equal(await documentText(page), "");
   await context.close();
 });
 
@@ -378,7 +396,7 @@ test("tree mode renders safe expandable values, counts, types, and copyable JSON
   await setDocument(page, '{"unsafe":"<img src=x onerror=alert(1)>","items":[{"name":"one"},2]}');
   await page.getByRole("tab", { name: "树视图" }).click();
 
-  const tree = page.getByRole("tree", { name: "JSON 数据树" });
+  const tree = page.getByRole("list", { name: "JSON 数据树" });
   await tree.waitFor({ timeout: 2_000 });
   assert.match(await tree.textContent(), /object · 2 项/);
   assert.match(await tree.textContent(), /array · 2 项/);
@@ -552,6 +570,18 @@ test("Diff gates large input before mounting the merge editor", async () => {
   assert.equal(await page.locator("[data-diff-merge] .cm-mergeView").count(), 0);
   assert.match(await page.getByRole("tabpanel", { name: "对比" }).textContent(), /超过 1 MiB.+手动/);
   assert.ok(await page.getByRole("button", { name: "仍然打开对比" }).count());
+  await context.close();
+});
+
+test("Diff structural summary truncates high-cardinality changes", async () => {
+  const { context, page } = await openWorkbench();
+  await setDocument(page, JSON.stringify(Array.from({ length: 1_500 }, () => 0)));
+  await page.getByRole("tab", { name: "对比" }).click();
+  const right = page.locator("[data-diff-right] .cm-content");
+  await right.click();
+  await page.keyboard.insertText(JSON.stringify(Array.from({ length: 1_500 }, () => 1)));
+  await page.waitForTimeout(280);
+  assert.match(await page.locator("[data-diff-summary]").textContent(), /修改 1000.+达到统计上限/);
   await context.close();
 });
 

@@ -98,6 +98,11 @@
     return map[key] || key || '';
   }
 
+  function toolActionLabel(tool, action) {
+    if (tool === 'json' && action === 'diff') return '结构对比';
+    return pick(ACTION_LABELS, action);
+  }
+
   function buildDesc(name, data) {
     data = data || {};
     var base = EVENT_LABELS[name] || name;
@@ -110,7 +115,7 @@
       return base + '：' + (data.tool_name || data.name || '') + (cat ? '（' + cat + '）' : '');
     }
     if (name === 'tool_used') {
-      return base + '：' + pick(TOOL_LABELS, data.tool) + ' · ' + pick(ACTION_LABELS, data.action);
+      return base + '：' + pick(TOOL_LABELS, data.tool) + ' · ' + toolActionLabel(data.tool, data.action);
     }
     if (name === 'search_use') {
       return base + '：「' + (data.query || '') + '」' + (data.results != null ? '（' + data.results + ' 条）' : '');
@@ -165,7 +170,7 @@
 
     if (name === 'tool_used') {
       cn['工具'] = pick(TOOL_LABELS, data.tool);
-      cn['操作'] = pick(ACTION_LABELS, data.action);
+      cn['操作'] = toolActionLabel(data.tool, data.action);
     } else if (name === 'tool_click') {
       cn['工具'] = data.tool_name || data.name || '';
       cn['分类'] = pick(CATEGORY_LABELS, data.category);

@@ -792,10 +792,12 @@ function valueKind(value) {
   return typeof value === "object" ? "object" : "primitive";
 }
 
-export function diffJson(left, right) {
+export function diffJson(left, right, { includeValues = true, maxChanges = Infinity, maxWork = Infinity } = {}) {
   const changes = [];
   const stack = [{ before: left, after: right, path: null }];
   const seenPairs = new WeakMap();
+  let truncated = false;
+  let work = 0;
   const pathArray = (path) => {
     const result = [];
     for (let node = path; node; node = node.parent) result.push(node.segment);
@@ -803,14 +805,21 @@ export function diffJson(left, right) {
   };
 
   while (stack.length > 0) {
+    if (work >= maxWork) {
+      truncated = true;
+      break;
+    }
+    work += 1;
     const task = stack.pop();
     const { before, after, path } = task;
     if (task.type === "added") {
-      changes.push({ type: "added", path: pathArray(path), value: cloneJsonValue(after) });
+      changes.push({ type: "added", path: pathArray(path), ...(includeValues ? { value: cloneJsonValue(after) } : {}) });
+      if (changes.length >= maxChanges) { truncated = truncated || stack.length > 0; break; }
       continue;
     }
     if (task.type === "removed") {
-      changes.push({ type: "removed", path: pathArray(path), value: cloneJsonValue(before) });
+      changes.push({ type: "removed", path: pathArray(path), ...(includeValues ? { value: cloneJsonValue(before) } : {}) });
+      if (changes.length >= maxChanges) { truncated = truncated || stack.length > 0; break; }
       continue;
     }
     if (Object.is(before, after)) continue;
@@ -820,9 +829,9 @@ export function diffJson(left, right) {
       changes.push({
         type: "changed",
         path: pathArray(path),
-        before: cloneJsonValue(before),
-        after: cloneJsonValue(after),
+        ...(includeValues ? { before: cloneJsonValue(before), after: cloneJsonValue(after) } : {}),
       });
+      if (changes.length >= maxChanges) { truncated = truncated || stack.length > 0; break; }
       continue;
     }
 
@@ -835,7 +844,9 @@ export function diffJson(left, right) {
 
     if (beforeKind === "array") {
       const length = Math.max(before.length, after.length);
-      for (let index = length - 1; index >= 0; index -= 1) {
+      const scheduled = Math.min(length, Math.max(0, maxWork - work - stack.length));
+      if (scheduled < length) truncated = true;
+      for (let index = scheduled - 1; index >= 0; index -= 1) {
         const childPath = { parent: path, segment: index };
         if (index >= before.length) {
           stack.push({ type: "added", after: after[index], path: childPath });
@@ -850,7 +861,9 @@ export function diffJson(left, right) {
 
     const keys = [...new Set([...Object.keys(before), ...Object.keys(after)])]
       .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
-    for (let index = keys.length - 1; index >= 0; index -= 1) {
+    const scheduled = Math.min(keys.length, Math.max(0, maxWork - work - stack.length));
+    if (scheduled < keys.length) truncated = true;
+    for (let index = scheduled - 1; index >= 0; index -= 1) {
       const key = keys[index];
       const childPath = { parent: path, segment: key };
       const inBefore = Object.hasOwn(before, key);
@@ -865,5 +878,5 @@ export function diffJson(left, right) {
     }
   }
 
-  return { equal: changes.length === 0, changes };
+  return { equal: !truncated && changes.length === 0, changes, ...(truncated ? { truncated: true } : {}) };
 }

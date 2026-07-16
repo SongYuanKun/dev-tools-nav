@@ -433,6 +433,22 @@ test("diffJson treats a container type change as one safe root change", () => {
   });
 });
 
+test("diffJson truncates structural work at explicit UI budgets", () => {
+  const left = Array.from({ length: 20_000 }, () => 0);
+  const right = Array.from({ length: 20_000 }, () => 1);
+  const result = diffJson(left, right, { maxChanges: 100, maxWork: 1_000 });
+  assert.equal(result.equal, false);
+  assert.equal(result.truncated, true);
+  assert.ok(result.changes.length <= 100);
+  const lateDifference = Array.from({ length: 20_000 }, () => 0);
+  lateDifference[19_999] = 1;
+  assert.deepEqual(diffJson(left, lateDifference, { maxWork: 1_000 }), {
+    equal: false,
+    changes: [],
+    truncated: true,
+  });
+});
+
 test("deep direct values are handled without recursive stack overflow", () => {
   const source = `${"[".repeat(15_000)}0${"]".repeat(15_000)}`;
   const left = JSON.parse(source);

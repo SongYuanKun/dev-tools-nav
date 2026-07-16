@@ -19,8 +19,9 @@ test("test workflow gates pushes and pull requests with npm ci and npm test", ()
   assert.match(workflow, /node-version: ["']24["']/);
   assert.match(workflow, /actions\/checkout@v6[\s\S]*?fetch-depth:\s*0/);
   assert.match(workflow, /run: npm ci/);
+  assert.match(workflow, /run: npx playwright install chromium --with-deps/);
   assert.match(workflow, /run: npm test/);
-  assertStepsInOrder(workflow, ["run: npm ci", "run: npm test", "run: npm run check:generated"]);
+  assertStepsInOrder(workflow, ["run: npm ci", "run: npx playwright install chromium --with-deps", "run: npm test", "run: npm run check:generated"]);
 });
 
 test("deploy workflows install dependencies and build before publishing", () => {

@@ -27,5 +27,6 @@ jobs:
           node-version: "24"
           cache: npm
       - run: npm ci
+      - run: npx playwright install chromium --with-deps
       - run: npm test
       - run: npm run check:generated
