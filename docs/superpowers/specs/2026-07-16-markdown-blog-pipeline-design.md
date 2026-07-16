@@ -56,12 +56,12 @@
 
 ## sitemap 与真实日期
 
-生成文章 URL 的 `lastmod` 必须追溯对应的 `content/blog/<file>.md`，而非生成 HTML 的提交时间。其他页面继续使用各自内容源。Atom 的 `published`/`updated` 使用 frontmatter 的真实日期；未来文章日期视为构建错误。
+生成文章 URL 的 `lastmod` 必须使用对应 Markdown frontmatter 的 `updated`（缺省为 `date`），而非生成 HTML 的提交时间。其他页面继续使用各自内容源的 Git 日期。Atom 与 sitemap 共用同一组真实发布日期/修改日期；未来文章日期视为构建错误。
 
 ## 构建、部署与门禁
 
 - `npm run build` 仍是唯一完整构建入口。
-- `npm run check:generated` 重建并拒绝文章页、索引、manifest、兼容 JS、Feed 或 sitemap 漂移。
+- `npm run check:generated` 重建并拒绝文章页、索引、manifest、兼容 JS、Feed 或 sitemap 漂移；必需生成物缺失和不再属于任何 Markdown 的陈旧文章页也必须失败。
 - CI checkout 保留完整 Git 历史，以便计算 sitemap lastmod。
 - GitHub Pages 和 1Panel 工作流均运行 `npm ci` 与 `npm run build`，并排除 Markdown 源文件，不排除生成物。
 - 构建器应暴露纯函数，核心内容模型、排序、转义、Feed、旧路由、sitemap 来源映射均有 Node 测试；关键页面链接和兼容跳转有真实浏览器回归。

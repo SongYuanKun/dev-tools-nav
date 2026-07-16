@@ -32,7 +32,7 @@
 
 - 为 Atom XML 转义、稳定 id、发布时间/更新时间和文章排序写测试。
 - 生成根目录 `feed.xml`，并在博客页暴露 feed discovery 链接。
-- 扩展 sitemap 来源映射测试，使文章 HTML 的 lastmod 来自对应 Markdown。
+- 扩展 sitemap 来源映射测试，使文章 HTML 的 lastmod 来自对应 Markdown frontmatter 的 `updated`。
 
 ## Task 6：替换旧动态文章页为兼容跳转
 

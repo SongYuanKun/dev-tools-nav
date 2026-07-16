@@ -1,9 +1,15 @@
-# AI 免费 Token / 额度薅羊毛手册
-
-> **站内阅读（随站部署）：** [tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html](https://tools.songyuankun.top/pages/blog/ai-free-tokens-handbook.html) · `docs/` 下本文与网页内容需自行同步更新。  
-> **相关站内专题：** [AI 专题首页](https://tools.songyuankun.top/pages/ai/index.html)（价格一览、场景速查、入门与横评子页；GitHub Pages 同路径 `/pages/ai/index.html`）。阶段与后续安排见唯一活跃的 [产品路线图](./roadmap.md)。
-
-整理于 2026 年 3 月。
+---
+title: AI 免费 Token / 额度薅羊毛手册
+date: 2026-03-30
+updated: 2026-03-30
+description: 面向新手整理 AI API 免费额度、限流、绑卡与密钥安全的实用手册，帮助你低成本试用 Gemini、OpenAI、Claude、DeepSeek 与 Groq。
+keywords: AI 免费额度, API Token, Gemini, OpenAI, Claude, DeepSeek, Groq
+category: AI 实践
+tags: [AI, API, 新手向]
+kicker: 自托管首发 · AI 实践
+slug: ai-free-tokens-handbook
+featured: true
+---
 
 这篇写得比较长，是**故意啰嗦**的：方便**完全不懂代码、也没做过网站**的读者，也能大致明白「免费体验 AI」这件事在说什么、坑在哪里。如果你自己会做网站、会调接口，可以跳着看小标题。
 
@@ -11,6 +17,7 @@
 
 **给想少花钱、又想试试「把 AI 接进自己的东西里」的人看的**——「自己的东西」可以是一个小网站、一个小程序、一个作业演示，甚至只是你想先**免费玩玩**、感受一下不同平台差别。不一定要马上充很多钱，很多平台都有免费层或者送一点试用金。
 
+如果你要把这篇转到别的群、公众号里发，文末我留了自己的首页链接；**你发的时候换成你自己的链接就行**，免得给别人导流。
 
 ---
 
@@ -139,7 +146,9 @@
 
 ---
 
-网站太多、收藏太散，我自己整理了一个**开发者工具导航**，AI、命令行、运维相关都会往里丢，省得书签栏长草：
+## 首页与镜像
+
+网站太多、收藏太散，我自己整理了一个**开发者首页**，AI、命令行、运维相关都会往里丢，省得书签栏长草：
 
 https://tools.songyuankun.top
 https://songyuankun.github.io/dev-tools-nav/
