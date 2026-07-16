@@ -638,6 +638,7 @@ function renderBlogIndex(posts) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Koen 的技术博客：Java 源码、独立开发与 AI 实践。" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="${BASE_URL}/pages/blog/" />
   <link rel="alternate" type="application/atom+xml" href="${BASE_URL}/feed.xml" title="Koen 的技术博客" />
   <link rel="stylesheet" href="../../css/style.css" />

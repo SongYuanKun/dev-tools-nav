@@ -242,6 +242,7 @@ test("article, index, manifest, compatibility data, and Atom share canonical pos
   for (const post of posts) assert.match(index, new RegExp(`href="${post.slug}\\.html"`));
   assert.match(index, /src="\.\.\/\.\.\/data\/blog-posts\.js"/);
   assert.match(index, /src="\.\.\/\.\.\/js\/blog-list\.js"/);
+  assert.match(index, /<link rel="icon" href="\.\.\/\.\.\/favicon\.svg" type="image\/svg\+xml" \/>/);
   assert.match(index, /<footer class="footer"><\/footer>/);
   assert.match(index, /href="https:\/\/blog\.csdn\.net\/syk123839070"/);
 
