@@ -1,8 +1,41 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { parse } from "yaml";
 
-const forbiddenSsh = /^\s*(?:-\s*uses:\s*\S*ssh\S*|(?:-\s*)?run:\s*[^\n]*\bssh\b|ssh\b)/im;
+const deployCondition = "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'";
+const sshCommand = /(?:^|\n|;|&&|\|\|)\s*(?:(?:command|sudo|exec)\s+)*(?:\/usr\/bin\/)?ssh(?:\s|$)/i;
+
+function assertDeployCondition(workflow) {
+  assert.equal(workflow.jobs?.deploy?.if, deployCondition, "jobs.deploy must require a successful workflow_run");
+}
+
+function assertNoRemoteSsh(workflow) {
+  for (const [jobName, job] of Object.entries(workflow.jobs ?? {})) {
+    if (typeof job?.uses === "string") {
+      assert.doesNotMatch(job.uses, /ssh/i, `${jobName} must not call an SSH reusable workflow`);
+    }
+    for (const [index, step] of (job?.steps ?? []).entries()) {
+      if (typeof step?.uses === "string") {
+        assert.doesNotMatch(step.uses, /ssh/i, `${jobName} step ${index + 1} must not use an SSH action`);
+      }
+      if (typeof step?.run === "string") {
+        assert.doesNotMatch(step.run, sshCommand, `${jobName} step ${index + 1} must not execute ssh`);
+      }
+    }
+  }
+}
+
+function assertNoSecretReferences(value, path = "workflow") {
+  if (typeof value === "string") {
+    assert.doesNotMatch(value, /\bsecrets\./i, `${path} must not reference GitHub secrets`);
+    return;
+  }
+  if (!value || typeof value !== "object") return;
+  for (const [key, child] of Object.entries(value)) {
+    assertNoSecretReferences(child, `${path}.${key}`);
+  }
+}
 
 function assertStepsInOrder(workflow, steps) {
   let cursor = -1;
@@ -33,14 +66,12 @@ test("deploy workflows install dependencies and build before publishing", () => 
   assert.match(pages, /name: Assemble site[\s\S]*?--exclude='node_modules'[\s\S]*?\.\/ _site\//);
 
   const onePanel = readFileSync(".github/workflows/deploy-1panel.yml", "utf-8");
+  const onePanelWorkflow = parse(onePanel);
   assert.match(onePanel, /name: ["']?Deploy to 1Panel \(GTR self-hosted\)["']?/);
   assert.match(onePanel, /node-version: ["']24["']/);
   assert.match(onePanel, /runs-on:\s*\[self-hosted, linux, x64, gtr\]/);
   assert.match(onePanel, /concurrency:\s*\n\s+group: deploy-1panel\s*\n\s+cancel-in-progress: false/);
-  assert.match(
-    onePanel,
-    /^\s*if:\s*(["'])?\s*(?:\$\{\{\s*)?github\.event_name\s*!=\s*["']workflow_run["']\s*\|\|\s*github\.event\.workflow_run\.conclusion\s*==\s*["']success["'](?:\s*\}\})?\s*\1\s*$/m,
-  );
+  assertDeployCondition(onePanelWorkflow);
   assertStepsInOrder(onePanel, [
     "run: npm ci",
     "name: Generate AI topic changelog",
@@ -50,15 +81,49 @@ test("deploy workflows install dependencies and build before publishing", () => 
     "run: ./scripts/deploy-1panel-local.sh",
   ]);
   assert.doesNotMatch(onePanel, /ubuntu-latest|ssh-keyscan|ssh-agent|rsync|ONEPANEL_/);
-  assert.doesNotMatch(onePanel, forbiddenSsh);
-  assert.doesNotMatch(onePanel, /\bsecrets\b/i);
+  assertNoRemoteSsh(onePanelWorkflow);
+  assertNoSecretReferences(onePanelWorkflow);
   assert.doesNotMatch(onePanel, /pull_request:/);
 });
 
 test("remote SSH deployment syntax is rejected", () => {
-  for (const unsafe of ["- run: ssh host command", "- uses: vendor/ssh-action@v1", "ssh host command"]) {
-    assert.match(unsafe, forbiddenSsh);
+  for (const run of [
+    "ssh host command",
+    "command ssh host command",
+    "sudo ssh host command",
+    "exec ssh host command",
+    "/usr/bin/ssh host command",
+    "echo ready; ssh host command",
+    "echo ready && ssh host command",
+    "echo ready\nssh host command",
+  ]) {
+    assert.throws(() => assertNoRemoteSsh({ jobs: { deploy: { steps: [{ run }] } } }), /must not execute ssh/);
   }
+
+  assert.throws(
+    () => assertNoRemoteSsh({ jobs: { deploy: { steps: [{ uses: "vendor/ssh-action@v1" }] } } }),
+    /must not use an SSH action/,
+  );
+  assert.throws(
+    () => assertNoRemoteSsh({ jobs: { deploy: { uses: "vendor/ssh-workflow.yml@v1" } } }),
+    /must not call an SSH reusable workflow/,
+  );
+
+  const safe = parse(`jobs:\n  deploy:\n    steps:\n      - run: echo "SSH is unavailable"\n# ssh host command\n# secrets.DEPLOY_KEY`);
+  assert.doesNotThrow(() => assertNoRemoteSsh(safe));
+  assert.doesNotThrow(() => assertNoSecretReferences(safe));
+});
+
+test("deployment guard and secret checks use parsed workflow values", () => {
+  assert.throws(
+    () => assertDeployCondition(parse(`jobs:\n  test:\n    if: ${deployCondition}\n  deploy:\n    if: always()`)),
+    /jobs.deploy/,
+  );
+  assert.throws(
+    () => assertNoSecretReferences(parse(`jobs:\n  deploy:\n    env:\n      TOKEN: \${{ secrets.DEPLOY_TOKEN }}`)),
+    /must not reference GitHub secrets/,
+  );
+  assert.doesNotThrow(() => assertNoSecretReferences(parse("jobs:\n  deploy:\n    steps: []\n# secrets.DEPLOY_TOKEN")));
 });
 
 test("screenshot workflow builds generated assets before serving the site", () => {
