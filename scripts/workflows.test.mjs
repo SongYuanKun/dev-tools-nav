@@ -3,27 +3,39 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { parse } from "yaml";
 
-const deployCondition = "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'";
-const sshCommand = /(?:^|\n|;|&&|\|\|)\s*(?:(?:command|sudo|exec)\s+)*(?:\/usr\/bin\/)?ssh(?:\s|$)/i;
+const expectedDeployJob = {
+  if: "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'",
+  "runs-on": ["self-hosted", "linux", "x64", "gtr"],
+  steps: [
+    {
+      uses: "actions/checkout@v6",
+      with: { "fetch-depth": 0 },
+    },
+    {
+      uses: "actions/setup-node@v4",
+      with: {
+        "node-version": "24",
+        cache: "npm",
+      },
+    },
+    { run: "npm ci" },
+    {
+      name: "Generate AI topic changelog",
+      run: "node scripts/generate-ai-changelog.mjs",
+    },
+    {
+      name: "Refresh CSDN articles from RSS",
+      env: { CSDN_RSS_URL: "https://blog.csdn.net/syk123839070/rss/list" },
+      run: "python3 scripts/sync-csdn-rss.py",
+    },
+    { run: "npm run build" },
+    { run: "npm run check:generated" },
+    { run: "./scripts/deploy-1panel-local.sh" },
+  ],
+};
 
-function assertDeployCondition(workflow) {
-  assert.equal(workflow.jobs?.deploy?.if, deployCondition, "jobs.deploy must require a successful workflow_run");
-}
-
-function assertNoRemoteSsh(workflow) {
-  for (const [jobName, job] of Object.entries(workflow.jobs ?? {})) {
-    if (typeof job?.uses === "string") {
-      assert.doesNotMatch(job.uses, /ssh/i, `${jobName} must not call an SSH reusable workflow`);
-    }
-    for (const [index, step] of (job?.steps ?? []).entries()) {
-      if (typeof step?.uses === "string") {
-        assert.doesNotMatch(step.uses, /ssh/i, `${jobName} step ${index + 1} must not use an SSH action`);
-      }
-      if (typeof step?.run === "string") {
-        assert.doesNotMatch(step.run, sshCommand, `${jobName} step ${index + 1} must not execute ssh`);
-      }
-    }
-  }
+function assertExactDeployJob(job) {
+  assert.deepEqual(job, expectedDeployJob);
 }
 
 function assertNoSecretReferences(value, path = "workflow") {
@@ -68,57 +80,29 @@ test("deploy workflows install dependencies and build before publishing", () => 
   const onePanel = readFileSync(".github/workflows/deploy-1panel.yml", "utf-8");
   const onePanelWorkflow = parse(onePanel);
   assert.match(onePanel, /name: ["']?Deploy to 1Panel \(GTR self-hosted\)["']?/);
-  assert.match(onePanel, /node-version: ["']24["']/);
-  assert.match(onePanel, /runs-on:\s*\[self-hosted, linux, x64, gtr\]/);
   assert.match(onePanel, /concurrency:\s*\n\s+group: deploy-1panel\s*\n\s+cancel-in-progress: false/);
-  assertDeployCondition(onePanelWorkflow);
-  assertStepsInOrder(onePanel, [
-    "run: npm ci",
-    "name: Generate AI topic changelog",
-    "name: Refresh CSDN articles from RSS",
-    "run: npm run build",
-    "run: npm run check:generated",
-    "run: ./scripts/deploy-1panel-local.sh",
-  ]);
-  assert.doesNotMatch(onePanel, /ubuntu-latest|ssh-keyscan|ssh-agent|rsync|ONEPANEL_/);
-  assertNoRemoteSsh(onePanelWorkflow);
+  assertExactDeployJob(onePanelWorkflow.jobs.deploy);
   assertNoSecretReferences(onePanelWorkflow);
   assert.doesNotMatch(onePanel, /pull_request:/);
 });
 
-test("remote SSH deployment syntax is rejected", () => {
-  for (const run of [
-    "ssh host command",
-    "command ssh host command",
-    "sudo ssh host command",
-    "exec ssh host command",
-    "/usr/bin/ssh host command",
-    "echo ready; ssh host command",
-    "echo ready && ssh host command",
-    "echo ready\nssh host command",
-  ]) {
-    assert.throws(() => assertNoRemoteSsh({ jobs: { deploy: { steps: [{ run }] } } }), /must not execute ssh/);
-  }
+test("deploy job exact contract rejects SSH command, extra step, and reusable workflow mutants", () => {
+  const currentJob = parse(readFileSync(".github/workflows/deploy-1panel.yml", "utf-8")).jobs.deploy;
+  assert.doesNotThrow(() => assertExactDeployJob(currentJob));
 
-  assert.throws(
-    () => assertNoRemoteSsh({ jobs: { deploy: { steps: [{ uses: "vendor/ssh-action@v1" }] } } }),
-    /must not use an SSH action/,
-  );
-  assert.throws(
-    () => assertNoRemoteSsh({ jobs: { deploy: { uses: "vendor/ssh-workflow.yml@v1" } } }),
-    /must not call an SSH reusable workflow/,
-  );
+  const pipedSsh = structuredClone(currentJob);
+  pipedSsh.steps[2].run = "echo ready | ssh host";
+  assert.throws(() => assertExactDeployJob(pipedSsh));
 
-  const safe = parse(`jobs:\n  deploy:\n    steps:\n      - run: echo "SSH is unavailable"\n# ssh host command\n# secrets.DEPLOY_KEY`);
-  assert.doesNotThrow(() => assertNoRemoteSsh(safe));
-  assert.doesNotThrow(() => assertNoSecretReferences(safe));
+  const extraSshStep = structuredClone(currentJob);
+  extraSshStep.steps.push({ run: "ssh host" });
+  assert.throws(() => assertExactDeployJob(extraSshStep));
+
+  const reusableSshJob = { uses: "vendor/ssh-workflow.yml@v1" };
+  assert.throws(() => assertExactDeployJob(reusableSshJob));
 });
 
-test("deployment guard and secret checks use parsed workflow values", () => {
-  assert.throws(
-    () => assertDeployCondition(parse(`jobs:\n  test:\n    if: ${deployCondition}\n  deploy:\n    if: always()`)),
-    /jobs.deploy/,
-  );
+test("secret checks use parsed workflow values", () => {
   assert.throws(
     () => assertNoSecretReferences(parse(`jobs:\n  deploy:\n    env:\n      TOKEN: \${{ secrets.DEPLOY_TOKEN }}`)),
     /must not reference GitHub secrets/,
