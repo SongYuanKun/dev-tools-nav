@@ -68,6 +68,31 @@ function assertStepsInOrder(workflow, steps) {
   }
 }
 
+function assertDeploymentVerificationContract(deployDoc) {
+  assert.match(
+    deployDoc,
+    /^      gh run list --repo "\$REPO" --workflow "\$workflow" --branch main \\\n        --limit 50 --json databaseId,headSha \|\n        jq -r --arg sha "\$HEAD_SHA" 'map\(select\(\.headSha == \$sha\)\) \| \.\[0\]\.databaseId \/\/ empty'$/m,
+  );
+  assert.match(
+    deployDoc,
+    /^  done\n  \[\[ "\$run_id" =~ \^\[0-9\]\+\$ \]\] \|\| \{\n    echo [^\n]+ >&2\n    exit 1\n  \}$/m,
+  );
+  assert.match(deployDoc, /^\s*gh run watch "\$run_id" --repo "\$REPO" --exit-status$/m);
+  assert.match(
+    deployDoc,
+    /^\s*conclusion="\$\(gh run view "\$run_id" --repo "\$REPO" --json conclusion --jq \.conclusion\)"$/m,
+  );
+  assert.match(
+    deployDoc,
+    /^\s*\[\[ "\$conclusion" == "success" \]\] \|\| \{ [^\n]* >&2; exit 1; \}$/m,
+  );
+}
+
+function replaceRequiredFragment(value, fragment, replacement = "") {
+  assert.ok(value.includes(fragment), `mutant fragment must exist: ${fragment}`);
+  return value.replace(fragment, replacement);
+}
+
 test("test workflow gates pushes and pull requests with npm ci and npm test", () => {
   const workflow = readFileSync(".github/workflows/test.yml", "utf-8");
   assert.match(workflow, /pull_request:/);
@@ -163,6 +188,23 @@ test("deployment documentation is an executable GTR runner operations contract",
   assert.match(deployDoc, /loginctl show-user "\$USER" -p Linger --value/);
   assert.match(deployDoc, /Linger[^\n]*yes/);
   assert.match(deployDoc, /gh run list[\s\S]*gh run watch/);
+  assert.doesNotThrow(() => assertDeploymentVerificationContract(deployDoc));
+  for (const [fragment, replacement = ""] of [
+    [" // empty"],
+    ['[[ "$run_id" =~ ^[0-9]+$ ]] || {'],
+    ['    exit 1\n  }\n  gh run watch', '  }\n  gh run watch'],
+    [" --exit-status"],
+    [" --json conclusion"],
+    ['[[ "$conclusion" == "success" ]] ||'],
+    [" >&2; exit 1; }", " >&2; }"],
+  ]) {
+    const mutant = replaceRequiredFragment(deployDoc, fragment, replacement);
+    assert.throws(
+      () => assertDeploymentVerificationContract(mutant),
+      undefined,
+      `removing ${fragment} must violate the deployment verification contract`,
+    );
+  }
   assert.match(deployDoc, /HEAD_SHA="\$\(git rev-parse HEAD\)"/);
   assert.match(deployDoc, /export HEAD_SHA/);
   assert.match(deployDoc, /--json databaseId,headSha/);
