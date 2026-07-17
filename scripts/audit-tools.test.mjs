@@ -200,7 +200,7 @@ test("README documents the automatic deployment workflow and compatibility wrapp
   assert.match(readme, /docs\/deploy-1panel\.md/);
 });
 
-test("deploy.sh gates generated files and delegates to the atomic local deployer", () => {
+test("deploy.sh fails fast when build fails and delegates to the atomic local deployer", () => {
   const root = mkdtempSync(join(tmpdir(), "deploy-wrapper-"));
   try {
     mkdirSync(join(root, "scripts"), { recursive: true });
@@ -210,7 +210,7 @@ test("deploy.sh gates generated files and delegates to the atomic local deployer
     writeFileSync(join(root, "bin", "npm"), `#!/usr/bin/env bash
 set -euo pipefail
 printf 'npm:%s\\n' "$*" >> "$WRAPPER_LOG"
-[[ "\${FAIL_GENERATED:-0}" != 1 ]]
+[[ "\${FAIL_BUILD:-0}" != 1 ]]
 `);
     chmodSync(join(root, "bin", "npm"), 0o755);
     writeFileSync(join(root, "scripts", "deploy-1panel-local.sh"), `#!/usr/bin/env bash
@@ -231,7 +231,7 @@ printf 'local\\n' >> "$WRAPPER_LOG"
     writeFileSync(env.WRAPPER_LOG, "");
     const failure = spawnSync("bash", [join(root, "deploy.sh")], {
       cwd: "/",
-      env: { ...env, FAIL_GENERATED: "1" },
+      env: { ...env, FAIL_BUILD: "1" },
       encoding: "utf8",
     });
     assert.notEqual(failure.status, 0);

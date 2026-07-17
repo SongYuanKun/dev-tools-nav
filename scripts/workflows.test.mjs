@@ -163,6 +163,13 @@ test("deployment documentation is an executable GTR runner operations contract",
   assert.match(deployDoc, /loginctl show-user "\$USER" -p Linger --value/);
   assert.match(deployDoc, /Linger[^\n]*yes/);
   assert.match(deployDoc, /gh run list[\s\S]*gh run watch/);
+  assert.match(deployDoc, /HEAD_SHA="\$\(git rev-parse HEAD\)"/);
+  assert.match(deployDoc, /export HEAD_SHA/);
+  assert.match(deployDoc, /--json databaseId,headSha/);
+  assert.match(deployDoc, /select\(\.headSha == \$sha\)/);
+  assert.match(deployDoc, /for attempt in \{1\.\.30\}; do[\s\S]*sleep 5/);
+  assert.match(deployDoc, /workflows=\(test\.yml deploy-pages\.yml deploy-1panel\.yml\)[\s\S]*for workflow in "\$\{workflows\[@\]\}"[\s\S]*--arg sha "\$HEAD_SHA"/);
+  assert.doesNotMatch(deployDoc, /--limit 1 --json databaseId(?:\s|$)/);
   assert.match(deployDoc, /content_status=.*%\{http_code\}/);
   assert.match(deployDoc, /\[\[ "\$content_status" == "404" \]\]/);
   assert.match(deployDoc, /baidu_verify_codeva-TByQYpVHM2\.html/);

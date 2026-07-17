@@ -75,17 +75,30 @@ gh api repos/SongYuanKun/dev-tools-nav/actions/runners \
 
 ## 发布与验证
 
-推送 `main` 后，必须分别列出并等待 Test、Deploy GitHub Pages、Deploy to 1Panel 三条 workflow，且逐条确认结论为 `success`：
+推送 `main` 后，先固定刚推送的本地 HEAD；必须等待该同一 commit 的 Test、Deploy GitHub Pages、Deploy to 1Panel 三条 workflow 出现，并逐条确认结论为 `success`。每条 workflow 最多查询 30 次，不能用 latest run 代替目标 commit 的 run：
 
 ```bash
 set -euo pipefail
 
 REPO=SongYuanKun/dev-tools-nav
+HEAD_SHA="$(git rev-parse HEAD)"
+export HEAD_SHA
 workflows=(test.yml deploy-pages.yml deploy-1panel.yml)
 for workflow in "${workflows[@]}"; do
-  gh run list --repo "$REPO" --workflow "$workflow" --branch main --limit 3
-  run_id="$(gh run list --repo "$REPO" --workflow "$workflow" --branch main --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
-  [[ -n "$run_id" ]] || { echo "找不到 $workflow 的 main 运行" >&2; exit 1; }
+  run_id=""
+  for attempt in {1..30}; do
+    run_id="$(
+      gh run list --repo "$REPO" --workflow "$workflow" --branch main \
+        --limit 50 --json databaseId,headSha |
+        jq -r --arg sha "$HEAD_SHA" 'map(select(.headSha == $sha)) | .[0].databaseId // empty'
+    )"
+    [[ -n "$run_id" ]] && break
+    sleep 5
+  done
+  [[ "$run_id" =~ ^[0-9]+$ ]] || {
+    echo "找不到 $workflow 对应 HEAD_SHA=$HEAD_SHA 的运行" >&2
+    exit 1
+  }
   gh run watch "$run_id" --repo "$REPO" --exit-status
   conclusion="$(gh run view "$run_id" --repo "$REPO" --json conclusion --jq .conclusion)"
   [[ "$conclusion" == "success" ]] || { echo "$workflow 未成功：$conclusion" >&2; exit 1; }
