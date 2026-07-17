@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
+const forbiddenSsh = /^\s*(?:-\s*uses:\s*\S*ssh\S*|(?:-\s*)?run:\s*[^\n]*\bssh\b|ssh\b)/im;
+
 function assertStepsInOrder(workflow, steps) {
   let cursor = -1;
   for (const step of steps) {
@@ -35,6 +37,10 @@ test("deploy workflows install dependencies and build before publishing", () => 
   assert.match(onePanel, /node-version: ["']24["']/);
   assert.match(onePanel, /runs-on:\s*\[self-hosted, linux, x64, gtr\]/);
   assert.match(onePanel, /concurrency:\s*\n\s+group: deploy-1panel\s*\n\s+cancel-in-progress: false/);
+  assert.match(
+    onePanel,
+    /^\s*if:\s*(["'])?\s*(?:\$\{\{\s*)?github\.event_name\s*!=\s*["']workflow_run["']\s*\|\|\s*github\.event\.workflow_run\.conclusion\s*==\s*["']success["'](?:\s*\}\})?\s*\1\s*$/m,
+  );
   assertStepsInOrder(onePanel, [
     "run: npm ci",
     "name: Generate AI topic changelog",
@@ -44,7 +50,15 @@ test("deploy workflows install dependencies and build before publishing", () => 
     "run: ./scripts/deploy-1panel-local.sh",
   ]);
   assert.doesNotMatch(onePanel, /ubuntu-latest|ssh-keyscan|ssh-agent|rsync|ONEPANEL_/);
+  assert.doesNotMatch(onePanel, forbiddenSsh);
+  assert.doesNotMatch(onePanel, /\bsecrets\b/i);
   assert.doesNotMatch(onePanel, /pull_request:/);
+});
+
+test("remote SSH deployment syntax is rejected", () => {
+  for (const unsafe of ["- run: ssh host command", "- uses: vendor/ssh-action@v1", "ssh host command"]) {
+    assert.match(unsafe, forbiddenSsh);
+  }
 });
 
 test("screenshot workflow builds generated assets before serving the site", () => {
