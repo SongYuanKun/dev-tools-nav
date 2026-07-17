@@ -139,15 +139,52 @@ test("screenshot workflow builds generated assets before serving the site", () =
   assertStepsInOrder(workflow, ["run: npm ci", "run: npm run build", "name: Capture screenshots"]);
 });
 
-test("deployment documentation describes the GTR runner without stale SSH setup", () => {
+test("deployment documentation is an executable GTR runner operations contract", () => {
   const deployDoc = readFileSync("docs/deploy-1panel.md", "utf-8");
   const readme = readFileSync("README.md", "utf-8");
+  const manual = readFileSync("manual.md", "utf-8");
+  const docsIndex = readFileSync("docs/README.md", "utf-8");
+  const unit = readFileSync("ops/github-actions-dev-tools-nav.service", "utf-8");
+  const wrapper = readFileSync("deploy.sh", "utf-8");
+  const activeDeploymentFiles = [deployDoc, readme, manual, docsIndex, unit, wrapper].join("\n");
+
   assert.match(deployDoc, /gtr-dev-tools-nav/);
   assert.match(deployDoc, /github-actions-dev-tools-nav\.service/);
   assert.match(deployDoc, /scripts\/deploy-1panel-local\.sh/);
   assert.match(deployDoc, /actions-runner-linux-x64-2\.335\.1\.tar\.gz/);
   assert.match(deployDoc, /4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf/);
-  assert.doesNotMatch(deployDoc, /ONEPANEL_SSH_KEY|ssh-keyscan/);
+  assert.match(deployDoc, /set -euo pipefail/);
+  assert.match(deployDoc, /trap cleanup EXIT/);
+  assert.match(deployDoc, /rm -f "\$ARCHIVE_PATH"/);
+  assert.match(deployDoc, /unset TOKEN/);
+  assert.match(deployDoc, /Administration/);
+  assert.match(deployDoc, /install -d -m 0700 "\$HOME\/\.config\/systemd\/user"/);
+  assert.match(deployDoc, /install -m 0644 ops\/github-actions-dev-tools-nav\.service/);
+  assert.match(deployDoc, /loginctl show-user "\$USER" -p Linger --value/);
+  assert.match(deployDoc, /Linger[^\n]*yes/);
+  assert.match(deployDoc, /gh run list[\s\S]*gh run watch/);
+  assert.match(deployDoc, /content_status=.*%\{http_code\}/);
+  assert.match(deployDoc, /\[\[ "\$content_status" == "404" \]\]/);
+  assert.match(deployDoc, /baidu_verify_codeva-TByQYpVHM2\.html/);
+  assert.match(deployDoc, /googleb710668c9aa28d4e\.html/);
+  assert.match(deployDoc, /\.deploy-in-progress/);
+  assert.match(deployDoc, /if \[ -d "\$old" \]/);
+  assert.match(deployDoc, /journalctl --user -u github-actions-dev-tools-nav\.service/);
+  assert.match(deployDoc, /docker info/);
+  assert.match(deployDoc, /默认自动更新已启用/);
+  assert.match(deployDoc, /repos\/actions\/runner\/releases\/latest/);
+  assert.match(deployDoc, /\.digest/);
+  assert.match(deployDoc, /chmod 700 "\$BACKUP"/);
+  assert.match(deployDoc, /mv "\$BACKUP" "\$RUNNER_HOME"/);
+  assert.match(deployDoc, /SERVICE_STOPPED=1/);
+  assert.match(deployDoc, /elif \[\[ "\$status" -ne 0 && "\$SERVICE_STOPPED" -eq 1 \]\][\s\S]*systemctl --user start "\$SERVICE"/);
+  assert.doesNotMatch(deployDoc, /--disableupdate|TBD|占位 SHA/);
+  assert.match(unit, /WorkingDirectory=%h\/\.local\/share\/github-actions-runner\/dev-tools-nav/);
+  assert.match(unit, /ExecStart=%h\/\.local\/share\/github-actions-runner\/dev-tools-nav\/run\.sh/);
+  assert.match(wrapper, /exec .*scripts\/deploy-1panel-local\.sh/);
+  assert.doesNotMatch(activeDeploymentFiles, /ONEPANEL_SSH_KEY|ssh-keyscan|deploy-1panel-ssh|1Panel SSH|\/opt\/1panel\/www\/sites\/tools\.songyuankun\.top\/index|三套部署 manifest/);
   assert.match(readme, /deploy-1panel\.yml/);
-  assert.doesNotMatch(readme, /deploy-1panel-ssh\.yml|1Panel SSH/);
+  assert.match(readme, /deploy\.sh[^\n]*兼容/);
+  assert.match(manual, /Deploy to 1Panel/);
+  assert.match(docsIndex, /GTR 自托管 Runner/);
 });

@@ -88,7 +88,8 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 | 方式 | 说明 |
 |------|------|
 | GitHub Pages | 推送 `main` → Actions **Deploy GitHub Pages** |
-| 1Panel 自动发布 | 推送 `main` → Actions **Deploy to 1Panel**；见 [docs/deploy-1panel.md](docs/deploy-1panel.md) |
+| 1Panel 自动发布（推荐） | 推送 `main` → Actions **Deploy to 1Panel**；见 [docs/deploy-1panel.md](docs/deploy-1panel.md) |
+| 1Panel 本机兼容入口 | `./deploy.sh` 先构建生成物，再委托原子部署脚本；自动工作流仍是权威发布流程 |
 
 ## 7. 稳定性说明
 

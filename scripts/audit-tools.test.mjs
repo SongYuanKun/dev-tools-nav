@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  chmodSync,
+  cpSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -9,6 +11,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { spawnSync } from "node:child_process";
 
 import {
   SELF_BUILT_TOOLS,
@@ -187,12 +190,65 @@ test("README keeps AI capabilities without a second roadmap", () => {
   assert.doesNotMatch(readme, /^## AI 专题规划|^### 未完成 \/ 待办|^\*\*P[012].*\*\*|^\*\*下一阶段产品 TODO/m);
 });
 
-test("README documents separate deployment manifests", () => {
+test("README documents the automatic deployment workflow and compatibility wrapper", () => {
   const readme = readFileSync("README.md", "utf-8");
 
   assert.doesNotMatch(readme, /与 `deploy\.sh` 排除规则一致/);
-  assert.match(readme, /三套部署 manifest 分别维护/);
+  assert.doesNotMatch(readme, /三套部署 manifest/);
+  assert.match(readme, /deploy\.sh[^\n]*兼容/);
+  assert.match(readme, /推荐[^\n]*Deploy to 1Panel/);
   assert.match(readme, /docs\/deploy-1panel\.md/);
+});
+
+test("deploy.sh gates generated files and delegates to the atomic local deployer", () => {
+  const root = mkdtempSync(join(tmpdir(), "deploy-wrapper-"));
+  try {
+    mkdirSync(join(root, "scripts"), { recursive: true });
+    mkdirSync(join(root, "bin"), { recursive: true });
+    cpSync("deploy.sh", join(root, "deploy.sh"));
+    chmodSync(join(root, "deploy.sh"), 0o755);
+    writeFileSync(join(root, "bin", "npm"), `#!/usr/bin/env bash
+set -euo pipefail
+printf 'npm:%s\\n' "$*" >> "$WRAPPER_LOG"
+[[ "\${FAIL_GENERATED:-0}" != 1 ]]
+`);
+    chmodSync(join(root, "bin", "npm"), 0o755);
+    writeFileSync(join(root, "scripts", "deploy-1panel-local.sh"), `#!/usr/bin/env bash
+set -euo pipefail
+printf 'local\\n' >> "$WRAPPER_LOG"
+`);
+    chmodSync(join(root, "scripts", "deploy-1panel-local.sh"), 0o755);
+    const env = {
+      ...process.env,
+      PATH: `${join(root, "bin")}:${process.env.PATH}`,
+      WRAPPER_LOG: join(root, "wrapper.log"),
+    };
+
+    const success = spawnSync("bash", [join(root, "deploy.sh")], { cwd: "/", env, encoding: "utf8" });
+    assert.equal(success.status, 0, success.stderr);
+    assert.equal(readFileSync(env.WRAPPER_LOG, "utf8"), "npm:run build\nlocal\n");
+
+    writeFileSync(env.WRAPPER_LOG, "");
+    const failure = spawnSync("bash", [join(root, "deploy.sh")], {
+      cwd: "/",
+      env: { ...env, FAIL_GENERATED: "1" },
+      encoding: "utf8",
+    });
+    assert.notEqual(failure.status, 0);
+    assert.equal(readFileSync(env.WRAPPER_LOG, "utf8"), "npm:run build\n");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("deploy.sh has fail-fast wrapper text without the legacy rsync target", () => {
+  const wrapper = readFileSync("deploy.sh", "utf8");
+
+  assert.match(wrapper, /set -euo pipefail/);
+  assert.match(wrapper, /npm run build/);
+  assert.doesNotMatch(wrapper, /npm run check:generated/);
+  assert.match(wrapper, /exec .*scripts\/deploy-1panel-local\.sh/);
+  assert.doesNotMatch(wrapper, /rsync|\/opt\/1panel\/www\/sites\/tools\.songyuankun\.top\/index/);
 });
 
 test("content docs record the delivered Markdown single-source pipeline", () => {

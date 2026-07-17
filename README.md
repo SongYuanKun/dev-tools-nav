@@ -103,7 +103,7 @@ dev-tools-nav/
 │   ├── sync-csdn-rss.py         # 同步 CSDN RSS
 │   └── sync-open-source-radar.py # 同步 AI 开源项目雷达
 ├── docs/                   # 部署说明等（不随 Pages 发布，见 docs/README.md）
-├── deploy.sh               # 同步到 1Panel 的本地脚本
+├── deploy.sh               # 本地手动发布兼容入口（委托原子部署脚本）
 ├── package.json            # npm test、capture-screenshots（Playwright）
 ├── feed.xml                # 构建生成的 Atom Feed
 └── .github/workflows/
@@ -177,7 +177,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 部署到 GitHub Pages
 
-仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后自动打包静态资源并发布。当前已不再采用三套部署 manifest 分别维护的模式；Pages 与 GTR 自托管 1Panel 的发布说明见 [1Panel 部署说明](docs/deploy-1panel.md)。
+仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后自动打包静态资源并发布。Pages 与 GTR 自托管 1Panel 的发布说明见 [1Panel 部署说明](docs/deploy-1panel.md)。
 
 | 步骤 | 说明 |
 |------|------|
@@ -191,7 +191,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 部署到 1Panel
 
-推送 `main` 后，Actions **Deploy to 1Panel** 自动发布。Runner 安装、发布、回滚与运维说明见 **[docs/deploy-1panel.md](docs/deploy-1panel.md)**。
+推荐通过推送 `main` 触发 Actions **Deploy to 1Panel** 自动发布，这是权威发布流程。根目录 `deploy.sh` 仅为本机手动发布的兼容入口：它先构建生成物，再委托 `scripts/deploy-1panel-local.sh` 原子部署，不再维护独立同步规则。Runner 安装、发布、回滚与运维说明见 **[docs/deploy-1panel.md](docs/deploy-1panel.md)**。
 
 ## 添加新工具
 

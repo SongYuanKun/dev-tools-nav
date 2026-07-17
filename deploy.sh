@@ -1,28 +1,12 @@
 #!/usr/bin/env bash
-# 本地部署到 1Panel 静态站 (tools.songyuankun.top)
-# 1Panel 网站根目录: /opt/1panel/www/sites/tools.songyuankun.top/index
+# 兼容入口：本机手动部署统一委托给原子部署脚本。
 
-set -e
-ROOT="/opt/1panel/www/sites/tools.songyuankun.top/index"
+set -euo pipefail
 
-echo "生成 sitemap.xml..."
-npm run generate-sitemap 2>/dev/null || node scripts/generate-sitemap.mjs
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT_DIR"
 
-if [[ ! -d "$ROOT" ]]; then
-  echo "错误: 目录不存在: $ROOT"
-  exit 1
-fi
+echo "构建发布生成物..."
+npm run build
 
-rsync -av --delete --delete-excluded \
-  --exclude='.git' \
-  --exclude='.github' \
-  --exclude='README.md' \
-  --exclude='.gitignore' \
-  --exclude='docs' \
-  --exclude='package.json' \
-  --exclude='package-lock.json' \
-  --exclude='node_modules' \
-  --exclude='deploy.sh' \
-  ./ "$ROOT/"
-
-echo "已同步到 $ROOT"
+exec "$ROOT_DIR/scripts/deploy-1panel-local.sh"
