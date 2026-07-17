@@ -73,6 +73,29 @@ gh api repos/SongYuanKun/dev-tools-nav/actions/runners \
 
 仓库内版本化模板是 `ops/github-actions-dev-tools-nav.service`；不要在主机上维护另一份 unit 内容。
 
+## 配置搜索引擎验证文件
+
+验证文件不进入 Git。部署脚本优先沿用当前容器中的线上副本；线上副本缺失时，才从主机目录读取。默认目录是 `$HOME/.local/share/dev-tools-nav-verification`，可通过 `VERIFICATION_SOURCE_DIR` 覆盖。首次配置时，将两个原始文件路径分别放入环境变量；下列命令会在变量为空、输入不是普通文件或任一安装失败时立即停止，并将目录设为 `0700`、文件设为 `0600`：
+
+```bash
+set -euo pipefail
+
+: "${BAIDU_VERIFICATION_SOURCE:?请设置百度验证原始文件路径}"
+: "${GOOGLE_VERIFICATION_SOURCE:?请设置 Google 验证原始文件路径}"
+[[ -f "$BAIDU_VERIFICATION_SOURCE" ]]
+[[ -f "$GOOGLE_VERIFICATION_SOURCE" ]]
+
+VERIFICATION_SOURCE_DIR="$HOME/.local/share/dev-tools-nav-verification"
+install -d -m 0700 "$VERIFICATION_SOURCE_DIR"
+install -m 0600 "$BAIDU_VERIFICATION_SOURCE" "$VERIFICATION_SOURCE_DIR/baidu_verify_codeva-TByQYpVHM2.html"
+install -m 0600 "$GOOGLE_VERIFICATION_SOURCE" "$VERIFICATION_SOURCE_DIR/googleb710668c9aa28d4e.html"
+test -s "$VERIFICATION_SOURCE_DIR/baidu_verify_codeva-TByQYpVHM2.html"
+test -s "$VERIFICATION_SOURCE_DIR/googleb710668c9aa28d4e.html"
+stat -c '%a %n' "$VERIFICATION_SOURCE_DIR" "$VERIFICATION_SOURCE_DIR"/*.html
+```
+
+备份时，将该目录复制到仅当前用户可访问的离线位置，并保持目录 `0700`、文件 `0600`；不要把备份放进仓库或日志。线上副本和主机副本同时丢失时，部署会在切换 `index` 前失败。恢复时从备份重新执行上述 `install` 命令，再用 `test -s` 与 `stat` 检查存在性和权限；这些检查不会显示文件内容。随后重新发布，并用下文的公开 URL 检查确认两个端点可访问。
+
 ## 发布与验证
 
 推送 `main` 后，先固定刚推送的本地 HEAD；必须等待该同一 commit 的 Test、Deploy GitHub Pages、Deploy to 1Panel 三条 workflow 出现，并逐条确认结论为 `success`。每条 workflow 最多查询 30 次，不能用 latest run 代替目标 commit 的 run：
@@ -131,7 +154,7 @@ content_status="$(curl -sS -o /dev/null -w '%{http_code}' "${BASE_URL}/content/"
 }
 ```
 
-两个验证文件由原子部署脚本从当前线上版本复制到新版本，不进入 Git。
+两个验证文件由原子部署脚本优先从当前线上版本复制到新版本；线上副本缺失时从受限权限的主机目录恢复，始终不进入 Git payload。
 
 ## 手动发布
 

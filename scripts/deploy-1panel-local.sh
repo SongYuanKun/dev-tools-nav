@@ -6,6 +6,7 @@ DOCKER_BIN="${DOCKER_BIN:-docker}"
 OPENRESTY_CONTAINER="${OPENRESTY_CONTAINER:-1Panel-openresty-rRvM}"
 SITE_BASE="${SITE_BASE:-/www/sites/tools.songyuankun.top}"
 SITE_OWNER="${SITE_OWNER:-ubuntu:ubuntu}"
+VERIFICATION_SOURCE_DIR="${VERIFICATION_SOURCE_DIR:-$HOME/.local/share/dev-tools-nav-verification}"
 TARGET="$SITE_BASE/index"
 NEXT="$SITE_BASE/.index-next"
 OLD="$SITE_BASE/.index-old"
@@ -83,10 +84,14 @@ REMOTE_DIRTY=1
 "$DOCKER_BIN" cp "$STAGE/." "$OPENRESTY_CONTAINER:$NEXT/"
 
 for filename in "${preserved[@]}"; do
-  "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" sh -ec '
-    target=$1; next=$2; filename=$3
-    if [ -f "$target/$filename" ]; then cp "$target/$filename" "$next/$filename"; fi
-  ' _ "$TARGET" "$NEXT" "$filename"
+  if "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" test -f "$TARGET/$filename"; then
+    "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" cp "$TARGET/$filename" "$NEXT/$filename"
+  elif [[ -f "$VERIFICATION_SOURCE_DIR/$filename" ]]; then
+    "$DOCKER_BIN" cp "$VERIFICATION_SOURCE_DIR/$filename" "$OPENRESTY_CONTAINER:$NEXT/$filename"
+  else
+    echo "Missing verification file: $filename" >&2
+    exit 1
+  fi
 done
 
 required_lines="$(printf '%s\n' "${required[@]}")"

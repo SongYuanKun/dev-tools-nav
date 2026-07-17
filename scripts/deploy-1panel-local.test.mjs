@@ -53,9 +53,11 @@ function fixture() {
   const root = mkdtempSync(join(tmpdir(), "deploy-1panel-"));
   const repo = join(root, "repo");
   const site = join(root, "site");
+  const verificationSource = join(root, "verification-source");
   const bin = join(root, "bin");
   mkdirSync(repo, { recursive: true });
   mkdirSync(join(site, "index"), { recursive: true });
+  mkdirSync(verificationSource, { recursive: true });
   mkdirSync(bin, { recursive: true });
   for (const file of requiredFiles) write(repo, file, `new:${file}`);
   for (const file of publishedRootFiles) write(repo, file, `new:${file}`);
@@ -63,7 +65,10 @@ function fixture() {
   for (const file of unpublishedFiles) write(repo, file, "must not deploy");
   for (const file of verificationFiles) write(repo, file, `repo:${file}`);
   write(join(site, "index"), "marker.txt", "old release");
-  for (const file of verificationFiles) write(join(site, "index"), file, `verify:${file}`);
+  for (const file of verificationFiles) {
+    write(join(site, "index"), file, `live:${file}`);
+    write(verificationSource, file, `host:${file}`);
+  }
   cpSync("scripts/deploy-1panel-local.sh", join(repo, "scripts/deploy-1panel-local.sh"));
   chmodSync(join(repo, "scripts/deploy-1panel-local.sh"), 0o755);
   const fakeDocker = join(bin, "docker");
@@ -81,9 +86,14 @@ case "$command" in
     source="$1"
     destination="\${2#*:}"
     if [[ "\${FAKE_DOCKER_FAIL_CP:-0}" == "1" ]]; then exit 65; fi
-    mkdir -p "$destination"
-    cp -a "\${source%/.}/." "$destination/"
-    if [[ "\${FAKE_DOCKER_DROP_FEED:-0}" == "1" ]]; then rm -f "$destination/feed.xml"; fi
+    if [[ -d "\${source%/.}" ]]; then
+      mkdir -p "$destination"
+      cp -a "\${source%/.}/." "$destination/"
+      if [[ "\${FAKE_DOCKER_DROP_FEED:-0}" == "1" ]]; then rm -f "$destination/feed.xml"; fi
+    else
+      mkdir -p "$(dirname "$destination")"
+      cp -a "$source" "$destination"
+    fi
     ;;
   *)
     echo "unexpected docker command: $command" >&2
@@ -105,10 +115,10 @@ fi
 exec /bin/mv "$@"
 `);
   chmodSync(fakeMv, 0o755);
-  return { root, repo, site, fakeDocker };
+  return { root, repo, site, verificationSource, fakeDocker };
 }
 
-function deploy({ repo, site, fakeDocker }, extraEnv = {}) {
+function deploy({ repo, site, verificationSource, fakeDocker }, extraEnv = {}) {
   return spawnSync("bash", ["scripts/deploy-1panel-local.sh"], {
     cwd: repo,
     encoding: "utf8",
@@ -118,13 +128,14 @@ function deploy({ repo, site, fakeDocker }, extraEnv = {}) {
       OPENRESTY_CONTAINER: "fixture-openresty",
       SITE_BASE: site,
       SITE_OWNER: `${process.getuid()}:${process.getgid()}`,
+      VERIFICATION_SOURCE_DIR: verificationSource,
       PATH: `${dirname(fakeDocker)}:${process.env.PATH}`,
       ...extraEnv,
     },
   });
 }
 
-test("deploys only the static payload and preserves verification files", () => {
+test("deploys only the static payload and lets live verification files win", () => {
   const data = fixture();
   try {
     const result = deploy(data);
@@ -136,12 +147,47 @@ test("deploys only the static payload and preserves verification files", () => {
       assert.equal(existsSync(join(data.site, "index", file)), false, `${file} must not deploy`);
     }
     for (const file of verificationFiles) {
-      assert.equal(readFileSync(join(data.site, "index", file), "utf8"), `verify:${file}`);
+      assert.equal(readFileSync(join(data.site, "index", file), "utf8"), `live:${file}`);
     }
     assert.equal(existsSync(join(data.site, ".index-next")), false);
     assert.equal(existsSync(join(data.site, ".index-old")), false);
   } finally {
     rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("recovers missing live verification files from the host source", () => {
+  const data = fixture();
+  try {
+    for (const file of verificationFiles) rmSync(join(data.site, "index", file));
+    const result = deploy(data);
+    assert.equal(result.status, 0, result.stderr);
+    for (const file of verificationFiles) {
+      assert.equal(readFileSync(join(data.site, "index", file), "utf8"), `host:${file}`);
+    }
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("fails before switching the active index when either verification file has no source", async (t) => {
+  for (const missingFile of verificationFiles) {
+    await t.test(missingFile, () => {
+      const data = fixture();
+      try {
+        rmSync(join(data.site, "index", missingFile));
+        rmSync(join(data.verificationSource, missingFile));
+        const result = deploy(data);
+        assert.notEqual(result.status, 0);
+        assert.match(result.stderr, new RegExp(`Missing verification file: ${missingFile}`));
+        assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+        assert.equal(existsSync(join(data.site, ".deploy-in-progress")), false);
+        assert.equal(existsSync(join(data.site, ".index-old")), false);
+        assert.equal(existsSync(join(data.site, ".index-next")), false);
+      } finally {
+        rmSync(data.root, { recursive: true, force: true });
+      }
+    });
   }
 });
 
