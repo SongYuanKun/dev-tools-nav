@@ -216,7 +216,8 @@ test("deployment documentation is an executable GTR runner operations contract",
   assert.match(deployDoc, /\[\[ "\$content_status" == "404" \]\]/);
   assert.match(deployDoc, /baidu_verify_codeva-TByQYpVHM2\.html/);
   assert.match(deployDoc, /googleb710668c9aa28d4e\.html/);
-  assert.match(deployDoc, /VERIFICATION_SOURCE_DIR="\$HOME\/\.local\/share\/dev-tools-nav-verification"/);
+  assert.match(deployDoc, /VERIFICATION_SOURCE_DIR="\$\{VERIFICATION_SOURCE_DIR:-\$HOME\/\.local\/share\/dev-tools-nav-verification\}"/);
+  assert.doesNotMatch(deployDoc, /^VERIFICATION_SOURCE_DIR="\$HOME\/\.local\/share\/dev-tools-nav-verification"$/m);
   assert.match(deployDoc, /install -d -m 0700 "\$VERIFICATION_SOURCE_DIR"/);
   assert.match(deployDoc, /install -m 0600[^\n]*baidu_verify_codeva-TByQYpVHM2\.html/);
   assert.match(deployDoc, /install -m 0600[^\n]*googleb710668c9aa28d4e\.html/);

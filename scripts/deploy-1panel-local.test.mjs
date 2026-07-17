@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -68,6 +68,7 @@ function fixture() {
   for (const file of verificationFiles) {
     write(join(site, "index"), file, `live:${file}`);
     write(verificationSource, file, `host:${file}`);
+    chmodSync(join(verificationSource, file), 0o600);
   }
   cpSync("scripts/deploy-1panel-local.sh", join(repo, "scripts/deploy-1panel-local.sh"));
   chmodSync(join(repo, "scripts/deploy-1panel-local.sh"), 0o755);
@@ -164,6 +165,26 @@ test("recovers missing live verification files from the host source", () => {
     assert.equal(result.status, 0, result.stderr);
     for (const file of verificationFiles) {
       assert.equal(readFileSync(join(data.site, "index", file), "utf8"), `host:${file}`);
+      assert.equal(statSync(join(data.verificationSource, file)).mode & 0o777, 0o600);
+      assert.equal(statSync(join(data.site, "index", file)).mode & 0o777, 0o644);
+    }
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("deploys mixed live and host verification sources with live priority and public modes", () => {
+  const data = fixture();
+  try {
+    const [liveFile, hostFile] = verificationFiles;
+    rmSync(join(data.site, "index", hostFile));
+    chmodSync(join(data.site, "index", liveFile), 0o600);
+    const result = deploy(data);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(readFileSync(join(data.site, "index", liveFile), "utf8"), `live:${liveFile}`);
+    assert.equal(readFileSync(join(data.site, "index", hostFile), "utf8"), `host:${hostFile}`);
+    for (const file of verificationFiles) {
+      assert.equal(statSync(join(data.site, "index", file)).mode & 0o777, 0o644);
     }
   } finally {
     rmSync(data.root, { recursive: true, force: true });

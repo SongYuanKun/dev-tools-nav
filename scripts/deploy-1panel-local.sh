@@ -92,6 +92,7 @@ for filename in "${preserved[@]}"; do
     echo "Missing verification file: $filename" >&2
     exit 1
   fi
+  "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" chmod 0644 "$NEXT/$filename"
 done
 
 required_lines="$(printf '%s\n' "${required[@]}")"

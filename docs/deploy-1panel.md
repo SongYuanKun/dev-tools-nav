@@ -85,7 +85,7 @@ set -euo pipefail
 [[ -f "$BAIDU_VERIFICATION_SOURCE" ]]
 [[ -f "$GOOGLE_VERIFICATION_SOURCE" ]]
 
-VERIFICATION_SOURCE_DIR="$HOME/.local/share/dev-tools-nav-verification"
+VERIFICATION_SOURCE_DIR="${VERIFICATION_SOURCE_DIR:-$HOME/.local/share/dev-tools-nav-verification}"
 install -d -m 0700 "$VERIFICATION_SOURCE_DIR"
 install -m 0600 "$BAIDU_VERIFICATION_SOURCE" "$VERIFICATION_SOURCE_DIR/baidu_verify_codeva-TByQYpVHM2.html"
 install -m 0600 "$GOOGLE_VERIFICATION_SOURCE" "$VERIFICATION_SOURCE_DIR/googleb710668c9aa28d4e.html"
