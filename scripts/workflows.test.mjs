@@ -138,3 +138,16 @@ test("screenshot workflow builds generated assets before serving the site", () =
   const workflow = readFileSync(".github/workflows/update-screenshots.yml", "utf-8");
   assertStepsInOrder(workflow, ["run: npm ci", "run: npm run build", "name: Capture screenshots"]);
 });
+
+test("deployment documentation describes the GTR runner without stale SSH setup", () => {
+  const deployDoc = readFileSync("docs/deploy-1panel.md", "utf-8");
+  const readme = readFileSync("README.md", "utf-8");
+  assert.match(deployDoc, /gtr-dev-tools-nav/);
+  assert.match(deployDoc, /github-actions-dev-tools-nav\.service/);
+  assert.match(deployDoc, /scripts\/deploy-1panel-local\.sh/);
+  assert.match(deployDoc, /actions-runner-linux-x64-2\.335\.1\.tar\.gz/);
+  assert.match(deployDoc, /4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf/);
+  assert.doesNotMatch(deployDoc, /ONEPANEL_SSH_KEY|ssh-keyscan/);
+  assert.match(readme, /deploy-1panel\.yml/);
+  assert.doesNotMatch(readme, /deploy-1panel-ssh\.yml|1Panel SSH/);
+});

@@ -108,7 +108,7 @@ dev-tools-nav/
 ├── feed.xml                # 构建生成的 Atom Feed
 └── .github/workflows/
     ├── deploy-pages.yml    # GitHub Pages 自动发布
-    ├── deploy-1panel-ssh.yml  # 可选：SSH 同步到 1Panel
+    ├── deploy-1panel.yml  # GTR 自托管 Runner 自动发布到 1Panel
     ├── update-screenshots.yml # 每周计划运行；成功状态以 GitHub Actions 为准
     ├── sync-csdn-rss.yml      # 定时同步 CSDN RSS
     ├── sync-open-source-radar.yml # 每周同步 AI 开源项目雷达
@@ -177,7 +177,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 部署到 GitHub Pages
 
-仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后自动打包静态资源并发布。Pages、本地 `deploy.sh` 与 1Panel SSH 三套部署 manifest 分别维护，排除范围并非逐字节一致；差异与核对方式见 [1Panel 部署说明](docs/deploy-1panel.md)。
+仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后自动打包静态资源并发布。当前已不再采用三套部署 manifest 分别维护的模式；Pages 与 GTR 自托管 1Panel 的发布说明见 [1Panel 部署说明](docs/deploy-1panel.md)。
 
 | 步骤 | 说明 |
 |------|------|
@@ -191,9 +191,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 部署到 1Panel
 
-自建服务器可使用 1Panel 托管，与 GitHub Pages 无冲突。详细目录、`rsync` 与 `./deploy.sh` 说明见 **[docs/deploy-1panel.md](docs/deploy-1panel.md)**。
-
-简要步骤：在 1Panel 创建静态网站 → 配置 Git 或手动同步仓库根目录下的 `index.html`、`css/`、`js/`、`data/`、`pages/`、`assets/` 等 → 绑定域名与 SSL。
+推送 `main` 后，Actions **Deploy to 1Panel** 自动发布。Runner 安装、发布、回滚与运维说明见 **[docs/deploy-1panel.md](docs/deploy-1panel.md)**。
 
 ## 添加新工具
 
@@ -267,7 +265,7 @@ MIT
 - **[manual.md](manual.md)** — 简明使用说明（含在线工具与截图）  
 - **[docs/roadmap.md](docs/roadmap.md)** — 唯一活跃产品路线图
 - **[docs/README.md](docs/README.md)** — 文档索引  
-- **[docs/deploy-1panel.md](docs/deploy-1panel.md)** — 1Panel / 本机 `rsync` 部署  
+- **[docs/deploy-1panel.md](docs/deploy-1panel.md)** — GTR Runner 自动部署、回滚与运维
 - **[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)** — GitHub Pages CI  
 - **[.github/workflows/update-screenshots.yml](.github/workflows/update-screenshots.yml)** — 预览截图自动刷新  
 - **[.github/workflows/sync-jrebel.yml](.github/workflows/sync-jrebel.yml)** — JRebel 地址定时同步
