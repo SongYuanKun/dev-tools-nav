@@ -38,9 +38,18 @@ function assertExactDeployJob(job) {
   assert.deepEqual(job, expectedDeployJob);
 }
 
+function assertExactDeployWorkflow(workflow) {
+  assert.deepEqual(Object.keys(workflow.jobs), ["deploy"]);
+  assertExactDeployJob(workflow.jobs.deploy);
+}
+
 function assertNoSecretReferences(value, path = "workflow") {
   if (typeof value === "string") {
-    assert.doesNotMatch(value, /\bsecrets\./i, `${path} must not reference GitHub secrets`);
+    assert.doesNotMatch(
+      value,
+      /\bsecrets\s*(?:\.\s*[a-z_][a-z0-9_]*|\[\s*(['"])[a-z_][a-z0-9_]*\1\s*\])/i,
+      `${path} must not reference GitHub secrets`,
+    );
     return;
   }
   if (!value || typeof value !== "object") return;
@@ -81,14 +90,20 @@ test("deploy workflows install dependencies and build before publishing", () => 
   const onePanelWorkflow = parse(onePanel);
   assert.match(onePanel, /name: ["']?Deploy to 1Panel \(GTR self-hosted\)["']?/);
   assert.match(onePanel, /concurrency:\s*\n\s+group: deploy-1panel\s*\n\s+cancel-in-progress: false/);
-  assertExactDeployJob(onePanelWorkflow.jobs.deploy);
+  assertExactDeployWorkflow(onePanelWorkflow);
   assertNoSecretReferences(onePanelWorkflow);
   assert.doesNotMatch(onePanel, /pull_request:/);
 });
 
-test("deploy job exact contract rejects SSH command, extra step, and reusable workflow mutants", () => {
-  const currentJob = parse(readFileSync(".github/workflows/deploy-1panel.yml", "utf-8")).jobs.deploy;
+test("deploy workflow exact contract rejects extra jobs and mutated deploy jobs", () => {
+  const currentWorkflow = parse(readFileSync(".github/workflows/deploy-1panel.yml", "utf-8"));
+  const currentJob = currentWorkflow.jobs.deploy;
+  assert.doesNotThrow(() => assertExactDeployWorkflow(currentWorkflow));
   assert.doesNotThrow(() => assertExactDeployJob(currentJob));
+
+  const extraRemoteJob = structuredClone(currentWorkflow);
+  extraRemoteJob.jobs.remote = { steps: [{ run: "ssh host" }] };
+  assert.throws(() => assertExactDeployWorkflow(extraRemoteJob));
 
   const pipedSsh = structuredClone(currentJob);
   pipedSsh.steps[2].run = "echo ready | ssh host";
@@ -107,6 +122,15 @@ test("secret checks use parsed workflow values", () => {
     () => assertNoSecretReferences(parse(`jobs:\n  deploy:\n    env:\n      TOKEN: \${{ secrets.DEPLOY_TOKEN }}`)),
     /must not reference GitHub secrets/,
   );
+  assert.throws(
+    () => assertNoSecretReferences(parse(`jobs:\n  deploy:\n    env:\n      TOKEN: \${{ secrets['DEPLOY_TOKEN'] }}`)),
+    /must not reference GitHub secrets/,
+  );
+  assert.throws(
+    () => assertNoSecretReferences(parse(`jobs:\n  deploy:\n    env:\n      TOKEN: \${{ SeCrEtS [ 'DEPLOY_TOKEN' ] }}`)),
+    /must not reference GitHub secrets/,
+  );
+  assert.doesNotThrow(() => assertNoSecretReferences(parse("description: This workflow uses no secrets for deployment")));
   assert.doesNotThrow(() => assertNoSecretReferences(parse("jobs:\n  deploy:\n    steps: []\n# secrets.DEPLOY_TOKEN")));
 });
 
