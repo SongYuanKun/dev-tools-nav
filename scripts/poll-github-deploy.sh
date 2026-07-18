@@ -81,7 +81,7 @@ checkout=$(mktemp -d "$CACHE_DIR/checkout.XXXXXX")
 (
   cd "$checkout"
   "$GIT_BIN" init -q
-  "$GIT_BIN" fetch --quiet --depth=1 "$REMOTE_URL" refs/heads/main
+  "$GIT_BIN" fetch --quiet "$REMOTE_URL" refs/heads/main
   "$GIT_BIN" checkout --quiet --detach FETCH_HEAD
 )
 

@@ -50,6 +50,10 @@ function makeFixture() {
   const npm = path.join(bin, 'npm');
   executable(npm, [
     'printf "npm:%s\\n" "$*" >> "$COMMAND_LOG"',
+    'if [[ "${ASSERT_FULL_HISTORY:-0}" == 1 && "$*" == ci ]]; then',
+    '  commit_count=$("$REAL_GIT" rev-list --count HEAD)',
+    '  [[ "$commit_count" -ge 2 ]] || { printf "expected full history, found %s commit(s)\\n" "$commit_count" >&2; exit 43; }',
+    'fi',
     'if [[ "${FAIL_NPM:-}" == "$*" ]]; then exit 41; fi',
   ].join('\n'));
   const deploy = path.join(bin, 'deploy');
@@ -162,6 +166,23 @@ test('successful exact-SHA push Test runs all gates in order and records state',
     const curlArgs = readFileSync(f.curlLog, 'utf8');
     assert.match(curlArgs, new RegExp(`https://api\\.example\\.test/repos/example/project/actions/workflows/test\\.yml/runs\\?branch=main&event=push&head_sha=${f.sha}&per_page=20`));
     assert.doesNotMatch(curlArgs, /authorization|token/i);
+  } finally { f.cleanup(); }
+});
+
+test('successful gates run from a checkout with the full reachable main history', () => {
+  const f = makeFixture();
+  try {
+    writeFileSync(path.join(f.source, 'second.txt'), 'second commit\n');
+    run(realGit, ['add', 'second.txt'], { cwd: f.source });
+    run(realGit, ['commit', '-m', 'second'], { cwd: f.source });
+    run(realGit, ['push', 'origin', 'main'], { cwd: f.source });
+    const secondSha = run(realGit, ['rev-parse', 'HEAD'], { cwd: f.source });
+    setRuns(f, [{ head_sha: secondSha, event: 'push', conclusion: 'success' }]);
+
+    const result = f.invoke({ ASSERT_FULL_HISTORY: '1' });
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(readFileSync(path.join(f.state, 'last-deployed-sha'), 'utf8').trim(), secondSha);
   } finally { f.cleanup(); }
 });
 
