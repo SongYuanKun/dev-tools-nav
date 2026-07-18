@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { chmod, mkdtemp, mkdir, readFile, rm, stat, symlink, writeFile } from 'node:fs/promises';
+import { chmod, mkdtemp, mkdir, readFile, readdir, rm, stat, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
@@ -31,6 +31,7 @@ async function makeFixture(t, { withOldTargets = true } = {}) {
   const fakeBin = path.join(fixture, 'bin');
   const log = path.join(fixture, 'commands.log');
   const timerState = path.join(fixture, 'timer.state');
+  const serviceState = path.join(fixture, 'service.state');
   t.after(() => rm(fixture, { recursive: true, force: true }));
 
   await mkdir(path.join(home, '.local/share/dev-tools-nav-verification'), { recursive: true });
@@ -38,7 +39,7 @@ async function makeFixture(t, { withOldTargets = true } = {}) {
   for (const name of ['baidu_verify_codeva-TByQYpVHM2.html', 'googleb710668c9aa28d4e.html']) {
     await writeFile(path.join(home, '.local/share/dev-tools-nav-verification', name), `${name}\n`, { mode: 0o644 });
   }
-  await writeFile(timerState, 'enabled-active\n');
+  await writeFile(timerState, withOldTargets ? 'enabled-active\n' : 'not-found\n');
 
   if (withOldTargets) {
     for (const [, relative] of targets) {
@@ -69,31 +70,61 @@ case "$name" in
   mv)
     count=0; [[ -f "$MV_COUNT" ]] && count="$(<"$MV_COUNT")"
     count=$((count + 1)); printf '%s\n' "$count" > "$MV_COUNT"
+    if [[ " $* " == *'.restore.'* && "\${FAIL_RESTORE_MV:-0}" == 1 ]]; then exit 75; fi
     [[ "\${FAIL_MV_AT:-0}" != "$count" ]] || exit 72
     exec /usr/bin/mv "$@"
     ;;
+  rm)
+    if [[ " $* " == *'.install-backup.'* && "\${FAIL_BACKUP_CLEANUP:-0}" == 1 ]]; then exit 76; fi
+    exec /usr/bin/rm "$@"
+    ;;
   systemctl)
     if [[ " $* " == *' disable --now dev-tools-nav-deploy.timer '* ]]; then
+      count=0; [[ -f "$DISABLE_COUNT" ]] && count="$(<"$DISABLE_COUNT")"
+      count=$((count + 1)); printf '%s\n' "$count" > "$DISABLE_COUNT"
+      if [[ "\${FAIL_INITIAL_DISABLE:-0}" == 1 && "$count" -eq 1 ]]; then exit 74; fi
+      if [[ "$(<"$TIMER_STATE")" == not-found ]]; then
+        printf 'Unit dev-tools-nav-deploy.timer does not exist.\n' >&2
+        exit 5
+      fi
       printf 'disabled-inactive\n' > "$TIMER_STATE"
     elif [[ " $* " == *' is-active dev-tools-nav-deploy.service '* ]]; then
-      if [[ "\${SERVICE_ACTIVE:-0}" == 1 ]]; then printf 'active\n'; exit 0; fi
-      printf 'inactive\n'; exit 3
+      state="\${SERVICE_STATE:-inactive}"
+      [[ -f "$SERVICE_STATE_FILE" ]] && state="$(<"$SERVICE_STATE_FILE")"
+      printf '%s\n' "$state"
+      [[ "$state" == inactive || "$state" == failed ]] && exit 3
+      exit 0
+    elif [[ " $* " == *' reset-failed dev-tools-nav-deploy.service '* ]]; then
+      printf 'inactive\n' > "$SERVICE_STATE_FILE"
     elif [[ " $* " == *' daemon-reload '* ]]; then
       count=0; [[ -f "$RELOAD_COUNT" ]] && count="$(<"$RELOAD_COUNT")"
       count=$((count + 1)); printf '%s\n' "$count" > "$RELOAD_COUNT"
       [[ "\${FAIL_RELOAD_AT:-0}" != "$count" ]] || exit 73
+      if [[ ! -e "$TIMER_TARGET" ]]; then
+        printf 'not-found\n' > "$TIMER_STATE"
+      elif [[ "$count" -eq 1 && "\${TIMER_ENABLED:-0}" == 1 ]]; then
+        printf 'enabled-inactive\n' > "$TIMER_STATE"
+      elif [[ "$count" -eq 1 && "\${TIMER_ACTIVE:-0}" == 1 ]]; then
+        printf 'disabled-active\n' > "$TIMER_STATE"
+      elif [[ "$(<"$TIMER_STATE")" == not-found && -e "$TIMER_TARGET" ]]; then
+        printf 'disabled-inactive\n' > "$TIMER_STATE"
+      fi
     elif [[ " $* " == *' is-enabled dev-tools-nav-deploy.timer '* ]]; then
-      if [[ "\${TIMER_ENABLED:-0}" == 1 ]]; then printf 'enabled\n'; exit 0; fi
+      state="$(<"$TIMER_STATE")"
+      if [[ "$state" == enabled-* ]]; then printf 'enabled\n'; exit 0; fi
+      if [[ "$state" == not-found ]]; then printf 'not-found\n'; exit 4; fi
       printf 'disabled\n'; exit 1
     elif [[ " $* " == *' is-active dev-tools-nav-deploy.timer '* ]]; then
-      if [[ "\${TIMER_ACTIVE:-0}" == 1 ]]; then printf 'active\n'; exit 0; fi
+      state="$(<"$TIMER_STATE")"
+      if [[ "$state" == *-active ]]; then printf 'active\n'; exit 0; fi
+      if [[ "$state" == not-found ]]; then printf 'inactive\n'; exit 3; fi
       printf 'inactive\n'; exit 3
     fi
     ;;
 esac
 `);
   await chmod(fakeCommand, 0o755);
-  for (const command of ['loginctl', 'systemctl', 'docker', 'git', 'curl', 'python3', 'npm', 'node', 'flock', 'rsync', 'install', 'mv']) {
+  for (const command of ['loginctl', 'systemctl', 'docker', 'git', 'curl', 'python3', 'npm', 'node', 'flock', 'rsync', 'install', 'mv', 'rm']) {
     await symlink('fake-command', path.join(fakeBin, command));
   }
 
@@ -107,6 +138,9 @@ esac
     INSTALL_COUNT: path.join(fixture, 'install.count'),
     MV_COUNT: path.join(fixture, 'mv.count'),
     RELOAD_COUNT: path.join(fixture, 'reload.count'),
+    DISABLE_COUNT: path.join(fixture, 'disable.count'),
+    SERVICE_STATE_FILE: serviceState,
+    TIMER_TARGET: path.join(home, targets[3][1]),
   };
   const invoke = async (extraEnv = {}) => {
     try {
@@ -124,6 +158,22 @@ esac
     for (const [, relative] of targets) old.set(relative, await readFile(path.join(home, relative)));
   }
   return { home, log, timerState, invoke, old };
+}
+
+async function installationArtifacts(fixture) {
+  const roots = [
+    path.join(fixture.home, '.local/libexec/dev-tools-nav-deploy'),
+    path.join(fixture.home, '.config/systemd/user'),
+  ];
+  const entries = [];
+  for (const directory of roots) {
+    try {
+      for (const name of await readdir(directory, { recursive: true })) entries.push(path.join(directory, name));
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+  return entries;
 }
 
 async function assertOldTargets(fixture) {
@@ -173,16 +223,39 @@ test('installer disables an active timer before any staged target write and inst
     '.local/libexec/dev-tools-nav-deploy', '.cache/dev-tools-nav-deploy',
     '.local/state/dev-tools-nav-deploy', '.config/systemd/user',
   ]) await assertMode(path.join(f.home, directory), 0o700);
+  const artifacts = await installationArtifacts(f);
+  assert.equal(artifacts.some((entry) => entry.includes('.stage.')), false, artifacts.join('\n'));
+  assert.equal(artifacts.some((entry) => entry.includes('.install-backup.')), false, artifacts.join('\n'));
 });
 
-test('installer fails closed before writes when the deploy service is active', async (t) => {
+test('installer fails closed before writes when the deploy service is active or activating', async (t) => {
+  for (const state of ['active', 'activating']) {
+    await t.test(state, async (t2) => {
+      const f = await makeFixture(t2);
+      const result = await f.invoke({ SERVICE_STATE: state });
+      assert.notEqual(result.status, 0);
+      await assertOldTargets(f);
+      assert.equal(await readFile(f.timerState, 'utf8'), 'disabled-inactive\n');
+      const calls = await readFile(f.log, 'utf8');
+      assert.doesNotMatch(calls, /^install .*\.stage\./m);
+    });
+  }
+});
+
+test('an installed timer disable failure is fatal before target writes', async (t) => {
   const f = await makeFixture(t);
-  const result = await f.invoke({ SERVICE_ACTIVE: '1' });
+  const result = await f.invoke({ FAIL_INITIAL_DISABLE: '1' });
   assert.notEqual(result.status, 0);
   await assertOldTargets(f);
+  assert.equal(await readFile(f.timerState, 'utf8'), 'enabled-active\n');
+  assert.doesNotMatch(await readFile(f.log, 'utf8'), /^install .*\.stage\./m);
+});
+
+test('a first install accepts only the timer not-found disable result', async (t) => {
+  const f = await makeFixture(t, { withOldTargets: false });
+  const result = await f.invoke();
+  assert.equal(result.status, 0, result.stderr);
   assert.equal(await readFile(f.timerState, 'utf8'), 'disabled-inactive\n');
-  const calls = await readFile(f.log, 'utf8');
-  assert.doesNotMatch(calls, /^install .*\.stage\./m);
 });
 
 test('installer rolls back all targets after staging, move, reload, or final-status failure', async (t) => {
@@ -190,7 +263,8 @@ test('installer rolls back all targets after staging, move, reload, or final-sta
     staging: { FAIL_INSTALL_AT: '3' },
     move: { FAIL_MV_AT: '3' },
     reload: { FAIL_RELOAD_AT: '1' },
-    'final status': { TIMER_ENABLED: '1' },
+    'final enabled': { TIMER_ENABLED: '1' },
+    'final active': { TIMER_ACTIVE: '1' },
   })) {
     await t.test(name, async (t2) => {
       const f = await makeFixture(t2);
@@ -198,8 +272,36 @@ test('installer rolls back all targets after staging, move, reload, or final-sta
       assert.notEqual(result.status, 0);
       await assertOldTargets(f);
       assert.equal(await readFile(f.timerState, 'utf8'), 'disabled-inactive\n');
+      const artifacts = await installationArtifacts(f);
+      assert.equal(artifacts.some((entry) => entry.includes('.stage.')), false, artifacts.join('\n'));
+      assert.equal(artifacts.some((entry) => entry.includes('.install-backup.')), false, artifacts.join('\n'));
     });
   }
+});
+
+test('a restore move failure preserves the old backup and reports its paths', async (t) => {
+  const f = await makeFixture(t);
+  const result = await f.invoke({ FAIL_MV_AT: '3', FAIL_RESTORE_MV: '1' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /recovery.*incomplete/i);
+  assert.match(result.stderr, /backup/i);
+  const artifacts = await installationArtifacts(f);
+  const backups = artifacts.filter((entry) => /\.install-backup\.[^/]+\/[^/]+$/.test(entry));
+  assert.ok(backups.length >= 1, artifacts.join('\n'));
+  assert.match(await readFile(backups[0], 'utf8'), /^old:/);
+  assert.equal(artifacts.some((entry) => entry.includes('.stage.')), false, artifacts.join('\n'));
+});
+
+test('backup cleanup failure keeps the committed install and warns with recovery paths', async (t) => {
+  const f = await makeFixture(t);
+  const result = await f.invoke({ FAIL_BACKUP_CLEANUP: '1' });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stderr, /warning.*backup/i);
+  for (const [source, relative] of targets) {
+    assert.deepEqual(await readFile(path.join(f.home, relative)), await readFile(path.join(root, source)));
+  }
+  const artifacts = await installationArtifacts(f);
+  assert.ok(artifacts.some((entry) => entry.includes('.install-backup.')), artifacts.join('\n'));
 });
 
 test('a failed first install removes newly created targets', async (t) => {
@@ -209,5 +311,5 @@ test('a failed first install removes newly created targets', async (t) => {
   for (const [, relative] of targets) {
     await assert.rejects(readFile(path.join(f.home, relative)), { code: 'ENOENT' });
   }
-  assert.equal(await readFile(f.timerState, 'utf8'), 'disabled-inactive\n');
+  assert.equal(await readFile(f.timerState, 'utf8'), 'not-found\n');
 });

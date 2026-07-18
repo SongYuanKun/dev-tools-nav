@@ -67,9 +67,10 @@
 
 - 检查 `Linger=yes`、Docker、Git、curl、Python、Node、npm 和 flock。
 - 创建权限受限的 libexec、cache、state 和验证文件目录；验证目录固定为 `0700`，两个源文件固定为 `0600`。
-- 在写 4 个目标前先禁用 timer，并确认 oneshot 不处于 active 或 activating；安装器不停止正在部署的 service。
+- 在写 4 个目标前先禁用 timer；已有 timer 时禁用失败即停止，首装仅接受明确的 unit not-found。随后确认 oneshot 不处于 active 或 activating；安装器不停止正在部署的 service。
 - 备份 4 个旧目标，在各目标目录 staging 正确 mode 的新文件，再逐个原子替换。
-- 任一 staging、替换、daemon reload 或最终状态验证失败时，恢复全部旧目标（首装则删除新目标）、再次 reload，并保持 timer disabled；成功也保持 timer disabled/inactive。
+- 任一 staging、替换、daemon reload 或最终状态验证失败时，尝试恢复全部旧目标（首装则删除新目标）、再次 reload、重新禁用 timer，并严格验证 disabled/inactive。恢复替换失败时保留唯一旧备份及其目录并报告路径；timer 安全无法确认时输出高优先级错误并保留 recovery 现场。
+- 文件和 timer 状态均验证后即为 commit point。随后删除备份；删除失败只警告并保留备份，不回滚或否定已验证的新安装。
 - 不会自动注销 Runner、启用 timer 或推送 Git。
 
 运维手册记录安装、手动触发、日志、状态、失败重试、升级和卸载命令。根 `deploy.sh` 继续作为人工兼容入口。

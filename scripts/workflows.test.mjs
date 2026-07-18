@@ -68,7 +68,11 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
   assert.doesNotMatch(runbook, /\$\{VERIFICATION_SOURCE_DIR:-|VERIFICATION_SOURCE_DIR=/);
   assertStepsInOrder(runbook, [
     "systemctl --user disable --now dev-tools-nav-deploy.timer",
-    "systemctl --user is-active dev-tools-nav-deploy.service",
+    'SERVICE_STATE="$(systemctl --user is-active dev-tools-nav-deploy.service)"',
+    'if [[ "$SERVICE_STATE" == "failed" ]]',
+    "systemctl --user reset-failed dev-tools-nav-deploy.service",
+    'SERVICE_STATE="$(systemctl --user is-active dev-tools-nav-deploy.service)"',
+    '[[ "$service_status" -eq 3 && "$SERVICE_STATE" == "inactive" ]]',
     "npm ci",
     "npm test",
     "npm run build",
@@ -81,6 +85,8 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
     "systemctl --user enable --now dev-tools-nav-deploy.timer",
   ]);
   assert.match(runbook, /active.*activating|activating.*active/s);
+  assert.match(runbook, /reloading.*deactivating|deactivating.*reloading/s);
+  assert.match(runbook, /active\|activating\|reloading\|deactivating\)/);
   assert.match(runbook, /等待.*完成.*重试/);
   assert.doesNotMatch(runbook, /systemctl --user (?:stop|kill) dev-tools-nav-deploy\.service/);
   assert.doesNotMatch(runbook, /^\s*(?:\.\/deploy\.sh|\.\/scripts\/deploy-1panel-local\.sh)\s*$/m);

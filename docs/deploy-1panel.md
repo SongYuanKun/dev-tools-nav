@@ -100,17 +100,24 @@ git ls-remote https://github.com/SongYuanKun/dev-tools-nav.git refs/heads/main
 
 ## 手动原子部署
 
-仅在自动路径不可用且已确认本地 checkout 对应目标提交时使用。先禁用 timer，并确认 oneshot 已经停止。若 service 仍为 `active` 或 `activating`，停止手动流程，等待它完成后重试；绝不要 stop 或 kill 正在发布的 service。
+仅在自动路径不可用且已确认本地 checkout 对应目标提交时使用。先禁用 timer，并确认 oneshot 已经停止。若 service 为 `failed`，清除失败记录并重新确认 `inactive`；若仍为 `active`、`activating`、`reloading` 或 `deactivating`，停止手动流程，等待它完成后重试。绝不要 stop 或 kill 正在发布的 service。
 
 ```bash
 set -euo pipefail
 systemctl --user disable --now dev-tools-nav-deploy.timer
 service_status=0
 SERVICE_STATE="$(systemctl --user is-active dev-tools-nav-deploy.service)" || service_status=$?
-if [[ "$SERVICE_STATE" == "active" || "$SERVICE_STATE" == "activating" ]]; then
-  echo "Deployment service is still running; 等待它完成后重试。" >&2
-  exit 1
+if [[ "$SERVICE_STATE" == "failed" ]]; then
+  systemctl --user reset-failed dev-tools-nav-deploy.service
+  service_status=0
+  SERVICE_STATE="$(systemctl --user is-active dev-tools-nav-deploy.service)" || service_status=$?
 fi
+case "$SERVICE_STATE" in
+  active|activating|reloading|deactivating)
+    echo "Deployment service is still running; 等待它完成后重试。" >&2
+    exit 1
+    ;;
+esac
 [[ "$service_status" -eq 3 && "$SERVICE_STATE" == "inactive" ]] || {
   echo "Unexpected deployment service state: $SERVICE_STATE (status $service_status)" >&2
   exit 1
@@ -195,7 +202,7 @@ curl -fsS https://tools.songyuankun.top/googleb710668c9aa28d4e.html >/dev/null
 
 ## 升级与恢复
 
-升级时先在本地可信 checkout 审查 `scripts/poll-github-deploy.sh`、`scripts/deploy-1panel-local.sh`、`scripts/install-outbound-deployer.sh` 和 `ops/dev-tools-nav-deploy.{service,timer}`，再重新运行安装器。安装器先禁用 timer；若 oneshot 仍在运行，则保留旧文件并退出。安装过程先备份旧文件，再 staging 并原子替换 4 个目标；任一步失败都会恢复全部旧文件并保持 timer disabled。成功后重复“初次运行和启用”步骤。永远不要让远端 checkout 自行升级本地脚本或 units。
+升级时先在本地可信 checkout 审查 `scripts/poll-github-deploy.sh`、`scripts/deploy-1panel-local.sh`、`scripts/install-outbound-deployer.sh` 和 `ops/dev-tools-nav-deploy.{service,timer}`，再重新运行安装器。安装器必须先禁用已有 timer；若禁用失败或 oneshot 仍在运行，则不写目标文件并退出。安装过程先备份旧文件，再 staging 并原子替换 4 个目标；失败时逐项恢复、reload、重新禁用 timer 并验证状态。若恢复替换失败，错误会列出目标和保留的 backup 路径；不要删除该 backup 目录。文件与 timer 状态全部验证后才到 commit point，之后的 backup 清理失败只产生 warning 并保留 backup，不回滚新安装。成功后重复“初次运行和启用”步骤。永远不要让远端 checkout 自行升级本地脚本或 units。
 
 若发布中断，重新运行 oneshot；原子部署会根据 `.deploy-in-progress` 和 `.index-old` 恢复或完成切换。若必须停止自动发布：
 
