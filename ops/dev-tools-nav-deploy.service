@@ -1,0 +1,17 @@
+[Unit]
+Description=Deploy dev-tools-nav after the exact GitHub Test succeeds
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/libexec/dev-tools-nav-deploy/poll-github-deploy.sh
+Environment=HOME=%h
+Environment=NPM_CONFIG_CACHE=%h/.cache/dev-tools-nav-deploy/npm
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.cache/dev-tools-nav-deploy %h/.local/state/dev-tools-nav-deploy
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6

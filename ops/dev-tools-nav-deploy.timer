@@ -1,0 +1,11 @@
+[Unit]
+Description=Check dev-tools-nav main for a deployable SHA every ten minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=10min
+Persistent=true
+Unit=dev-tools-nav-deploy.service
+
+[Install]
+WantedBy=timers.target
