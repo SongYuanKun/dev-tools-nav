@@ -190,13 +190,13 @@ test("README keeps AI capabilities without a second roadmap", () => {
   assert.doesNotMatch(readme, /^## AI 专题规划|^### 未完成 \/ 待办|^\*\*P[012].*\*\*|^\*\*下一阶段产品 TODO/m);
 });
 
-test("README documents the automatic deployment workflow and compatibility wrapper", () => {
+test("README summarizes outbound deployment and links the canonical runbook", () => {
   const readme = readFileSync("README.md", "utf-8");
 
   assert.doesNotMatch(readme, /与 `deploy\.sh` 排除规则一致/);
   assert.doesNotMatch(readme, /三套部署 manifest/);
-  assert.match(readme, /deploy\.sh[^\n]*兼容/);
-  assert.match(readme, /推荐[^\n]*Deploy to 1Panel/);
+  assert.match(readme, /GTR[^\n]*出站/);
+  assert.match(readme, /精确 SHA Test/);
   assert.match(readme, /docs\/deploy-1panel\.md/);
 });
 

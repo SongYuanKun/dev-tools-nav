@@ -5,7 +5,7 @@
 | [../README.md](../README.md) | 仓库主说明；含 **「AI 专题当前能力」**、**在线工具**、**预览截图**更新步骤 |
 | [../manual.md](../manual.md) | 简明使用说明（导航站 + 在线工具 + 截图 + 部署） |
 | [roadmap.md](./roadmap.md) | 唯一活跃产品路线图：阶段、状态、验收标准、指标与商业化约束 |
-| [deploy-1panel.md](./deploy-1panel.md) | GTR 自托管 Runner 安装、原子部署、发布验收、升级与恢复说明 |
+| [deploy-1panel.md](./deploy-1panel.md) | GTR 出站轮询、原子部署、发布验收、升级与恢复的唯一运维手册 |
 | [umami-integration-spec.md](./umami-integration-spec.md) | Umami 埋点规范（含 `tool_used` 等在线工具事件） |
 | [analytics-insights.md](./analytics-insights.md) | 带日期、窗口与查询依据的 Umami 运营快照；不是自动保持当前状态的仪表盘 |
 | [../scripts/rebuild-umami-goals.sql](../scripts/rebuild-umami-goals.sql) | Umami Goals/Funnels 中文事件名重建 SQL |

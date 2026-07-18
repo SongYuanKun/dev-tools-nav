@@ -108,7 +108,6 @@ dev-tools-nav/
 ├── feed.xml                # 构建生成的 Atom Feed
 └── .github/workflows/
     ├── deploy-pages.yml    # GitHub Pages 自动发布
-    ├── deploy-1panel.yml  # GTR 自托管 Runner 自动发布到 1Panel
     ├── update-screenshots.yml # 每周计划运行；成功状态以 GitHub Actions 为准
     ├── sync-csdn-rss.yml      # 定时同步 CSDN RSS
     ├── sync-open-source-radar.yml # 每周同步 AI 开源项目雷达
@@ -177,7 +176,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 部署到 GitHub Pages
 
-仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后自动打包静态资源并发布。Pages 与 GTR 自托管 1Panel 的发布说明见 [1Panel 部署说明](docs/deploy-1panel.md)。
+仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后，Test 检查提交，Pages workflow 构建并发布静态资源。GTR 主机通过出站轮询部署同一提交；完整运维流程见 [1Panel 部署说明](docs/deploy-1panel.md)。
 
 | 步骤 | 说明 |
 |------|------|
@@ -191,7 +190,7 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 ## 部署到 1Panel
 
-推荐通过推送 `main` 触发 Actions **Deploy to 1Panel** 自动发布，这是权威发布流程。根目录 `deploy.sh` 仅为本机手动发布的兼容入口：它先构建生成物，再委托 `scripts/deploy-1panel-local.sh` 原子部署，不再维护独立同步规则。Runner 安装、发布、回滚与运维说明见 **[docs/deploy-1panel.md](docs/deploy-1panel.md)**。
+GTR 主机每十分钟出站检查 `main`，仅部署已通过精确 SHA Test 门禁的提交。安装、首次启用、诊断、回滚和验收统一见 **[docs/deploy-1panel.md](docs/deploy-1panel.md)**。
 
 ## 添加新工具
 
@@ -265,7 +264,7 @@ MIT
 - **[manual.md](manual.md)** — 简明使用说明（含在线工具与截图）  
 - **[docs/roadmap.md](docs/roadmap.md)** — 唯一活跃产品路线图
 - **[docs/README.md](docs/README.md)** — 文档索引  
-- **[docs/deploy-1panel.md](docs/deploy-1panel.md)** — GTR Runner 自动部署、回滚与运维
+- **[docs/deploy-1panel.md](docs/deploy-1panel.md)** — GTR 出站轮询部署、回滚与运维
 - **[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)** — GitHub Pages CI  
 - **[.github/workflows/update-screenshots.yml](.github/workflows/update-screenshots.yml)** — 预览截图自动刷新  
 - **[.github/workflows/sync-jrebel.yml](.github/workflows/sync-jrebel.yml)** — JRebel 地址定时同步

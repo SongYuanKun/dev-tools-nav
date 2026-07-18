@@ -1,320 +1,161 @@
-# 1Panel 自动部署与 GTR Runner 运维
+# GTR 出站轮询部署运维手册
 
-`tools.songyuankun.top` 的权威发布入口是 `.github/workflows/deploy-1panel.yml`。Test 与 GitHub Pages 使用 GitHub 托管 Runner；1Panel 发布使用仓库专属的 `gtr-dev-tools-nav` Runner，在 GTR 本机构建并通过生成物门禁后调用 `scripts/deploy-1panel-local.sh`，由 Docker 原子切换 OpenResty 站点目录。
+GTR 主机主动读取公开仓库，不接受 GitHub 下发的作业。发布链路中的 GitHub Actions 只运行 Test 和 GitHub Pages；`dev-tools-nav-deploy.timer` 每十分钟检查 `main`，仅在该精确提交的 Test push run 成功后部署。公开仓库不得重新注册任何 GitHub Actions Runner。
 
-## 固定配置
+## 固定配置与信任边界
 
-- 仓库：`SongYuanKun/dev-tools-nav`
-- Runner：`gtr-dev-tools-nav`，标签 `self-hosted,linux,x64,gtr`
-- 安装目录：`/home/kun/.local/share/github-actions-runner/dev-tools-nav`
-- user unit：`~/.config/systemd/user/github-actions-dev-tools-nav.service`
-- 容器：`1Panel-openresty-rRvM`
-- 容器站点：`/www/sites/tools.songyuankun.top/index`
+| 项目 | 值 |
+|---|---|
+| 仓库 | `SongYuanKun/dev-tools-nav` |
+| 远端 | `https://github.com/SongYuanKun/dev-tools-nav.git` |
+| 容器 | `1Panel-openresty-rRvM` |
+| 站点目录 | `/www/sites/tools.songyuankun.top/index` |
+| 可信脚本目录 | `~/.local/libexec/dev-tools-nav-deploy` |
+| 状态文件 | `~/.local/state/dev-tools-nav-deploy/last-deployed-sha` |
+| 缓存目录 | `~/.cache/dev-tools-nav-deploy` |
+| user units | `~/.config/systemd/user/dev-tools-nav-deploy.{service,timer}` |
+| 计划 | `OnBootSec=2min`、`OnCalendar=*:0/10`、`Persistent=true` |
 
-## 安装 Runner
+安装器从管理员审查过的本地仓库复制 poller、部署脚本和 units。poller 将远端 checkout 当作不可信输入：它在临时目录获取精确 SHA，运行依赖安装、测试、构建和生成物检查，但只调用可信目录内的部署脚本。不要从远端 checkout 执行或覆盖 `~/.local/libexec/dev-tools-nav-deploy` 中的脚本。
 
-执行者的 `gh` 身份必须对仓库拥有 **Administration** 权限，才能创建注册令牌。以下代码固定安装 GitHub Actions Runner v2.335.1，归档是 `actions-runner-linux-x64-2.335.1.tar.gz`；任意下载、SHA-256 校验、解压、取令牌或注册步骤失败都会立即停止。退出时 trap 总会删除临时归档并清除 `TOKEN`：
+## 首次安装
+
+先确认 `curl`、Docker、`flock`、Git、Node.js 24、npm、Python 3 和 `rsync` 可用，并确认当前用户能运行 `docker info`。user timer 依赖 lingering；若下列检查不是 `yes`，由系统管理员先启用它：
 
 ```bash
-set -euo pipefail
-
-RUNNER_VERSION=2.335.1
-RUNNER_SHA256=4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf
-RUNNER_HOME="$HOME/.local/share/github-actions-runner/dev-tools-nav"
-ARCHIVE="actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
-ARCHIVE_PATH="/tmp/${ARCHIVE}"
-TOKEN=""
-
-rm -f "$ARCHIVE_PATH"
-cleanup() {
-  status=$?
-  rm -f "$ARCHIVE_PATH"
-  unset TOKEN
-  trap - EXIT
-  exit "$status"
-}
-trap cleanup EXIT
-trap 'exit 129' HUP
-trap 'exit 130' INT
-trap 'exit 143' TERM
-
-install -d -m 0700 "$RUNNER_HOME"
-curl -fL "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/${ARCHIVE}" -o "$ARCHIVE_PATH"
-echo "${RUNNER_SHA256}  ${ARCHIVE_PATH}" | sha256sum --check
-tar -xzf "$ARCHIVE_PATH" -C "$RUNNER_HOME"
-TOKEN="$(gh api -X POST repos/SongYuanKun/dev-tools-nav/actions/runners/registration-token --jq .token)"
-[[ -n "$TOKEN" ]]
-"$RUNNER_HOME/config.sh" --unattended --url https://github.com/SongYuanKun/dev-tools-nav --token "$TOKEN" --name gtr-dev-tools-nav --labels gtr --work _work --replace
+loginctl show-user "$USER" -p Linger --value
+docker info
 ```
 
-## 安装并启用 user service
+### 准备站点验证文件
 
-user service 要在退出登录后继续运行，`Linger` 必须为 `yes`。下面的检查不通过会退出；请让管理员在另一个会话执行 `loginctl enable-linger "$USER"`，不要在本流程内自行 `sudo`：
-
-```bash
-set -euo pipefail
-
-linger="$(loginctl show-user "$USER" -p Linger --value)"
-if [[ "$linger" != "yes" ]]; then
-  echo "Linger 必须为 yes；请管理员执行：loginctl enable-linger $USER" >&2
-  exit 1
-fi
-
-install -d -m 0700 "$HOME/.config/systemd/user"
-install -m 0644 ops/github-actions-dev-tools-nav.service \
-  "$HOME/.config/systemd/user/github-actions-dev-tools-nav.service"
-systemctl --user daemon-reload
-systemctl --user enable --now github-actions-dev-tools-nav.service
-systemctl --user is-enabled github-actions-dev-tools-nav.service
-systemctl --user is-active github-actions-dev-tools-nav.service
-gh api repos/SongYuanKun/dev-tools-nav/actions/runners \
-  --jq '.runners[] | select(.name == "gtr-dev-tools-nav") | {name,status,busy,labels:[.labels[].name]}'
-```
-
-仓库内版本化模板是 `ops/github-actions-dev-tools-nav.service`；不要在主机上维护另一份 unit 内容。
-
-## 配置搜索引擎验证文件
-
-验证文件不进入 Git。部署脚本优先沿用当前容器中的线上副本；线上副本缺失时，才从主机目录读取。默认目录是 `$HOME/.local/share/dev-tools-nav-verification`，可通过 `VERIFICATION_SOURCE_DIR` 覆盖。首次配置时，将两个原始文件路径分别放入环境变量；下列命令会在变量为空、输入不是普通文件或任一安装失败时立即停止，并将目录设为 `0700`、文件设为 `0600`：
+验证文件独立于远端 checkout。将生产站现有文件保存为仅当前用户可读的本地源：
 
 ```bash
-set -euo pipefail
-
-: "${BAIDU_VERIFICATION_SOURCE:?请设置百度验证原始文件路径}"
-: "${GOOGLE_VERIFICATION_SOURCE:?请设置 Google 验证原始文件路径}"
-[[ -f "$BAIDU_VERIFICATION_SOURCE" ]]
-[[ -f "$GOOGLE_VERIFICATION_SOURCE" ]]
-
 VERIFICATION_SOURCE_DIR="${VERIFICATION_SOURCE_DIR:-$HOME/.local/share/dev-tools-nav-verification}"
 install -d -m 0700 "$VERIFICATION_SOURCE_DIR"
-install -m 0600 "$BAIDU_VERIFICATION_SOURCE" "$VERIFICATION_SOURCE_DIR/baidu_verify_codeva-TByQYpVHM2.html"
-install -m 0600 "$GOOGLE_VERIFICATION_SOURCE" "$VERIFICATION_SOURCE_DIR/googleb710668c9aa28d4e.html"
+docker cp 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/index/baidu_verify_codeva-TByQYpVHM2.html "$VERIFICATION_SOURCE_DIR/"
+docker cp 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/index/googleb710668c9aa28d4e.html "$VERIFICATION_SOURCE_DIR/"
+chmod 0600 "$VERIFICATION_SOURCE_DIR"/*.html
 test -s "$VERIFICATION_SOURCE_DIR/baidu_verify_codeva-TByQYpVHM2.html"
 test -s "$VERIFICATION_SOURCE_DIR/googleb710668c9aa28d4e.html"
-stat -c '%a %n' "$VERIFICATION_SOURCE_DIR" "$VERIFICATION_SOURCE_DIR"/*.html
 ```
 
-备份时，将该目录复制到仅当前用户可访问的离线位置，并保持目录 `0700`、文件 `0600`；不要把备份放进仓库或日志。线上副本和主机副本同时丢失时，部署会在切换 `index` 前失败。恢复时从备份重新执行上述 `install` 命令，再用 `test -s` 与 `stat` 检查存在性和权限；这些检查不会显示文件内容。随后重新发布，并用下文的公开 URL 检查确认两个端点可访问。
+### 安装、初次运行和启用
 
-## 发布与验证
-
-推送 `main` 后，先固定刚推送的本地 HEAD；必须等待该同一 commit 的 Test、Deploy GitHub Pages、Deploy to 1Panel 三条 workflow 出现，并逐条确认结论为 `success`。每条 workflow 最多查询 30 次，不能用 latest run 代替目标 commit 的 run：
+从已审查的本地 checkout 安装。安装器会强制 timer 保持 `disabled` 和 `inactive`，因此安装本身不会发布：
 
 ```bash
-set -euo pipefail
-
-REPO=SongYuanKun/dev-tools-nav
-HEAD_SHA="$(git rev-parse HEAD)"
-export HEAD_SHA
-workflows=(test.yml deploy-pages.yml deploy-1panel.yml)
-for workflow in "${workflows[@]}"; do
-  run_id=""
-  for attempt in {1..30}; do
-    run_id="$(
-      gh run list --repo "$REPO" --workflow "$workflow" --branch main \
-        --limit 50 --json databaseId,headSha |
-        jq -r --arg sha "$HEAD_SHA" 'map(select(.headSha == $sha)) | .[0].databaseId // empty'
-    )"
-    [[ -n "$run_id" ]] && break
-    sleep 5
-  done
-  [[ "$run_id" =~ ^[0-9]+$ ]] || {
-    echo "找不到 $workflow 对应 HEAD_SHA=$HEAD_SHA 的运行" >&2
-    exit 1
-  }
-  gh run watch "$run_id" --repo "$REPO" --exit-status
-  conclusion="$(gh run view "$run_id" --repo "$REPO" --json conclusion --jq .conclusion)"
-  [[ "$conclusion" == "success" ]] || { echo "$workflow 未成功：$conclusion" >&2; exit 1; }
-done
+./scripts/install-outbound-deployer.sh
+systemctl --user is-enabled dev-tools-nav-deploy.timer
+systemctl --user is-active dev-tools-nav-deploy.timer
 ```
 
-三条 workflow 成功后验证公开 URL、两个搜索引擎验证文件，并断言 `/content/` **精确返回 404**；任何其他状态都会退出：
+检查旧状态；首次迁移应没有状态文件。若文件存在，先核对其 SHA，不要盲目删除或改写：
 
 ```bash
-set -euo pipefail
-
-BASE_URL=https://tools.songyuankun.top
-for path in \
-  / \
-  /tools/json/ \
-  /feed.xml \
-  /sitemap.xml \
-  /pages/blog/java-source-mybatis.html \
-  /favicon.svg \
-  /baidu_verify_codeva-TByQYpVHM2.html \
-  /googleb710668c9aa28d4e.html
-do
-  curl -fsS "${BASE_URL}${path}" >/dev/null
-done
-
-content_status="$(curl -sS -o /dev/null -w '%{http_code}' "${BASE_URL}/content/")"
-[[ "$content_status" == "404" ]] || {
-  echo "${BASE_URL}/content/ 应为 404，实际为 ${content_status}" >&2
-  exit 1
-}
+STATE_FILE="$HOME/.local/state/dev-tools-nav-deploy/last-deployed-sha"
+if test -f "$STATE_FILE"; then cat "$STATE_FILE"; else echo "no deployed SHA recorded"; fi
 ```
 
-两个验证文件由原子部署脚本优先从当前线上版本复制到新版本；线上副本缺失时从受限权限的主机目录恢复，始终不进入 Git payload。
-
-## 手动发布
-
-推荐自动 workflow，它会在干净 checkout 中执行 `npm run check:generated`，是权威发布流程。GTR 本机存在两个被 Git 忽略的搜索引擎验证文件，生成 sitemap 后可能被漂移检查识别；兼容入口不得移动或删除这些线上凭据。因此根目录 `deploy.sh` 只执行一次 `npm run build`，随后 `exec scripts/deploy-1panel-local.sh`，不会重复维护发布清单。需要在 GTR 本机手动发布时，从仓库根目录执行：
+手动触发初次 oneshot。poller 只有在部署成功后才会原子写入 `last-deployed-sha`；Test 尚未成功或 GitHub 暂时不可用时，它不更新状态，下一次检查会重试：
 
 ```bash
+systemctl --user start dev-tools-nav-deploy.service
+systemctl --user status dev-tools-nav-deploy.service --no-pager
+cat "$STATE_FILE"
+```
+
+完成下文的生产验收后再启用 timer：
+
+```bash
+systemctl --user enable --now dev-tools-nav-deploy.timer
+systemctl --user list-timers dev-tools-nav-deploy.timer
+```
+
+## 精确 SHA 发布门禁
+
+poller 先用 `git ls-remote` 读取 `main` SHA，再查询 Test workflow 的公开 API：
+
+```text
+https://api.github.com/repos/SongYuanKun/dev-tools-nav/actions/workflows/test.yml/runs?branch=main&event=push&head_sha=$remote_sha&per_page=20
+```
+
+只有响应中同一 `head_sha`、`event=push` 且 `conclusion=success` 的 run 才能放行。没有匹配成功 run 时，service 正常退出且不写状态；网络、JSON、checkout、测试、构建或部署失败时，service 失败且不写状态。两种情况都会保留待部署 SHA，供下一次十分钟 calendar 触发重试。
+
+## 日常诊断
+
+```bash
+systemctl --user status dev-tools-nav-deploy.timer --no-pager
+systemctl --user status dev-tools-nav-deploy.service --no-pager
+systemctl --user list-timers dev-tools-nav-deploy.timer
+journalctl --user -u dev-tools-nav-deploy.service -n 100 --no-pager
+cat "$HOME/.local/state/dev-tools-nav-deploy/last-deployed-sha"
+git ls-remote https://github.com/SongYuanKun/dev-tools-nav.git refs/heads/main
+```
+
+`service` 显示失败时，先从 journal 找到第一个失败命令。状态 SHA 与远端相同表示无需发布；不同表示 Test 尚未放行或发布失败。缓存中的锁阻止并发执行。
+
+## 手动原子部署
+
+仅在自动路径不可用且已确认本地 checkout 对应目标提交时使用。先完成同一组门禁，再调用仓库内的兼容入口；它最终委托 `scripts/deploy-1panel-local.sh` 完成原子切换：
+
+```bash
+npm ci
+npm test
+npm run build
+npm run check:generated
 ./deploy.sh
 ```
 
-不要绕过该入口直接同步站点目录。
+部署脚本先构造 `.index-next`，保留两个验证文件，再用 `.deploy-in-progress`、`.index-old` 和目录重命名切换站点。失败时恢复旧目录。手动发布不会更新 poller 状态文件；恢复自动路径后运行一次 oneshot，让 poller 核验并记录 SHA。
 
-## 站点中断后的人工恢复
+## 注销旧 Runner
 
-自动脚本使用 `.index-next`、`.index-old` 和 `.deploy-in-progress`。下面的恢复命令只会在 marker 与 old 同时存在时删除未确认的 index 并恢复 old；若 old 不存在，会保留唯一的 index。最后清理 next 和 marker：
-
-```bash
-set -euo pipefail
-
-docker exec 1Panel-openresty-rRvM sh -ec '
-  target=/www/sites/tools.songyuankun.top/index
-  next=/www/sites/tools.songyuankun.top/.index-next
-  old=/www/sites/tools.songyuankun.top/.index-old
-  marker=/www/sites/tools.songyuankun.top/.deploy-in-progress
-
-  if [ -e "$marker" ]; then
-    if [ -d "$old" ]; then
-      if [ -d "$target" ]; then rm -rf "$target"; fi
-      mv "$old" "$target"
-    else
-      echo "marker 存在但 old 不存在；保留唯一 index" >&2
-    fi
-    rm -rf "$next"
-    rm -f "$marker"
-  elif [ ! -d "$target" ] && [ -d "$old" ]; then
-    mv "$old" "$target"
-    rm -rf "$next"
-  else
-    rm -rf "$next"
-  fi
-'
-```
-
-恢复后重新执行上一节的公开 URL 与精确 404 验证。
-
-## Runner 故障排查
-
-Runner 离线时依次重启、检查服务与日志、GitHub 出站网络、主机和容器磁盘、Docker 权限，最后确认 GitHub 端状态：
+先在 GitHub 仓库的 **Settings → Actions → Runners** 确认旧 Runner `gtr-dev-tools-nav` 已显示 **Offline**。不要为公开仓库创建新的注册令牌。停止旧进程，并由仓库管理员创建一次性的 remove token：
 
 ```bash
-set -euo pipefail
-
-systemctl --user restart github-actions-dev-tools-nav.service
-systemctl --user is-active github-actions-dev-tools-nav.service
-systemctl --user status github-actions-dev-tools-nav.service --no-pager
-journalctl --user -u github-actions-dev-tools-nav.service -n 200 --no-pager
-curl -fsSI https://github.com/ >/dev/null
-df -h "$HOME/.local/share/github-actions-runner/dev-tools-nav"
-docker info >/dev/null
-docker exec 1Panel-openresty-rRvM df -h /www/sites/tools.songyuankun.top
-gh api repos/SongYuanKun/dev-tools-nav/actions/runners \
-  --jq '.runners[] | select(.name == "gtr-dev-tools-nav") | {name,status,busy}'
-```
-
-## 注销 Runner
-
-```bash
-set -euo pipefail
-TOKEN=""
-cleanup() { unset TOKEN; }
-trap cleanup EXIT
-
 systemctl --user disable --now github-actions-dev-tools-nav.service
-TOKEN="$(gh api -X POST repos/SongYuanKun/dev-tools-nav/actions/runners/remove-token --jq .token)"
-[[ -n "$TOKEN" ]]
-"$HOME/.local/share/github-actions-runner/dev-tools-nav/config.sh" remove --token "$TOKEN"
+cd "$HOME/.local/share/github-actions-runner/dev-tools-nav"
+./config.sh remove --token "$REMOVE_TOKEN"
+unset REMOVE_TOKEN
 ```
 
-## 自动更新与可审计的人工修复升级
-
-Runner 注册时保留默认设置，因此**默认自动更新已启用**。只有自动更新损坏或需要可审计人工修复时，才运行下面的流程。它停止服务、以权限 `0700` 备份完整 runner home、从 GitHub 官方 `actions/runner` latest release API 读取非空版本、下载地址和 `sha256:` digest、校验归档、验证新二进制版本并替换目录；替换后任一步失败，EXIT trap 都会恢复备份并重启服务。
+GitHub 页面确认该 Runner 已消失后，删除旧凭据和安装目录：
 
 ```bash
-set -euo pipefail
-
-SERVICE=github-actions-dev-tools-nav.service
-REPO=SongYuanKun/dev-tools-nav
-RUNNER_NAME=gtr-dev-tools-nav
-RUNNER_HOME="$HOME/.local/share/github-actions-runner/dev-tools-nav"
-RELEASE_JSON="$(mktemp)"
-ARCHIVE_PATH=""
-NEW_HOME=""
-BACKUP="${RUNNER_HOME}.backup-$(date -u +%Y%m%dT%H%M%SZ)"
-RESTORE_NEEDED=0
-SERVICE_STOPPED=0
-
-cleanup_upgrade() {
-  status=$?
-  trap - EXIT
-  [[ -z "$ARCHIVE_PATH" ]] || rm -f "$ARCHIVE_PATH"
-  rm -f "$RELEASE_JSON"
-  [[ -z "$NEW_HOME" ]] || rm -rf "$NEW_HOME"
-  if [[ "$status" -ne 0 && "$RESTORE_NEEDED" -eq 1 ]]; then
-    systemctl --user stop "$SERVICE" || true
-    rm -rf "$RUNNER_HOME"
-    mv "$BACKUP" "$RUNNER_HOME"
-    systemctl --user start "$SERVICE" || true
-    echo "升级失败，已从 $BACKUP 恢复" >&2
-  elif [[ "$status" -ne 0 && "$SERVICE_STOPPED" -eq 1 ]]; then
-    systemctl --user start "$SERVICE" || true
-  fi
-  exit "$status"
-}
-trap cleanup_upgrade EXIT
-trap 'exit 129' HUP
-trap 'exit 130' INT
-trap 'exit 143' TERM
-
-[[ -d "$RUNNER_HOME" ]]
-[[ ! -e "$BACKUP" ]]
-systemctl --user stop "$SERVICE"
-SERVICE_STOPPED=1
-cp -a "$RUNNER_HOME" "$BACKUP"
-chmod 700 "$BACKUP"
-RESTORE_NEEDED=1
-
-gh api repos/actions/runner/releases/latest > "$RELEASE_JSON"
-VERSION="$(jq -er '.tag_name | ltrimstr("v") | select(length > 0)' "$RELEASE_JSON")"
-ARCHIVE="actions-runner-linux-x64-${VERSION}.tar.gz"
-DOWNLOAD_URL="$(jq -er --arg name "$ARCHIVE" '.assets[] | select(.name == $name) | .browser_download_url | select(length > 0)' "$RELEASE_JSON")"
-SHA256="$(jq -er --arg name "$ARCHIVE" '.assets[] | select(.name == $name) | .digest | select(startswith("sha256:")) | sub("^sha256:"; "") | select(test("^[0-9a-f]{64}$"))' "$RELEASE_JSON")"
-[[ -n "$VERSION" && -n "$DOWNLOAD_URL" && -n "$SHA256" ]]
-
-ARCHIVE_PATH="/tmp/${ARCHIVE}"
-rm -f "$ARCHIVE_PATH"
-curl -fL "$DOWNLOAD_URL" -o "$ARCHIVE_PATH"
-echo "${SHA256}  ${ARCHIVE_PATH}" | sha256sum --check
-
-NEW_HOME="$(mktemp -d "${RUNNER_HOME}.new.XXXXXX")"
-cp -a "$BACKUP/." "$NEW_HOME/"
-tar -xzf "$ARCHIVE_PATH" -C "$NEW_HOME"
-installed_version="$("$NEW_HOME/bin/Runner.Listener" --version)"
-[[ "$installed_version" == "$VERSION" ]]
-
-rm -rf "$RUNNER_HOME"
-mv "$NEW_HOME" "$RUNNER_HOME"
-NEW_HOME=""
-systemctl --user start "$SERVICE"
-systemctl --user is-active "$SERVICE"
-
-online=""
-for attempt in {1..30}; do
-  online="$(gh api "repos/${REPO}/actions/runners" --jq ".runners[] | select(.name == \"${RUNNER_NAME}\") | .status")"
-  [[ "$online" == "online" ]] && break
-  sleep 2
-done
-[[ "$online" == "online" ]]
-
-SERVICE_STOPPED=0
-RESTORE_NEEDED=0
-rm -rf "$BACKUP"
+rm -rf "$HOME/.local/share/github-actions-runner/dev-tools-nav"
+rm -f "$HOME/.config/systemd/user/github-actions-dev-tools-nav.service"
+systemctl --user daemon-reload
 ```
 
-升级完成后，再执行完整的三 workflow 与公开 URL 验收。不要复用旧注册令牌，也不要开放入站端口。
+remove token 只放在当前 shell，不写入仓库、命令脚本、日志或配置文件。若注销失败，保留目录，重新取得临时 remove token 后重试。无论结果如何，都不得在公开仓库重新注册 Runner。
+
+## 生产验收
+
+记录 `main` SHA、状态 SHA、容器状态和 HTTP 结果：
+
+```bash
+REMOTE_SHA="$(git ls-remote https://github.com/SongYuanKun/dev-tools-nav.git refs/heads/main | awk '{print $1}')"
+STATE_SHA="$(cat "$HOME/.local/state/dev-tools-nav-deploy/last-deployed-sha")"
+test "$REMOTE_SHA" = "$STATE_SHA"
+docker ps --filter name=1Panel-openresty-rRvM
+curl -fsS https://tools.songyuankun.top/ >/dev/null
+test "$(curl -sS -o /dev/null -w '%{http_code}' https://tools.songyuankun.top/this-path-must-not-exist)" = 404
+curl -fsS https://tools.songyuankun.top/baidu_verify_codeva-TByQYpVHM2.html >/dev/null
+curl -fsS https://tools.songyuankun.top/googleb710668c9aa28d4e.html >/dev/null
+```
+
+验收要求：生产首页可访问，随机缺失路径返回 404，OpenResty 容器运行，两个验证端点可访问，状态 SHA 等于当前 `main`。同时确认 Test 和 GitHub Pages 对该 SHA 成功，以及 timer 使用十分钟 calendar 计划。
+
+## 升级与恢复
+
+升级时先在本地可信 checkout 审查 `scripts/poll-github-deploy.sh`、`scripts/deploy-1panel-local.sh`、`scripts/install-outbound-deployer.sh` 和 `ops/dev-tools-nav-deploy.{service,timer}`，再重新运行安装器。安装器会再次禁用 timer；重复“初次运行和启用”步骤。永远不要让远端 checkout 自行升级本地脚本或 units。
+
+若发布中断，重新运行 oneshot；原子部署会根据 `.deploy-in-progress` 和 `.index-old` 恢复或完成切换。若必须停止自动发布：
+
+```bash
+systemctl --user disable --now dev-tools-nav-deploy.timer
+```
+
+修复并重新安装可信文件后，先手动 oneshot 和生产验收，再启用 timer。
