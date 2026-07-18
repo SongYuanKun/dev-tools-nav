@@ -4,7 +4,7 @@
 
 **Goal:** Replace the public-repository self-hosted Runner with a ten-minute GTR outbound poller that deploys only the current `main` SHA after its GitHub Test push run succeeds.
 
-**Architecture:** A trusted poller and atomic deployment script are installed under the GTR user's home and run from a hardened user-level systemd timer. The poller compares `origin/main` with local state, checks the exact SHA through GitHub's public Actions API, builds a clean checkout, and advances state only after a successful Docker deployment. GitHub retains hosted Test and Pages workflows but no longer has any execution path into GTR.
+**Architecture:** A trusted poller and atomic deployment script are installed under the GTR user's home and run from a hardened user-level systemd timer. The poller compares `origin/main` with local state, checks the exact SHA through GitHub's public Actions API, fetches its full reachable history into a clean checkout, and advances state only after a successful Docker deployment. GitHub retains hosted Test and Pages workflows but no longer dispatches jobs into GTR.
 
 **Tech Stack:** Bash, Node.js `node:test`, Git, GitHub public REST API, npm/Node.js 24, Docker CLI, user-level systemd
 
@@ -18,6 +18,7 @@
 - Verification source: `~/.local/share/dev-tools-nav-verification`, directory `0700`, files `0600`; public copies are non-empty and `0644`.
 - Production container: `1Panel-openresty-rRvM`; site base: `/www/sites/tools.songyuankun.top`.
 - State advances only after the exact SHA passes hosted Test, all local gates pass, and production deployment succeeds.
+- The `main` checkout's npm lifecycle, tests, and build run as the Docker-capable service user; merge permission is production code-execution permission. Trusted local scripts protect the control plane but do not sandbox checkout code.
 - The approved design at `docs/superpowers/specs/2026-07-18-gtr-outbound-deployer-design.md` is authoritative.
 
 ---
@@ -159,7 +160,9 @@ Create a local bare Git remote with `main`, fake API/curl, npm, and deploy comma
 - `pending, failed, non-push, and mismatched Test runs do not deploy`: use four API fixtures, assert zero exit, no npm/deploy log, and no state file.
 - `successful exact-SHA push Test runs all gates in order and records state`: return a matching successful push run, assert the exact command log below, and assert state equals the SHA.
 - `malformed API JSON fails without advancing state`: return invalid JSON, assert nonzero exit and no state.
-- `checkout, npm, and deploy failures do not advance state`: inject each failure independently and assert nonzero exit plus unchanged state.
+- `a curl network failure fails without advancing state or running gates`: make curl exit nonzero and retain the previous state.
+- `remote SHA parsing accepts lowercase 40/64 hex and rejects ambiguous lines`: accept both widths; reject uppercase, non-hex, wrong width/ref, and extra fields before the API call.
+- `checkout, every npm gate, and deploy failures stop immediately without advancing state`: inject checkout, `npm ci`, `npm test`, build, generated-check, and deploy failures independently; assert no later gate or deploy runs and state remains unchanged.
 - `a held flock makes a concurrent invocation exit without work`: hold the lock with `flock`, run the poller, and assert zero exit with no API/npm/deploy log.
 - `a branch race fails when fetched HEAD differs from the observed SHA`: advance the fixture branch after `ls-remote`, assert nonzero exit and unchanged state.
 
@@ -212,7 +215,7 @@ api_url="$API_BASE_URL/repos/$REPO/actions/workflows/test.yml/runs?branch=main&e
 
 Parse JSON with Python. Return `ready` only when a run has the same `head_sha`, `event == "push"`, and `conclusion == "success"`; return `pending` for valid JSON without such a run. Invalid JSON exits nonzero.
 
-Checkout by fetching current `refs/heads/main` into a temporary Git repository, detach at `FETCH_HEAD`, then require `git rev-parse HEAD == remote_sha`. Run gates and deployment exactly in the tested order:
+If state already equals the remote SHA, print exactly `SHA is already deployed; no work required.` and exit before API, npm, or deploy work. Checkout by fetching current `refs/heads/main` with its full reachable history into a temporary Git repository, detach at `FETCH_HEAD`, then require `git rev-parse HEAD == remote_sha`. Run gates and deployment exactly in the tested order:
 
 ```bash
 "$NPM_BIN" ci
@@ -279,7 +282,7 @@ assert.match(installer, /systemctl --user is-active/);
 assert.doesNotMatch(installer, /systemctl[^\n]*\benable\b|sudo|gh api/);
 ```
 
-Add a temporary-home installer test with fake `systemctl`, `node`, `docker`, and the other required commands. It verifies directory modes, byte-identical installed scripts/units, `daemon-reload`, `disable --now`, the exact disabled/inactive status checks, and the absence of `enable` or `start` calls.
+Add temporary-HOME installer tests with fake `systemctl`, `node`, `docker`, and the other required commands. Verify timer disable precedes every target write; active/activating service fails before writes; staging, move, reload, and final-validation failures restore all four old targets; failed first install removes new targets; and success installs 4/4 byte-identical files with strict modes while leaving the timer disabled/inactive.
 
 - [ ] **Step 2: Run RED**
 
@@ -327,7 +330,7 @@ Unit=dev-tools-nav-deploy.service
 WantedBy=timers.target
 ```
 
-The installer uses `set -euo pipefail`, checks `Linger=yes` and required commands including `node`, creates libexec/cache/state/config directories with `0700`, installs scripts as `0755` and units as `0644`, verifies the two host verification files with `test -s`, runs `systemctl --user daemon-reload`, then explicitly runs `systemctl --user disable --now dev-tools-nav-deploy.timer`. It requires `is-enabled` to report `disabled` with its standard nonzero status and `is-active` to report `inactive` with its standard nonzero status. It never enables or starts the timer.
+The installer uses `set -euo pipefail`, checks `Linger=yes`, every required command, and `docker info >/dev/null`. It fixes the verification directory at `0700` and both files at `0600`. Before rewriting any libexec/unit target, it best-effort disables the timer and fails closed if the service is active or activating without stopping it. It backs up all existing targets, stages all four new files in their target directories with final modes, and atomically moves them into place. An EXIT trap restores every old target (or removes a first-install target), cleans temporary files, reloads units, and leaves the timer disabled after any staging, move, reload, or final-validation failure. Success requires 4/4 byte equality, exact modes, and strict disabled/inactive states; it cleans backups and never enables or starts the timer.
 
 - [ ] **Step 4: Verify and commit**
 

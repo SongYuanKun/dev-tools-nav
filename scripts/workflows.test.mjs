@@ -67,12 +67,22 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
   assert.match(runbook, /^VERIFICATION_SOURCE="\$HOME\/\.local\/share\/dev-tools-nav-verification"$/m);
   assert.doesNotMatch(runbook, /\$\{VERIFICATION_SOURCE_DIR:-|VERIFICATION_SOURCE_DIR=/);
   assertStepsInOrder(runbook, [
+    "systemctl --user disable --now dev-tools-nav-deploy.timer",
+    "systemctl --user is-active dev-tools-nav-deploy.service",
     "npm ci",
     "npm test",
     "npm run build",
     "npm run check:generated",
+    'exec 9>"$HOME/.cache/dev-tools-nav-deploy/deploy.lock"',
+    "flock -n 9",
     'SITE_SOURCE_DIR="$PWD" "$HOME/.local/libexec/dev-tools-nav-deploy/deploy-1panel-local.sh"',
+    "curl -fsS https://tools.songyuankun.top/ >/dev/null",
+    "https://tools.songyuankun.top/content/",
+    "systemctl --user enable --now dev-tools-nav-deploy.timer",
   ]);
+  assert.match(runbook, /active.*activating|activating.*active/s);
+  assert.match(runbook, /等待.*完成.*重试/);
+  assert.doesNotMatch(runbook, /systemctl --user (?:stop|kill) dev-tools-nav-deploy\.service/);
   assert.doesNotMatch(runbook, /^\s*(?:\.\/deploy\.sh|\.\/scripts\/deploy-1panel-local\.sh)\s*$/m);
   assertStepsInOrder(runbook, [
     "systemctl --user disable --now github-actions-dev-tools-nav.service",
@@ -87,7 +97,8 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
     'rm -f "$HOME/.config/systemd/user/github-actions-dev-tools-nav.service"',
   ]);
   assert.match(runbook, /^curl -fsS https:\/\/tools\.songyuankun\.top\/ >\/dev\/null$/m);
-  assert.match(runbook, /curl -sS -o \/dev\/null -w '%\{http_code\}' https:\/\/tools\.songyuankun\.top\/this-path-must-not-exist/);
+  assert.match(runbook, /curl -sS -o \/dev\/null -w '%\{http_code\}' https:\/\/tools\.songyuankun\.top\/content\//);
+  assert.doesNotMatch(runbook, /this-path-must-not-exist/);
   assert.match(runbook, /^curl -fsS https:\/\/tools\.songyuankun\.top\/baidu_verify_codeva-TByQYpVHM2\.html >\/dev\/null$/m);
   assert.match(runbook, /^curl -fsS https:\/\/tools\.songyuankun\.top\/googleb710668c9aa28d4e\.html >\/dev\/null$/m);
 });

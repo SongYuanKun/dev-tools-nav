@@ -19,8 +19,8 @@
 - 轮询器只接受 `origin/main` 当前 SHA，不接受分支名、PR ref 或调用参数指定的任意提交。
 - 轮询器通过 GitHub 公共 API 检查 `test.yml`：`head_sha` 必须等于目标 SHA，事件必须是 `push`，结论必须是 `success`。
 - GitHub API 查询不使用 token。10 分钟轮询仅在发现新 SHA 时查询 Actions，保持在公共 API 限额内。
-- 从 Git 安装到 GTR 本地的轮询器和部署器是可信控制面。远端 checkout 只能提供待构建站点，不会替换正在运行的本地控制脚本。
-- 只有合并进 `main` 且通过 Test 的代码会在 GTR 构建。合并权限因此等同于生产发布权限。
+- 从 Git 安装到 GTR 本地的轮询器和部署器是可信控制面；它们能防止远端 checkout 替换控制脚本，但不是 sandbox。
+- checkout 的 npm lifecycle、测试和构建由拥有 Docker 权限的 service 用户执行。只有合并进 `main` 且通过 Test 的代码会运行，但合并权限因此等同于生产主机代码执行权限，而不只是站点生成物发布权限。
 - systemd 服务以 `kun` 运行，不使用 sudo。它保留 Docker 访问，但不接受 GitHub 下发的任意作业。
 
 ## 组件与职责
@@ -32,9 +32,9 @@
 轮询器使用 `flock` 保证单实例，执行以下流程：
 
 1. 用 `git ls-remote` 取得 `origin/main` SHA，并验证它是 40 或 64 位十六进制值。
-2. 若 SHA 等于 `~/.local/state/dev-tools-nav-deploy/last-deployed-sha`，直接成功退出。
+2. 若 SHA 等于 `~/.local/state/dev-tools-nav-deploy/last-deployed-sha`，输出固定日志 `SHA is already deployed; no work required.` 后成功退出，不查询 API、运行 npm 或调用部署器。
 3. 调用 GitHub 公共 Actions API，要求同 SHA 的 `test.yml` push run 已成功。Test 尚未完成时不报错，也不更新状态，等待下一轮。
-4. 在 `~/.cache/dev-tools-nav-deploy/` 下创建临时 checkout，只获取目标 SHA，并再次验证 `HEAD` 完全相等。
+4. 在 `~/.cache/dev-tools-nav-deploy/` 下创建临时 checkout，获取目标 `main` SHA 的完整可达历史，并再次验证 `HEAD` 与已观察 SHA 完全相等。
 5. 在干净 checkout 中执行 `npm ci`、`npm test`、`npm run build` 和 `npm run check:generated`。
 6. 以 `SITE_SOURCE_DIR` 指向 checkout，调用本地安装的可信 `deploy-1panel-local.sh`。
 7. 生产部署成功后，以原子文件替换方式写入 `last-deployed-sha`。
@@ -66,9 +66,11 @@
 新增 `scripts/install-outbound-deployer.sh`，负责：
 
 - 检查 `Linger=yes`、Docker、Git、curl、Python、Node、npm 和 flock。
-- 创建权限受限的 libexec、cache、state 和验证文件目录。
-- 安装轮询器、部署器、service 和 timer 的版本化副本。
-- 执行 daemon reload，但不会自动注销 Runner 或推送 Git。
+- 创建权限受限的 libexec、cache、state 和验证文件目录；验证目录固定为 `0700`，两个源文件固定为 `0600`。
+- 在写 4 个目标前先禁用 timer，并确认 oneshot 不处于 active 或 activating；安装器不停止正在部署的 service。
+- 备份 4 个旧目标，在各目标目录 staging 正确 mode 的新文件，再逐个原子替换。
+- 任一 staging、替换、daemon reload 或最终状态验证失败时，恢复全部旧目标（首装则删除新目标）、再次 reload，并保持 timer disabled；成功也保持 timer disabled/inactive。
+- 不会自动注销 Runner、启用 timer 或推送 Git。
 
 运维手册记录安装、手动触发、日志、状态、失败重试、升级和卸载命令。根 `deploy.sh` 继续作为人工兼容入口。
 
@@ -100,6 +102,8 @@
 - checkout、npm 或部署失败时不更新状态。
 - 成功后原子写入状态；并发调用只有一个实例执行。
 - API 返回畸形 JSON、网络失败和非法 SHA 时安全失败。
+- 40/64 位小写 SHA 合法；大写、非法字符、错误长度、错误 ref 和多余字段在 API 查询前拒绝。
+- `npm ci`、`npm test`、build 或生成物检查任一失败时，不运行后续 gate、部署器，也不推进状态。
 
 ### 部署器回归测试
 
@@ -112,8 +116,8 @@
 ### 配置与文档测试
 
 - 仓库不存在 self-hosted 1Panel workflow，也不再引用 Runner 标签或 Runner 服务。
-- service、timer 和安装脚本路径、权限、10 分钟周期及 hardening 配置一致。
-- 手册明确公共 API、精确 SHA、首次切换、卸载 Runner 和恢复流程。
+- service、timer 和安装脚本路径、权限、事务回滚、10 分钟周期及 hardening 配置一致。
+- 手册明确公共 API、精确 SHA、首次切换、卸载 Runner 和恢复流程；手动路径禁用 timer、等待 service inactive，并用 poller 的同一非阻塞锁串行调用可信部署器。
 
 ## 验收标准
 
@@ -130,5 +134,5 @@
 
 - 轮询器失败时，停用 timer；生产站点保持最后成功版本。
 - 部署失败由现有事务逻辑恢复旧 `index`，状态 SHA 不更新。
-- 安装升级失败时恢复 libexec 和 unit 的上一个本地备份，再 daemon reload。
+- 安装升级失败时由 EXIT trap 恢复 libexec 和 unit 的全部上一个本地备份（原先不存在则删除新目标），清理 staging/备份，再 daemon reload；timer 保持 disabled。
 - 只有仓库改为私有或具备受限 Runner Group 后，才允许重新采用自托管 Runner。公开仓库不得回滚到当前 Runner 架构。

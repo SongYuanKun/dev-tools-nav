@@ -46,7 +46,7 @@ function makeFixture() {
   const sha = run(realGit, ['rev-parse', 'HEAD'], { cwd: source });
 
   const curl = path.join(bin, 'curl');
-  executable(curl, 'printf "%s\\n" "$*" >> "$CURL_LOG"\ncat "$API_FIXTURE"\n');
+  executable(curl, 'printf "%s\\n" "$*" >> "$CURL_LOG"\n[[ "${CURL_FAIL:-0}" != 1 ]] || exit 28\ncat "$API_FIXTURE"\n');
   const npm = path.join(bin, 'npm');
   executable(npm, [
     'printf "npm:%s\\n" "$*" >> "$COMMAND_LOG"',
@@ -63,6 +63,7 @@ function makeFixture() {
   ].join('\n'));
   const git = path.join(bin, 'git');
   executable(git, [
+    'if [[ "${1:-}" == ls-remote && -n "${LS_REMOTE_OUTPUT:-}" ]]; then printf "%s\\n" "$LS_REMOTE_OUTPUT"; exit 0; fi',
     'if [[ "${1:-}" == fetch ]]; then touch "$GIT_FETCH_MARKER"; fi',
     'if [[ "${FAIL_GIT_FETCH:-0}" == 1 && "${1:-}" == fetch ]]; then exit 42; fi',
     'if [[ "${RACE_AFTER_LS_REMOTE:-0}" == 1 && "${1:-}" == ls-remote ]]; then',
@@ -198,13 +199,62 @@ test('malformed API JSON fails without advancing state', () => {
   } finally { f.cleanup(); }
 });
 
-test('checkout, npm, and deploy failures do not advance state', async (t) => {
-  const cases = {
-    checkout: { FAIL_GIT_FETCH: '1' },
-    npm: { FAIL_NPM: 'test' },
-    deploy: { FAIL_DEPLOY: '1' },
+test('a curl network failure fails without advancing state or running gates', () => {
+  const f = makeFixture();
+  try {
+    const previousSha = '0'.repeat(40);
+    mkdirSync(f.state, { recursive: true });
+    writeFileSync(path.join(f.state, 'last-deployed-sha'), `${previousSha}\n`);
+    const result = f.invoke({ CURL_FAIL: '1' });
+    assert.notEqual(result.status, 0);
+    assert.equal(readFileSync(path.join(f.state, 'last-deployed-sha'), 'utf8').trim(), previousSha);
+    assertNoWork(f);
+  } finally { f.cleanup(); }
+});
+
+test('remote SHA parsing accepts lowercase 40/64 hex and rejects ambiguous lines', async (t) => {
+  const accepted64 = 'a'.repeat(64);
+  await t.test('64-character SHA', () => {
+    const f = makeFixture();
+    try {
+      setRuns(f, []);
+      const result = f.invoke({ LS_REMOTE_OUTPUT: `${accepted64}\trefs/heads/main` });
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(readFileSync(f.curlLog, 'utf8'), new RegExp(`head_sha=${accepted64}`));
+      assertNoWork(f);
+    } finally { f.cleanup(); }
+  });
+
+  const rejected = {
+    uppercase: `${'A'.repeat(40)}\trefs/heads/main`,
+    invalid: `${'g'.repeat(40)}\trefs/heads/main`,
+    'wrong width': `${'a'.repeat(41)}\trefs/heads/main`,
+    'wrong ref': `${'a'.repeat(40)}\trefs/heads/release`,
+    'extra field': `${'a'.repeat(40)}\trefs/heads/main\textra`,
   };
-  for (const [name, env] of Object.entries(cases)) {
+  for (const [name, line] of Object.entries(rejected)) {
+    await t.test(name, () => {
+      const f = makeFixture();
+      try {
+        const result = f.invoke({ LS_REMOTE_OUTPUT: line });
+        assert.notEqual(result.status, 0);
+        assert.equal(existsSync(f.curlLog), false, 'invalid ref queried the API');
+        assertNoWork(f);
+      } finally { f.cleanup(); }
+    });
+  }
+});
+
+test('checkout, every npm gate, and deploy failures stop immediately without advancing state', async (t) => {
+  const cases = {
+    checkout: [{ FAIL_GIT_FETCH: '1' }, []],
+    'npm ci': [{ FAIL_NPM: 'ci' }, ['npm:ci']],
+    'npm test': [{ FAIL_NPM: 'test' }, ['npm:ci', 'npm:test']],
+    build: [{ FAIL_NPM: 'run build' }, ['npm:ci', 'npm:test', 'npm:run build']],
+    'check:generated': [{ FAIL_NPM: 'run check:generated' }, ['npm:ci', 'npm:test', 'npm:run build', 'npm:run check:generated']],
+    deploy: [{ FAIL_DEPLOY: '1' }, null],
+  };
+  for (const [name, [env, expectedCommands]] of Object.entries(cases)) {
     await t.test(name, () => {
       const f = makeFixture();
       try {
@@ -219,8 +269,8 @@ test('checkout, npm, and deploy failures do not advance state', async (t) => {
         const commands = existsSync(f.commandLog)
           ? readFileSync(f.commandLog, 'utf8').trim().split('\n')
           : [];
+        if (expectedCommands) assert.deepEqual(commands, expectedCommands);
         if (name === 'checkout') assert.deepEqual(commands, []);
-        if (name === 'npm') assert.deepEqual(commands, ['npm:ci', 'npm:test']);
         if (name === 'deploy') {
           assert.equal(commands.length, 5);
           assert.deepEqual(commands.slice(0, 4), ['npm:ci', 'npm:test', 'npm:run build', 'npm:run check:generated']);
