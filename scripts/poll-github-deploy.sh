@@ -43,6 +43,7 @@ if [[ "$remote_ref" != "refs/heads/main" || -n "${extra:-}" || ! "$remote_sha" =
 fi
 
 if [[ -f "$STATE_FILE" ]] && [[ "$(<"$STATE_FILE")" == "$remote_sha" ]]; then
+  printf '%s\n' 'SHA is already deployed; no work required.'
   exit 0
 fi
 

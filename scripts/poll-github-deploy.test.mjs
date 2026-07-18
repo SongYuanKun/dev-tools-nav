@@ -125,6 +125,7 @@ test('unchanged SHA does not query API, run npm, or deploy', () => {
     writeFileSync(path.join(f.state, 'last-deployed-sha'), `${f.sha}\n`);
     const result = f.invoke();
     assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stdout, 'SHA is already deployed; no work required.\n');
     assert.equal(existsSync(f.curlLog), false, 'API was queried');
     assertNoWork(f);
   } finally { f.cleanup(); }
