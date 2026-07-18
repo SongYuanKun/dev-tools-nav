@@ -27,7 +27,8 @@ test('systemd units and installer keep the hardened disabled-install contract', 
   ]);
 
   assert.match(timer, /OnBootSec=2min/);
-  assert.match(timer, /OnUnitActiveSec=10min/);
+  assert.match(timer, /OnCalendar=\*:0\/10/);
+  assert.doesNotMatch(timer, /OnUnitActiveSec=/);
   assert.match(timer, /Persistent=true/);
   assert.match(service, /Type=oneshot/);
   assert.match(service, /NoNewPrivileges=true/);
@@ -38,8 +39,12 @@ test('systemd units and installer keep the hardened disabled-install contract', 
   assert.match(installer, /loginctl show-user "\$USER" -p Linger --value/);
   assert.match(installer, /install -m 0755 scripts\/poll-github-deploy\.sh/);
   assert.match(installer, /install -m 0755 scripts\/deploy-1panel-local\.sh/);
-  assert.doesNotMatch(installer, /enable --now|sudo|gh api/);
-  assert.doesNotMatch(installer, /systemctl[^\n]*(?:enable|start)/);
+  assert.match(installer, /required_commands=\([\s\S]*\bnode\b[\s\S]*\)/);
+  assert.match(installer, /systemctl --user disable --now dev-tools-nav-deploy\.timer/);
+  assert.match(installer, /systemctl --user is-enabled/);
+  assert.match(installer, /systemctl --user is-active/);
+  assert.doesNotMatch(installer, /systemctl[^\n]*\benable\b|sudo|gh api/);
+  assert.doesNotMatch(installer, /systemctl[^\n]*\b(?:enable|start)\b/);
 });
 
 test('installer copies trusted files with strict modes and leaves the timer inactive', async (t) => {
@@ -71,12 +76,16 @@ printf ' %q' "$@" >> "$COMMAND_LOG"
 printf '\n' >> "$COMMAND_LOG"
 if [[ "$name" == loginctl ]]; then
   printf 'yes\n'
+elif [[ "$name" == systemctl && " $* " == *' is-enabled '* ]]; then
+  printf 'disabled\n'
+  exit 1
 elif [[ "$name" == systemctl && " $* " == *' is-active '* ]]; then
+  printf 'inactive\n'
   exit 3
 fi
 `);
   await chmod(fakeCommand, 0o755);
-  for (const command of ['loginctl', 'systemctl', 'docker', 'git', 'curl', 'python3', 'npm', 'flock', 'rsync']) {
+  for (const command of ['loginctl', 'systemctl', 'docker', 'git', 'curl', 'python3', 'npm', 'node', 'flock', 'rsync']) {
     await symlink('fake-command', path.join(fakeBin, command));
   }
 
@@ -113,7 +122,9 @@ fi
   const calls = await readFile(log, 'utf8');
   assert.match(calls, /^loginctl show-user fixture-user -p Linger --value$/m);
   assert.match(calls, /^systemctl --user daemon-reload$/m);
-  assert.match(calls, /^systemctl --user is-active --quiet dev-tools-nav-deploy\.timer$/m);
+  assert.match(calls, /^systemctl --user disable --now dev-tools-nav-deploy\.timer$/m);
+  assert.match(calls, /^systemctl --user is-enabled dev-tools-nav-deploy\.timer$/m);
+  assert.match(calls, /^systemctl --user is-active dev-tools-nav-deploy\.timer$/m);
   assert.doesNotMatch(calls, /systemctl[^\n]*\b(?:enable|start)\b/);
   assert.doesNotMatch(calls, /^gh\b|^sudo\b/m);
 });

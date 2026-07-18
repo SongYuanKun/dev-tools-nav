@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- Poll interval: `OnUnitActiveSec=10min`; first activation: `OnBootSec=2min`; timer is persistent.
+- Poll schedule: `OnCalendar=*:0/10`; first activation: `OnBootSec=2min`; `Persistent=true` catches up a missed calendar activation after downtime.
 - Repository: `SongYuanKun/dev-tools-nav`; branch: `refs/heads/main`; Test workflow: `test.yml`; accepted event: `push`.
 - No GitHub token, inbound port, SSH, self-hosted workflow, repository Runner, sudo, or system-level service.
 - Trusted binaries: `~/.local/libexec/dev-tools-nav-deploy/poll-github-deploy.sh` and `deploy-1panel-local.sh`.
@@ -260,7 +260,8 @@ Assert the unit templates and installer require:
 
 ```js
 assert.match(timer, /OnBootSec=2min/);
-assert.match(timer, /OnUnitActiveSec=10min/);
+assert.match(timer, /OnCalendar=\*:0\/10/);
+assert.doesNotMatch(timer, /OnUnitActiveSec=/);
 assert.match(timer, /Persistent=true/);
 assert.match(service, /Type=oneshot/);
 assert.match(service, /NoNewPrivileges=true/);
@@ -271,10 +272,14 @@ assert.match(service, /UMask=0077/);
 assert.match(installer, /loginctl show-user "\$USER" -p Linger --value/);
 assert.match(installer, /install -m 0755 scripts\/poll-github-deploy\.sh/);
 assert.match(installer, /install -m 0755 scripts\/deploy-1panel-local\.sh/);
-assert.doesNotMatch(installer, /enable --now|sudo|gh api/);
+assert.match(installer, /required_commands=\([\s\S]*\bnode\b[\s\S]*\)/);
+assert.match(installer, /systemctl --user disable --now dev-tools-nav-deploy\.timer/);
+assert.match(installer, /systemctl --user is-enabled/);
+assert.match(installer, /systemctl --user is-active/);
+assert.doesNotMatch(installer, /systemctl[^\n]*\benable\b|sudo|gh api/);
 ```
 
-Add a temporary-home installer test with fake `systemctl`, `docker`, and commands. It verifies directory modes, byte-identical installed scripts/units, `daemon-reload`, and a disabled timer.
+Add a temporary-home installer test with fake `systemctl`, `node`, `docker`, and the other required commands. It verifies directory modes, byte-identical installed scripts/units, `daemon-reload`, `disable --now`, the exact disabled/inactive status checks, and the absence of `enable` or `start` calls.
 
 - [ ] **Step 2: Run RED**
 
@@ -314,7 +319,7 @@ Description=Check dev-tools-nav main for a deployable SHA every ten minutes
 
 [Timer]
 OnBootSec=2min
-OnUnitActiveSec=10min
+OnCalendar=*:0/10
 Persistent=true
 Unit=dev-tools-nav-deploy.service
 
@@ -322,7 +327,7 @@ Unit=dev-tools-nav-deploy.service
 WantedBy=timers.target
 ```
 
-The installer uses `set -euo pipefail`, checks `Linger=yes` and required commands, creates libexec/cache/state/config directories with `0700`, installs scripts as `0755` and units as `0644`, verifies the two host verification files with `test -s`, runs `systemctl --user daemon-reload`, and asserts the timer is not active. It never enables the timer.
+The installer uses `set -euo pipefail`, checks `Linger=yes` and required commands including `node`, creates libexec/cache/state/config directories with `0700`, installs scripts as `0755` and units as `0644`, verifies the two host verification files with `test -s`, runs `systemctl --user daemon-reload`, then explicitly runs `systemctl --user disable --now dev-tools-nav-deploy.timer`. It requires `is-enabled` to report `disabled` with its standard nonzero status and `is-active` to report `inactive` with its standard nonzero status. It never enables or starts the timer.
 
 - [ ] **Step 4: Verify and commit**
 

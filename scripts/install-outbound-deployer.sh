@@ -5,7 +5,7 @@ SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$SCRIPT_ROOT"
 
 required_commands=(
-  curl docker flock git install loginctl npm python3 rsync systemctl
+  curl docker flock git install loginctl node npm python3 rsync systemctl
 )
 for command in "${required_commands[@]}"; do
   command -v "$command" >/dev/null 2>&1 || {
@@ -36,8 +36,19 @@ install -m 0644 ops/dev-tools-nav-deploy.service "$unit_dir/dev-tools-nav-deploy
 install -m 0644 ops/dev-tools-nav-deploy.timer "$unit_dir/dev-tools-nav-deploy.timer"
 
 systemctl --user daemon-reload
-if systemctl --user is-active --quiet dev-tools-nav-deploy.timer; then
-  echo "Refusing to leave dev-tools-nav-deploy.timer active after installation." >&2
+systemctl --user disable --now dev-tools-nav-deploy.timer
+
+enabled_status=0
+enabled_state=$(systemctl --user is-enabled dev-tools-nav-deploy.timer) || enabled_status=$?
+if [[ "$enabled_status" -ne 1 || "$enabled_state" != "disabled" ]]; then
+  echo "Expected dev-tools-nav-deploy.timer to be disabled; got '$enabled_state' (status $enabled_status)." >&2
+  exit 1
+fi
+
+active_status=0
+active_state=$(systemctl --user is-active dev-tools-nav-deploy.timer) || active_status=$?
+if [[ "$active_status" -ne 3 || "$active_state" != "inactive" ]]; then
+  echo "Expected dev-tools-nav-deploy.timer to be inactive; got '$active_state' (status $active_status)." >&2
   exit 1
 fi
 

@@ -57,7 +57,7 @@
 新增两个版本化模板：
 
 - `ops/dev-tools-nav-deploy.service`：oneshot 服务，运行本地轮询器。
-- `ops/dev-tools-nav-deploy.timer`：`OnBootSec=2min`，`OnUnitActiveSec=10min`，`Persistent=true`。
+- `ops/dev-tools-nav-deploy.timer`：`OnBootSec=2min`，`OnCalendar=*:0/10`，`Persistent=true`；若主机停机期间错过 calendar 触发，恢复后补跑一次。
 
 服务使用 `UMask=0077`、`NoNewPrivileges=true`、`PrivateTmp=true` 和受限的读写目录。缓存、npm cache、锁和状态分别位于专用的用户目录。日志进入 user journal。
 
@@ -132,4 +132,3 @@
 - 部署失败由现有事务逻辑恢复旧 `index`，状态 SHA 不更新。
 - 安装升级失败时恢复 libexec 和 unit 的上一个本地备份，再 daemon reload。
 - 只有仓库改为私有或具备受限 Runner Group 后，才允许重新采用自托管 Runner。公开仓库不得回滚到当前 Runner 架构。
-
