@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SOURCE_DIR="${SITE_SOURCE_DIR:-$SCRIPT_ROOT}"
 DOCKER_BIN="${DOCKER_BIN:-docker}"
 OPENRESTY_CONTAINER="${OPENRESTY_CONTAINER:-1Panel-openresty-rRvM}"
 SITE_BASE="${SITE_BASE:-/www/sites/tools.songyuankun.top}"
@@ -46,7 +47,7 @@ preserved=(
 )
 
 for relative in "${required[@]}"; do
-  [[ -f "$ROOT_DIR/$relative" ]] || { echo "Missing build artifact: $relative" >&2; exit 1; }
+  [[ -f "$SOURCE_DIR/$relative" ]] || { echo "Missing build artifact: $relative" >&2; exit 1; }
 done
 
 rsync -a --delete \
@@ -63,7 +64,7 @@ rsync -a --delete \
   --include='/robots.txt' \
   --include='/sitemap.xml' \
   --exclude='*' \
-  "$ROOT_DIR/" "$STAGE/"
+  "$SOURCE_DIR/" "$STAGE/"
 
 REMOTE_DIRTY=1
 "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" sh -ec '
@@ -84,14 +85,15 @@ REMOTE_DIRTY=1
 "$DOCKER_BIN" cp "$STAGE/." "$OPENRESTY_CONTAINER:$NEXT/"
 
 for filename in "${preserved[@]}"; do
-  if "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" test -f "$TARGET/$filename"; then
+  if "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" test -s "$TARGET/$filename"; then
     "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" cp "$TARGET/$filename" "$NEXT/$filename"
-  elif [[ -f "$VERIFICATION_SOURCE_DIR/$filename" ]]; then
+  elif [[ -s "$VERIFICATION_SOURCE_DIR/$filename" ]]; then
     "$DOCKER_BIN" cp "$VERIFICATION_SOURCE_DIR/$filename" "$OPENRESTY_CONTAINER:$NEXT/$filename"
   else
     echo "Missing verification file: $filename" >&2
     exit 1
   fi
+  "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" test -s "$NEXT/$filename"
   "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" chmod 0644 "$NEXT/$filename"
 done
 
@@ -125,10 +127,12 @@ required_lines="$(printf '%s\n' "${required[@]}")"
 $required
 EOF
   [ "$failed" -eq 0 ] || exit 1
-  rm -rf "$old"
   rm -f "$marker"
   committed=1
   trap - EXIT
+  if ! rm -rf "$old"; then
+    echo "Warning: verified release is active, but old cleanup failed: $old" >&2
+  fi
 ' _ "$TARGET" "$NEXT" "$OLD" "$MARKER" "$required_lines" "$SITE_OWNER"
 
 REMOTE_DIRTY=0

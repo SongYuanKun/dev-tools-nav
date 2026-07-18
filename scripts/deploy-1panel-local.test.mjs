@@ -116,12 +116,22 @@ fi
 exec /bin/mv "$@"
 `);
   chmodSync(fakeMv, 0o755);
+  const fakeRm = join(bin, "rm");
+  writeFileSync(fakeRm, `#!/usr/bin/env bash
+set -euo pipefail
+if [[ -n "\${FAKE_RM_LOG:-}" ]]; then printf '%s\n' "$*" >> "\$FAKE_RM_LOG"; fi
+if [[ "\${FAKE_RM_FAIL_FINAL_OLD_CLEANUP:-0}" == "1" && "$*" == "-rf \${FAKE_RM_FINAL_OLD}" && -e "\${FAKE_RM_MARKER}" ]]; then
+  exit 67
+fi
+exec /bin/rm "$@"
+`);
+  chmodSync(fakeRm, 0o755);
   return { root, repo, site, verificationSource, fakeDocker };
 }
 
-function deploy({ repo, site, verificationSource, fakeDocker }, extraEnv = {}) {
-  return spawnSync("bash", ["scripts/deploy-1panel-local.sh"], {
-    cwd: repo,
+function deploy({ repo, site, verificationSource, fakeDocker }, extraEnv = {}, options = {}) {
+  return spawnSync("bash", [options.script ?? "scripts/deploy-1panel-local.sh"], {
+    cwd: options.cwd ?? repo,
     encoding: "utf8",
     env: {
       ...process.env,
@@ -135,6 +145,83 @@ function deploy({ repo, site, verificationSource, fakeDocker }, extraEnv = {}) {
     },
   });
 }
+
+test("deploys from SITE_SOURCE_DIR instead of the installed script directory", () => {
+  const data = fixture();
+  try {
+    const installedScript = join(data.root, "installed", "deploy-1panel-local.sh");
+    mkdirSync(dirname(installedScript), { recursive: true });
+    cpSync(join(data.repo, "scripts/deploy-1panel-local.sh"), installedScript);
+    chmodSync(installedScript, 0o755);
+    write(data.repo, "index.html", "new:from-site-source-dir");
+
+    const result = deploy(
+      data,
+      { SITE_SOURCE_DIR: data.repo },
+      { script: installedScript, cwd: data.root },
+    );
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(readFileSync(join(data.site, "index/index.html"), "utf8"), "new:from-site-source-dir");
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("falls back from an empty live verification file to a non-empty host source", () => {
+  const data = fixture();
+  try {
+    const filename = verificationFiles[0];
+    writeFileSync(join(data.site, "index", filename), "");
+
+    const result = deploy(data);
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(readFileSync(join(data.site, "index", filename), "utf8"), `host:${filename}`);
+    assert.equal(statSync(join(data.site, "index", filename)).mode & 0o777, 0o644);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("fails before switching when both verification sources are empty", () => {
+  const data = fixture();
+  try {
+    const filename = verificationFiles[0];
+    writeFileSync(join(data.site, "index", filename), "");
+    writeFileSync(join(data.verificationSource, filename), "");
+
+    const result = deploy(data);
+
+    assert.notEqual(result.status, 0);
+    assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+    assert.equal(existsSync(join(data.site, ".deploy-in-progress")), false);
+    assert.equal(existsSync(join(data.site, ".index-old")), false);
+    assert.equal(existsSync(join(data.site, ".index-next")), false);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("keeps the verified target when old release cleanup fails", () => {
+  const data = fixture();
+  try {
+    const rmLog = join(data.root, "rm.log");
+    const result = deploy(data, {
+      FAKE_RM_FAIL_FINAL_OLD_CLEANUP: "1",
+      FAKE_RM_FINAL_OLD: join(data.site, ".index-old"),
+      FAKE_RM_MARKER: join(data.site, ".deploy-in-progress"),
+      FAKE_RM_LOG: rmLog,
+    });
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(readFileSync(join(data.site, "index/index.html"), "utf8"), "new:index.html");
+    assert.equal(existsSync(join(data.site, ".deploy-in-progress")), false);
+    assert.equal(readFileSync(rmLog, "utf8").includes(`-rf ${join(data.site, "index")}\n`), false);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
 
 test("deploys only the static payload and lets live verification files win", () => {
   const data = fixture();
