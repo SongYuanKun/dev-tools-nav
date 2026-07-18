@@ -120,8 +120,15 @@ exec /bin/mv "$@"
   writeFileSync(fakeRm, `#!/usr/bin/env bash
 set -euo pipefail
 if [[ -n "\${FAKE_RM_LOG:-}" ]]; then printf '%s\n' "$*" >> "\$FAKE_RM_LOG"; fi
-if [[ "\${FAKE_RM_FAIL_FINAL_OLD_CLEANUP:-0}" == "1" && "$*" == "-rf \${FAKE_RM_FINAL_OLD}" && -e "\${FAKE_RM_MARKER}" ]]; then
-  exit 67
+if [[ "\${FAKE_RM_FAIL_FINAL_OLD_CLEANUP:-0}" == "1" && "$#" -eq 2 && "$1" == "-rf" && "$2" == "\${FAKE_RM_FINAL_OLD}" ]]; then
+  count=0
+  if [[ -f "\${FAKE_RM_STATE}" ]]; then read -r count < "\${FAKE_RM_STATE}"; fi
+  count=$((count + 1))
+  printf '%s\n' "$count" > "\${FAKE_RM_STATE}"
+  if [[ "$count" -eq 2 ]]; then
+    printf 'failed:%s\n' "$*" >> "\$FAKE_RM_LOG"
+    exit 67
+  fi
 fi
 exec /bin/rm "$@"
 `);
@@ -207,17 +214,27 @@ test("keeps the verified target when old release cleanup fails", () => {
   const data = fixture();
   try {
     const rmLog = join(data.root, "rm.log");
+    const rmState = join(data.root, "rm-state");
+    const old = join(data.site, ".index-old");
+    const target = join(data.site, "index");
     const result = deploy(data, {
       FAKE_RM_FAIL_FINAL_OLD_CLEANUP: "1",
-      FAKE_RM_FINAL_OLD: join(data.site, ".index-old"),
-      FAKE_RM_MARKER: join(data.site, ".deploy-in-progress"),
+      FAKE_RM_FINAL_OLD: old,
       FAKE_RM_LOG: rmLog,
+      FAKE_RM_STATE: rmState,
     });
 
     assert.equal(result.status, 0, result.stderr);
-    assert.equal(readFileSync(join(data.site, "index/index.html"), "utf8"), "new:index.html");
+    assert.match(result.stderr, /Warning: verified release is active, but old cleanup failed:/);
+    assert.equal(result.stderr.includes(old), true);
+    assert.equal(readFileSync(join(target, "index.html"), "utf8"), "new:index.html");
     assert.equal(existsSync(join(data.site, ".deploy-in-progress")), false);
-    assert.equal(readFileSync(rmLog, "utf8").includes(`-rf ${join(data.site, "index")}\n`), false);
+    assert.equal(readFileSync(join(old, "marker.txt"), "utf8"), "old release");
+    assert.equal(readFileSync(rmState, "utf8"), "2\n");
+    const rmCalls = readFileSync(rmLog, "utf8").trimEnd().split("\n");
+    assert.equal(rmCalls.filter((call) => call === `-rf ${old}`).length, 2);
+    assert.equal(rmCalls.includes(`failed:-rf ${old}`), true);
+    assert.equal(rmCalls.includes(`-rf ${target}`), false);
   } finally {
     rmSync(data.root, { recursive: true, force: true });
   }
