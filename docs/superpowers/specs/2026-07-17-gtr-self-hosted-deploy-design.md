@@ -2,6 +2,8 @@
 
 日期：2026-07-17
 
+> 已于 2026-07-18 被 [GTR 出站轮询部署设计](./2026-07-18-gtr-outbound-deployer-design.md) 取代。本文仅保留为历史决策记录，不再作为当前实施依据。
+
 ## 背景与目标
 
 当前 `deploy-1panel-ssh.yml` 运行在 GitHub 托管 Runner 上，需要通过公网 SSH 连接 GTR。仓库密钥已经配置，但 GitHub Runner 在 `ssh-keyscan` 阶段始终无法连接；GTR 的 frpc 只代理 HTTP/HTTPS，没有可供 GitHub Runner 使用的 SSH/TCP 通道。
@@ -81,4 +83,3 @@
 - 若 Runner 故障，可停止并禁用用户服务；删除安装目录前，先使用临时删除令牌注销 Runner。
 - 若未来恢复可靠的公网 SSH 通道，可以将 1Panel 工作流切回 GitHub 托管 Runner，但无需改变构建产物规范。
 - Runner 升级沿用官方发布包校验、停止服务、替换程序、启动服务和执行一次部署验收的流程。
-
