@@ -32,13 +32,13 @@ docker info
 验证文件独立于远端 checkout。将生产站现有文件保存为仅当前用户可读的本地源：
 
 ```bash
-VERIFICATION_SOURCE_DIR="${VERIFICATION_SOURCE_DIR:-$HOME/.local/share/dev-tools-nav-verification}"
-install -d -m 0700 "$VERIFICATION_SOURCE_DIR"
-docker cp 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/index/baidu_verify_codeva-TByQYpVHM2.html "$VERIFICATION_SOURCE_DIR/"
-docker cp 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/index/googleb710668c9aa28d4e.html "$VERIFICATION_SOURCE_DIR/"
-chmod 0600 "$VERIFICATION_SOURCE_DIR"/*.html
-test -s "$VERIFICATION_SOURCE_DIR/baidu_verify_codeva-TByQYpVHM2.html"
-test -s "$VERIFICATION_SOURCE_DIR/googleb710668c9aa28d4e.html"
+VERIFICATION_SOURCE="$HOME/.local/share/dev-tools-nav-verification"
+install -d -m 0700 "$VERIFICATION_SOURCE"
+docker cp 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/index/baidu_verify_codeva-TByQYpVHM2.html "$VERIFICATION_SOURCE/"
+docker cp 1Panel-openresty-rRvM:/www/sites/tools.songyuankun.top/index/googleb710668c9aa28d4e.html "$VERIFICATION_SOURCE/"
+chmod 0600 "$VERIFICATION_SOURCE"/*.html
+test -s "$VERIFICATION_SOURCE/baidu_verify_codeva-TByQYpVHM2.html"
+test -s "$VERIFICATION_SOURCE/googleb710668c9aa28d4e.html"
 ```
 
 ### 安装、初次运行和启用
@@ -98,38 +98,56 @@ git ls-remote https://github.com/SongYuanKun/dev-tools-nav.git refs/heads/main
 
 ## 手动原子部署
 
-仅在自动路径不可用且已确认本地 checkout 对应目标提交时使用。先完成同一组门禁，再调用仓库内的兼容入口；它最终委托 `scripts/deploy-1panel-local.sh` 完成原子切换：
+仅在自动路径不可用且已确认本地 checkout 对应目标提交时使用。checkout 只提供站点生成物；完成门禁后，直接调用安装在可信目录中的部署脚本：
 
 ```bash
 npm ci
 npm test
 npm run build
 npm run check:generated
-./deploy.sh
+SITE_SOURCE_DIR="$PWD" "$HOME/.local/libexec/dev-tools-nav-deploy/deploy-1panel-local.sh"
 ```
 
 部署脚本先构造 `.index-next`，保留两个验证文件，再用 `.deploy-in-progress`、`.index-old` 和目录重命名切换站点。失败时恢复旧目录。手动发布不会更新 poller 状态文件；恢复自动路径后运行一次 oneshot，让 poller 核验并记录 SHA。
 
 ## 注销旧 Runner
 
-先在 GitHub 仓库的 **Settings → Actions → Runners** 确认旧 Runner `gtr-dev-tools-nav` 已显示 **Offline**。不要为公开仓库创建新的注册令牌。停止旧进程，并由仓库管理员创建一次性的 remove token：
+执行者的 `gh` 身份必须有仓库 Administration 权限。先停止旧进程，再轮询 GitHub API，确认旧 Runner `gtr-dev-tools-nav` 已显示 **Offline**：
 
 ```bash
 systemctl --user disable --now github-actions-dev-tools-nav.service
+RUNNER_STATUS=""
+for attempt in {1..30}; do
+  RUNNER_STATUS="$(gh api repos/SongYuanKun/dev-tools-nav/actions/runners \
+    --jq '.runners[] | select(.name == "gtr-dev-tools-nav") | .status')"
+  [[ "$RUNNER_STATUS" == "offline" ]] && break
+  sleep 2
+done
+[[ "$RUNNER_STATUS" == "offline" ]] || { echo "Runner did not become Offline" >&2; exit 1; }
+```
+
+确认 Offline 后获取一次性 remove token，校验非空，再注销：
+
+```bash
+REMOVE_TOKEN="$(gh api -X POST repos/SongYuanKun/dev-tools-nav/actions/runners/remove-token --jq .token)"
+[[ -n "$REMOVE_TOKEN" ]] || { echo "Empty Runner remove token" >&2; exit 1; }
 cd "$HOME/.local/share/github-actions-runner/dev-tools-nav"
 ./config.sh remove --token "$REMOVE_TOKEN"
 unset REMOVE_TOKEN
 ```
 
-GitHub 页面确认该 Runner 已消失后，删除旧凭据和安装目录：
+通过 API 确认该 Runner 已消失；也在 GitHub 的 **Settings → Actions → Runners** 页面复核。只有两处都确认后，才能删除旧凭据、安装目录和 unit：
 
 ```bash
+RUNNER_MATCH="$(gh api repos/SongYuanKun/dev-tools-nav/actions/runners \
+  --jq '.runners[] | select(.name == "gtr-dev-tools-nav") | .name')"
+[[ -z "$RUNNER_MATCH" ]] || { echo "Runner still registered" >&2; exit 1; }
 rm -rf "$HOME/.local/share/github-actions-runner/dev-tools-nav"
 rm -f "$HOME/.config/systemd/user/github-actions-dev-tools-nav.service"
 systemctl --user daemon-reload
 ```
 
-remove token 只放在当前 shell，不写入仓库、命令脚本、日志或配置文件。若注销失败，保留目录，重新取得临时 remove token 后重试。无论结果如何，都不得在公开仓库重新注册 Runner。
+remove token 只放在当前 shell，不写入仓库、命令脚本、日志或配置文件。若注销失败，保留目录，重新取得临时 remove token 后重试。不要为公开仓库创建新的注册令牌；无论结果如何，都不得重新注册 Runner。
 
 ## 生产验收
 

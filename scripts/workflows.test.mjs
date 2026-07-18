@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 function assertStepsInOrder(workflow, steps) {
   let cursor = -1;
@@ -41,14 +41,20 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
   assert.equal(existsSync(".github/workflows/deploy-1panel.yml"), false);
   assert.equal(existsSync("ops/github-actions-dev-tools-nav.service"), false);
 
-  const activeWorkflowsAndSummaries = [
-    readFileSync(".github/workflows/test.yml", "utf8"),
-    readFileSync(".github/workflows/deploy-pages.yml", "utf8"),
+  const activeWorkflowFiles = readdirSync(".github/workflows")
+    .filter((name) => /\.ya?ml$/.test(name))
+    .map((name) => `.github/workflows/${name}`);
+  const activeUnitFiles = readdirSync("ops")
+    .filter((name) => /\.(?:service|timer)$/.test(name))
+    .map((name) => `ops/${name}`);
+  const activeWorkflowsUnitsAndSummaries = [
+    ...activeWorkflowFiles.map((path) => readFileSync(path, "utf8")),
+    ...activeUnitFiles.map((path) => readFileSync(path, "utf8")),
     readFileSync("README.md", "utf8"),
     readFileSync("manual.md", "utf8"),
     readFileSync("docs/README.md", "utf8"),
   ].join("\n");
-  assert.doesNotMatch(activeWorkflowsAndSummaries, /self-hosted|gtr-dev-tools-nav|github-actions-dev-tools-nav|deploy-1panel\.yml/);
+  assert.doesNotMatch(activeWorkflowsUnitsAndSummaries, /self-hosted|gtr-dev-tools-nav|github-actions-dev-tools-nav|deploy-1panel\.yml/);
 
   const runbook = readFileSync("docs/deploy-1panel.md", "utf8");
   assert.match(runbook, /gtr-dev-tools-nav/);
@@ -58,5 +64,30 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
   assert.match(runbook, /\.local\/state\/dev-tools-nav-deploy\/last-deployed-sha/);
   assert.match(runbook, /offline/i);
   assert.match(runbook, /systemctl --user start dev-tools-nav-deploy\.service/);
-  assert.match(runbook, /curl[^\n]*https:\/\/tools\.songyuankun\.top/);
+  assert.match(runbook, /^VERIFICATION_SOURCE="\$HOME\/\.local\/share\/dev-tools-nav-verification"$/m);
+  assert.doesNotMatch(runbook, /\$\{VERIFICATION_SOURCE_DIR:-|VERIFICATION_SOURCE_DIR=/);
+  assertStepsInOrder(runbook, [
+    "npm ci",
+    "npm test",
+    "npm run build",
+    "npm run check:generated",
+    'SITE_SOURCE_DIR="$PWD" "$HOME/.local/libexec/dev-tools-nav-deploy/deploy-1panel-local.sh"',
+  ]);
+  assert.doesNotMatch(runbook, /^\s*(?:\.\/deploy\.sh|\.\/scripts\/deploy-1panel-local\.sh)\s*$/m);
+  assertStepsInOrder(runbook, [
+    "systemctl --user disable --now github-actions-dev-tools-nav.service",
+    'RUNNER_STATUS="$(gh api repos/SongYuanKun/dev-tools-nav/actions/runners',
+    '[[ "$RUNNER_STATUS" == "offline" ]] ||',
+    "gh api -X POST repos/SongYuanKun/dev-tools-nav/actions/runners/remove-token --jq .token",
+    '[[ -n "$REMOVE_TOKEN" ]] ||',
+    './config.sh remove --token "$REMOVE_TOKEN"',
+    'RUNNER_MATCH="$(gh api repos/SongYuanKun/dev-tools-nav/actions/runners',
+    '[[ -z "$RUNNER_MATCH" ]] ||',
+    'rm -rf "$HOME/.local/share/github-actions-runner/dev-tools-nav"',
+    'rm -f "$HOME/.config/systemd/user/github-actions-dev-tools-nav.service"',
+  ]);
+  assert.match(runbook, /^curl -fsS https:\/\/tools\.songyuankun\.top\/ >\/dev\/null$/m);
+  assert.match(runbook, /curl -sS -o \/dev\/null -w '%\{http_code\}' https:\/\/tools\.songyuankun\.top\/this-path-must-not-exist/);
+  assert.match(runbook, /^curl -fsS https:\/\/tools\.songyuankun\.top\/baidu_verify_codeva-TByQYpVHM2\.html >\/dev\/null$/m);
+  assert.match(runbook, /^curl -fsS https:\/\/tools\.songyuankun\.top\/googleb710668c9aa28d4e\.html >\/dev\/null$/m);
 });
