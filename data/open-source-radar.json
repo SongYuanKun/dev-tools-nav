@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-07-13T13:40:32+08:00",
-  "weekLabel": "2026-07-06 ~ 2026-07-13",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、调研 / 知识、多模态 等方向。代表项目包括 meetily、system_prompts_leaks、OfficeCLI。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-07-20T13:42:32+08:00",
+  "weekLabel": "2026-07-13 ~ 2026-07-20",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、调研 / 知识、Agent Skills 等方向。代表项目包括 skills、hallmark、awesome-llm-apps。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,48 +31,88 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "Zackriya-Solutions/meetily",
-      "language": "Rust",
-      "stars": 23700,
-      "weekStars": 7440,
+      "repo": "mattpocock/skills",
+      "language": "Shell",
+      "stars": 177835,
+      "weekStars": 10983,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：skills — Skills for Real Engineers. Straight from my .agents directory.",
+      "features": [
+        "Skills for Real Engineers. Straight from my .agents directory.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "skills",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 2,
+      "repo": "Nutlope/hallmark",
+      "language": "CSS",
+      "stars": 13554,
+      "weekStars": 9193,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：hallmark — Anti-AI-slop design skill for Claude Code, Cursor, and Codex.",
+      "features": [
+        "Anti-AI-slop design skill for Claude Code, Cursor, and Codex.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "hallmark",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 3,
+      "repo": "Shubhamsaboo/awesome-llm-apps",
+      "language": "Python",
+      "stars": 124665,
+      "weekStars": 6211,
       "trending": true,
       "topic": "research",
-      "summary": "本周 GitHub Trending：meetily — Privacy first, AI meeting assistant with 4x faster Parakeet/Whisper live transcription, speaker diarization, and Ollama summarization built on Rust. 100% local processing. no cloud required. Meetily (Meetly Ai - https://meetily.ai ) is the #1 Self-hosted, Open-source Ai meeting note taker for macOS & Windows. Understand How to write meeting minutes",
+      "summary": "本周 GitHub Trending：awesome-llm-apps — 100+ AI Agent & RAG apps you can actually run — clone, customize, ship.",
       "features": [
-        "Privacy first, AI meeting assistant with 4x faster Parakeet/Whisper live transcription, speaker diarization, and Ollama summarization built on Rust. 100% local processing. no cloud required. Meetily (Meetly Ai - https://meetily.ai ) is the #1 Self-hosted, Open-source Ai meeting note taker for macOS & Windows. Understand How to write meeting minutes",
+        "100+ AI Agent & RAG apps you can actually run — clone, customize, ship.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "调研 / 知识",
-        "meetily"
+        "awesome llm apps"
       ]
     },
     {
-      "rank": 2,
-      "repo": "asgeirtj/system_prompts_leaks",
-      "language": "JavaScript",
-      "stars": 56836,
-      "weekStars": 7155,
+      "rank": 4,
+      "repo": "HKUDS/Vibe-Trading",
+      "language": "Python",
+      "stars": 25379,
+      "weekStars": 5228,
       "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：system_prompts_leaks — Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude Design. OpenAI - ChatGPT GPT-5.6, Codex GPT-5.6, GPT-5.5. Google - Gemini 3.5 Flash, 3.1 Pro, Antigravity. xAI - Grok, Cursor, Copilot, VS Code, Perplexity, and more. Updated regularly.",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：Vibe-Trading — \"Vibe-Trading: Your Personal Trading Agent\"",
       "features": [
-        "Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude Design. OpenAI - ChatGPT GPT-5.6, Codex GPT-5.6, GPT-5.5. Google - Gemini 3.5 Flash, 3.1 Pro, Antigravity. xAI - Grok, Cursor, Copilot, VS Code, Perplexity, and more. Updated regularly.",
+        "\"Vibe-Trading: Your Personal Trading Agent\"",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "编程 Agent",
-        "system_prompts_leaks"
+        "调研 / 知识",
+        "Vibe Trading"
       ]
     },
     {
-      "rank": 3,
+      "rank": 5,
       "repo": "iOfficeAI/OfficeCLI",
       "language": "C#",
-      "stars": 15563,
-      "weekStars": 6978,
+      "stars": 19780,
+      "weekStars": 4269,
       "trending": true,
       "topic": "coding",
       "summary": "本周 GitHub Trending：OfficeCLI — OfficeCLI is the first and best Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Free, open-source, single binary, no Office installation required.",
@@ -87,86 +127,48 @@
       ]
     },
     {
-      "rank": 4,
-      "repo": "diegosouzapw/OmniRoute",
+      "rank": 6,
+      "repo": "earendil-works/pi",
       "language": "TypeScript",
-      "stars": 16346,
-      "weekStars": 4506,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：OmniRoute — Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline & Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA.",
-      "features": [
-        "Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline & Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "OmniRoute"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "stablyai/orca",
-      "language": "TypeScript",
-      "stars": 17343,
-      "weekStars": 4481,
+      "stars": 72908,
+      "weekStars": 2854,
       "trending": true,
       "topic": "coding",
-      "summary": "本周 GitHub Trending：orca — Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop and mobile.",
+      "summary": "本周 GitHub Trending：pi — AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI",
       "features": [
-        "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop and mobile.",
+        "AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "编程 Agent",
-        "orca"
-      ]
-    },
-    {
-      "rank": 6,
-      "repo": "bradautomates/claude-video",
-      "language": "Python",
-      "stars": 7890,
-      "weekStars": 4353,
-      "trending": true,
-      "topic": "multimodal",
-      "summary": "本周 GitHub Trending：claude-video — Give Claude the ability to watch any video. /watch downloads, extracts frames, transcribes, hands it all to Claude.",
-      "features": [
-        "Give Claude the ability to watch any video. /watch downloads, extracts frames, transcribes, hands it all to Claude.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "多模态",
-        "claude video"
+        "pi"
       ]
     },
     {
       "rank": 7,
-      "repo": "usestrix/strix",
-      "language": "Python",
-      "stars": 40929,
-      "weekStars": 4143,
+      "repo": "openinterpreter/openinterpreter",
+      "language": "Rust",
+      "stars": 66861,
+      "weekStars": 2498,
       "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：strix — Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：openinterpreter — A coding agent for open models like Kimi K3",
       "features": [
-        "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
+        "A coding agent for open models like Kimi K3",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "调研 / 知识",
-        "strix"
+        "编程 Agent",
+        "openinterpreter"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 253207,
+      "stars": 257701,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -186,7 +188,7 @@
       "rank": 9,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 229010,
+      "stars": 231311,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -206,7 +208,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 213852,
+      "stars": 217369,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -226,7 +228,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 160640,
+      "stars": 162782,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -246,7 +248,7 @@
       "rank": 12,
       "repo": "iptv-org/iptv",
       "language": "TypeScript",
-      "stars": 132658,
+      "stars": 133447,
       "weekStars": 0,
       "trending": false,
       "topic": "research",
