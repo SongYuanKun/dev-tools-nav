@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-07-20T13:42:32+08:00",
-  "weekLabel": "2026-07-13 ~ 2026-07-20",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、调研 / 知识、Agent Skills 等方向。代表项目包括 skills、hallmark、awesome-llm-apps。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-07-27T13:53:12+08:00",
+  "weekLabel": "2026-07-20 ~ 2026-07-27",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、编程 Agent、调研 / 知识 等方向。代表项目包括 ai-agent-book、worldmonitor、skills。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,10 +31,48 @@
   "projects": [
     {
       "rank": 1,
+      "repo": "bojieli/ai-agent-book",
+      "language": "Python",
+      "stars": 21530,
+      "weekStars": 15909,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：ai-agent-book — 《深入理解 AI Agent：设计原理与工程实践》（李博杰 著）开源主仓库：全书正文、编译版 PDF 与按章配套代码",
+      "features": [
+        "《深入理解 AI Agent：设计原理与工程实践》（李博杰 著）开源主仓库：全书正文、编译版 PDF 与按章配套代码",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "ai agent book"
+      ]
+    },
+    {
+      "rank": 2,
+      "repo": "koala73/worldmonitor",
+      "language": "TypeScript",
+      "stars": 74940,
+      "weekStars": 12615,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：worldmonitor — Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitoring, and infrastructure tracking in a unified situational awareness interface",
+      "features": [
+        "Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitoring, and infrastructure tracking in a unified situational awareness interface",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "worldmonitor"
+      ]
+    },
+    {
+      "rank": 3,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 177835,
-      "weekStars": 10983,
+      "stars": 190050,
+      "weekStars": 12238,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：skills — Skills for Real Engineers. Straight from my .agents directory.",
@@ -50,88 +88,68 @@
       ]
     },
     {
-      "rank": 2,
-      "repo": "Nutlope/hallmark",
-      "language": "CSS",
-      "stars": 13554,
-      "weekStars": 9193,
+      "rank": 4,
+      "repo": "diegosouzapw/OmniRoute",
+      "language": "TypeScript",
+      "stars": 31297,
+      "weekStars": 10912,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：hallmark — Anti-AI-slop design skill for Claude Code, Cursor, and Codex.",
+      "summary": "本周 GitHub Trending：OmniRoute — Never stop coding. Free MIT AI gateway: one endpoint, 290+ providers (90+ free), 500+ models — Kimi, Claude, GPT, OpenAI, Gemini, GLM, DeepSeek, MiniMax. Works with Claude Code, Codex, Cursor, OpenCode, Cline & Copilot. Quota-aware auto-fallback, RTK+Caveman compression saves 15-95% tokens, MCP/A2A, Desktop/PWA. Built by 500+ contributors",
       "features": [
-        "Anti-AI-slop design skill for Claude Code, Cursor, and Codex.",
+        "Never stop coding. Free MIT AI gateway: one endpoint, 290+ providers (90+ free), 500+ models — Kimi, Claude, GPT, OpenAI, Gemini, GLM, DeepSeek, MiniMax. Works with Claude Code, Codex, Cursor, OpenCode, Cline & Copilot. Quota-aware auto-fallback, RTK+Caveman compression saves 15-95% tokens, MCP/A2A, Desktop/PWA. Built by 500+ contributors",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "hallmark",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 3,
-      "repo": "Shubhamsaboo/awesome-llm-apps",
-      "language": "Python",
-      "stars": 124665,
-      "weekStars": 6211,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：awesome-llm-apps — 100+ AI Agent & RAG apps you can actually run — clone, customize, ship.",
-      "features": [
-        "100+ AI Agent & RAG apps you can actually run — clone, customize, ship.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "awesome llm apps"
-      ]
-    },
-    {
-      "rank": 4,
-      "repo": "HKUDS/Vibe-Trading",
-      "language": "Python",
-      "stars": 25379,
-      "weekStars": 5228,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：Vibe-Trading — \"Vibe-Trading: Your Personal Trading Agent\"",
-      "features": [
-        "\"Vibe-Trading: Your Personal Trading Agent\"",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "Vibe Trading"
+        "OmniRoute"
       ]
     },
     {
       "rank": 5,
-      "repo": "iOfficeAI/OfficeCLI",
-      "language": "C#",
-      "stars": 19780,
-      "weekStars": 4269,
+      "repo": "stablyai/orca",
+      "language": "TypeScript",
+      "stars": 30014,
+      "weekStars": 7392,
       "trending": true,
       "topic": "coding",
-      "summary": "本周 GitHub Trending：OfficeCLI — OfficeCLI is the first and best Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Free, open-source, single binary, no Office installation required.",
+      "summary": "本周 GitHub Trending：orca — Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and VPS.",
       "features": [
-        "OfficeCLI is the first and best Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Free, open-source, single binary, no Office installation required.",
+        "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and VPS.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "编程 Agent",
-        "OfficeCLI"
+        "orca"
       ]
     },
     {
       "rank": 6,
+      "repo": "tirth8205/code-review-graph",
+      "language": "Python",
+      "stars": 26701,
+      "weekStars": 6006,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：code-review-graph — Local-first code intelligence graph for MCP and CLI. Builds a persistent map of your codebase so AI coding tools read only what matters, with benchmarked context reductions on reviews and large-repo workflows.",
+      "features": [
+        "Local-first code intelligence graph for MCP and CLI. Builds a persistent map of your codebase so AI coding tools read only what matters, with benchmarked context reductions on reviews and large-repo workflows.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "code review graph"
+      ]
+    },
+    {
+      "rank": 7,
       "repo": "earendil-works/pi",
       "language": "TypeScript",
-      "stars": 72908,
-      "weekStars": 2854,
+      "stars": 78319,
+      "weekStars": 5389,
       "trending": true,
       "topic": "coding",
       "summary": "本周 GitHub Trending：pi — AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI",
@@ -146,29 +164,10 @@
       ]
     },
     {
-      "rank": 7,
-      "repo": "openinterpreter/openinterpreter",
-      "language": "Rust",
-      "stars": 66861,
-      "weekStars": 2498,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：openinterpreter — A coding agent for open models like Kimi K3",
-      "features": [
-        "A coding agent for open models like Kimi K3",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "openinterpreter"
-      ]
-    },
-    {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 257701,
+      "stars": 261700,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -188,7 +187,7 @@
       "rank": 9,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 231311,
+      "stars": 233739,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -208,7 +207,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 217369,
+      "stars": 221046,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -228,7 +227,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 162782,
+      "stars": 164398,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -248,7 +247,7 @@
       "rank": 12,
       "repo": "iptv-org/iptv",
       "language": "TypeScript",
-      "stars": 133447,
+      "stars": 134500,
       "weekStars": 0,
       "trending": false,
       "topic": "research",
