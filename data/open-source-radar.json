@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-07-27T13:53:12+08:00",
-  "weekLabel": "2026-07-20 ~ 2026-07-27",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、编程 Agent、调研 / 知识 等方向。代表项目包括 ai-agent-book、worldmonitor、skills。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-08-03T13:45:14+08:00",
+  "weekLabel": "2026-07-27 ~ 2026-08-03",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、调研 / 知识、编程 Agent 等方向。代表项目包括 OmniRoute、AI-For-Beginners、i-have-adhd。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,68 +31,10 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "bojieli/ai-agent-book",
-      "language": "Python",
-      "stars": 21530,
-      "weekStars": 15909,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：ai-agent-book — 《深入理解 AI Agent：设计原理与工程实践》（李博杰 著）开源主仓库：全书正文、编译版 PDF 与按章配套代码",
-      "features": [
-        "《深入理解 AI Agent：设计原理与工程实践》（李博杰 著）开源主仓库：全书正文、编译版 PDF 与按章配套代码",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "ai agent book"
-      ]
-    },
-    {
-      "rank": 2,
-      "repo": "koala73/worldmonitor",
-      "language": "TypeScript",
-      "stars": 74940,
-      "weekStars": 12615,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：worldmonitor — Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitoring, and infrastructure tracking in a unified situational awareness interface",
-      "features": [
-        "Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitoring, and infrastructure tracking in a unified situational awareness interface",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "worldmonitor"
-      ]
-    },
-    {
-      "rank": 3,
-      "repo": "mattpocock/skills",
-      "language": "Shell",
-      "stars": 190050,
-      "weekStars": 12238,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：skills — Skills for Real Engineers. Straight from my .agents directory.",
-      "features": [
-        "Skills for Real Engineers. Straight from my .agents directory.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "skills",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 4,
       "repo": "diegosouzapw/OmniRoute",
       "language": "TypeScript",
-      "stars": 31297,
-      "weekStars": 10912,
+      "stars": 38078,
+      "weekStars": 7141,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：OmniRoute — Never stop coding. Free MIT AI gateway: one endpoint, 290+ providers (90+ free), 500+ models — Kimi, Claude, GPT, OpenAI, Gemini, GLM, DeepSeek, MiniMax. Works with Claude Code, Codex, Cursor, OpenCode, Cline & Copilot. Quota-aware auto-fallback, RTK+Caveman compression saves 15-95% tokens, MCP/A2A, Desktop/PWA. Built by 500+ contributors",
@@ -107,67 +49,126 @@
       ]
     },
     {
-      "rank": 5,
-      "repo": "stablyai/orca",
-      "language": "TypeScript",
-      "stars": 30014,
-      "weekStars": 7392,
+      "rank": 2,
+      "repo": "microsoft/AI-For-Beginners",
+      "language": "Jupyter Notebook",
+      "stars": 59593,
+      "weekStars": 5601,
       "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：orca — Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and VPS.",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：AI-For-Beginners — 12 Weeks, 24 Lessons, AI for All!",
       "features": [
-        "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and VPS.",
+        "12 Weeks, 24 Lessons, AI for All!",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "编程 Agent",
-        "orca"
+        "调研 / 知识",
+        "AI For Beginners"
       ]
     },
     {
-      "rank": 6,
-      "repo": "tirth8205/code-review-graph",
+      "rank": 3,
+      "repo": "ayghri/i-have-adhd",
       "language": "Python",
-      "stars": 26701,
-      "weekStars": 6006,
+      "stars": 15825,
+      "weekStars": 5225,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：code-review-graph — Local-first code intelligence graph for MCP and CLI. Builds a persistent map of your codebase so AI coding tools read only what matters, with benchmarked context reductions on reviews and large-repo workflows.",
+      "summary": "本周 GitHub Trending：i-have-adhd — A skill to stop your coding agent from burying the answer. ADHD-friendly output.",
       "features": [
-        "Local-first code intelligence graph for MCP and CLI. Builds a persistent map of your codebase so AI coding tools read only what matters, with benchmarked context reductions on reviews and large-repo workflows.",
+        "A skill to stop your coding agent from burying the answer. ADHD-friendly output.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "code review graph"
+        "i have adhd",
+        "Agent Skill"
       ]
     },
     {
-      "rank": 7,
-      "repo": "earendil-works/pi",
-      "language": "TypeScript",
-      "stars": 78319,
-      "weekStars": 5389,
+      "rank": 4,
+      "repo": "virgiliojr94/book-to-skill",
+      "language": "Python",
+      "stars": 15518,
+      "weekStars": 5223,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：book-to-skill — Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use while you work.",
+      "features": [
+        "Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use while you work.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "book to skill",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 5,
+      "repo": "alibaba/open-code-review",
+      "language": "Go",
+      "stars": 18056,
+      "weekStars": 4365,
       "trending": true,
       "topic": "coding",
-      "summary": "本周 GitHub Trending：pi — AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI",
+      "summary": "本周 GitHub Trending：open-code-review — Open-source & free — Battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
       "features": [
-        "AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI",
+        "Open-source & free — Battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "编程 Agent",
-        "pi"
+        "open code review"
+      ]
+    },
+    {
+      "rank": 6,
+      "repo": "citrolabs/ego-lite",
+      "language": "JavaScript",
+      "stars": 7763,
+      "weekStars": 3582,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：ego-lite — The fastest browser for AI agents to run browser automation, built for sharing your logged-in browser state with your AI agents, like Codex or Claude Code, without disturbing you. Zero cost, zero config.",
+      "features": [
+        "The fastest browser for AI agents to run browser automation, built for sharing your logged-in browser state with your AI agents, like Codex or Claude Code, without disturbing you. Zero cost, zero config.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "ego lite"
+      ]
+    },
+    {
+      "rank": 7,
+      "repo": "moeru-ai/airi",
+      "language": "TypeScript",
+      "stars": 46591,
+      "weekStars": 3431,
+      "trending": true,
+      "topic": "multimodal",
+      "summary": "本周 GitHub Trending：airi — 💖🧸 Self hosted, you-owned Grok Companion, a container of souls of waifu, cyber livings to bring them into our worlds, wishing to achieve Neuro-sama's altitude. Capable of realtime voice chat, Minecraft, Factorio playing. Web / macOS / Windows supported.",
+      "features": [
+        "💖🧸 Self hosted, you-owned Grok Companion, a container of souls of waifu, cyber livings to bring them into our worlds, wishing to achieve Neuro-sama's altitude. Capable of realtime voice chat, Minecraft, Factorio playing. Web / macOS / Windows supported.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "多模态",
+        "airi"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 261700,
+      "stars": 265263,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -187,7 +188,7 @@
       "rank": 9,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 233739,
+      "stars": 237130,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -207,7 +208,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 221046,
+      "stars": 224442,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -225,9 +226,29 @@
     },
     {
       "rank": 11,
+      "repo": "mattpocock/skills",
+      "language": "Shell",
+      "stars": 200208,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：skills — Skills for Real Engineers. Straight from my .agents directory.",
+      "features": [
+        "Skills for Real Engineers. Straight from my .agents directory.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "skills",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 12,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 164398,
+      "stars": 165865,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -241,25 +262,6 @@
         "官方 Skills",
         "Claude",
         "能力扩展"
-      ]
-    },
-    {
-      "rank": 12,
-      "repo": "iptv-org/iptv",
-      "language": "TypeScript",
-      "stars": 134500,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：iptv — Collection of publicly available IPTV channels from all over the world",
-      "features": [
-        "Collection of publicly available IPTV channels from all over the world",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "iptv"
       ]
     }
   ]
