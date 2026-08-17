@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-08-10T11:58:55+08:00",
-  "weekLabel": "2026-08-03 ~ 2026-08-10",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 调研 / 知识、Agent Skills、编程 Agent 等方向。代表项目包括 reverse-skill、TencentDB-Agent-Memory、AI-For-Beginners。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-08-17T11:02:01+08:00",
+  "weekLabel": "2026-08-10 ~ 2026-08-17",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、Agent Skills、记忆 / Harness 等方向。代表项目包括 diagram-design、prime-agent、semantica。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,30 +31,67 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "zhaoxuya520/reverse-skill",
-      "language": "PowerShell",
-      "stars": 22703,
-      "weekStars": 9784,
+      "repo": "cathrynlavery/diagram-design",
+      "language": "HTML",
+      "stars": 19685,
+      "weekStars": 15600,
       "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：reverse-skill — Reverse Engineering / Authorized Penetration Testing / Security Research Skill Router Pack AI-powered routing + On-demand toolchain bootstrapping + Self-evolving knowledge base Supports Claude Code, Kiro, Cursor, Cline, and other AI coding clients 逆向/渗透/安全技能路由包 - AI 自动路由 + 按需自举工具链 + 自动进化经验库 | 支持 Claude Code / Kiro / Cursor / Cline 等代码 AI 客户端",
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：diagram-design — 29 editorial diagram types for Claude Code. Self-contained HTML + SVG. No shadows, no Mermaid-slop.",
       "features": [
-        "Reverse Engineering / Authorized Penetration Testing / Security Research Skill Router Pack AI-powered routing + On-demand toolchain bootstrapping + Self-evolving knowledge base Supports Claude Code, Kiro, Cursor, Cline, and other AI coding clients 逆向/渗透/安全技能路由包 - AI 自动路由 + 按需自举工具链 + 自动进化经验库 | 支持 Claude Code / Kiro / Cursor / Cline 等代码 AI 客户端",
+        "29 editorial diagram types for Claude Code. Self-contained HTML + SVG. No shadows, no Mermaid-slop.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "Agent Skills",
-        "reverse skill",
-        "Agent Skill"
+        "编程 Agent",
+        "diagram design"
       ]
     },
     {
       "rank": 2,
+      "repo": "PrimeIntellect-ai/prime-agent",
+      "language": "TypeScript",
+      "stars": 16619,
+      "weekStars": 6435,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：prime-agent — A self-improving RLM agent for coding workflows and long-running autonomous tasks.",
+      "features": [
+        "A self-improving RLM agent for coding workflows and long-running autonomous tasks.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "prime agent"
+      ]
+    },
+    {
+      "rank": 3,
+      "repo": "semantica-agi/semantica",
+      "language": "Python",
+      "stars": 8235,
+      "weekStars": 5284,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：semantica — Graph-Native Infrastructure for Context and Accountable AI Systems",
+      "features": [
+        "Graph-Native Infrastructure for Context and Accountable AI Systems",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "semantica"
+      ]
+    },
+    {
+      "rank": 4,
       "repo": "TencentCloud/TencentDB-Agent-Memory",
       "language": "TypeScript",
-      "stars": 18911,
-      "weekStars": 8003,
+      "stars": 22288,
+      "weekStars": 3637,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：TencentDB-Agent-Memory — TencentDB Agent Memory is a team-level memory hub for AI Agents — turning conversations, docs, and code into four reusable memory assets (Chat Memory, Skill, LLM-Wiki, Code-Graph) that are governed, shared, and equipped across agents and frameworks.",
@@ -70,106 +107,67 @@
       ]
     },
     {
-      "rank": 3,
-      "repo": "microsoft/AI-For-Beginners",
-      "language": "Jupyter Notebook",
-      "stars": 64127,
-      "weekStars": 5514,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：AI-For-Beginners — 12 Weeks, 24 Lessons, AI for All!",
-      "features": [
-        "12 Weeks, 24 Lessons, AI for All!",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "AI For Beginners"
-      ]
-    },
-    {
-      "rank": 4,
-      "repo": "lyogavin/airllm",
-      "language": "Jupyter Notebook",
-      "stars": 30402,
-      "weekStars": 5129,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：airllm — AirLLM 70B inference with single 4GB GPU",
-      "features": [
-        "AirLLM 70B inference with single 4GB GPU",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "airllm"
-      ]
-    },
-    {
       "rank": 5,
-      "repo": "esengine/DeepSeek-Reasonix",
-      "language": "Go",
-      "stars": 33518,
-      "weekStars": 4709,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：DeepSeek-Reasonix — DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stability — leave it running.",
-      "features": [
-        "DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stability — leave it running.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "DeepSeek Reasonix"
-      ]
-    },
-    {
-      "rank": 6,
-      "repo": "virgiliojr94/book-to-skill",
-      "language": "Python",
-      "stars": 19525,
-      "weekStars": 4121,
+      "repo": "addyosmani/agent-skills",
+      "language": "JavaScript",
+      "stars": 87795,
+      "weekStars": 2882,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：book-to-skill — Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use while you work.",
+      "summary": "本周 GitHub Trending：agent-skills — Production-grade engineering skills for AI coding agents.",
       "features": [
-        "Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use while you work.",
+        "Production-grade engineering skills for AI coding agents.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "book to skill",
         "Agent Skill"
       ]
     },
     {
-      "rank": 7,
-      "repo": "usekaneo/kaneo",
-      "language": "TypeScript",
-      "stars": 7929,
-      "weekStars": 1952,
+      "rank": 6,
+      "repo": "unslothai/unsloth",
+      "language": "Python",
+      "stars": 72692,
+      "weekStars": 2645,
       "trending": true,
       "topic": "research",
-      "summary": "本周 GitHub Trending：kaneo — 🎯 All you need. Nothing you don't. Open source project management that works for you, not against you.",
+      "summary": "本周 GitHub Trending：unsloth — Local UI to run and train LLMs and diffusion models, including Qwen3.8, Kimi K3, MiniMax-H3, Gemma 4, DeepSeek-V4, FLUX and more.",
       "features": [
-        "🎯 All you need. Nothing you don't. Open source project management that works for you, not against you.",
+        "Local UI to run and train LLMs and diffusion models, including Qwen3.8, Kimi K3, MiniMax-H3, Gemma 4, DeepSeek-V4, FLUX and more.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "调研 / 知识",
-        "kaneo"
+        "unsloth"
+      ]
+    },
+    {
+      "rank": 7,
+      "repo": "macro-inc/macro",
+      "language": "Rust",
+      "stars": 3427,
+      "weekStars": 2588,
+      "trending": true,
+      "topic": "memory",
+      "summary": "本周 GitHub Trending：macro — Macro is a unified workspace for teams: email, chat, docs, tasks, agents, calls, and CRM — @-linked together with shared AI memory.",
+      "features": [
+        "Macro is a unified workspace for teams: email, chat, docs, tasks, agents, calls, and CRM — @-linked together with shared AI memory.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "记忆 / Harness",
+        "macro"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 269799,
+      "stars": 272855,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -189,7 +187,7 @@
       "rank": 9,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 239054,
+      "stars": 240520,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -209,7 +207,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 228009,
+      "stars": 231578,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -229,7 +227,7 @@
       "rank": 11,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 211428,
+      "stars": 219402,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -249,7 +247,7 @@
       "rank": 12,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 167267,
+      "stars": 169782,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
