@@ -1309,35 +1309,6 @@ const TOOLS_DATA = [
     featured: false,
     content: null,
   },
-
-  // ==================== 🔑 KMS ====================
-  {
-    id: "kms",
-    slug: "kms",
-    name: "KMS 激活",
-    description: "Windows / Office / Server 全版本 KMS 激活工具，一键命令搞定",
-    category: "activate",
-    tags: ["Windows", "Office", "激活", "KMS"],
-    url: "pages/kms.html",
-    icon: "💻",
-    featured: false,
-    hidden: true,
-    content: null,
-  },
-  {
-    id: "jrebel",
-    slug: "jrebel",
-    name: "JRebel 激活",
-    description: "JRebel 热部署工具 License Server，支持 2023.4.0+，无限试用",
-    category: "activate",
-    tags: ["Java", "热部署", "JRebel", "License"],
-    url: "tools/jrebel/",
-    legacyUrl: "pages/jrebel.html",
-    icon: "JR",
-    featured: false,
-    hidden: true,
-    content: null,
-  },
 ];
 
 /**
@@ -1352,5 +1323,4 @@ const CATEGORIES = [
   { id: "ops", label: "运维监控", icon: "📊" },
   { id: "design", label: "设计资源", icon: "🎨" },
   { id: "online-tools", label: "在线工具", icon: "🧰" },
-  { id: "activate", label: "激活工具", icon: "🔑", hidden: true },
 ];

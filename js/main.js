@@ -9,7 +9,6 @@
 const state = {
   currentCategory: "all",
   searchQuery: "",
-  secretUnlocked: false,
 };
 
 // ============================================================
@@ -126,38 +125,6 @@ const ThemeManager = {
     this.apply(next);
   },
 };
-
-// ============================================================
-// 彩蛋联动 - 逻辑在 js/easter-egg.js，此处仅处理旧版分类栏
-// ============================================================
-function revealActivateCategoryTab() {
-  if (typeof CATEGORIES === "undefined") return;
-  const activateCat = CATEGORIES.find((c) => c.id === "activate");
-  if (!activateCat) return;
-
-  const container = document.getElementById("categoryBar");
-  if (!container) return;
-  if (container.querySelector('[data-category="activate"]')) return;
-
-  const btn = document.createElement("button");
-  btn.className = "category-btn secret-category";
-  btn.dataset.category = "activate";
-  btn.innerHTML = `<span>${activateCat.icon}</span><span>${activateCat.label}</span>`;
-  btn.addEventListener("click", () => {
-    state.currentCategory = "activate";
-    activateCategoryBtn(btn);
-    renderTools();
-  });
-  container.appendChild(btn);
-  setTimeout(() => btn.classList.add("animate-in"), 100);
-}
-
-function syncSecretUnlockState() {
-  if (window.EasterEgg?.isUnlocked()) {
-    state.secretUnlocked = true;
-    revealActivateCategoryTab();
-  }
-}
 
 // ============================================================
 // 分类筛选
@@ -302,8 +269,8 @@ function createToolCard(tool) {
     <div class="card-footer">
       ${tool.content
         ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn" data-tool-id="${tool.id}">教程</a>`
-        : (safeCategory === "activate" || safeCategory === "online-tools")
-          ? `<a href="${safeUrl}" class="visit-btn" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "使用" : "访问"}</a>`
+        : (safeCategory === "online-tools")
+          ? `<a href="${safeUrl}" class="visit-btn" data-tool-id="${tool.id}">使用</a>`
           : `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="visit-btn" data-tool-id="${tool.id}">
             ↗ 访问
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -313,7 +280,7 @@ function createToolCard(tool) {
             </svg>
           </a>`
       }
-      <a href="${(safeCategory === "activate" || safeCategory === "online-tools") ? safeUrl : `pages/template.html?id=${tool.id}`}" class="detail-link" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "打开 →" : "详情 →"}</a>
+      <a href="${safeCategory === "online-tools" ? safeUrl : `pages/template.html?id=${tool.id}`}" class="detail-link" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "打开 →" : "详情 →"}</a>
     </div>
   `;
 
@@ -357,7 +324,7 @@ function createToolCard(tool) {
 
 const ICON_FALLBACK_MAP = {
   dev: "DEV", hosting: "WEB", security: "SEC",
-  ops: "OPS", design: "UI", ai: "AI", activate: "KEY",
+  ops: "OPS", design: "UI", ai: "AI",
   "online-tools": "TOOL",
 };
 
@@ -429,7 +396,6 @@ function getToolsIndex() {
 function filterTools() {
   if (typeof TOOLS_DATA === "undefined") return [];
 
-  const isSecretCategory = state.currentCategory === "activate";
   const isSpecialTab = state.currentCategory === "favorites" || state.currentCategory === "recent";
   const index = getToolsIndex();
 
@@ -446,8 +412,8 @@ function filterTools() {
   const words = q ? q.split(/\s+/).filter(Boolean) : [];
 
   return pool.filter((tool) => {
-    if (!isSecretCategory && !isSpecialTab && tool.hidden === true) return false;
-    if (!isSecretCategory && !isSpecialTab && isCategoryHidden(tool.category)) return false;
+    if (!isSpecialTab && tool.hidden === true) return false;
+    if (!isSpecialTab && isCategoryHidden(tool.category)) return false;
     const matchCategory = isSpecialTab || state.currentCategory === "all" || tool.category === state.currentCategory;
     if (!matchCategory) return false;
     if (!words.length) return true;
@@ -755,10 +721,9 @@ function initNavMenu() {
 function initKeyboard() {
   let _categoryBtns = null;
   const getCategoryBtns = () => {
-    if (!_categoryBtns) _categoryBtns = Array.from(document.querySelectorAll(".category-btn:not(.secret-category)"));
+    if (!_categoryBtns) _categoryBtns = Array.from(document.querySelectorAll(".category-btn"));
     return _categoryBtns;
   };
-  // 分类按钮变化时（如彩蛋解锁新增按钮）清除缓存
   const categoryBar = document.getElementById("categoryBar");
   if (categoryBar) new MutationObserver(() => { _categoryBtns = null; }).observe(categoryBar, { childList: true });
 
@@ -817,11 +782,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initImageFallbacks();
   initNavMenu();
   initKeyboard();
-  window.EasterEgg?.registerOnUnlock(() => {
-    state.secretUnlocked = true;
-    revealActivateCategoryTab();
-  });
-  syncSecretUnlockState();
   initSidePanel();
 });
 
