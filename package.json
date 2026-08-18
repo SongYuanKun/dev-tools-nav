@@ -1,6 +1,7 @@
 {
   "name": "dev-tools-nav",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "test": "node --test scripts/*.test.mjs",
     "audit:tools": "node scripts/audit-tools.mjs",

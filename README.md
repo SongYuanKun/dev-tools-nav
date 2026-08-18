@@ -1,6 +1,8 @@
 # Koen's 工具箱 · 开发者工具导航站
 
-> 目录收录 73 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> 目录收录 73 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 MIT 协议开源，仅用于非商业开源用途的开发与贡献。
 
 <!-- catalog-total: 73 -->
 <!-- catalog-self-built: 10 -->
