@@ -1,0 +1,14 @@
+{
+  "name": "dev-tools-nav",
+  "install": "./.cursor/install.sh",
+  "terminals": [
+    {
+      "name": "static-server",
+      "command": "python3 -m http.server 8080",
+      "description": "Serves the static site at http://localhost:8080 (open /index.html, /tools/json/, /pages/blog/)."
+    }
+  ],
+  "ports": [
+    { "name": "static site", "port": 8080 }
+  ]
+}
