@@ -15,7 +15,7 @@ last_verified: 2026-07-16
 - 当前继续使用 Vanilla HTML、CSS 和 JavaScript；原创内容达到 30–50 篇，或手工模板明显拖慢迭代时，才重新评估渐进迁移。
 - `tools.songyuankun.top` 与 `songyuankun.github.io/dev-tools-nav/` 两个 hostname 均保留，并继续共用现有 Umami website ID；运营查询必须分 hostname 展示。
 - 当前不展示广告，核心工具首屏始终无广告。
-- KMS、JRebel 等激活类内容继续保留入口，但不得进入首页精选，不展示广告、联盟或赞助内容，并从商业化转化指标中排除。
+- 目录不收录商业软件许可绕过类内容，此类页面、数据与同步任务已从仓库移除，且不再重新引入。
 - 站内原创正文以 `content/blog/*.md` 为唯一来源；文章 HTML、博客索引、Feed、sitemap 元数据和结构化数据均由构建流程生成，生成物不作为第二人工正文源。
 
 ## Phase 1：可信基础
@@ -24,7 +24,7 @@ last_verified: 2026-07-16
 |---|---|---|---|
 | 恢复测试并建立 CI 门禁 | done | `npm test` 全部通过；push 与 pull request 均执行 `npm ci`、`npm test` | [`scripts/*.test.mjs`](../scripts/audit-tools.test.mjs)、[测试工作流](../.github/workflows/test.yml) |
 | 修复截图自动化 | done | 本地与 Actions 均稳定生成首页、博客、JSON 三张有效 PNG；JSON 截图含示例内容；失败能定位页面与步骤 | [`capture-screenshots.mjs`](../scripts/capture-screenshots.mjs)、[截图工作流](../.github/workflows/update-screenshots.yml)、[2026-07-14 Actions 成功记录](https://github.com/SongYuanKun/dev-tools-nav/actions/runs/29305839196) |
-| 校验工具元数据与公开路径 | done | 工具总数 73、自研工具 10、`online-tools` 分类 11；ID 唯一；canonical 为 `/tools/*/` | [`audit-tools.mjs`](../scripts/audit-tools.mjs)、[`audit-tools.test.mjs`](../scripts/audit-tools.test.mjs) |
+| 校验工具元数据与公开路径 | done | 工具总数 71、自研工具 10、`online-tools` 分类 11；ID 唯一；canonical 为 `/tools/*/` | [`audit-tools.mjs`](../scripts/audit-tools.mjs)、[`audit-tools.test.mjs`](../scripts/audit-tools.test.mjs) |
 | 建立双 hostname 运营报表 | done | 输出 hostname、规范化路径、PV、会话、访客、有效使用次数与用户数；商业口径排除激活类内容 | [运营 SQL](../scripts/umami-operations-report.sql)、[Umami 规范](./umami-integration-spec.md) |
 | 建立活跃文档职责与一致性门禁 | done | 自动检查 README 路线源、AI 路线重复、部署 manifest 结论、Markdown 目标态和历史 Prompt 归档 | [文档一致性测试](../scripts/audit-tools.test.mjs)、[文档索引](./README.md) |
 

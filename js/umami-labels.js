@@ -25,7 +25,6 @@
     radar_filter: '雷达筛选',
     radar_copy_link: '雷达复制链接',
     favorite_toggle: '收藏切换',
-    easter_egg_unlocked: '彩蛋解锁',
     js_error: 'JS 错误',
     perf_lcp: '页面性能',
     scroll_depth: '滚动深度',
@@ -48,9 +47,7 @@
     cron: 'Cron 表达式',
     jwt: 'JWT 解码',
     sql: 'SQL 格式化',
-    sql_formatter: 'SQL 格式化',
-    kms: 'KMS 激活',
-    jrebel: 'JRebel 激活'
+    sql_formatter: 'SQL 格式化'
   };
 
   var ACTION_LABELS = {
@@ -90,8 +87,7 @@
     design: '设计资源',
     favorites: '我的收藏',
     recent: '最近访问',
-    'online-tools': '在线工具',
-    activate: '激活工具'
+    'online-tools': '在线工具'
   };
 
   function pick(map, key) {

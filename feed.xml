@@ -23,7 +23,7 @@
     <link href="https://tools.songyuankun.top/pages/blog/why-build-dev-tools-nav.html" />
     <published>2026-03-20T00:00:00Z</published>
     <updated>2026-03-20T00:00:00Z</updated>
-    <summary>从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、彩蛋和部署体验的过程。</summary>
+    <summary>从杂乱书签到可维护的开发者工具站，记录一个程序员用三天启动独立项目，并持续打磨搜索、主题、内容和部署体验的过程。</summary>
   </entry>
   <entry>
     <title>MyBatis 源码解析：SQL 是如何执行的</title>

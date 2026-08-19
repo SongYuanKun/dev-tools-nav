@@ -314,7 +314,7 @@
           if (fb) fb.textContent = tool.icon;
           return;
         }
-        const fallbackMap = { dev:"🛠️", hosting:"🌐", security:"🔒", ops:"📊", design:"🎨", ai:"🤖", activate:"🔑" };
+        const fallbackMap = { dev:"🛠️", hosting:"🌐", security:"🔒", ops:"📊", design:"🎨", ai:"🤖", "online-tools":"🧰" };
         const img = document.createElement("img");
         img.alt = tool.name;
         img.onload = () => { container.innerHTML = ""; container.appendChild(img); };

@@ -80,7 +80,7 @@ flowchart TB
     UC2[查看工具详情/教程]
     UC3[使用站内在线工具]
     UC4[阅读 AI 专题与博客]
-    UC5[切换主题与侧栏彩蛋]
+    UC5[切换主题与侧栏收藏]
     UC6[订阅或关注外链转化]
     UC7[更新数据与部署]
     UC8[CI 生成 Sitemap/Changelog/RSS]
@@ -250,7 +250,7 @@ ARTICLES / CSDN 同步 JSON
 |--------|------|
 | `deploy-pages.yml` | Checkout 全历史 → blog → sitemap → AI changelog → RSS → `_site` 发布 Pages |
 | `update-screenshots.yml` | Playwright 刷新 `assets/screenshot*.png` 并自动提交 |
-| 其他 | JRebel/CSDN 等定时或辅助 |
+| 其他 | CSDN 文章、AI 开源雷达等定时同步 |
 
 ### 静态代码扫描阈值（对齐说明）
 

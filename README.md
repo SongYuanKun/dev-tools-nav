@@ -2,9 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> 目录收录 73 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 MIT 协议开源，仅用于非商业开源用途的开发与贡献。
+> 目录收录 71 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 MIT 协议开源，仅用于非商业开源用途的开发与贡献。
 
-<!-- catalog-total: 73 -->
+<!-- catalog-total: 71 -->
 <!-- catalog-self-built: 10 -->
 <!-- catalog-online-tools: 11 -->
 
@@ -30,7 +30,6 @@
 - **Markdown 博客流水线**：原创正文单一来源，自动生成文章、索引、Atom Feed、结构化数据与 sitemap 日期
 - **响应式设计**：移动端、平板、桌面全适配
 - **精选标记**：高频推荐工具标注精选徽章
-- **🎮 彩蛋系统**：隐藏的"激活工具"分类，5 种趣味解锁方式！
 
 ## 在线工具（`/tools/`）
 
@@ -51,7 +50,7 @@
 
 ## 工具分类
 
-与 `data/tools.js` 中 `CATEGORIES` 一致（不含「全部」；「激活工具」为彩蛋隐藏 Tab，见下文）：
+与 `data/tools.js` 中 `CATEGORIES` 一致（不含「全部」）：
 
 | 分类 | 数量 | 代表工具 |
 |------|------|----------|
@@ -62,9 +61,8 @@
 | 📊 运维监控 | 7 | UptimeRobot、Grafana、Sentry |
 | 🎨 设计资源 | 7 | Figma、Iconify、Coolors、Google Fonts |
 | 🧰 在线工具 | 11 | **JSON 格式化**、JWT 解码、时间戳、Cron、SQL、正则（含 10 款自研工具） |
-| 🔑 激活工具（隐藏） | 2 | KMS、JRebel |
 
-> 目录合计 **73** 条。商业口径报告可排除 2 条隐藏激活记录，但它们不会从目录总数中静默移除；彩蛋解锁后会出现隐藏的「🔑 激活工具」分类 Tab（`CATEGORIES` 中 `hidden: true`）。
+> 目录合计 **71** 条，全部公开可见，没有隐藏分类。目录不收录商业软件激活、破解或许可绕过类内容。
 
 ## 文件结构
 
@@ -77,7 +75,7 @@ dev-tools-nav/
 │   ├── tools.css           # 在线工具页共享样式
 │   └── ai-topic.css        # AI 专题页样式
 ├── js/
-│   ├── main.js             # 搜索过滤、分类、彩蛋、侧栏等
+│   ├── main.js             # 搜索过滤、分类、侧栏等
 │   ├── base.js             # 全站导航注入、主题、Umami 统计
 │   ├── json-core.mjs       # JSON 解析、转换、查询与 Diff 纯逻辑
 │   ├── json-workbench.mjs  # JSON 工作台交互与 CodeMirror 状态
@@ -96,8 +94,7 @@ dev-tools-nav/
 │   ├── ai-compare.js       # AI 专题数据（横评、工作流、Prompt、入门、价格、AI_TOOL_INFO）
 │   ├── blog-manifest.json  # 构建生成的站内文章清单
 │   ├── blog-posts.js       # 构建生成的博客列表数据
-│   ├── articles.js         # 首页「最新动态」文章区
-│   └── servers.json        # JRebel 等（可由 Actions 同步更新）
+│   └── articles.js         # 首页「最新动态」文章区
 ├── assets/                 # Logo、预览截图（screenshot*.png）
 ├── scripts/
 │   ├── build-blog.mjs           # 生成文章、索引、清单与 Atom Feed
@@ -112,8 +109,7 @@ dev-tools-nav/
     ├── deploy-pages.yml    # GitHub Pages 自动发布
     ├── update-screenshots.yml # 每周计划运行；成功状态以 GitHub Actions 为准
     ├── sync-csdn-rss.yml      # 定时同步 CSDN RSS
-    ├── sync-open-source-radar.yml # 每周同步 AI 开源项目雷达
-    └── sync-jrebel.yml     # 定时同步 JRebel 配置
+    └── sync-open-source-radar.yml # 每周同步 AI 开源项目雷达
 ```
 
 ## AI 专题（当前能力）
@@ -203,7 +199,7 @@ GTR 主机每十分钟出站检查 `main`，仅部署已通过精确 SHA Test �
   id: "unique-id",           // 唯一标识符（英文、数字、连字符）
   name: "工具名称",
   description: "工具描述，建议 50-100 字。",
-  category: "dev",           // dev | hosting | security | ops | design | online-tools | activate
+  category: "dev",           // dev | hosting | security | ops | design | online-tools | ai
   tags: ["标签1", "标签2"],
   url: "https://example.com/",
   icon: "https://example.com/favicon.ico",  // 可选，加载失败会显示分类 emoji
@@ -226,35 +222,6 @@ GTR 主机每十分钟出站检查 `main`，仅部署已通过精确 SHA Test �
 - **无障碍**：语义化 HTML，ARIA 标签，键盘可访问
 - **性能**：图标懒加载，防抖搜索，CSS 动画硬件加速
 
-## 🎮 彩蛋系统
-
-导航栏中的「🔑 激活工具」分类 Tab 默认隐藏，需要通过有趣的解锁方式才会出现（KMS / JRebel 等入口属于隐藏的 `activate` 数据分类）。
-
-### 解锁方式
-
-1. **URL 参数** ⭐ - 最简单
-   ```
-   http://your-site.com/?devtools2024=unlock
-   ```
-
-2. **Logo 连击** ⭐⭐ - Logo 相邻点击间隔不超过1.5秒，共7次
-
-3. **Konami 代码** ⭐⭐⭐⭐ - 输入 ↑↑↓↓←→←→BA
-
-4. **快捷键** ⭐⭐⭐ - 搜索框中按 Cmd/Ctrl+Shift+A
-
-5. **页脚问号** ⭐ - 连续点击页脚的 "?" 7 次
-
-### 更多信息
-
-解锁逻辑与持久化见源码 **`js/easter-egg.js`**。
-
-解锁后会显示：
-- 🎊 撒花动画
-- 💬 提示消息
-- 🌀 分类按钮动画
-- 持久化存储（一次解锁，永久享受）
-
 ## License
 
 MIT
@@ -269,4 +236,4 @@ MIT
 - **[docs/deploy-1panel.md](docs/deploy-1panel.md)** — GTR 出站轮询部署、回滚与运维
 - **[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)** — GitHub Pages CI  
 - **[.github/workflows/update-screenshots.yml](.github/workflows/update-screenshots.yml)** — 预览截图自动刷新  
-- **[.github/workflows/sync-jrebel.yml](.github/workflows/sync-jrebel.yml)** — JRebel 地址定时同步
+- **[.github/workflows/sync-csdn-rss.yml](.github/workflows/sync-csdn-rss.yml)** — CSDN 文章列表定时同步

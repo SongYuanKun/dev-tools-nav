@@ -53,7 +53,6 @@ FROM (VALUES
   ('导航点击', '{"type":"event","value":"导航点击"}'),
   ('分类筛选', '{"type":"event","value":"分类筛选"}'),
   ('收藏切换', '{"type":"event","value":"收藏切换"}'),
-  ('彩蛋解锁', '{"type":"event","value":"彩蛋解锁"}'),
   ('AI 专题导航', '{"type":"event","value":"AI 专题导航"}')
 ) AS v(name, params)
 WHERE NOT EXISTS (

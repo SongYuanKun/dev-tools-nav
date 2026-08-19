@@ -179,14 +179,14 @@ export function auditTools(root) {
 }
 
 function invariantsHold(result) {
-  return result.total === 73
+  return result.total === 71
     && result.selfBuilt.length === 10
     && result.categoryCounts["online-tools"] === 11
     && result.duplicateIds.length === 0
     && result.invalidTools.length === 0
     && result.missingCanonical.length === 0
     && result.selfBuiltCatalogErrors.length === 0
-    && result.readmeCounts.total === 73
+    && result.readmeCounts.total === 71
     && result.readmeCounts.selfBuilt === 10
     && result.readmeCounts.onlineTools === 11
     && result.readmeUsesCanonicalToolsPath;

@@ -2,7 +2,7 @@
 
 ## 1. 项目定位
 
-`dev-tools-nav` 是一个纯静态的开发者工具导航站，核心能力包括分类筛选、搜索、收藏、最近访问、暗色模式、隐藏彩蛋分类，以及 **10 款浏览器内在线工具**（数据本地处理、不上传服务器）。
+`dev-tools-nav` 是一个纯静态的开发者工具导航站，核心能力包括分类筛选、搜索、收藏、最近访问、暗色模式，以及 **10 款浏览器内在线工具**（数据本地处理、不上传服务器）。所有分类均公开可见，不收录商业软件许可绕过类内容。
 
 ## 2. 本地运行
 
@@ -73,32 +73,22 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 
 截图脚本按计划由 GitHub Actions 运行；截图是否新鲜以 Actions 的最近成功记录为准，不保证固定每周都能成功刷新。
 
-## 5. 彩蛋解锁方式
-
-隐藏分类「激活工具」支持以下方式解锁：
-
-- URL 参数：`?devtools2024=unlock`
-- Logo 连击（3 秒内 7 次）
-- Konami 代码：`↑↑↓↓←→←→BA`
-- 搜索框内 `Ctrl/Cmd + Shift + A`
-- 页脚 `?` 连续点击 7 次
-
-## 6. 部署
+## 5. 部署
 
 | 方式 | 说明 |
 |------|------|
 | Test 与 GitHub Pages | 推送 `main` 后，GitHub Actions 检查并发布 Pages |
 | GTR 出站部署 | GTR 定时检查通过精确 SHA Test 门禁的提交；安装、诊断和验收见 [docs/deploy-1panel.md](docs/deploy-1panel.md) |
 
-## 7. 稳定性说明
+## 6. 稳定性说明
 
 `js/main.js` 使用 `SafeStorage` 封装 `localStorage`，在隐私模式或存储受限时页面仍可正常加载。JSON 工作台专属设置只保存缩进、宽松解析和 Unicode 显示偏好，不保存编辑内容；全站另保存主题、收藏和最近使用记录，刷新页面后 JSON 编辑器仍从空白文档开始。
 
-## 8. 产品路线
+## 7. 产品路线
 
 活跃的阶段、状态、验收标准和商业化约束只在 [docs/roadmap.md](docs/roadmap.md) 维护；本手册不保存容易过期的运营快照或路线表。
 
-## 9. 验证记录
+## 8. 验证记录
 
 - 语法检查：`node --check js/*-tool.js js/tool-chrome.js` 通过。
 - 页面冒烟：本地静态服务下 `curl -I /index.html` 返回 `200`。

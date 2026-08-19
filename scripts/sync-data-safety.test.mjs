@@ -117,31 +117,6 @@ test("CSDN sync keeps prior articles when RSS returns only a partial feed", () =
   );
 });
 
-test("JRebel sync preserves existing server data when no URL is extracted", () => {
-  const dir = tempDir();
-  const outPath = join(dir, "servers.json");
-  const sourcePath = join(dir, "jrebel.html");
-  const existing = {
-    jrebel: {
-      url: "http://42.194.149.64:8088/previous",
-      email: "old@example.com",
-      updatedAt: "2026-01-01T00:00:00Z",
-      source: "previous",
-    },
-  };
-
-  writeFileSync(outPath, JSON.stringify(existing, null, 2));
-  writeFileSync(sourcePath, "<html><body>temporarily unavailable</body></html>");
-
-  const result = runPython("scripts/sync-jrebel-server.py", {
-    JREBEL_SERVERS_OUT_PATH: outPath,
-    JREBEL_SOURCE_FILE: sourcePath,
-  });
-
-  assert.equal(result.status, 0, result.stderr);
-  assert.deepEqual(JSON.parse(readFileSync(outPath, "utf-8")), existing);
-});
-
 test("radar sync preserves existing data when trending HTML is empty", () => {
   const dir = tempDir();
   const outPath = join(dir, "open-source-radar.json");
@@ -234,40 +209,4 @@ test("radar sync keeps curated Chinese copy and refreshes trending stats", () =>
   assert.equal(data.projects[0].weekStars, 2500);
   assert.equal(data.projects[0].trending, true);
   assert.match(data.updatedAt, /^2026-/);
-});
-
-test("JRebel sync updates URL and keeps previous email when source omits email", () => {
-  const dir = tempDir();
-  const outPath = join(dir, "servers.json");
-  const sourcePath = join(dir, "jrebel.html");
-
-  writeFileSync(
-    outPath,
-    JSON.stringify(
-      {
-        jrebel: {
-          url: "http://42.194.149.64:8088/previous",
-          email: "old@example.com",
-          updatedAt: "2026-01-01T00:00:00Z",
-          source: "previous",
-        },
-      },
-      null,
-      2,
-    ),
-  );
-  writeFileSync(sourcePath, "<p>License server: http://42.194.149.64:8088/new-token</p>");
-
-  const result = runPython("scripts/sync-jrebel-server.py", {
-    JREBEL_SERVERS_OUT_PATH: outPath,
-    JREBEL_SOURCE_FILE: sourcePath,
-  });
-
-  assert.equal(result.status, 0, result.stderr);
-
-  const data = JSON.parse(readFileSync(outPath, "utf-8"));
-  assert.equal(data.jrebel.url, "http://42.194.149.64:8088/new-token");
-  assert.equal(data.jrebel.email, "old@example.com");
-  assert.equal(data.jrebel.source, "https://www.jpy.wang/page/jrebel.html");
-  assert.match(data.jrebel.updatedAt, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
 });

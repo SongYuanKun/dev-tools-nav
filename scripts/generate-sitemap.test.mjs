@@ -42,7 +42,7 @@ test("collectStaticUrls includes all ten canonical self-built tools", () => {
 test("collectStaticUrls creates template URLs only for catalog tools", () => {
   const locations = collectStaticUrls(process.cwd()).map((item) => item.loc);
   const leakedCategoryIds = [
-    "activate", "ai", "all", "design", "dev",
+    "ai", "all", "design", "dev",
     "hosting", "online-tools", "ops", "security",
   ];
 
@@ -51,6 +51,15 @@ test("collectStaticUrls creates template URLs only for catalog tools", () => {
       !locations.includes(`https://tools.songyuankun.top/pages/template.html?id=${id}`),
       `category ID leaked into sitemap: ${id}`,
     );
+  }
+});
+
+test("sitemap keeps no removed activation URLs", () => {
+  const committed = readFileSync("sitemap.xml", "utf8");
+  const generated = generateSitemap(process.cwd(), { resolveLastmod: () => undefined });
+
+  for (const sitemap of [committed, generated]) {
+    assert.doesNotMatch(sitemap, /jrebel|kms/i);
   }
 });
 

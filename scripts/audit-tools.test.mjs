@@ -95,7 +95,7 @@ test("README canonical policy rejects legacy paths in the public table", () => {
 
 test("catalog has the approved counts and unique IDs", () => {
   const result = auditTools(process.cwd());
-  assert.equal(result.total, 73);
+  assert.equal(result.total, 71);
   assert.equal(result.categoryCounts["online-tools"], 11);
   assert.deepEqual(result.duplicateIds, []);
   assert.deepEqual(result.invalidTools, []);
@@ -142,25 +142,24 @@ test("audit reports a self-built tool with the wrong catalog URL", () => {
 
 test("README states all three catalog counts and canonical URL policy", () => {
   const result = auditTools(process.cwd());
-  assert.deepEqual(result.readmeCounts, { total: 73, selfBuilt: 10, onlineTools: 11 });
+  assert.deepEqual(result.readmeCounts, { total: 71, selfBuilt: 10, onlineTools: 11 });
   assert.equal(result.readmeUsesCanonicalToolsPath, true);
 });
 
-test("README places KMS and JRebel in the hidden activate category", () => {
-  const readme = readFileSync("README.md", "utf-8");
-  const easterEggSection = readme.match(/^## 🎮 彩蛋系统\n([\s\S]*?)(?=^## |$(?![\s\S]))/m)?.[1] ?? "";
+test("docs keep no activation content or easter-egg entry", () => {
+  const activationPattern = /KMS|JRebel|彩蛋|easter-egg|`activate`|激活工具/;
 
-  assert.match(easterEggSection, /KMS \/ JRebel[^\n]*隐藏的 `activate` 数据分类/);
-  assert.doesNotMatch(easterEggSection, /KMS \/ JRebel[^\n]*在线工具/);
+  for (const path of ["README.md", "manual.md", "docs/roadmap.md"]) {
+    assert.doesNotMatch(readFileSync(path, "utf-8"), activationPattern, path);
+  }
 });
 
-test("README documents the actual Logo unlock timing and source", () => {
-  const readme = readFileSync("README.md", "utf-8");
-  const easterEggSection = readme.match(/^## 🎮 彩蛋系统\n([\s\S]*?)(?=^## |$(?![\s\S]))/m)?.[1] ?? "";
+test("catalog and labels expose no activation category or tools", () => {
+  const catalog = readFileSync("data/tools.js", "utf-8");
+  const labels = readFileSync("js/umami-labels.js", "utf-8");
 
-  assert.match(easterEggSection, /Logo 相邻点击间隔不超过1\.5秒，共7次/);
-  assert.match(easterEggSection, /`js\/easter-egg\.js`/);
-  assert.doesNotMatch(easterEggSection, /Logo 7 次（3 秒内）|`js\/main\.js`/);
+  assert.doesNotMatch(catalog, /activate|jrebel|kms/i);
+  assert.doesNotMatch(labels, /activate|jrebel|kms|easter_egg/i);
 });
 
 test("active docs have one roadmap and archive the ChatDev prompt", () => {

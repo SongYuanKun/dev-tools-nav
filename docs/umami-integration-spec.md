@@ -3,7 +3,7 @@
 ## 当前架构
 
 - `js/base.js` 是全站入口，直接向 `https://umami.songyuankun.top/api/send` 发送 pageview、identify、事件和 performance 数据，并兼容 History API 导航。
-- `js/base.js` 依次加载 `js/umami-labels.js`、`js/umami-helper.js` 和彩蛋脚本。业务代码统一调用 `window.umamiTrack(internalKey, data)`。
+- `js/base.js` 依次加载 `js/umami-labels.js` 和 `js/umami-helper.js`。业务代码统一调用 `window.umamiTrack(internalKey, data)`。
 - `js/umami-labels.js` 把内部英文 key 转为中文事件名、中文属性和可读的 `描述`；`js/umami-helper.js` 用事件委托采集导航、工具卡、CTA、筛选、搜索、外链、滚动和离开事件。
 - 全站共用 Website ID `99e14cad-6300-4f3c-83d2-b3b71c7d6a25`。
 - 运营范围只有 `tools.songyuankun.top` 与 `songyuankun.github.io`。它们共享 Website ID，但必须按 hostname 分析。
@@ -31,7 +31,6 @@
 | `blog_filter` | 博客筛选 | `描述` | 切换博客分类；当前映射未保留原始分类属性 |
 | `radar_filter` | 雷达筛选 | `描述` | 切换开源雷达主题；当前映射未保留原始主题属性 |
 | `radar_copy_link` | 雷达复制链接 | `描述` | 复制雷达项目链接；当前映射未保留原始 repo 属性 |
-| `easter_egg_unlocked` | 彩蛋解锁 | `描述` | 解锁隐藏激活工具入口 |
 | `js_error` | JS 错误 | `描述`、`错误`、`来源`，可选 `行号` | 未捕获 error 或 Promise rejection |
 | `scroll_depth` | 滚动深度 | `描述`、`深度` | 首次到达 25/50/75/100% |
 | `page_exit` | 页面离开 | `描述`、`停留毫秒` | `pagehide` |
