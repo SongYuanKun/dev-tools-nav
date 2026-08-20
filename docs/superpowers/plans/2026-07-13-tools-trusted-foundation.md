@@ -15,7 +15,7 @@
 - Keep both `tools.songyuankun.top` and `songyuankun.github.io/dev-tools-nav/` on Umami website ID `99e14cad-6300-4f3c-83d2-b3b71c7d6a25`.
 - Every production analytics query must output or filter `hostname` and normalize the GitHub Pages `/dev-tools-nav` prefix before cross-host aggregation.
 - Define the north-star event as the existing translated Umami event `工具使用`; ordinary pageviews and clicks do not count as effective tool use.
-- Keep KMS and JRebel out of featured, advertising, affiliate, and commercial conversion metrics.
+- Keep the project non-commercial: no ads, affiliate links, sponsored placements, or paid rankings, and keep KMS/JRebel values out of effective-use metrics.
 - Current catalog contract: 73 total directory entries, 10 self-built browser tools, and 11 `online-tools` category entries.
 - Do not display ads, add commercial UI, deploy, restart services, or push production in this plan.
 - Use test-first development for behavior changes. Do not change production code until the relevant new or existing test has been observed failing for the expected reason.
@@ -732,8 +732,8 @@ Create `docs/roadmap.md` with:
 - north-star metric “有效工具使用次数”;
 - Phase 1 trusted foundation tasks and acceptance criteria from the approved design;
 - Phase 2 core tools JSON/JWT/SQL/Regex/Cron/Timestamp and Markdown single-source pipeline;
-- Phase 3 affiliate → sponsorship → display-ad sequence and 1,000/5,000 effective-user thresholds;
-- fixed decisions: Vanilla for now, both hostnames retained, no ads now, activation content commercially isolated;
+- Phase 3 long-term maintainability: contributor onboarding, accessibility/performance baselines, reproducible builds;
+- fixed decisions: Vanilla for now, both hostnames retained, non-commercial open source with no ads or affiliate links, activation content removed from the repository;
 - status values limited to `planned`, `in_progress`, `done`, `blocked` and an evidence link for every `done` item.
 
 - [ ] **Step 4: Make manual and docs index current-state only**

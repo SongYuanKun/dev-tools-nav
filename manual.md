@@ -86,7 +86,7 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 
 ## 7. 产品路线
 
-活跃的阶段、状态、验收标准和商业化约束只在 [docs/roadmap.md](docs/roadmap.md) 维护；本手册不保存容易过期的运营快照或路线表。
+活跃的阶段、状态、验收标准和非商业约束只在 [docs/roadmap.md](docs/roadmap.md) 维护；本手册不保存容易过期的运营快照或路线表。
 
 ## 8. 验证记录
 

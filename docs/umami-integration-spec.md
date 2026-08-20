@@ -66,9 +66,9 @@
 4. 输出最近 7 天、最近 30 天和此前 30 天，窗口均为执行时刻的滚动窗口。
 5. `report_level` 明确输出 `detail`、`hostname_summary`、`all_hosts_summary`。同一原始事件集展开到三层；PV/effective_uses 分层计数，sessions/visitors/effective_users 在每层从原始事件重新去重，禁止相加明细行得到汇总。
 6. visitors 是浏览器 `distinct_id`，缺失时按 `session_id` 回退的近似访客口径，即 `COUNT(DISTINCT COALESCE(s.distinct_id, e.session_id::text))`。
-7. effective_users 使用 `COUNT(DISTINCT COALESCE(session.distinct_id, session_id::text))`，不是 session 数；路径明细保留，但商业阈值只引用汇总层的独立有效工具用户。
+7. effective_users 使用 `COUNT(DISTINCT COALESCE(session.distinct_id, session_id::text))`，不是 session 数；路径明细保留，但指标阈值只引用汇总层的独立有效工具用户。
 8. 跨 hostname 因浏览器存储隔离通常无法共享 `distinct_id`，所以 `all_hosts_summary` 的独立用户只能视为现有标识下的近似去重，可能高估真实跨站人数。
-9. 商业有效使用采用 fail-closed 白名单。只有 `JSON 格式化`、`时间戳转换`、`Base64`、`正则表达式`、`Cron 表达式`、`JWT 解码`、`SQL 格式化`、`diff`、`uuid` 计入；Color 尚未上报。缺失工具属性、未知值、KMS/JRebel 激活值的 effective_uses/effective_users 均为 0。
+9. 有效使用采用 fail-closed 白名单。只有 `JSON 格式化`、`时间戳转换`、`Base64`、`正则表达式`、`Cron 表达式`、`JWT 解码`、`SQL 格式化`、`diff`、`uuid` 计入；Color 尚未上报。缺失工具属性、未知值、KMS/JRebel 激活值的 effective_uses/effective_users 均为 0。
 
 Umami 3.2.0 实际 schema 已于 2026-07-13 在只读连接上验证：`event_data.website_event_id` 关联 `website_event.event_id`；文本事件属性保存在 `event_data.string_value`，属性名在 `event_data.data_key`。报表不得改用旧字段假设。
 
@@ -109,8 +109,8 @@ docker exec -i 1Panel-postgresql-emsf sh -lc \
   < scripts/umami-operations-report.sql
 ```
 
-验收结果的明细和 hostname 汇总只能出现两个目标 hostname，另有 hostname=`all` 的 all-hosts 汇总；GitHub Pages 的 `normalized_path` 不得以 `/dev-tools-nav` 开头；缺失/未知/激活工具属性不能进入商业 `effective_uses` 和 `effective_users`。
+验收结果的明细和 hostname 汇总只能出现两个目标 hostname，另有 hostname=`all` 的 all-hosts 汇总；GitHub Pages 的 `normalized_path` 不得以 `/dev-tools-nav` 开头；缺失/未知/激活工具属性不能进入 `effective_uses` 和 `effective_users`。
 
-## 商业指标排除
+## 有效使用白名单
 
-商业口径不是“排除少数值”，而是只接纳上述九个当前持久值。KMS/JRebel、缺失 `工具` 属性和任何未知值都不会命中白名单，因此 fail-closed 为 0；它们的 pageview 仍可保留用于风险和流量观察。
+白名单不是“排除少数值”，而是只接纳上述九个当前持久值。历史 KMS/JRebel 激活值、缺失 `工具` 属性和任何未知值都不会命中白名单，因此 fail-closed 为 0；它们的 pageview 仍可保留用于流量观察。

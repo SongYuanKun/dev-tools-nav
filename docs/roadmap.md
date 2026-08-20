@@ -14,7 +14,7 @@ last_verified: 2026-07-16
 
 - 当前继续使用 Vanilla HTML、CSS 和 JavaScript；原创内容达到 30–50 篇，或手工模板明显拖慢迭代时，才重新评估渐进迁移。
 - `tools.songyuankun.top` 与 `songyuankun.github.io/dev-tools-nav/` 两个 hostname 均保留，并继续共用现有 Umami website ID；运营查询必须分 hostname 展示。
-- 当前不展示广告，核心工具首屏始终无广告。
+- 本项目是非商业开源项目，以 MIT 协议发布：不展示广告，不接入联盟推广、付费排名或赞助位，也不提供付费功能与商业授权。
 - 目录不收录商业软件许可绕过类内容，此类页面、数据与同步任务已从仓库移除，且不再重新引入。
 - 站内原创正文以 `content/blog/*.md` 为唯一来源；文章 HTML、博客索引、Feed、sitemap 元数据和结构化数据均由构建流程生成，生成物不作为第二人工正文源。
 
@@ -25,7 +25,7 @@ last_verified: 2026-07-16
 | 恢复测试并建立 CI 门禁 | done | `npm test` 全部通过；push 与 pull request 均执行 `npm ci`、`npm test` | [`scripts/*.test.mjs`](../scripts/audit-tools.test.mjs)、[测试工作流](../.github/workflows/test.yml) |
 | 修复截图自动化 | done | 本地与 Actions 均稳定生成首页、博客、JSON 三张有效 PNG；JSON 截图含示例内容；失败能定位页面与步骤 | [`capture-screenshots.mjs`](../scripts/capture-screenshots.mjs)、[截图工作流](../.github/workflows/update-screenshots.yml)、[2026-07-14 Actions 成功记录](https://github.com/SongYuanKun/dev-tools-nav/actions/runs/29305839196) |
 | 校验工具元数据与公开路径 | done | 工具总数 71、自研工具 10、`online-tools` 分类 11；ID 唯一；canonical 为 `/tools/*/` | [`audit-tools.mjs`](../scripts/audit-tools.mjs)、[`audit-tools.test.mjs`](../scripts/audit-tools.test.mjs) |
-| 建立双 hostname 运营报表 | done | 输出 hostname、规范化路径、PV、会话、访客、有效使用次数与用户数；商业口径排除激活类内容 | [运营 SQL](../scripts/umami-operations-report.sql)、[Umami 规范](./umami-integration-spec.md) |
+| 建立双 hostname 运营报表 | done | 输出 hostname、规范化路径、PV、会话、访客、有效使用次数与用户数；有效使用按 fail-closed 白名单统计 | [运营 SQL](../scripts/umami-operations-report.sql)、[Umami 规范](./umami-integration-spec.md) |
 | 建立活跃文档职责与一致性门禁 | done | 自动检查 README 路线源、AI 路线重复、部署 manifest 结论、Markdown 目标态和历史 Prompt 归档 | [文档一致性测试](../scripts/audit-tools.test.mjs)、[文档索引](./README.md) |
 
 ### Phase 1 总体验收
@@ -50,14 +50,16 @@ last_verified: 2026-07-16
 
 Phase 2 已交付 JSON 工作台和 Markdown 博客流水线，其余项目仍按准入条件推进。连续 30 天有效使用用户过低的工具停止功能扩张；有曝光但 CTR 低的页面优化标题摘要；有访问但无有效使用的工具优先检查搜索意图、首屏价值和操作路径。
 
-## Phase 3：商业化准备
+## Phase 3：长期可维护
 
-| 顺序 | 工作项 | 状态 | 启用条件与约束 |
+本项目没有商业化阶段。第三阶段只解决一件事：让一个非商业开源项目在少量维护投入下仍能保持质量并接受外部贡献。
+
+| 顺序 | 工作项 | 状态 | 准入 / 验收标准 |
 |---:|---|---|---|
-| 1 | 联盟推荐 | planned | 月独立有效工具用户达到 1,000 后测试；必须披露关系并可追踪 partner、placement、tool、category |
-| 2 | 工具赞助与专题合作 | planned | 联盟验证后再评估；付费关系不得改变评价结论 |
-| 3 | 低密度展示广告 | planned | 月独立有效工具用户达到 5,000 后仅评估单个广告位；核心工具首屏无广告 |
+| 1 | 贡献者自助入门 | planned | 新贡献者只依据仓库内文档即可完成本地运行、测试与提交 |
+| 2 | 无障碍与性能基线门禁 | planned | 关键页面的无障碍与性能基线纳入 CI，回归可被拦截 |
+| 3 | 依赖与生成物可复现 | planned | 依赖升级和生成物漂移由 CI 检查，构建结果可在干净环境复现 |
 
-商业组件默认关闭，关闭时不保留空白占位。禁止弹窗、遮挡、自动播放、诱导点击和虚构用户评价；收入实验必须同时观察出站转化、回访率和 Core Web Vitals。
+站点始终不出现弹窗、遮挡、自动播放和诱导点击；统计指标只用来判断维护投入方向，不服务于任何收入或转化目标。
 
-商业阈值只引用运营 SQL 汇总层重新去重的独立有效工具用户，不得引用或相加路径明细；跨 hostname 合计必须同时披露浏览器身份隔离限制。
+指标阈值只引用运营 SQL 汇总层重新去重的独立有效工具用户，不得引用或相加路径明细；跨 hostname 合计必须同时披露浏览器身份隔离限制。

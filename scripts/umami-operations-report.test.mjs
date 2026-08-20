@@ -91,7 +91,7 @@ test("analytics docs use summary effective users and disclose cross-host identit
   assert.match(insights, /跨 hostname[^\n]*浏览器存储隔离/);
   assert.match(spec, /fail-closed/);
   assert.match(spec, /缺失[^\n]*未知[^\n]*激活[^\n]*0/);
-  assert.match(roadmap, /商业阈值[^\n]*汇总[^\n]*独立有效工具用户/);
+  assert.match(roadmap, /指标阈值[^\n]*汇总[^\n]*独立有效工具用户/);
 });
 
 test("operations SQL preserves effective-use keys without pageviews", () => {

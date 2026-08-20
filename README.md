@@ -10,7 +10,7 @@
 
 ## 产品路线
 
-本项目唯一活跃的路线来源是 [产品路线图](docs/roadmap.md)。当前技术栈继续使用 Vanilla HTML、CSS 和 JavaScript；阶段状态、准入条件、验收证据与商业化约束均在该路线图维护。
+本项目唯一活跃的路线来源是 [产品路线图](docs/roadmap.md)。当前技术栈继续使用 Vanilla HTML、CSS 和 JavaScript；阶段状态、准入条件、验收证据与非商业约束均在该路线图维护。
 
 ## 预览
 
