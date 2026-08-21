@@ -199,6 +199,28 @@ test("README summarizes outbound deployment and links the canonical runbook", ()
   assert.match(readme, /docs\/deploy-1panel\.md/);
 });
 
+test("README opens with the non-commercial open-source positioning", () => {
+  const readme = readFileSync("README.md", "utf-8");
+  const opening = readme.slice(0, readme.indexOf("## 产品路线"));
+
+  assert.match(opening, /^## 关于本项目$/m);
+  assert.match(opening, /非商业的开源项目/);
+  assert.match(opening, /\[MIT 协议\]\(LICENSE\)/);
+  assert.match(opening, /\[贡献指南\]\(CONTRIBUTING\.md\)/);
+});
+
+test("CONTRIBUTING states the contribution scope and the self-check commands", () => {
+  const contributing = readFileSync("CONTRIBUTING.md", "utf-8");
+
+  assert.match(contributing, /非商业开源项目/);
+  assert.match(contributing, /\[MIT 协议\]\(LICENSE\)/);
+  assert.match(contributing, /\[产品路线图\]\(docs\/roadmap\.md\)/);
+  for (const command of ["npm ci", "npm test", "npm run audit:tools", "npm run check:generated", "npm run build"]) {
+    assert.ok(contributing.includes(command), `CONTRIBUTING.md lacks ${command}`);
+  }
+  assert.match(contributing, /<!-- catalog-total -->/);
+});
+
 test("deploy.sh fails fast when build fails and delegates to the atomic local deployer", () => {
   const root = mkdtempSync(join(tmpdir(), "deploy-wrapper-"));
   try {

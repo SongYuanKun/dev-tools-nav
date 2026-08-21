@@ -1,12 +1,24 @@
 # Koen's 工具箱 · 开发者工具导航站
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Test](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/test.yml/badge.svg)](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/test.yml)
+[![Contributing](https://img.shields.io/badge/contributing-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 > 目录收录 71 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 MIT 协议开源，仅用于非商业开源用途的开发与贡献。
 
 <!-- catalog-total: 71 -->
 <!-- catalog-self-built: 10 -->
 <!-- catalog-online-tools: 11 -->
+
+## 关于本项目
+
+**Koen's 工具箱是一个非商业的开源项目**：全部源码与站内原创内容都在 [MIT 协议](LICENSE)下公开，任何人都可以自由使用、修改并自行部署。
+
+- **完全开源** — 代码、数据、文档和自动化脚本都在本仓库；`main` 分支即线上版本，构建、测试与发布由仓库内的 [测试工作流](.github/workflows/test.yml)和 [Pages 工作流](.github/workflows/deploy-pages.yml)完成。
+- **非商业** — 不展示广告，不接入联盟推广、付费排名或赞助位，也不提供付费功能与商业授权；访问统计只用于判断维护投入方向。
+- **内容边界** — 目录只收录正规工具与服务，不收录商业软件的破解、序列号或许可绕过类资源。
+- **数据不出站** — 10 款自研在线工具全部在浏览器内计算，不向服务端上传用户输入。
+- **欢迎贡献** — 提 Issue 或 Pull Request 前请先读 [贡献指南](CONTRIBUTING.md)，其中写明贡献范围、本地运行、自查命令与提交要求。
 
 ## 产品路线
 
@@ -224,12 +236,14 @@ GTR 主机每十分钟出站检查 `main`，仅部署已通过精确 SHA Test �
 
 ## License
 
-MIT
+本项目采用 [MIT 协议](LICENSE)，是非商业开源项目；二次分发与自建部署请保留版权与许可声明。
 
 ---
 
 ## 📁 相关文档
 
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** — 贡献指南：贡献范围、本地运行、自查命令与提交要求
+- **[LICENSE](LICENSE)** — MIT 许可证全文
 - **[manual.md](manual.md)** — 简明使用说明（含在线工具与截图）  
 - **[docs/roadmap.md](docs/roadmap.md)** — 唯一活跃产品路线图
 - **[docs/README.md](docs/README.md)** — 文档索引  
