@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-08-17T11:02:01+08:00",
-  "weekLabel": "2026-08-10 ~ 2026-08-17",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、Agent Skills、记忆 / Harness 等方向。代表项目包括 diagram-design、prime-agent、semantica。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-08-24T11:05:12+08:00",
+  "weekLabel": "2026-08-17 ~ 2026-08-24",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 调研 / 知识、编程 Agent、多模态 等方向。代表项目包括 MoneyPrinterTurbo、OpenViking、omlx。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,143 +31,105 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "cathrynlavery/diagram-design",
-      "language": "HTML",
-      "stars": 19685,
-      "weekStars": 15600,
+      "repo": "harry0703/MoneyPrinterTurbo",
+      "language": "Python",
+      "stars": 115388,
+      "weekStars": 11167,
       "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：diagram-design — 29 editorial diagram types for Claude Code. Self-contained HTML + SVG. No shadows, no Mermaid-slop.",
+      "topic": "multimodal",
+      "summary": "本周 GitHub Trending：MoneyPrinterTurbo — 利用 AI 大模型和自动化工作流，根据主题或关键词一键生成高清短视频。Generate HD short videos from a topic or keyword with an automated AI workflow.",
       "features": [
-        "29 editorial diagram types for Claude Code. Self-contained HTML + SVG. No shadows, no Mermaid-slop.",
+        "利用 AI 大模型和自动化工作流，根据主题或关键词一键生成高清短视频。Generate HD short videos from a topic or keyword with an automated AI workflow.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "编程 Agent",
-        "diagram design"
+        "多模态",
+        "MoneyPrinterTurbo"
       ]
     },
     {
       "rank": 2,
-      "repo": "PrimeIntellect-ai/prime-agent",
-      "language": "TypeScript",
-      "stars": 16619,
-      "weekStars": 6435,
+      "repo": "volcengine/OpenViking",
+      "language": "Python",
+      "stars": 32546,
+      "weekStars": 3799,
       "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：prime-agent — A self-improving RLM agent for coding workflows and long-running autonomous tasks.",
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：OpenViking — Self-evolving Context Database for AI Agents. Unify Agent Memory, Knowledge RAG and Skills.",
       "features": [
-        "A self-improving RLM agent for coding workflows and long-running autonomous tasks.",
+        "Self-evolving Context Database for AI Agents. Unify Agent Memory, Knowledge RAG and Skills.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "编程 Agent",
-        "prime agent"
+        "Agent Skills",
+        "OpenViking",
+        "Agent Skill"
       ]
     },
     {
       "rank": 3,
-      "repo": "semantica-agi/semantica",
+      "repo": "jundot/omlx",
       "language": "Python",
-      "stars": 8235,
-      "weekStars": 5284,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：semantica — Graph-Native Infrastructure for Context and Accountable AI Systems",
-      "features": [
-        "Graph-Native Infrastructure for Context and Accountable AI Systems",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "semantica"
-      ]
-    },
-    {
-      "rank": 4,
-      "repo": "TencentCloud/TencentDB-Agent-Memory",
-      "language": "TypeScript",
-      "stars": 22288,
-      "weekStars": 3637,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：TencentDB-Agent-Memory — TencentDB Agent Memory is a team-level memory hub for AI Agents — turning conversations, docs, and code into four reusable memory assets (Chat Memory, Skill, LLM-Wiki, Code-Graph) that are governed, shared, and equipped across agents and frameworks.",
-      "features": [
-        "TencentDB Agent Memory is a team-level memory hub for AI Agents — turning conversations, docs, and code into four reusable memory assets (Chat Memory, Skill, LLM-Wiki, Code-Graph) that are governed, shared, and equipped across agents and frameworks.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "TencentDB Agent Memory",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "addyosmani/agent-skills",
-      "language": "JavaScript",
-      "stars": 87795,
-      "weekStars": 2882,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：agent-skills — Production-grade engineering skills for AI coding agents.",
-      "features": [
-        "Production-grade engineering skills for AI coding agents.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 6,
-      "repo": "unslothai/unsloth",
-      "language": "Python",
-      "stars": 72692,
-      "weekStars": 2645,
+      "stars": 20455,
+      "weekStars": 1671,
       "trending": true,
       "topic": "research",
-      "summary": "本周 GitHub Trending：unsloth — Local UI to run and train LLMs and diffusion models, including Qwen3.8, Kimi K3, MiniMax-H3, Gemma 4, DeepSeek-V4, FLUX and more.",
+      "summary": "本周 GitHub Trending：omlx — LLM inference server with continuous batching & SSD caching for Apple Silicon — managed from the macOS menu bar",
       "features": [
-        "Local UI to run and train LLMs and diffusion models, including Qwen3.8, Kimi K3, MiniMax-H3, Gemma 4, DeepSeek-V4, FLUX and more.",
+        "LLM inference server with continuous batching & SSD caching for Apple Silicon — managed from the macOS menu bar",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "调研 / 知识",
-        "unsloth"
+        "omlx"
       ]
     },
     {
-      "rank": 7,
-      "repo": "macro-inc/macro",
-      "language": "Rust",
-      "stars": 3427,
-      "weekStars": 2588,
+      "rank": 4,
+      "repo": "apache/maka",
+      "language": "TypeScript",
+      "stars": 2401,
+      "weekStars": 859,
       "trending": true,
-      "topic": "memory",
-      "summary": "本周 GitHub Trending：macro — Macro is a unified workspace for teams: email, chat, docs, tasks, agents, calls, and CRM — @-linked together with shared AI memory.",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：maka — Apache Maka (Incubating) is a local-first AI agent workspace. Model messages, tool calls, tool results, permission decisions, and termination events are recorded as an append-only log.",
       "features": [
-        "Macro is a unified workspace for teams: email, chat, docs, tasks, agents, calls, and CRM — @-linked together with shared AI memory.",
+        "Apache Maka (Incubating) is a local-first AI agent workspace. Model messages, tool calls, tool results, permission decisions, and termination events are recorded as an append-only log.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "记忆 / Harness",
-        "macro"
+        "调研 / 知识",
+        "maka"
       ]
     },
     {
-      "rank": 8,
+      "rank": 5,
+      "repo": "anthropics/claude-plugins-community",
+      "language": "Python",
+      "stars": 1005,
+      "weekStars": 406,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：claude-plugins-community — Community plugin marketplace for Claude Cowork and Claude Code. Read-only mirror — submit plugins at clau.de/plugin-directory-submission.",
+      "features": [
+        "Community plugin marketplace for Claude Cowork and Claude Code. Read-only mirror — submit plugins at clau.de/plugin-directory-submission.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "claude plugins community"
+      ]
+    },
+    {
+      "rank": 6,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 272855,
+      "stars": 276716,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -184,10 +146,10 @@
       ]
     },
     {
-      "rank": 9,
+      "rank": 7,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 240520,
+      "stars": 242602,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -204,10 +166,10 @@
       ]
     },
     {
-      "rank": 10,
+      "rank": 8,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 231578,
+      "stars": 235085,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -224,10 +186,10 @@
       ]
     },
     {
-      "rank": 11,
+      "rank": 9,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 219402,
+      "stars": 234033,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -244,10 +206,10 @@
       ]
     },
     {
-      "rank": 12,
+      "rank": 10,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 169782,
+      "stars": 171211,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
