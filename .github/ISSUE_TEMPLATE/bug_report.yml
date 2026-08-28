@@ -1,0 +1,82 @@
+name: 🐛 Bug 报告
+description: 报告项目中的缺陷、回归或异常行为
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢提交 Bug 报告！请尽量提供可复现的完整信息，帮助我们更快定位问题。
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提报前检查
+      options:
+        - label: 我已在现有 Issue 中搜索过，确认没有重复或相似问题
+          required: true
+        - label: 我使用的是最新 `main` 分支或最新 Release 版本
+          required: true
+        - label: 我已在本地执行 `npm test` 和 `npm run check:generated`，且它们与我的问题相关
+          required: false
+  - type: textarea
+    id: describe
+    attributes:
+      label: 问题描述
+      description: 清楚简洁地说明发生了什么问题。
+      placeholder: 例：「在 Safari 18 中打开 /tools/json/，粘贴超过 1MB 的 JSON 后页面卡死。」
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 一步步说明如何复现该问题。
+      placeholder: |
+        1. 访问 '...'
+        2. 点击 '...'
+        3. 滚动到 '...'
+        4. 看到错误
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+      description: 你认为应该发生什么。
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: 受影响的浏览器
+      multiple: true
+      options:
+        - Chrome
+        - Safari
+        - Firefox
+        - Edge
+        - 其他（请在描述中说明）
+    validations:
+      required: false
+  - type: dropdown
+    id: devices
+    attributes:
+      label: 受影响的设备类型
+      multiple: true
+      options:
+        - 桌面端
+        - 移动端（手机）
+        - 平板
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: 项目版本或 commit SHA
+      description: 可在 `git rev-parse HEAD` 或 GitHub Pages 底部看到。
+      placeholder: 例如 `3c2868e` 或 `v1.0.0`
+  - type: textarea
+    id: additional
+    attributes:
+      label: 截图 / 补充信息
+      description: 如有必要，添加截图、控制台报错栈或其他上下文。

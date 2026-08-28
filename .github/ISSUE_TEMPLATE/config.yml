@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 常见问题与贡献指南
+    url: https://github.com/SongYuanKun/dev-tools-nav/blob/main/CONTRIBUTING.md
+    about: 提交前请先阅读贡献指南中的「贡献范围」和「提交前自查」两节。
+  - name: 私密安全漏洞报告
+    url: mailto:123839070@qq.com
+    about: 安全漏洞请直接邮件报告给维护者，不要公开提交 Issue。详细流程见 SECURITY.md。
+  - name: 项目路线图
+    url: https://github.com/SongYuanKun/dev-tools-nav/blob/main/docs/roadmap.md
+    about: 功能需求请先查看产品路线图确认不在计划中。
