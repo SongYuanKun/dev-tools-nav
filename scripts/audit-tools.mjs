@@ -90,12 +90,30 @@ function literal(object, field) {
   return object.match(new RegExp(`^ {4}${field}: ["']([^"']+)["'],?`, "m"))?.[1];
 }
 
-export function parseToolCatalog(source) {
-  const tools = topLevelToolObjects(source).map((object) => ({
-    id: literal(object, "id"),
-    category: literal(object, "category"),
-    url: literal(object, "url"),
-  }));
+function literalBoolean(object, field) {
+  const raw = object.match(new RegExp(`^ {4}${field}: (true|false),?`, "m"))?.[1];
+  return raw === undefined ? undefined : raw === "true";
+}
+
+export function parseToolCatalog(source, options = {}) {
+  const extended = Boolean(options.extended);
+  const fields = ["id", "category", "url"];
+  if (extended) fields.push("slug", "legacyUrl", "name", "hidden");
+  const tools = topLevelToolObjects(source).map((object) => {
+    const tool = {
+      id: literal(object, "id"),
+      category: literal(object, "category"),
+      url: literal(object, "url"),
+    };
+    if (extended) {
+      tool.slug = literal(object, "slug");
+      tool.legacyUrl = literal(object, "legacyUrl");
+      tool.name = literal(object, "name");
+      const hidden = literalBoolean(object, "hidden");
+      if (hidden !== undefined) tool.hidden = hidden;
+    }
+    return tool;
+  });
   const requiredFields = ["id", "category", "url"];
   const invalidTools = tools.flatMap((tool, index) => {
     const missingFields = requiredFields.filter((field) => !tool[field]?.trim());
