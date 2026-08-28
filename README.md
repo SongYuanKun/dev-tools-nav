@@ -1,10 +1,15 @@
 # Koen's 工具箱 · 开发者工具导航站
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![OSI Approved](https://img.shields.io/badge/OSI-Approved-3DA639?logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Test](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/test.yml/badge.svg)](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/test.yml)
+[![Deploy Pages](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/deploy-pages.yml)
 [![Contributing](https://img.shields.io/badge/contributing-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[![Security Policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
+[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-> 目录收录 71 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 MIT 协议开源，仅用于非商业开源用途的开发与贡献。
+> 目录收录 71 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 **MIT 协议（OSI 认可）** 开源，**非商业** — 不展示广告、不做联盟推广、不提供付费功能。
 
 <!-- catalog-total: 71 -->
 <!-- catalog-self-built: 10 -->
@@ -234,16 +239,37 @@ GTR 主机每十分钟出站检查 `main`，仅部署已通过精确 SHA Test �
 - **无障碍**：语义化 HTML，ARIA 标签，键盘可访问
 - **性能**：图标懒加载，防抖搜索，CSS 动画硬件加速
 
+## 社区与协作
+
+| 项目 | 链接 |
+|------|------|
+| 贡献指南 | [CONTRIBUTING.md](CONTRIBUTING.md) — 贡献范围 / 本地运行 / 自查命令 / 提交流程 |
+| 行为准则 | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — Contributor Covenant v2.1 |
+| 安全政策 | [SECURITY.md](SECURITY.md) — 漏洞私密披露渠道与 48h 响应承诺 |
+| 资助说明 | [.github/FUNDING.yml](.github/FUNDING.yml) — 非商业项目，仅接受自愿咖啡支持 |
+| Issue 模板 | 🐛 [Bug Report](.github/ISSUE_TEMPLATE/bug_report.yml) · ✨ [Feature Request](.github/ISSUE_TEMPLATE/feature_request.yml) |
+| PR 模板 | [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) |
+| 产品路线图 | [docs/roadmap.md](docs/roadmap.md) — 唯一活跃路线来源，优先级只在此维护 |
+| 在线站点 | 🌐 **[tools.songyuankun.top](https://tools.songyuankun.top)**（主站）· [songyuankun.github.io/dev-tools-nav](https://songyuankun.github.io/dev-tools-nav/)（GitHub Pages） |
+
 ## License
 
-本项目采用 [MIT 协议](LICENSE)，是非商业开源项目；二次分发与自建部署请保留版权与许可声明。
+本项目采用 **[MIT 协议](LICENSE)**（OSI 官方认可的开源许可证）。
+
+```
+Copyright (c) 2026 SongYuanKun
+```
+
+本项目为**非商业开源项目**；二次分发、自建部署与派生作品请保留版权与许可声明。所有贡献按 MIT 许可与项目共享同一版权条款，无需额外 CLA。
 
 ---
 
 ## 📁 相关文档
 
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** — 贡献指南：贡献范围、本地运行、自查命令与提交要求
-- **[LICENSE](LICENSE)** — MIT 许可证全文
+- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** — 社区行为准则（Contributor Covenant v2.1）
+- **[SECURITY.md](SECURITY.md)** — 安全漏洞披露政策与联系方式
+- **[LICENSE](LICENSE)** — MIT 许可证全文（OSI 认可）
 - **[manual.md](manual.md)** — 简明使用说明（含在线工具与截图）  
 - **[docs/roadmap.md](docs/roadmap.md)** — 唯一活跃产品路线图
 - **[docs/README.md](docs/README.md)** — 文档索引  
