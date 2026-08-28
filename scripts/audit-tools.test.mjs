@@ -213,7 +213,7 @@ test("CONTRIBUTING states the contribution scope and the self-check commands", (
   const contributing = readFileSync("CONTRIBUTING.md", "utf-8");
 
   assert.match(contributing, /非商业开源项目/);
-  assert.match(contributing, /\[MIT 协议\]\(LICENSE\)/);
+  assert.match(contributing, /\[MIT 协议[^\]]*\]\(LICENSE\)/);
   assert.match(contributing, /\[产品路线图\]\(docs\/roadmap\.md\)/);
   for (const command of ["npm ci", "npm test", "npm run audit:tools", "npm run check:generated", "npm run build"]) {
     assert.ok(contributing.includes(command), `CONTRIBUTING.md lacks ${command}`);
