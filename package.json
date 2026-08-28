@@ -1,7 +1,33 @@
 {
   "name": "dev-tools-nav",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Koen's 工具箱 — 开源开发者工具导航站：收录 71 条开发/建站/AI 资源，内置 10 款浏览器端在线工具（JSON、时间戳、JWT、SQL 等），纯静态零服务端，数据不出浏览器。",
   "license": "MIT",
+  "author": "SongYuanKun <123839070@qq.com>",
+  "homepage": "https://tools.songyuankun.top",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SongYuanKun/dev-tools-nav.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SongYuanKun/dev-tools-nav/issues",
+    "email": "123839070@qq.com"
+  },
+  "keywords": [
+    "developer-tools",
+    "tool-navigation",
+    "json-formatter",
+    "jwt-decoder",
+    "online-tools",
+    "static-site",
+    "ai-resources",
+    "vanilla-javascript",
+    "open-source",
+    "non-commercial"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "test": "node --test scripts/*.test.mjs",
     "audit:tools": "node scripts/audit-tools.mjs",
