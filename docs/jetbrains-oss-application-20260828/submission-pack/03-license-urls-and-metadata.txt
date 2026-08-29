@@ -1,0 +1,58 @@
+================================================================================
+JetBrains OSS License Application · Copy-Paste Metadata
+(Most fields in Section P2 + P3 of the application form)
+================================================================================
+
+--- M-02 PROJECT NAME ---------------------------------------------------------
+Koen's 工具箱 · dev-tools-nav — Open Source Developer Toolkit & Navigation
+
+
+--- M-03 PROJECT WEBSITE / HOMEPAGE URL --------------------------------------
+https://tools.songyuankun.top
+
+
+--- M-04 SOURCE CODE REPOSITORY URL ------------------------------------------
+https://github.com/SongYuanKun/dev-tools-nav
+
+
+--- M-05 LICENSE URL (ABSOLUTELY CRITICAL · use BLOB form, NOT tree form) ---
+https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE
+
+
+--- M-08 COUNTRY / REGION ----------------------------------------------------
+China (or People's Republic of China / 中华人民共和国)
+
+
+--- M-09 NUMBER OF LICENSES NEEDED -------------------------------------------
+1
+
+
+--- M-10 PROJECT / COMPANY WEBSITE (can be identical to M-03) ----------------
+https://tools.songyuankun.top
+
+
+--- M-11 IDE(s) YOU NEED -----------------------------------------------------
+☑️ All Products Pack (recommended — includes every JetBrains IDE, no need
+   to pick individually; if you MUST pick individual IDEs instead, use
+   this minimal subset actually used by the project today):
+     - IntelliJ IDEA Ultimate (primary IDE for Node.js / shell script /
+       repo-wide tooling development with advanced debuggers, HTTP
+       clients, database consoles and VCS integration)
+     - WebStorm (primary for HTML/CSS/JS frontend work on the 10
+       browser-side tools)
+     - DataGrip (occasional SQL validation work inside the SQL
+       formatter online tool)
+
+
+================================================================================
+INTERNAL VALIDATION · LICENSING TRIPLE-CHECK (for Agent-side compliance audit)
+================================================================================
+
+[1] LICENSE file on disk = MIT License full text with
+    "Copyright (c) 2026 SongYuanKun" present:   VERIFIED
+[2] package.json field "license":                 "MIT"  VERIFIED
+[3] README.md badges show "OSI Approved" +       "MIT"  VERIFIED
+[4] CONTRIBUTING.md references MIT + OSI:        VERIFIED
+[5] No "private": true in package.json:          VERIFIED (removed)
+[6] No commercial / advertising / affiliate      VERIFIED
+    language in FUNDING.yml / README /           CONTRIBUTING.md

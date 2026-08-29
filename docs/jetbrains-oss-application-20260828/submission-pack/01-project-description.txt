@@ -1,0 +1,47 @@
+================================================================================
+JetBrains OSS License Application · Project Description (Fields M-06 + M-07)
+Maintainer: SongYuanKun · Email: 123839070@qq.com
+Repository: https://github.com/SongYuanKun/dev-tools-nav
+Production Site: https://tools.songyuankun.top
+================================================================================
+
+---- SECTION A · PROJECT DESCRIPTION (paste into M-06, English, 220 words) ----
+
+Dev-Tools-Nav is a NON-COMMERCIAL, MIT-licensed (OSI-approved) static
+developer toolkit and navigation site that has been actively maintained
+for 5.7 months since March 2026, with 1,171 total commits across 6 fully
+active months (100% monthly activity, zero idle months). In the last 90
+days the core maintainer SongYuanKun has personally shipped 141 real code
+commits covering UI redesigns (light-theme warm-sand + deep-green editor
+style), the JSON/JWT/Timestamp/Cron/Base64/SQL/Regex/UUID/Diff/Color 10
+fully functional browser-only online tools (all computation runs inside
+the user's browser with zero data uploads), analytics integration, CI
+pipelines, security policy, community profile templates (Contributor
+Covenant v2.1 CoC / SECURITY / Issue & PR forms / FUNDING), and the full
+JetBrains OSS precheck report shipped today. The maximum zero-commit gap
+over the entire project history is only 11 days (well below the 30-day
+stagnation rejection threshold used by most OSS program reviews).
+
+Five GitHub Actions production workflows run on every push or schedule:
+the automated test suite with 181 Node.js and Playwright browser
+regression tests, GitHub Pages deploy, weekly screenshot refresh,
+bi-daily CSDN RSS article sync, and weekly AI Open-Source Radar data
+synchronization. The project ships 71 hand-curated developer/hosting/AI
+tool entries plus the 10 built-in dev utilities and is used daily via the
+canonical production site https://tools.songyuankun.top plus a fully
+mirrored deployment on GitHub Pages.
+
+
+---- SECTION B · WHAT MAKES THIS PROJECT STAND OUT (paste into M-07, 80 words) ----
+
+First, every single one of the 10 built-in online tools (JSON Workbench,
+JWT decoder, SQL formatter, regex evaluator, timestamp converter, Cron
+helper, Base64, UUID, Diff, Color) runs entirely in the user's local
+browser — zero backend storage, zero data upload, no server log of any
+user input, matching the modern industry shift toward privacy-first
+developer tooling. Second, the 71-entry curated catalog of dev/hosting/AI
+resources is maintained manually by the maintainer rather than scraped,
+resulting in higher-signal recommendations than crawler-generated
+directories. Third, dual production deployments (primary 1Panel site +
+GitHub Pages mirror) guarantee sustained availability even during single
+infrastructure outages.

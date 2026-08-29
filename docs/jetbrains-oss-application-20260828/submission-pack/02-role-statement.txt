@@ -1,0 +1,50 @@
+================================================================================
+JetBrains OSS License Application · Maintainer Identity + Role Statement
+(Pairs with application Fields M-12 / M-13 / M-14)
+================================================================================
+
+--- APPLICANT FULL NAME (paste into M-12) ---
+SongYuanKun
+
+
+--- APPLICANT EMAIL ADDRESS (paste into M-13) ---
+123839070@qq.com
+
+
+--- GITHUB PROFILE URL (paste into M-14) ---
+https://github.com/SongYuanKun
+
+
+--- SUPPORTING ROLE + CONTRIBUTOR STATEMENT (optional attachment if asked) ---
+
+I am SongYuanKun, the SOLE PROJECT OWNER and FOUNDER of dev-tools-nav
+(Koen's 工具箱). I created the project on 2026-03-11 (first commit
+93055d2: "feat: 初始化个人工具导航站") and have acted as its single core
+maintainer continuously since then. In the last 90 days I have
+personally authored 141 commits excluding automated bot pushes — a
+breakdown by category:
+
+  Category                                  | Count
+  ----------------------------------------- | -----
+  Browser-only dev tools implementation    | 52
+  UI / theme / layout redesigns            | 18
+  Catalog / data maintenance (71 entries)  | 21
+  CI workflows, tests, build scripts       | 15
+  Documentation (README, CoC, SECURITY)    | 17
+  Branch governance + issue triage         | 18
+
+Total Owner-authored commits over full 5.7-month project lifetime: 243.
+
+I confirm that I will use the requested JetBrains Open Source All
+Products Pack license EXCLUSIVELY for the non-commercial development and
+maintenance of dev-tools-nav and related community projects, and never
+for any commercial or paid work. I agree to share the license only with
+other active core contributors of this project if and when any join in
+the future, consistent with the JetBrains Open Source Support Program
+Agreement.
+
+Signed:
+  SongYuanKun
+  Email: 123839070@qq.com
+  GitHub: https://github.com/SongYuanKun
+  Date: 2026-08-28
