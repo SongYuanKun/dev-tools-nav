@@ -4,6 +4,7 @@
 |------|------|
 | [../README.md](../README.md) | 仓库主说明；含 **开源与非商业定位**、**「AI 专题当前能力」**、**在线工具**、**预览截图**更新步骤 |
 | [../CONTRIBUTING.md](../CONTRIBUTING.md) | 贡献指南：贡献范围、本地运行、提交前自查命令与 PR 要求 |
+| [../THIRD-PARTY-NOTICES.md](../THIRD-PARTY-NOTICES.md) | 打包产物内第三方开源组件（CodeMirror MIT / yaml ISC）的版权与许可声明 |
 | [../manual.md](../manual.md) | 简明使用说明（导航站 + 在线工具 + 截图 + 部署） |
 | [roadmap.md](./roadmap.md) | 唯一活跃产品路线图：阶段、状态、验收标准、指标与非商业约束 |
 | [deploy-1panel.md](./deploy-1panel.md) | GTR 出站轮询、原子部署、发布验收、升级与恢复的唯一运维手册 |

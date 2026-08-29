@@ -262,6 +262,8 @@ Copyright (c) 2026 SongYuanKun
 
 本项目为**非商业开源项目**；二次分发、自建部署与派生作品请保留版权与许可声明。所有贡献按 MIT 许可与项目共享同一版权条款，无需额外 CLA。
 
+构建产物 `js/json-workbench.bundle.js` 打包了 CodeMirror（MIT）与 `yaml`（ISC）等第三方组件，其版权声明与许可正文见 **[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)**，同一份声明也内嵌在产物开头。
+
 ---
 
 ## 📁 相关文档
@@ -270,6 +272,7 @@ Copyright (c) 2026 SongYuanKun
 - **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** — 社区行为准则（Contributor Covenant v2.1）
 - **[SECURITY.md](SECURITY.md)** — 安全漏洞披露政策与联系方式
 - **[LICENSE](LICENSE)** — MIT 许可证全文（OSI 认可）
+- **[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)** — 打包产物内第三方开源组件的版权与许可声明
 - **[manual.md](manual.md)** — 简明使用说明（含在线工具与截图）  
 - **[docs/roadmap.md](docs/roadmap.md)** — 唯一活跃产品路线图
 - **[docs/README.md](docs/README.md)** — 文档索引  
