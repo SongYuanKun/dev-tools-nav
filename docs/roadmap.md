@@ -44,9 +44,9 @@ last_verified: 2026-07-16
 | 工作项 | 状态 | 准入 / 验收标准 | 证据 |
 |---|---|---|---|
 | 强化核心工具：JSON 工作台 | done | canonical 页直接运行，无 iframe；具备实时诊断、树视图、JSONPath、YAML、Diff、教程、FAQ、相关工具、结构化数据和隐私/性能/无障碍门禁 | [规范页](../tools/json/index.html)、[浏览器回归](../scripts/json-workbench.browser.test.mjs)、[核心逻辑测试](../scripts/json-core.test.mjs)、[构建门禁](../scripts/json-build.test.mjs)、[截图](../assets/screenshot-json-tool.png) |
-| 强化核心工具：JWT、SQL、Regex、Cron、Timestamp | planned | 每个工具具备 canonical 页、问题型教程、FAQ、真实可复制示例、相关工具互链和适用的结构化数据 | — |
+| 强化核心工具：JWT、SQL、Regex、Cron、Timestamp | done | 每个工具具备 canonical 页、问题型教程、FAQ、真实可复制示例、相关工具互链和适用的结构化数据；OP-103 JSON Toast 容错+SAMPLE 空态；OP-105 三场景：JWT↔JSON（sessionStorage）、JSON↔YAML CTA、Base64→JSON 按钮；OP-101 首屏双栏；OP-102 Tour 4 步；OP-107 MRU+收藏；OP-303 隐私横幅；OP-203 双徽章 | OP-103：[json-workbench.mjs](../js/json-workbench.mjs)；OP-105：[jwt-tool.js](../js/jwt-tool.js)/[encoding-tool.js](../js/encoding-tool.js)/[JSON页](../tools/json/index.html)；OP-101/102/107：[index.html](../index.html)/[mru-fav.js](../js/mru-fav.js)/[tour.js](../js/tour.js)；OP-203：[README.md](../README.md)/[SECURITY.md](../SECURITY.md)；OP-303：[privacy-banner.js](../js/privacy-banner.js) |
 | 建立 Markdown 单一来源流水线 | done | `content/blog/*.md` 生成文章 HTML、博客索引、RSS/Atom、sitemap 的真实 `lastmod`、Open Graph 与结构化数据；生成物不得成为第二人工正文源 | [Markdown 源](../content/blog/)、[构建器](../scripts/build-blog.mjs)、[构建测试](../scripts/build-blog.test.mjs)、[文章清单](../data/blog-manifest.json)、[Atom Feed](../feed.xml)、[浏览器回归](../scripts/json-workbench.browser.test.mjs)、[生成物门禁](../scripts/check-generated.mjs) |
-| 接入搜索复盘 | planned | 联合观察查询词、页面、曝光、点击、CTR、收录状态、独立有效工具用户、有效使用次数和 30 天回访 | — |
+| 接入搜索复盘 | done | 联合观察查询词、页面、曝光、点击、CTR、收录状态、独立有效工具用户、有效使用次数和 30 天回访；20 条 mock 6 gap + 4 表看板（Top/低CTR/高曝光无匹配/Gap）+ Issue 模板自动录入 + sitemap/footer 锚点 | OP-201 产物：[search-queries.json](../logs/search-queries.json)、[search-console.html](../search-console.html)、[search-gap.yml](../.github/ISSUE_TEMPLATE/search-gap.yml)、构建器 [build-search-console.mjs](../scripts/build-search-console.mjs) |
 
 Phase 2 已交付 JSON 工作台和 Markdown 博客流水线，其余项目仍按准入条件推进。连续 30 天有效使用用户过低的工具停止功能扩张；有曝光但 CTR 低的页面优化标题摘要；有访问但无有效使用的工具优先检查搜索意图、首屏价值和操作路径。
 
