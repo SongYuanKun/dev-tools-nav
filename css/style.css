@@ -4054,3 +4054,419 @@ html.is-embed body.site-v2 .tool-workbench-inner {
   min-height: 0 !important;
   box-sizing: border-box !important;
 }
+
+/* OP-203：Header 合规徽章 */
+.header-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px 10px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+.header-badges img {
+  display: block;
+  height: 20px;
+  border-radius: 4px;
+}
+.header-badges a:hover {
+  transform: translateY(-1px);
+  transition: transform 120ms ease;
+  opacity: 0.92;
+}
+@media (max-width: 640px) {
+  .header-badges {
+    padding: 6px 10px 8px;
+    gap: 6px;
+  }
+  .header-badges img {
+    height: 18px;
+  }
+}
+
+/* OP-303：隐私承诺横幅（首屏，三短语强制显式） */
+.privacy-banner {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #fff7ed 0%, #ecfdf5 100%);
+  border-bottom: 1px solid #fde68a;
+  color: #111827;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.privacy-banner__copy {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-weight: 500;
+}
+.privacy-banner__copy span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.privacy-banner__copy strong {
+  color: #047857;
+}
+.privacy-banner__close {
+  border: 0;
+  background: transparent;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: #6b7280;
+  border-radius: 6px;
+}
+.privacy-banner__close:hover {
+  background: #ffffff;
+  color: #111827;
+}
+@media (max-width: 720px) {
+  .privacy-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 14px 8px;
+    gap: 6px;
+  }
+  .privacy-banner__copy {
+    gap: 8px;
+    font-size: 13px;
+  }
+  .privacy-banner__close {
+    align-self: flex-end;
+  }
+}
+
+/* OP-101：首屏双栏（60% 自研工具高亮区 + 40% 目录导航） */
+.self-built-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 24px;
+  align-items: start;
+}
+.self-built-tools-area {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  border-radius: 14px;
+  padding: 20px 20px 22px;
+}
+.self-built-tools-area .v2-section-head h2::before {
+  content: "🛠️ ";
+}
+.self-built-tools-area .v2-tool-card {
+  background: #ffffffcc;
+  backdrop-filter: blur(4px);
+  border-color: #c8e6c9;
+}
+.directory-nav {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px 18px 20px;
+  position: sticky;
+  top: 110px;
+}
+.directory-nav__title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+.directory-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.directory-nav__list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #374151;
+  text-decoration: none;
+  font-size: 14px;
+}
+.directory-nav__list a:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+.directory-nav__count {
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #4b5563;
+}
+@media (max-width: 1023px) {
+  .self-built-layout {
+    grid-template-columns: 1fr;
+  }
+  .directory-nav {
+    position: static;
+  }
+}
+
+/* OP-102：新手 Tour 4 步浮层 */
+.tour-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  z-index: 200;
+  display: none;
+}
+.tour-backdrop.is-open {
+  display: block;
+}
+.tour-tooltip {
+  position: fixed;
+  z-index: 210;
+  max-width: min(420px, calc(100vw - 32px));
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.22);
+}
+.tour-tooltip__step {
+  font-size: 12px;
+  color: #2563eb;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tour-tooltip__title {
+  margin: 4px 0 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+.tour-tooltip__desc {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #4b5563;
+}
+.tour-tooltip__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.tour-tooltip__skip {
+  background: transparent;
+  border: 0;
+  color: #6b7280;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.tour-tooltip__skip:hover {
+  background: #f3f4f6;
+}
+.tour-tooltip__next {
+  background: #111827;
+  color: #ffffff;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tour-tooltip__next:hover {
+  background: #000000;
+}
+.tour-highlight {
+  position: relative;
+  z-index: 205;
+  box-shadow: 0 0 0 3px #2563eb, 0 0 40px rgba(37, 99, 235, 0.3);
+  border-radius: 12px;
+}
+
+/* OP-103：通用 Toast 组件 */
+.toast-stack {
+  position: fixed;
+  top: 84px;
+  right: 16px;
+  z-index: 180;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  max-width: min(420px, calc(100vw - 32px));
+}
+.toast {
+  pointer-events: auto;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px 10px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  line-height: 1.5;
+  animation: toast-in 180ms ease-out;
+}
+.toast.toast--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+.toast.toast--info {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+.toast.toast--success {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+.toast__msg strong {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+.toast__hint {
+  font-size: 12.5px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+.toast__action {
+  background: transparent;
+  border: 1px solid currentColor;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  cursor: pointer;
+  color: inherit;
+  margin-top: 6px;
+}
+.toast__action:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+.toast__close {
+  background: transparent;
+  border: 0;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  color: inherit;
+  opacity: 0.7;
+}
+.toast__close:hover {
+  opacity: 1;
+}
+@keyframes toast-in {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* OP-107：MRU + 收藏夹 双栏 */
+.prefs-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.prefs-row section {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px 16px;
+}
+.prefs-row h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.prefs-row h3 em {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+}
+.prefs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 34px;
+}
+.prefs-list li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #f3f4f6;
+  border-radius: 999px;
+  color: #111827;
+  font-size: 13px;
+  text-decoration: none;
+}
+.prefs-list li a:hover {
+  background: #e5e7eb;
+}
+.prefs-empty {
+  color: #9ca3af;
+  font-size: 13px;
+  padding: 6px 2px;
+}
+.tool-card-fav {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  color: #9ca3af;
+}
+.tool-card-fav.is-on {
+  color: #dc2626;
+  background: #fef2f2;
+}
+.v2-tool-card {
+  position: relative;
+}
+@media (max-width: 760px) {
+  .prefs-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
