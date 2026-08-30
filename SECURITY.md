@@ -55,4 +55,4 @@
 
 ## 免责声明
 
-本项目按 MIT 许可证「按现状」提供，不提供任何形式的担保。详尽免责条款请参阅 [LICENSE](LICENSE) 文件。
+本项目按 MIT 许可证「按现状」提供，不提供任何形式的担保。详尽免责条款请参阅 [LICENSE](https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE) 文件（blob/main 格式）。

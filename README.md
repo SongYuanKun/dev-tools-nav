@@ -1,6 +1,7 @@
 # Koen's 工具箱 · 开发者工具导航站
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE)
+[![JetBrains OSS Support](https://img.shields.io/badge/JetBrains-OSS_Support-000000?logo=jetbrains&logoColor=white)](https://github.com/SongYuanKun/dev-tools-nav/blob/main/docs/jetbrains-oss-application-20260828/PROGRESS-TRACKER.md)
 [![OSI Approved](https://img.shields.io/badge/OSI-Approved-3DA639?logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Test](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/test.yml/badge.svg)](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/test.yml)
 [![Deploy Pages](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/deploy-pages.yml)
@@ -271,7 +272,7 @@ Copyright (c) 2026 SongYuanKun
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** — 贡献指南：贡献范围、本地运行、自查命令与提交要求
 - **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** — 社区行为准则（Contributor Covenant v2.1）
 - **[SECURITY.md](SECURITY.md)** — 安全漏洞披露政策与联系方式
-- **[LICENSE](LICENSE)** — MIT 许可证全文（OSI 认可）
+- **[LICENSE](https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE)** — MIT 许可证全文（OSI 认可，blob/main 格式符合 JB-OSS M-05）
 - **[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)** — 打包产物内第三方开源组件的版权与许可声明
 - **[manual.md](manual.md)** — 简明使用说明（含在线工具与截图）  
 - **[docs/roadmap.md](docs/roadmap.md)** — 唯一活跃产品路线图
