@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>搜索意图复盘看板 | Koen的工具箱</title>
+  <meta name="description" content="Search Console 运营复盘：Top 查询、低 CTR 优化、工具缺口治理。纯静态生成，数据不出本地。" />
+  <link rel="canonical" href="https://tools.songyuankun.top/search-console.html" />
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
+  <style>
+    :root{color-scheme:light dark;--bg:#f7f8fa;--fg:#1f2937;--muted:#6b7280;--border:#e5e7eb;--primary:#2563eb;--gap:#fee2e2;--match:#dcfce7;--accent:#dbeafe;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+    @media (prefers-color-scheme:dark){:root{--bg:#0b1020;--fg:#e5e7eb;--muted:#94a3b8;--border:#1f2937;--gap:#3f1d1d;--match:#0f2a1a;--accent:#1e3a8a;color-scheme:dark}}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);line-height:1.6}
+    .sc-wrap{max-width:1200px;margin:0 auto;padding:28px 20px 80px}
+    .sc-hero{border:1px solid var(--border);border-radius:16px;padding:20px 22px;background:linear-gradient(180deg,var(--accent),transparent 60%)}
+    .sc-hero h1{margin:0 0 6px;font-size:24px}
+    .sc-hero p{margin:4px 0;color:var(--muted)}
+    .sc-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0 24px}
+    .sc-stat{border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--bg)}
+    .sc-stat b{display:block;font-size:20px;margin-bottom:2px}.sc-stat span{color:var(--muted);font-size:13px}
+    .sc-panel{border:1px solid var(--border);border-radius:16px;padding:18px 18px 22px;margin:18px 0;background:var(--bg)}
+    .sc-panel h2{margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:8px}
+    .sc-count{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--accent);color:var(--primary);font-weight:600}
+    .sc-sub{margin:0 0 14px;color:var(--muted);font-size:13px}
+    .sc-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}
+    .sc-table{width:100%;border-collapse:collapse;font-size:13px}
+    .sc-table th,.sc-table td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top;white-space:nowrap}
+    .sc-table th{background:var(--bg);color:var(--muted);font-weight:600;position:sticky;top:0}
+    .sc-row-gap{background:var(--gap)}
+    .sc-pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600;margin-left:6px}
+    .sc-pill-match{background:var(--match);color:#166534}
+    .sc-pill-gap{background:var(--gap);color:#991b1b}
+    .sc-tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:6px;border:1px solid var(--border);color:var(--muted);margin-right:4px}
+    .sc-empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:12px}
+    .sc-foot{color:var(--muted);font-size:12px;margin-top:16px;text-align:center}
+    .sc-foot a{color:var(--primary)}
+    .sc-gap-cta{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:8px 12px;border-radius:10px;background:var(--gap);color:#991b1b;font-weight:600;text-decoration:none;border:1px solid transparent}
+    @media (max-width:720px){.sc-stats{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+<div class="sc-wrap">
+  <header class="sc-hero">
+    <h1>🔍 搜索意图复盘看板</h1>
+    <p>数据周期：<b>2026-08-29</b> · 来源：<code>logs/search-queries.json</code> · 站点：https://tools.songyuankun.top</p>
+    <p>治理规则：<b>曝光 ≥ 500 且 CTR < 1% 的缺口查询</b> 自动生成 Issue 模板，按需一键录入路线图。</p>
+  </header>
+
+  <div class="sc-stats">
+    <div class="sc-stat"><b>20</b><span>查询词总数</span></div>
+    <div class="sc-stat"><b>6</b><span>工具缺口数</span></div>
+    <div class="sc-stat"><b>231</b><span>总点击</span></div>
+    <div class="sc-stat"><b>14,390</b><span>总曝光</span></div>
+  </div>
+
+  <section class="sc-panel">
+    <h2>① Top 查询 <span class="sc-count">10</span></h2>
+    <p class="sc-sub">按曝光×10 + 点击加权取前 10，作为判断搜索意图的基准样本。</p>
+    <div class="sc-table-wrap"><table class="sc-table">
+      <thead><tr><th>#</th><th>查询词</th><th>点击</th><th>曝光</th><th>CTR</th><th>排名</th><th>落地页</th><th>标签</th></tr></thead>
+      <tbody><tr>
+    <td>1</td>
+    <td><code>json 格式化</code> <span class="sc-pill sc-pill-match">已匹配</span></td>
+    <td>42</td>
+    <td>1,880</td>
+    <td>2.23%</td>
+    <td>4.1</td>
+    <td><a href="https://tools.songyuankun.top/tools/json/" target="_blank" rel="noopener noreferrer">/tools/json/</a></td>
+    <td><span class="sc-tag">json</span> <span class="sc-tag">format</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>2</td>
+    <td><code>免费 ai 写作 工具 推荐</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>4</td>
+    <td>1,560</td>
+    <td>0.26%</td>
+    <td>14.2</td>
+    <td><a href="https://tools.songyuankun.top/pages/ai/index.html" target="_blank" rel="noopener noreferrer">/pages/ai/index.html</a></td>
+    <td><span class="sc-tag">ai</span> <span class="sc-tag">gap</span></td>
+  </tr><tr>
+    <td>3</td>
+    <td><code>在线 json 校验</code> <span class="sc-pill sc-pill-match">已匹配</span></td>
+    <td>31</td>
+    <td>1,320</td>
+    <td>2.35%</td>
+    <td>5.8</td>
+    <td><a href="https://tools.songyuankun.top/tools/json/" target="_blank" rel="noopener noreferrer">/tools/json/</a></td>
+    <td><span class="sc-tag">json</span> <span class="sc-tag">validate</span></td>
+  </tr><tr>
+    <td>4</td>
+    <td><code>jwt 解码</code> <span class="sc-pill sc-pill-match">已匹配</span></td>
+    <td>27</td>
+    <td>1,050</td>
+    <td>2.57%</td>
+    <td>3.2</td>
+    <td><a href="https://tools.songyuankun.top/tools/jwt/" target="_blank" rel="noopener noreferrer">/tools/jwt/</a></td>
+    <td><span class="sc-tag">jwt</span> <span class="sc-tag">decode</span></td>
+  </tr><tr>
+    <td>5</td>
+    <td><code>cron 表达式 生成器</code> <span class="sc-pill sc-pill-match">已匹配</span></td>
+    <td>19</td>
+    <td>930</td>
+    <td>2.04%</td>
+    <td>6.4</td>
+    <td><a href="https://tools.songyuankun.top/tools/cron/" target="_blank" rel="noopener noreferrer">/tools/cron/</a></td>
+    <td><span class="sc-tag">cron</span> <span class="sc-tag">devops</span></td>
+  </tr><tr>
+    <td>6</td>
+    <td><code>base64 解码 在线</code> <span class="sc-pill sc-pill-match">已匹配</span></td>
+    <td>18</td>
+    <td>870</td>
+    <td>2.07%</td>
+    <td>5.9</td>
+    <td><a href="https://tools.songyuankun.top/tools/base64/" target="_blank" rel="noopener noreferrer">/tools/base64/</a></td>
+    <td><span class="sc-tag">base64</span> <span class="sc-tag">encode</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>7</td>
+    <td><code>k8s yaml 自动生成 校验</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>3</td>
+    <td>830</td>
+    <td>0.36%</td>
+    <td>19.3</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=dev" target="_blank" rel="noopener noreferrer">/pages/template.html?id=dev</a></td>
+    <td><span class="sc-tag">k8s</span> <span class="sc-tag">yaml</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>8</td>
+    <td><code>redis 在线 内存 分析</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>1</td>
+    <td>760</td>
+    <td>0.13%</td>
+    <td>22.6</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=ops" target="_blank" rel="noopener noreferrer">/pages/template.html?id=ops</a></td>
+    <td><span class="sc-tag">redis</span> <span class="sc-tag">ops</span> <span class="sc-tag">gap</span></td>
+  </tr><tr>
+    <td>9</td>
+    <td><code>时间戳转换</code> <span class="sc-pill sc-pill-match">已匹配</span></td>
+    <td>16</td>
+    <td>720</td>
+    <td>2.22%</td>
+    <td>5.0</td>
+    <td><a href="https://tools.songyuankun.top/tools/timestamp/" target="_blank" rel="noopener noreferrer">/tools/timestamp/</a></td>
+    <td><span class="sc-tag">timestamp</span></td>
+  </tr><tr>
+    <td>10</td>
+    <td><code>正则测试工具</code> <span class="sc-pill sc-pill-match">已匹配</span></td>
+    <td>12</td>
+    <td>610</td>
+    <td>1.97%</td>
+    <td>6.8</td>
+    <td><a href="https://tools.songyuankun.top/tools/regex/" target="_blank" rel="noopener noreferrer">/tools/regex/</a></td>
+    <td><span class="sc-tag">regex</span></td>
+  </tr></tbody>
+    </table></div>
+  </section>
+  <section class="sc-panel">
+    <h2>② CTR 低（优化标题/摘要） <span class="sc-count">6</span></h2>
+    <p class="sc-sub">曝光 ≥ 100 但 CTR &lt; 1%。先改 meta title/description 与首屏 H1/H2 对齐意图。</p>
+    <div class="sc-table-wrap"><table class="sc-table">
+      <thead><tr><th>#</th><th>查询词</th><th>点击</th><th>曝光</th><th>CTR</th><th>排名</th><th>落地页</th><th>标签</th></tr></thead>
+      <tbody><tr class="sc-row-gap">
+    <td>1</td>
+    <td><code>java 线程 转存 分析</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>0</td>
+    <td>210</td>
+    <td>0.00%</td>
+    <td>31.7</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=dev" target="_blank" rel="noopener noreferrer">/pages/template.html?id=dev</a></td>
+    <td><span class="sc-tag">java</span> <span class="sc-tag">profiling</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>2</td>
+    <td><code>二维码 生成 logo 自定义</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>0</td>
+    <td>180</td>
+    <td>0.00%</td>
+    <td>27.4</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=design" target="_blank" rel="noopener noreferrer">/pages/template.html?id=design</a></td>
+    <td><span class="sc-tag">qr</span> <span class="sc-tag">design</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>3</td>
+    <td><code>redis 在线 内存 分析</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>1</td>
+    <td>760</td>
+    <td>0.13%</td>
+    <td>22.6</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=ops" target="_blank" rel="noopener noreferrer">/pages/template.html?id=ops</a></td>
+    <td><span class="sc-tag">redis</span> <span class="sc-tag">ops</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>4</td>
+    <td><code>免费 ai 写作 工具 推荐</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>4</td>
+    <td>1,560</td>
+    <td>0.26%</td>
+    <td>14.2</td>
+    <td><a href="https://tools.songyuankun.top/pages/ai/index.html" target="_blank" rel="noopener noreferrer">/pages/ai/index.html</a></td>
+    <td><span class="sc-tag">ai</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>5</td>
+    <td><code>k8s yaml 自动生成 校验</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>3</td>
+    <td>830</td>
+    <td>0.36%</td>
+    <td>19.3</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=dev" target="_blank" rel="noopener noreferrer">/pages/template.html?id=dev</a></td>
+    <td><span class="sc-tag">k8s</span> <span class="sc-tag">yaml</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>6</td>
+    <td><code>md5 sha256 在线 破解 还原</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>2</td>
+    <td>510</td>
+    <td>0.39%</td>
+    <td>16.8</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=security" target="_blank" rel="noopener noreferrer">/pages/template.html?id=security</a></td>
+    <td><span class="sc-tag">security</span> <span class="sc-tag">legal-gap</span></td>
+  </tr></tbody>
+    </table></div>
+  </section>
+  <section class="sc-panel">
+    <h2>③ 高曝光 · 无匹配工具（强信号 Gap） <span class="sc-count">4</span></h2>
+    <p class="sc-sub">曝光 ≥ 500 且未匹配站内工具。下方 Issue 模板已自动生成。</p>
+    <div class="sc-table-wrap"><table class="sc-table">
+      <thead><tr><th>#</th><th>查询词</th><th>点击</th><th>曝光</th><th>CTR</th><th>排名</th><th>落地页</th><th>标签</th></tr></thead>
+      <tbody><tr class="sc-row-gap">
+    <td>1</td>
+    <td><code>免费 ai 写作 工具 推荐</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>4</td>
+    <td>1,560</td>
+    <td>0.26%</td>
+    <td>14.2</td>
+    <td><a href="https://tools.songyuankun.top/pages/ai/index.html" target="_blank" rel="noopener noreferrer">/pages/ai/index.html</a></td>
+    <td><span class="sc-tag">ai</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>2</td>
+    <td><code>k8s yaml 自动生成 校验</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>3</td>
+    <td>830</td>
+    <td>0.36%</td>
+    <td>19.3</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=dev" target="_blank" rel="noopener noreferrer">/pages/template.html?id=dev</a></td>
+    <td><span class="sc-tag">k8s</span> <span class="sc-tag">yaml</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>3</td>
+    <td><code>redis 在线 内存 分析</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>1</td>
+    <td>760</td>
+    <td>0.13%</td>
+    <td>22.6</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=ops" target="_blank" rel="noopener noreferrer">/pages/template.html?id=ops</a></td>
+    <td><span class="sc-tag">redis</span> <span class="sc-tag">ops</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>4</td>
+    <td><code>md5 sha256 在线 破解 还原</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>2</td>
+    <td>510</td>
+    <td>0.39%</td>
+    <td>16.8</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=security" target="_blank" rel="noopener noreferrer">/pages/template.html?id=security</a></td>
+    <td><span class="sc-tag">security</span> <span class="sc-tag">legal-gap</span></td>
+  </tr></tbody>
+    </table></div>
+  </section>
+  <section class="sc-panel">
+    <h2>④ 全部无匹配查询 <span class="sc-count">6</span></h2>
+    <p class="sc-sub">按「曝光 + 点击×20」加权排序，决定路线图下一个自研工具优先级。</p>
+    <div class="sc-table-wrap"><table class="sc-table">
+      <thead><tr><th>#</th><th>查询词</th><th>点击</th><th>曝光</th><th>CTR</th><th>排名</th><th>落地页</th><th>标签</th></tr></thead>
+      <tbody><tr class="sc-row-gap">
+    <td>1</td>
+    <td><code>免费 ai 写作 工具 推荐</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>4</td>
+    <td>1,560</td>
+    <td>0.26%</td>
+    <td>14.2</td>
+    <td><a href="https://tools.songyuankun.top/pages/ai/index.html" target="_blank" rel="noopener noreferrer">/pages/ai/index.html</a></td>
+    <td><span class="sc-tag">ai</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>2</td>
+    <td><code>k8s yaml 自动生成 校验</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>3</td>
+    <td>830</td>
+    <td>0.36%</td>
+    <td>19.3</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=dev" target="_blank" rel="noopener noreferrer">/pages/template.html?id=dev</a></td>
+    <td><span class="sc-tag">k8s</span> <span class="sc-tag">yaml</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>3</td>
+    <td><code>redis 在线 内存 分析</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>1</td>
+    <td>760</td>
+    <td>0.13%</td>
+    <td>22.6</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=ops" target="_blank" rel="noopener noreferrer">/pages/template.html?id=ops</a></td>
+    <td><span class="sc-tag">redis</span> <span class="sc-tag">ops</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>4</td>
+    <td><code>md5 sha256 在线 破解 还原</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>2</td>
+    <td>510</td>
+    <td>0.39%</td>
+    <td>16.8</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=security" target="_blank" rel="noopener noreferrer">/pages/template.html?id=security</a></td>
+    <td><span class="sc-tag">security</span> <span class="sc-tag">legal-gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>5</td>
+    <td><code>java 线程 转存 分析</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>0</td>
+    <td>210</td>
+    <td>0.00%</td>
+    <td>31.7</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=dev" target="_blank" rel="noopener noreferrer">/pages/template.html?id=dev</a></td>
+    <td><span class="sc-tag">java</span> <span class="sc-tag">profiling</span> <span class="sc-tag">gap</span></td>
+  </tr><tr class="sc-row-gap">
+    <td>6</td>
+    <td><code>二维码 生成 logo 自定义</code> <span class="sc-pill sc-pill-gap">缺口</span></td>
+    <td>0</td>
+    <td>180</td>
+    <td>0.00%</td>
+    <td>27.4</td>
+    <td><a href="https://tools.songyuankun.top/pages/template.html?id=design" target="_blank" rel="noopener noreferrer">/pages/template.html?id=design</a></td>
+    <td><span class="sc-tag">qr</span> <span class="sc-tag">design</span> <span class="sc-tag">gap</span></td>
+  </tr></tbody>
+    </table></div>
+  </section>
+
+  <div class="sc-panel" style="background:var(--gap)">
+    <h2>🧭 运营动作建议</h2>
+    <p class="sc-sub">按 DoD 顺序执行，完成 1 条划 1 条。</p>
+    <ol>
+      <li><b>② 低 CTR</b>：每条落地页 <code>title/description/h1</code> 对齐查询词意图，两周后复查 CTR 是否 ≥ 1.5%。</li>
+      <li><b>③ 高曝光 Gap</b>：点 <a class="sc-gap-cta" href="https://github.com/SongYuanKun/dev-tools-nav/issues/new?template=search-gap.yml&amp;title=%5BSearch+Gap%5D+%E5%85%8D%E8%B4%B9%20ai%20%E5%86%99%E4%BD%9C%20%E5%B7%A5%E5%85%B7%20%E6%8E%A8%E8%8D%90" target="_blank" rel="noopener noreferrer">📝 录入 1 条 Search Gap Issue</a>，评估自研 vs 外链策略。</li>
+      <li><b>④ 缺口排序</b>：连续 2 个周期仍在 Top 10 → 进路线图 Sprint 候选池，附收益测算（新增有效使用/潜在 PV）。</li>
+      <li><b>合规门禁</b>：缺口涉及「破解、绕过许可证」等灰色意图（如 md5 还原）→ 进入 Won't List，不落地但在看板显式标注。</li>
+    </ol>
+  </div>
+
+  <p class="sc-foot">构建脚本：<code>scripts/build-search-console.mjs</code> · 数据：<code>logs/search-queries.json</code> · <a href="/">返回首页</a> · <a href="https://github.com/SongYuanKun/dev-tools-nav/blob/main/search-console.html" target="_blank" rel="noopener noreferrer">源码（blob/main）</a></p>
+</div>
+</body>
+</html>

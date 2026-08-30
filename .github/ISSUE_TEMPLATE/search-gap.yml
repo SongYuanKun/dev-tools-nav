@@ -1,0 +1,59 @@
+name: Search Gap Report
+description: 用于录入 Search Console 曝光高但站内无匹配工具的搜索缺口。
+title: "[Search Gap] "
+labels: ["search-gap", "roadmap-candidate"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 背景
+        该 Issue 由 `scripts/build-search-console.mjs` 根据 `logs/search-queries.json` 自动生成，用于登记 Search Console 中有曝光但站内无匹配工具的查询。
+  - type: input
+    id: query
+    attributes:
+      label: 缺口查询词
+      description: 来自 Search Console 的真实搜索查询（按曝光最高优先）。
+      placeholder: "redis 在线 内存 分析"
+    validations:
+      required: true
+  - type: dropdown
+    id: strategy
+    attributes:
+      label: 处置策略
+      description: 自研工具、补充外链、进入 Won't List（灰色）、或暂不处理。
+      options:
+        - "自研：新增站内工具（Vanilla JS/纯本地）"
+        - "外链：在对应分类目录新增已存在的合规工具"
+        - "Won't List：灰色/违法意图，不落地（例：破解、许可证绕过）"
+        - "暂不处理：优先级低，下个周期再评估"
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: 收益测算与理由
+      description: 例如「月曝光 760，CTR 0.13%，提升到 1% ≈ +6 点击/月 → 估算 15% 激活率 ≈ +0.9 effective_uses/月」。
+      placeholder: "曝光 N 次 × 预期 CTR X% × 激活率 Y% = 新增有效使用次数 Z/月"
+  - type: textarea
+    id: candidates
+    attributes:
+      label: 候选高曝光 Gap 清单（脚本自动生成 TOP 10）
+      description: 可复制勾选作为本期治理队列。
+      value: |
+        - [ ] **免费 ai 写作 工具 推荐**（曝光 1560 · CTR 0.26% · 标签 ai, gap）
+- [ ] **k8s yaml 自动生成 校验**（曝光 830 · CTR 0.36% · 标签 k8s, yaml, gap）
+- [ ] **redis 在线 内存 分析**（曝光 760 · CTR 0.13% · 标签 redis, ops, gap）
+- [ ] **md5 sha256 在线 破解 还原**（曝光 510 · CTR 0.39% · 标签 security, legal-gap）
+- [ ] **java 线程 转存 分析**（曝光 210 · CTR 0.00% · 标签 java, profiling, gap）
+- [ ] **二维码 生成 logo 自定义**（曝光 180 · CTR 0.00% · 标签 qr, design, gap）
+  - type: checkboxes
+    id: jb_oss
+    attributes:
+      label: JetBrains OSS 合规核查（任一 ❌ → Won't List）
+      options:
+        - label: "JB-01 非商业：无广告位、无付费、无联盟追踪参数"
+          required: true
+        - label: "JB-02 全开源：方案实现纯 MIT，无闭源/付费组件"
+          required: true
+        - label: "JB-04 隐私：工具计算不出浏览器，无第三方 SDK 追踪"
+          required: true

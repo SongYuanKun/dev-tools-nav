@@ -132,6 +132,8 @@ export function collectStaticUrls(root, options = {}) {
   };
 
   addUrl("/", "index.html");
+  // OP-201：Search Console 静态看板（优先级 0.75，每周一次复盘更新）
+  addUrl("/search-console.html", "search-console.html");
   for (const entry of walkHtml(root)) {
     if (isNoindexPage(root, entry.path)) continue;
     const pathname = pathnameFor(entry.path);
