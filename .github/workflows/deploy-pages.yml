@@ -56,6 +56,8 @@ jobs:
       - name: Assemble site
         run: |
           mkdir -p _site
+          echo -n > _site/.nojekyll
+          if test -f CNAME; then cp CNAME _site/CNAME; fi
           rsync -a \
             --exclude='.git' \
             --exclude='.github' \
@@ -70,11 +72,16 @@ jobs:
             --exclude='logs' \
             --exclude='*.bak' \
             --exclude='.DS_Store' \
+            --exclude='tasks' \
+            --exclude='scripts' \
+            --exclude='ops' \
             ./ _site/
+          echo "site size: $(du -sh _site | cut -f1) files: $(find _site -type f | wc -l)"
 
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+          static_site_generator: none
 
       - uses: actions/upload-pages-artifact@v3
         with:

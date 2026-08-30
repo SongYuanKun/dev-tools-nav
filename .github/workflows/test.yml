@@ -16,7 +16,35 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  changed-files:
+    runs-on: ubuntu-latest
+    outputs:
+      code_changed: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'index.html'
+              - 'favicon.svg'
+              - 'robots.txt'
+              - 'rollup.config.mjs'
+              - 'package*.json'
+              - 'tools/**'
+              - 'pages/**'
+              - 'js/**'
+              - 'css/**'
+              - 'assets/**'
+              - 'data/**'
+              - 'scripts/**'
+              - 'content/**'
+              - '.github/workflows/**'
+
   unit:
+    needs: changed-files
+    if: needs.changed-files.outputs.code_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -26,7 +54,21 @@ jobs:
         with:
           node-version: "24"
           cache: npm
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-chromium-${{ hashFiles('package-lock.json') }}
+          restore-keys: playwright-${{ runner.os }}-chromium-
       - run: npm ci
       - run: npx playwright install chromium --with-deps
       - run: npm test
       - run: npm run check:generated
+      - name: Upload test logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-log-${{ github.sha }}
+          path: /tmp/npm-test*.log
+          if-no-files-found: ignore
+          retention-days: 7
