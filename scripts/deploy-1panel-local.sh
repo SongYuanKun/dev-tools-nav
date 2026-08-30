@@ -38,6 +38,7 @@ trap cleanup EXIT
 
 required=(
   index.html sitemap.xml feed.xml favicon.svg
+  search-console.html
   tools/json/index.html
   pages/blog/java-source-mybatis.html
 )
@@ -58,11 +59,16 @@ rsync -a --delete \
   --include='/pages/***' \
   --include='/tools/***' \
   --include='/index.html' \
+  --include='/search-console.html' \
   --include='/favicon.ico' \
   --include='/favicon.svg' \
   --include='/feed.xml' \
   --include='/robots.txt' \
   --include='/sitemap.xml' \
+  --include='/LICENSE' \
+  --include='/CODE_OF_CONDUCT.md' \
+  --include='/CONTRIBUTING.md' \
+  --include='/manual.md' \
   --exclude='*' \
   "$SOURCE_DIR/" "$STAGE/"
 
