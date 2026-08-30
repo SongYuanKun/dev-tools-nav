@@ -79,6 +79,61 @@
     }
   </script>
   <script defer src="../../js/base.js"></script>
+  <script defer src="../../js/toast.js"></script>
+  <script defer src="../../js/mru-fav.js"></script>
+  <script>
+    // OP-105 ② JSON↔YAML 入口：在 Hero 相关工具之前插入「场景互链 CTA 条」
+    // OP-107 MRU 记录：成功格式化/复制动作后上报 id=json
+    document.addEventListener("DOMContentLoaded", function () {
+      var related = document.querySelector(".json-related");
+      if (related) {
+        var wrap = document.createElement("div");
+        wrap.className = "json-related-grid";
+        wrap.style.cssText = "margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;";
+        wrap.innerHTML =
+          '<a href="#json-tab-yaml" data-jump-mode="yaml" data-umami-event="json_to_yaml_click" data-umami-event-op="OP-105" style="display:block;padding:14px 16px;border:1px solid var(--color-border, #e5e7eb);border-radius:12px;background:var(--bg-surface,#fff);text-decoration:none;color:inherit;"><strong>🔁 当前 JSON 转 YAML</strong><span style="display:block;margin-top:6px;font-size:13px;color:var(--text-secondary,#666);">跳到 YAML 模式，自动取当前编辑器内容</span><b aria-hidden="true" style="float:right;color:var(--color-primary,#2563eb);">↗</b></a>' +
+          '<a href="javascript:void(0)" data-json-upload-yaml-action data-umami-event="yaml_to_json_click" data-umami-event-op="OP-105" style="display:block;padding:14px 16px;border:1px solid var(--color-border, #e5e7eb);border-radius:12px;background:var(--bg-surface,#fff);text-decoration:none;color:inherit;"><strong>📥 从 YAML 导入到 JSON</strong><span style="display:block;margin-top:6px;font-size:13px;color:var(--text-secondary,#666);">打开文件选择器，自动转成 JSON 写入编辑器</span><b aria-hidden="true" style="float:right;color:var(--color-primary,#2563eb);">↗</b></a>' +
+          '<a href="../jwt/" data-umami-event="json_to_jwt_click" data-umami-event-op="OP-105" style="display:block;padding:14px 16px;border:1px solid var(--color-border, #e5e7eb);border-radius:12px;background:var(--bg-surface,#fff);text-decoration:none;color:inherit;"><strong>🔐 编辑 JWT 的 Payload</strong><span style="display:block;margin-top:6px;font-size:13px;color:var(--text-secondary,#666);">当前 JSON 作为 JWT payload 传到解码页</span><b aria-hidden="true" style="float:right;color:var(--color-primary,#2563eb);">↗</b></a>';
+        related.parentNode.insertBefore(wrap, related.nextSibling);
+        wrap.querySelector('[data-jump-mode="yaml"]').addEventListener("click", function (e) {
+          var tab = document.getElementById("json-tab-yaml");
+          if (tab) { e.preventDefault(); tab.click(); }
+          try { window.MruFav?.record?.("json"); } catch (_) {}
+        });
+        var upBtn = wrap.querySelector('[data-json-upload-yaml-action]');
+        if (upBtn) {
+          var file = document.createElement("input");
+          file.type = "file";
+          file.accept = ".yaml,.yml,text/yaml,application/yaml,text/plain";
+          file.className = "json-visually-hidden";
+          file.setAttribute("data-json-action", "upload");
+          upBtn.appendChild(file);
+          upBtn.addEventListener("click", function () { file.click(); });
+          try { window.MruFav?.record?.("json"); } catch (_) {}
+        }
+        var jwtLink = wrap.querySelectorAll("a")[2];
+        if (jwtLink) {
+          jwtLink.addEventListener("click", function (e) {
+            var shell = document.querySelector('[data-json-editor]');
+            var text = "";
+            try {
+              // 尝试从 CodeMirror view 读取；若挂载延迟则 fallback 从 editor shell DOM 抓
+              var win = window;
+              if (win.__jsonWbView && typeof win.__jsonWbView.state?.doc?.toString === "function") {
+                text = win.__jsonWbView.state.doc.toString();
+              }
+            } catch (_) {}
+            try {
+              if (text) {
+                sessionStorage.setItem("jwt_encode_payload_v1", text);
+              }
+              window.MruFav?.record?.("json");
+            } catch (_) {}
+          });
+        }
+      }
+    });
+  </script>
 </head>
 <body class="json-page">
   <a class="skip-link" href="#json-workbench">跳到 JSON 工作台</a>

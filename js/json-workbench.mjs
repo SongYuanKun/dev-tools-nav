@@ -22,7 +22,13 @@ const AUTO_DIAGNOSTIC_LIMIT = 1024 * 1024;
 const UPLOAD_LIMIT = 5 * 1024 * 1024;
 const TREE_NODE_LIMIT = 2_000;
 const PREFS_KEY = "json-workbench-prefs-v1";
-const SAMPLE = JSON.stringify({ project: "JSON 工作台", private: true, features: ["格式化", "校验", "本地处理"] });
+const SAMPLE = JSON.stringify({
+  name: "Koen's 工具箱",
+  tools: ["JSON 工作台", "JWT 解码", "Cron 生成器"],
+  tags: ["本地计算", "零上传", "MIT 开源"],
+  owner: "SongYuanKun",
+  lastUpdated: new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+}, null, 2);
 const DEFAULT_PREFS = Object.freeze({ indent: 2, relaxed: false, escapeUnicode: false });
 const ACTION_KEYS = new Set(["format", "minify", "copy", "clear", "sample", "upload", "download", "repair", "sort", "unicode", "validate", "diff"]);
 const lintCompartment = new Compartment();
@@ -50,6 +56,29 @@ function savePreferences(preferences) {
   } catch {
     // Preferences are optional; storage failures must not affect the editor.
   }
+}
+
+function inferJsonFixHint(message, line, doc) {
+  if (!message || !doc) return null;
+  const lines = doc.split("\n");
+  const lineText = lines[Math.max(0, line - 1)] || "";
+  const tail = lineText.trimEnd();
+  if (/Unexpected token (,|}|])/i.test(message) || /Expected.*but found.*comma/i.test(message)) {
+    return "疑似多余逗号：删除对象/数组末尾的逗号，或在设置里开启「宽松解析」。";
+  }
+  if (/Unexpected token .*EOF|Unexpected end of JSON input/i.test(message)) {
+    return "疑似少闭合：检查对象是否少 }、数组是否少 ]、字符串是否少引号。";
+  }
+  if (/Expected.*double-quoted property name|Expecting .*STRING.*got/i.test(message)) {
+    return "疑似键名未加双引号：把 { name: 1 } 改成 { \"name\": 1 }。";
+  }
+  if (/Unexpected character.*'|Invalid number|Single-quoted string/i.test(message)) {
+    return "疑似单引号：JSON 只接受双引号（\"），点「安全修复」能一键替换。";
+  }
+  if (tail.length && !/[}\]\d"',:\s-]$/.test(tail)) {
+    return "建议检查当前行末尾；常见问题是缺冒号、缺逗号或错用中文标点。";
+  }
+  return null;
 }
 
 function track(action) {
@@ -690,6 +719,29 @@ export function mountJsonWorkbench(mount) {
     errorBanner.hidden = false;
     validityNode.innerHTML = '<i aria-hidden="true"></i>JSON 无效';
     validityNode.dataset.valid = "false";
+    // OP-103：CodeMirror 诊断 → 通用 Toast（1s 节流，避免连输连弹）
+    try {
+      const lastToastKey = "json_last_error_toast_at";
+      const now = Date.now();
+      const lastAt = Number(localStorage.getItem(lastToastKey) || 0);
+      if (now - lastAt > 1000 && typeof window.Toast?.show === "function") {
+        localStorage.setItem(lastToastKey, String(now));
+        const fixHint = inferJsonFixHint(result.error.message, result.error.line, view.state.doc.toString());
+        window.Toast.show({
+          type: "error",
+          title: "JSON 语法有误",
+          msg: `${result.error.message}（第 ${result.error.line} 行，第 ${result.error.column} 列）`,
+          fixHint: fixHint || "试试「安全修复」按钮，能自动补尾逗号和替换单引号。",
+          actionText: "📖 看 JSON 教程",
+          onAction: () => {
+            const guide = document.querySelector("#json-guide-title");
+            if (guide) guide.scrollIntoView({ behavior: "smooth", block: "start" });
+          },
+          duration: 8000,
+          op: "OP-103"
+        });
+      }
+    } catch (_) {}
   };
   const scheduleDiagnostics = () => {
     clearTimeout(diagnosticTimer);
@@ -710,8 +762,50 @@ export function mountJsonWorkbench(mount) {
     scheduleDiagnostics();
   };
 
+  // OP-103 + OP-105 初值策略（优先级低→高：mount.dataset.initialValue < 空态SAMPLE < sessionStorage jwt_decode_payload_v1
+  let initialDoc = mount.dataset.initialValue ?? "";
+  if (!initialDoc) initialDoc = SAMPLE; // 空态默认给 5 行示例
+  try {
+    const fromJwt = sessionStorage.getItem("jwt_decode_payload_v1");
+    if (fromJwt) {
+      try {
+        const parsed = JSON.parse(fromJwt);
+        // 拼接：payload 最有价值，单独放；整包保留给用户保留；没有 payload 存 token 用全文拼接
+        if (parsed && typeof parsed === "object") {
+          initialDoc = JSON.stringify(
+            Object.prototype.hasOwnProperty.call(parsed, "payload") && parsed.payload
+              ? parsed.payload
+              : parsed,
+            null,
+            preferences.indent || 2
+          );
+        } else {
+          initialDoc = fromJwt;
+        }
+      } catch {
+        initialDoc = fromJwt;
+      }
+      sessionStorage.removeItem("jwt_decode_payload_v1");
+    }
+  } catch {
+    /* storage failing must not crash */
+  }
+  try {
+    const fromBase64 = sessionStorage.getItem("base64_decode_json_v1");
+    if (fromBase64) {
+      try {
+        initialDoc = JSON.stringify(JSON.parse(fromBase64), null, preferences.indent || 2);
+      } catch {
+        initialDoc = fromBase64;
+      }
+      sessionStorage.removeItem("base64_decode_json_v1");
+    }
+  } catch {
+    /* storage failing must not crash */
+  }
+
   const state = EditorState.create({
-    doc: mount.dataset.initialValue ?? "",
+    doc: initialDoc,
     extensions: [
       basicSetup,
       json(),
