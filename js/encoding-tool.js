@@ -390,6 +390,48 @@
     document.getElementById("btnDecode")?.addEventListener("click", function () {
       runDecode();
       window.umamiTrack?.("tool_used", { tool: "base64", action: "decode" });
+      // OP-105 场景③：解码后判断是否 JSON → 是则给出去 JSON 工作台美化入口
+      try {
+        var decoded = outputArea ? outputArea.value : "";
+        var linkSlot = document.getElementById("base64JsonGoSlot");
+        if (!linkSlot && outputArea) {
+          var p = document.createElement("p");
+          p.id = "base64JsonGoSlot";
+          p.style.cssText = "margin:8px 0 0;font-size:13px;color:#2563eb;";
+          outputArea.parentNode.insertBefore(p, outputArea.nextSibling);
+          linkSlot = p;
+        }
+        if (linkSlot) linkSlot.innerHTML = "";
+        if (decoded) {
+          var isJson = false;
+          try { JSON.parse(decoded); isJson = true; } catch (_) { isJson = false; }
+          if (isJson) {
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "tool-workbench-back";
+            btn.setAttribute("data-umami-event", "base64_to_json_click");
+            btn.setAttribute("data-umami-event-op", "OP-105");
+            btn.textContent = "🎨 解码结果是 JSON，去 JSON 工作台美化";
+            btn.addEventListener("click", function () {
+              try { sessionStorage.setItem("base64_decode_json_v1", decoded); } catch (_) {}
+              try {
+                window.MruFav?.record?.("base64");
+                window.umamiTrack?.("tool_used", { tool: "base64", action: "to_json" });
+              } catch (_) {}
+              // Base64 页在 /tools/base64/ 用 iframe 包装 → iframe 内的工具页相对路径 ../../tools/json/ 才对；
+              // 真实 encoding-tool.js 运行在 iframe 内（base64 tool 壳 /tools/base64/index.html 的 iframe），
+              // 看 iframe src 一般就是 shell 里的 data/id。这里统一用父级或 location 判：以 /tools 开头的 shell → ../json/ 即可
+              var target = "../json/?from_base64=1";
+              try {
+                var path = window.location.pathname;
+                if (/\/tools\/[^\/]+\/?/.test(path)) target = "../../tools/json/?from_base64=1";
+              } catch (_) {}
+              window.location.href = target;
+            });
+            linkSlot.appendChild(btn);
+          }
+        }
+      } catch (_) {}
     });
     document.getElementById("btnHexEncode")?.addEventListener("click", runHexEncode);
     document.getElementById("btnHexDecode")?.addEventListener("click", runHexDecode);

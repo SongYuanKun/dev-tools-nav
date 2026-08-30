@@ -279,7 +279,7 @@
       if (payloadClaims) payloadClaims.innerHTML = renderPayloadClaims(payloadObj);
 
       var sigPart = parts.length > 2 ? parts.slice(2).join(".") : "";
-      var signatureBody = document.getElementById("signatureBody");
+      var signatureBody = document.getElementById("sectionSignature");
       if (signatureBody) {
         if (!sigPart) {
           signatureBody.innerHTML = "<p>未包含签名段（不签名的 JWT / 仅前两段）。</p>";
@@ -290,6 +290,33 @@
             "<p>字符长度：" + sigPart.length + "。签名使用 Header 中的算法与密钥计算。</p>";
         }
       }
+
+      // OP-105 场景①：JWT decode 成功 → 显示「美化 claims 到 JSON 工作台」按钮（sessionStorage 传 payload）
+      try {
+        var secPayload = document.getElementById("sectionPayload");
+        if (secPayload) {
+          var oldCta = secPayload.querySelector(".jwt-to-json-cta");
+          if (oldCta) oldCta.parentNode.removeChild(oldCta);
+          var cta = document.createElement("div");
+          cta.className = "jwt-to-json-cta";
+          cta.style.cssText = "margin: 12px 0 4px;";
+          cta.innerHTML =
+            '<a class="jwt-to-json-btn" type="button" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;">🔍 美化 claims → 去 JSON 工作台</a>';
+          secPayload.appendChild(cta);
+          cta.querySelector("a").addEventListener("click", function () {
+            try {
+              var x = JSON.stringify({ header: headerObj, payload: payloadObj, token: token }, null, 2);
+              sessionStorage.setItem("jwt_decode_payload_v1", x);
+            } catch (e) {
+              sessionStorage.setItem("jwt_decode_payload_v1", JSON.stringify(payloadObj, null, 2));
+            }
+            if (typeof window.umami === "object" && typeof window.umami.track === "function") {
+              window.umami.track("jwt_to_json_click", { op: "OP-105" });
+            }
+            window.location.href = "../../tools/json/?from_jwt=1";
+          });
+        }
+      } catch (_) {}
 
       runAudit(token);
     }
