@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-08-31T16:18:07+08:00",
-  "weekLabel": "2026-08-24 ~ 2026-08-31",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、Agent Skills、调研 / 知识 等方向。代表项目包括 archify、awesome-gpt-image-2、codex。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-09-07T15:07:18+08:00",
+  "weekLabel": "2026-08-31 ~ 2026-09-07",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、编程 Agent、调研 / 知识 等方向。代表项目包括 archify、ponytail、OpenMAIC。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -33,8 +33,8 @@
       "rank": 1,
       "repo": "tt-a1i/archify",
       "language": "JavaScript",
-      "stars": 36223,
-      "weekStars": 18103,
+      "stars": 51391,
+      "weekStars": 17190,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：archify — Agent skill for beautiful, verifiable architecture, workflow, sequence, data-flow, and lifecycle diagrams—self-contained HTML with motion and crisp export.",
@@ -51,87 +51,68 @@
     },
     {
       "rank": 2,
-      "repo": "freestylefly/awesome-gpt-image-2",
+      "repo": "DietrichGebert/ponytail",
       "language": "JavaScript",
-      "stars": 26008,
-      "weekStars": 13413,
+      "stars": 129923,
+      "weekStars": 12186,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：ponytail — Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
+      "features": [
+        "Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "ponytail"
+      ]
+    },
+    {
+      "rank": 3,
+      "repo": "THU-MAIC/OpenMAIC",
+      "language": "TypeScript",
+      "stars": 32619,
+      "weekStars": 9193,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：OpenMAIC — Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
+      "features": [
+        "Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "OpenMAIC"
+      ]
+    },
+    {
+      "rank": 4,
+      "repo": "affaan-m/ECC",
+      "language": "JavaScript",
+      "stars": 251884,
+      "weekStars": 6394,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：awesome-gpt-image-2 — Prompt as Code | GPT-Image2 工业级提示词引擎与模板库，530+ 个案例逆向工程，20+ 套工业级模板，并提炼出Skills，持续更新中",
+      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
       "features": [
-        "Prompt as Code | GPT-Image2 工业级提示词引擎与模板库，530+ 个案例逆向工程，20+ 套工业级模板，并提炼出Skills，持续更新中",
+        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "awesome gpt image 2",
+        "ECC",
         "Agent Skill"
       ]
     },
     {
-      "rank": 3,
-      "repo": "openai/codex",
-      "language": "Rust",
-      "stars": 120273,
-      "weekStars": 5510,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：codex — Lightweight coding agent that runs in your terminal",
-      "features": [
-        "Lightweight coding agent that runs in your terminal",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "codex"
-      ]
-    },
-    {
-      "rank": 4,
-      "repo": "MadsLorentzen/ai-job-search",
-      "language": "Python",
-      "stars": 38722,
-      "weekStars": 5348,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：ai-job-search — The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.",
-      "features": [
-        "The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "ai job search"
-      ]
-    },
-    {
       "rank": 5,
-      "repo": "Alishahryar1/free-claude-code",
-      "language": "Python",
-      "stars": 52050,
-      "weekStars": 4324,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：free-claude-code — Use Claude Code, Codex, Pi, and OpenCode and more for free (1.3B+ free tokens) from your terminal, app, IDE, or phone like OpenClaw (voice supported + ToS friendly)",
-      "features": [
-        "Use Claude Code, Codex, Pi, and OpenCode and more for free (1.3B+ free tokens) from your terminal, app, IDE, or phone like OpenClaw (voice supported + ToS friendly)",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "free claude code"
-      ]
-    },
-    {
-      "rank": 6,
       "repo": "K-Dense-AI/scientific-agent-skills",
       "language": "Python",
-      "stars": 40028,
-      "weekStars": 4309,
+      "stars": 43419,
+      "weekStars": 4718,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：scientific-agent-skills — Turn any AI agent into an AI Scientist. The #1 Agent Skills library for science, used by 190,000+ scientists worldwide. 165 ready-to-use validated skills plus 100+ scientific databases covering biology, chemistry, medicine, and drug discovery. Compatible with Cursor, Claude Code, Codex, Pi, Antigravity, and the open Agent Skills standard.",
@@ -147,29 +128,48 @@
       ]
     },
     {
-      "rank": 7,
-      "repo": "rohitg00/ai-engineering-from-scratch",
+      "rank": 6,
+      "repo": "jingyaogong/minimind",
       "language": "Python",
-      "stars": 51414,
-      "weekStars": 3720,
+      "stars": 59268,
+      "weekStars": 3816,
       "trending": true,
       "topic": "research",
-      "summary": "本周 GitHub Trending：ai-engineering-from-scratch — Learn it. Build it. Ship it for others.",
+      "summary": "本周 GitHub Trending：minimind — 🧠 Train a 64M-parameter LLM from scratch in just 2h!",
       "features": [
-        "Learn it. Build it. Ship it for others.",
+        "🧠 Train a 64M-parameter LLM from scratch in just 2h!",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "调研 / 知识",
-        "ai engineering from scra"
+        "minimind"
+      ]
+    },
+    {
+      "rank": 7,
+      "repo": "google-research/timesfm",
+      "language": "Python",
+      "stars": 31701,
+      "weekStars": 3203,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：timesfm — TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
+      "features": [
+        "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "timesfm"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 279808,
+      "stars": 282533,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -187,21 +187,21 @@
     },
     {
       "rank": 9,
-      "repo": "affaan-m/ECC",
-      "language": "JavaScript",
-      "stars": 244874,
+      "repo": "mattpocock/skills",
+      "language": "Shell",
+      "stars": 255205,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "summary": "本周 GitHub Trending：skills — Skills for Real Engineers. Straight from my .agents directory.",
       "features": [
-        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+        "Skills for Real Engineers. Straight from my .agents directory.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "ECC",
+        "skills",
         "Agent Skill"
       ]
     },
@@ -209,7 +209,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 238660,
+      "stars": 242711,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -227,29 +227,9 @@
     },
     {
       "rank": 11,
-      "repo": "mattpocock/skills",
-      "language": "Shell",
-      "stars": 242245,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：skills — Skills for Real Engineers. Straight from my .agents directory.",
-      "features": [
-        "Skills for Real Engineers. Straight from my .agents directory.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "skills",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 12,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 172711,
+      "stars": 174925,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -263,6 +243,25 @@
         "官方 Skills",
         "Claude",
         "能力扩展"
+      ]
+    },
+    {
+      "rank": 12,
+      "repo": "openai/codex",
+      "language": "Rust",
+      "stars": 122069,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：codex — Lightweight coding agent that runs in your terminal",
+      "features": [
+        "Lightweight coding agent that runs in your terminal",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "codex"
       ]
     }
   ]
