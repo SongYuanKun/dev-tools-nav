@@ -181,7 +181,8 @@ async function assertVisibleFocus(control) {
 test("core commands, shortcuts, undo, feedback, status, and private analytics work", async () => {
   const { context, page } = await openWorkbench();
   await page.getByRole("button", { name: "示例" }).click();
-  assert.match(await documentText(page), /"project"/);
+  assert.match(await documentText(page), /"name": "Koen's 工具箱"/);
+  assert.match(await documentText(page), /"tools": \[/);
   await setDocument(page, '{"name":"JSON 工作台","items":[1,2]}');
   await page.keyboard.press("Control+Enter");
   assert.match(await documentText(page), /\n  "name"/);
@@ -290,7 +291,8 @@ test("settings persist only allowlisted preferences and content does not survive
   assert.deepEqual(workbenchPrefs, { indent: 4, relaxed: true, escapeUnicode: true });
   await page.reload();
   await page.locator(".cm-content").waitFor();
-  assert.equal(await documentText(page), "");
+  assert.match(await documentText(page), /"name": "Koen's 工具箱"/);
+  assert.doesNotMatch(await documentText(page), /must-not-persist|secret|quote|u0022/);
   await context.close();
 });
 
@@ -377,7 +379,8 @@ test("legacy q deep links migrate through a fragment, clean the URL, and do not 
   assert.match(contentRequests[0], /\/pages\/tools\/json\.html/);
   await page.reload();
   await page.locator("[data-json-editor] .cm-content").waitFor();
-  assert.equal(await documentText(page), "");
+  assert.match(await documentText(page), /"name": "Koen's 工具箱"/);
+  assert.doesNotMatch(await documentText(page), /"plus"|"unicode"/);
   await context.close();
 });
 
@@ -807,6 +810,8 @@ test("dialogs trap keyboard focus, close with Escape, and return focus to their 
 test("keyboard-only core flow and reduced-motion preferences remain usable", async () => {
   const { context, page } = await openWorkbench({ reducedMotion: "reduce" });
   await page.locator(".cm-content").focus();
+  await page.keyboard.press("Control+A");
+  await page.keyboard.press("Backspace");
   await page.keyboard.insertText('{"keyboard":true}');
   await page.keyboard.press("Control+Enter");
   assert.match(await documentText(page), /\n  "keyboard"/);
@@ -916,5 +921,14 @@ test("generated MyBatis article is a standalone canonical page", async () => {
     await page.locator('link[type="application/atom+xml"]').getAttribute("href"),
     "https://tools.songyuankun.top/feed.xml",
   );
+  await context.close();
+});
+
+test("shared footer exposes the public JetBrains non-commercial badge", async () => {
+  const { context, page } = await openWorkbench();
+  const badge = page.locator('body > footer a[href="https://www.jetbrains.com/community/opensource/"]');
+
+  assert.equal(await badge.count(), 1);
+  assert.match(await badge.locator("img").getAttribute("alt"), /JetBrains Non-Commercial Open Source/);
   await context.close();
 });

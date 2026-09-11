@@ -102,14 +102,12 @@
         });
         var upBtn = wrap.querySelector('[data-json-upload-yaml-action]');
         if (upBtn) {
-          var file = document.createElement("input");
-          file.type = "file";
-          file.accept = ".yaml,.yml,text/yaml,application/yaml,text/plain";
-          file.className = "json-visually-hidden";
-          file.setAttribute("data-json-action", "upload");
-          upBtn.appendChild(file);
-          upBtn.addEventListener("click", function () { file.click(); });
-          try { window.MruFav?.record?.("json"); } catch (_) {}
+          var file = document.querySelector('.json-secondary-actions [data-json-action="upload"]');
+          upBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            if (file) file.click();
+            try { window.MruFav?.record?.("json"); } catch (_) {}
+          });
         }
         var jwtLink = wrap.querySelectorAll("a")[2];
         if (jwtLink) {

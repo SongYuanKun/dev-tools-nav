@@ -7,6 +7,7 @@ import { spawnSync } from "node:child_process";
 
 const requiredFiles = [
   "index.html",
+  "search-console.html",
   "sitemap.xml",
   "feed.xml",
   "favicon.svg",
@@ -19,11 +20,16 @@ const verificationFiles = [
 ];
 const publishedRootFiles = [
   "index.html",
+  "search-console.html",
   "favicon.ico",
   "favicon.svg",
   "feed.xml",
   "robots.txt",
   "sitemap.xml",
+  "LICENSE",
+  "CODE_OF_CONDUCT.md",
+  "CONTRIBUTING.md",
+  "manual.md",
 ];
 const publishedDirectoryFiles = [
   "assets/app.txt",
@@ -35,12 +41,14 @@ const publishedDirectoryFiles = [
 ];
 const unpublishedFiles = [
   ".env.production",
-  "manual.md",
   "rollup.config.mjs",
   ".superpowers/private.md",
   "content/blog/private.md",
   "docs/private.md",
   "node_modules/pkg/index.js",
+  "tasks/private.md",
+  "scripts/private.sh",
+  "ops/private.service",
 ];
 
 function write(root, relative, content = relative) {

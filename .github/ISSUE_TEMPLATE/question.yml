@@ -1,0 +1,57 @@
+name: ❓ 使用问题
+description: 咨询工具用法、项目行为或本地运行问题
+title: "[Question]: "
+labels: ["question", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢提问！请先阅读 [SUPPORT.md](https://github.com/SongYuanKun/dev-tools-nav/blob/main/SUPPORT.md)，并删除示例中的隐私数据、Token、Cookie 和密钥。
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提问前检查
+      options:
+        - label: 我已搜索现有 Issue 和文档，没有找到可用答案
+          required: true
+        - label: 我没有在内容中附带隐私数据、Token、Cookie 或密钥
+          required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: 你的问题
+      description: 清楚说明你想完成什么，以及卡在哪一步。
+      placeholder: 我想使用 JSON 工作台完成……，目前遇到……
+    validations:
+      required: true
+  - type: textarea
+    id: attempted
+    attributes:
+      label: 已尝试的方法
+      description: 列出查过的文档、执行过的步骤和看到的结果。
+      placeholder: |
+        1. 阅读了……
+        2. 执行了……
+        3. 页面显示……
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 提供浏览器、操作系统、项目版本或 commit SHA；本地运行时再附 Node.js 版本。
+      placeholder: Chrome 140 / Ubuntu 24.04 / commit 043f275 / Node.js 24
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望得到的帮助
+      description: 说明你希望确认的行为、得到的解释或可接受的结果。
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: 补充信息
+      description: 可提供已脱敏的截图、控制台错误或最小复现；不要粘贴真实业务数据。

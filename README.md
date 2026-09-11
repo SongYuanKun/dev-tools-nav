@@ -1,7 +1,7 @@
 # Koen's 工具箱 · 开发者工具导航站
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE)
-[![JetBrains OSS Support](https://img.shields.io/badge/JetBrains-OSS_Support-000000?logo=jetbrains&logoColor=white)](https://github.com/SongYuanKun/dev-tools-nav/blob/main/docs/jetbrains-oss-application-20260828/PROGRESS-TRACKER.md)
+[![JetBrains Non-Commercial Open Source](https://img.shields.io/badge/JetBrains-Non--Commercial%20Open%20Source-000?logo=jetbrains&logoColor=fff)](https://www.jetbrains.com/community/opensource/)
 [![OSI Approved](https://img.shields.io/badge/OSI-Approved-3DA639?logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Test](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/test.yml/badge.svg)](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/test.yml)
 [![Deploy Pages](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/SongYuanKun/dev-tools-nav/actions/workflows/deploy-pages.yml)
@@ -246,9 +246,10 @@ GTR 主机每十分钟出站检查 `main`，仅部署已通过精确 SHA Test �
 |------|------|
 | 贡献指南 | [CONTRIBUTING.md](CONTRIBUTING.md) — 贡献范围 / 本地运行 / 自查命令 / 提交流程 |
 | 行为准则 | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — Contributor Covenant v2.1 |
-| 安全政策 | [SECURITY.md](SECURITY.md) — 漏洞私密披露渠道与 48h 响应承诺 |
+| 安全政策 | [SECURITY.md](SECURITY.md) — 漏洞私密披露渠道与 5 个工作日响应目标 |
+| 支持说明 | [SUPPORT.md](SUPPORT.md) — 提问入口、信息准备与隐私提醒 |
 | 资助说明 | [.github/FUNDING.yml](.github/FUNDING.yml) — 非商业项目，仅接受自愿咖啡支持 |
-| Issue 模板 | 🐛 [Bug Report](.github/ISSUE_TEMPLATE/bug_report.yml) · ✨ [Feature Request](.github/ISSUE_TEMPLATE/feature_request.yml) |
+| Issue 模板 | 🐛 [Bug Report](.github/ISSUE_TEMPLATE/bug_report.yml) · ✨ [Feature Request](.github/ISSUE_TEMPLATE/feature_request.yml) · ❓ [Question](.github/ISSUE_TEMPLATE/question.yml) |
 | PR 模板 | [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) |
 | 产品路线图 | [docs/roadmap.md](docs/roadmap.md) — 唯一活跃路线来源，优先级只在此维护 |
 | 在线站点 | 🌐 **[tools.songyuankun.top](https://tools.songyuankun.top)**（主站）· [songyuankun.github.io/dev-tools-nav](https://songyuankun.github.io/dev-tools-nav/)（GitHub Pages） |
@@ -281,3 +282,7 @@ Copyright (c) 2026 SongYuanKun
 - **[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)** — GitHub Pages CI  
 - **[.github/workflows/update-screenshots.yml](.github/workflows/update-screenshots.yml)** — 预览截图自动刷新  
 - **[.github/workflows/sync-csdn-rss.yml](.github/workflows/sync-csdn-rss.yml)** — CSDN 文章列表定时同步
+
+## 🔧 致谢 · 开发工具支持
+
+本项目使用 **JetBrains WebStorm (Non-Commercial Open Source License)** 进行前端开发，感谢 [JetBrains](https://www.jetbrains.com/community/opensource/) 团队对全球开源社区的长期支持。

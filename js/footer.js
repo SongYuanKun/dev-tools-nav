@@ -83,6 +83,11 @@
       '      </div>',
       '    </div>',
       '  </details>',
+      '  <p class="footer-jetbrains">',
+      '    <a href="https://www.jetbrains.com/community/opensource/" target="_blank" rel="noopener noreferrer" data-umami-event="badge_jetbrains_noncommercial_click" data-umami-event-op="OP-203" title="Powered by JetBrains Non-Commercial Open Source licenses">',
+      '      <img src="https://img.shields.io/badge/JetBrains-Non--Commercial%20Open%20Source-000?logo=jetbrains&logoColor=fff" alt="JetBrains Non-Commercial Open Source" loading="lazy">',
+      '    </a>',
+      '  </p>',
       '  <p class="footer-copyright">Made with code by Koen · © 2024-' + currentYear + '</p>',
       '  <p class="footer-beian"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备17048720号-1</a></p>',
       '</div>'
