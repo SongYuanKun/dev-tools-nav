@@ -69,6 +69,14 @@ test("collectStaticUrls excludes noindex compatibility pages", () => {
   assert.ok(!locations.includes("https://tools.songyuankun.top/pages/tools/json.html"));
 });
 
+test("collectStaticUrls excludes local search-engine verification HTML", () => {
+  const locations = collectStaticUrls(process.cwd(), { resolveLastmod: () => undefined })
+    .map(({ loc }) => loc);
+
+  assert.ok(!locations.some((loc) => /baidu_verify/i.test(loc)));
+  assert.ok(!locations.some((loc) => /\/google[a-f0-9]+\.html$/i.test(loc)));
+});
+
 test("collectStaticUrls keeps template URLs at monthly priority 0.5", () => {
   const templates = collectStaticUrls(process.cwd())
     .filter(({ loc }) => loc.includes("/pages/template.html?id="));

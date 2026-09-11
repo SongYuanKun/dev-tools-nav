@@ -61,3 +61,13 @@ test("static and shared footers disclose pseudonymous Umami analytics without ad
   assert.match(badge, /JetBrains/);
   assert.match(badge, /Non-Commercial Open Source/);
 });
+
+test("Dependabot npm weekly updates are configured for the repository root", () => {
+  const config = YAML.parse(readFileSync(".github/dependabot.yml", "utf8"));
+  const npm = config.updates.find((item) => item["package-ecosystem"] === "npm");
+
+  assert.equal(config.version, 2);
+  assert.ok(npm, "npm ecosystem must be declared");
+  assert.equal(npm.directory, "/");
+  assert.equal(npm.schedule?.interval, "weekly");
+});

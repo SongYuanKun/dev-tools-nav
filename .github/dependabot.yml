@@ -1,0 +1,20 @@
+# Dependabot 版本更新（免费）；Alerts / Security updates 仍需在仓库 Settings 手动开启
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "chore(deps)"
+    ignore:
+      # 大版本升级单独评估，避免无感打断 Node 测试矩阵
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]

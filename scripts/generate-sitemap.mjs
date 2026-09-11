@@ -11,6 +11,8 @@ const DEFAULT_ROOT = join(MODULE_DIR, "..");
 const BASE_URL = "https://tools.songyuankun.top";
 const EXCLUDED_NAMES = new Set(["node_modules", ".git", ".github", "docs"]);
 const EXCLUDED_FILES = new Set(["template.html", "post.html"]);
+// 搜索引擎站长验证页只部署到 Web 根，不入库；本机残留时不得进入 sitemap
+const EXCLUDED_FILE_PATTERNS = [/^baidu_verify/i, /^google[a-f0-9]+\.html$/i];
 const LASTMOD_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 export function xmlEscape(value) {
@@ -24,6 +26,10 @@ export function xmlEscape(value) {
 
 function shouldExclude(name) {
   return EXCLUDED_NAMES.has(name) || /_bak|\.bak$|README\.md$/.test(name);
+}
+
+function shouldExcludeHtmlFile(name) {
+  return EXCLUDED_FILES.has(name) || EXCLUDED_FILE_PATTERNS.some((pattern) => pattern.test(name));
 }
 
 function pageMeta(pathname) {
@@ -51,7 +57,7 @@ function walkHtml(root, relativePath = "") {
 
     if (stat.isDirectory()) {
       entries.push(...walkHtml(root, childRelativePath));
-    } else if (name.endsWith(".html") && !EXCLUDED_FILES.has(name)) {
+    } else if (name.endsWith(".html") && !shouldExcludeHtmlFile(name)) {
       entries.push({ path: childRelativePath });
     }
   }
