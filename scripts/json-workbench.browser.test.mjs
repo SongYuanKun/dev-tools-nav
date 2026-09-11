@@ -927,8 +927,12 @@ test("generated MyBatis article is a standalone canonical page", async () => {
 test("shared footer exposes the public JetBrains non-commercial badge", async () => {
   const { context, page } = await openWorkbench();
   const badge = page.locator('body > footer a[href="https://www.jetbrains.com/community/opensource/"]');
+  const privacy = page.locator("body > footer .footer-privacy");
 
   assert.equal(await badge.count(), 1);
   assert.match(await badge.locator("img").getAttribute("alt"), /JetBrains Non-Commercial Open Source/);
+  assert.equal(await badge.locator("img").evaluate((image) => image.complete && image.naturalWidth > 0), true);
+  assert.match(await privacy.innerText(), /Umami 无 Cookie 的假名化访问统计/);
+  assert.match(await privacy.innerText(), /无广告/);
   await context.close();
 });

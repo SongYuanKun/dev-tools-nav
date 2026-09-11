@@ -3045,6 +3045,7 @@ body.redesign-v2 {
 .footer-links { flex-wrap: wrap; }
 .footer-links a { color: var(--v2-text-secondary); text-decoration: none; }
 .footer-links a:hover { color: var(--v2-text); }
+.footer-privacy { margin: 0; color: var(--v2-text-muted); font-size: 12px; text-align: center; }
 .footer-copyright { margin: 0; color: var(--v2-text-muted); font-size: 13px; }
 .footer-jetbrains { margin: 0; }
 .footer-jetbrains a { display: inline-flex; }

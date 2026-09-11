@@ -42,3 +42,22 @@ test("README reports the same five-workday security response target as SECURITY"
   assert.match(readme, /5 个工作日/);
   assert.doesNotMatch(readme, /48h/);
 });
+
+test("static and shared footers disclose pseudonymous Umami analytics without ads or cookies", () => {
+  for (const path of ["index.html", "js/footer.js"]) {
+    const source = readFileSync(path, "utf8");
+
+    assert.match(source, /Umami 无 Cookie 的假名化访问统计/, `${path} must describe the stable visitor ID truthfully`);
+    assert.doesNotMatch(source, /Umami 匿名访问统计/, `${path} must not call a persistent identifier anonymous`);
+    assert.match(source, /无广告/, `${path} must disclose no ads`);
+    assert.match(source, /无 Cookie/, `${path} must disclose no cookies`);
+    assert.match(source, /https:\/\/www\.jetbrains\.com\/community\/opensource\//);
+    assert.match(source, /assets\/jetbrains-noncommercial\.svg/, `${path} must use the local badge`);
+    assert.doesNotMatch(source, /img\.shields\.io\/badge\/JetBrains/, `${path} must not depend on the badge CDN`);
+  }
+
+  const badge = readFileSync("assets/jetbrains-noncommercial.svg", "utf8");
+  assert.match(badge, /<svg/);
+  assert.match(badge, /JetBrains/);
+  assert.match(badge, /Non-Commercial Open Source/);
+});

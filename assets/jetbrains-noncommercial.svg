@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="286" height="24" viewBox="0 0 286 24" role="img" aria-labelledby="title desc">
+  <title id="title">JetBrains Non-Commercial Open Source</title>
+  <desc id="desc">JetBrains 对非商业开源项目的开发工具支持徽章</desc>
+  <defs>
+    <linearGradient id="mark" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff7a00"/>
+      <stop offset="0.48" stop-color="#ff007a"/>
+      <stop offset="1" stop-color="#6b57ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="286" height="24" rx="4" fill="#050505"/>
+  <rect x="4" y="4" width="16" height="16" rx="2" fill="url(#mark)"/>
+  <rect x="7" y="7" width="10" height="10" fill="#050505"/>
+  <text x="9" y="14" fill="#fff" font-family="Arial, sans-serif" font-size="7" font-weight="700">JB</text>
+  <text x="26" y="16" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="600">JetBrains · Non-Commercial Open Source</text>
+</svg>

@@ -29,3 +29,10 @@ googleb710668c9aa28d4e.html
 
 # 本地文档草稿
 docs/xiaohongshu-*.md
+
+# JetBrains 申请私密材料：真实申请 ID、邮件、提交素材与合规审计仅保留在本机。
+# 日期化或续期目录只要名称包含 jetbrains，都会继承这组遮罩。
+docs/*jetbrains*/PROGRESS-TRACKER.md
+docs/*jetbrains*/emails/
+docs/*jetbrains*/submission-pack/
+docs/*jetbrains*/audit/
