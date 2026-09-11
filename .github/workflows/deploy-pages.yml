@@ -79,9 +79,6 @@ jobs:
           echo "site size: $(du -sh _site | cut -f1) files: $(find _site -type f | wc -l)"
 
       - uses: actions/configure-pages@v5
-        with:
-          # Pages 已在仓库设置中启用；勿再传 enablement（该开关曾导致 configure-pages 抛异常）
-          static_site_generator: none
 
       - uses: actions/upload-pages-artifact@v3
         with:
