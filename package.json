@@ -40,7 +40,7 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
-    "playwright": "^1.51.0",
+    "playwright": "^1.63.0",
     "rollup": "^4.62.2"
   },
   "dependencies": {
