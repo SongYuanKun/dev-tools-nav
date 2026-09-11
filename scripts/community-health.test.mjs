@@ -31,6 +31,8 @@ test("README publicly acknowledges JetBrains non-commercial open-source support"
   assert.match(readme, /^## 🔧 致谢 · 开发工具支持$/m);
   assert.match(readme, /WebStorm \(Non-Commercial Open Source License\)/);
   assert.match(readme, /https:\/\/www\.jetbrains\.com\/community\/opensource\//);
+  assert.match(readme, /^### 永久非商业 · 零追踪边界$/m);
+  assert.match(readme, /blob\/main\/LICENSE/);
   assert.doesNotMatch(readme, /PROGRESS-TRACKER\.md/);
 });
 

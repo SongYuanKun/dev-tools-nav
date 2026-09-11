@@ -29,7 +29,7 @@ test("Pages installs dependencies and builds before publishing", () => {
   assert.match(pages, /node-version: ["']24["']/);
   assertStepsInOrder(pages, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Assemble site"]);
   assert.match(pages, /name: Assemble site[\s\S]*?--exclude='node_modules'[\s\S]*?\.\/ _site\//);
-
+  assert.doesNotMatch(pages, /^\s+enablement:\s*true\s*$/m);
 });
 
 test("screenshot workflow builds generated assets before serving the site", () => {

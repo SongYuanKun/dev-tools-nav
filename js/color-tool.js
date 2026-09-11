@@ -228,8 +228,18 @@
 
     var fgEl = document.getElementById("fgColor");
     var bgEl = document.getElementById("bgColor");
-    if (fgEl) fgEl.addEventListener("input", updateContrast);
-    if (bgEl) bgEl.addEventListener("input", updateContrast);
+    if (fgEl) {
+      fgEl.addEventListener("input", updateContrast);
+      fgEl.addEventListener("change", function () {
+        window.umamiTrack?.("tool_used", { tool: "color", action: "contrast" });
+      });
+    }
+    if (bgEl) {
+      bgEl.addEventListener("input", updateContrast);
+      bgEl.addEventListener("change", function () {
+        window.umamiTrack?.("tool_used", { tool: "color", action: "contrast" });
+      });
+    }
 
     var btnCopy = document.getElementById("btnCopyCssVar");
     if (btnCopy) {
@@ -246,7 +256,9 @@
         var copyFn = ToolChrome && ToolChrome.copyText ? ToolChrome.copyText : function (t) {
           return navigator.clipboard.writeText(t);
         };
-        copyFn(text, "CSS 变量已复制").catch(function () {
+        copyFn(text, "CSS 变量已复制").then(function () {
+          window.umamiTrack?.("tool_used", { tool: "color", action: "copy_css_var" });
+        }).catch(function () {
           if (ToolChrome && ToolChrome.showToast) ToolChrome.showToast("复制失败");
         });
       });
@@ -257,6 +269,9 @@
       picker.addEventListener("input", function () {
         var rgb = parseHex(picker.value);
         if (rgb) syncFromRgb(rgb);
+      });
+      picker.addEventListener("change", function () {
+        window.umamiTrack?.("tool_used", { tool: "color", action: "pick" });
       });
     }
 

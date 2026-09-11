@@ -26,6 +26,15 @@
 - **数据不出站** — 10 款自研在线工具全部在浏览器内计算，不向服务端上传用户输入。
 - **欢迎贡献** — 提 Issue 或 Pull Request 前请先读 [贡献指南](CONTRIBUTING.md)，其中写明贡献范围、本地运行、自查命令与提交要求。
 
+### 永久非商业 · 零追踪边界
+
+1. **永久非商业化** — 无广告、无付费墙、无联盟链接、外链不加 UTM / ref 追踪参数。
+2. **不收集 PII** — 不要求登录；Umami 仅做无 Cookie 的假名化访问统计（随机访客标识），不把工具正文、IP 或完整 User-Agent 当作业务数据上传。
+3. **纯本地运算** — JSON / JWT / Base64 / UUID / 颜色 / Cron / Diff / Regex / SQL / Timestamp 等自研工具的处理逻辑全部在浏览器内完成，用户输入不上传业务后端。
+4. **许可证** — [MIT（blob/main/LICENSE）](https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE)。
+5. **可审计** — 源代码 100% 公开，可 fork、自建与审计；双站部署与测试门禁均在仓库内可见。
+6. **项目深度文章** — 两篇面向开发者的原创长文将在 CSDN 公开发布后，于本节补上永久链接（当前草稿已就绪，发布排在产品优化之后）。
+
 ## 产品路线
 
 本项目唯一活跃的路线来源是 [产品路线图](docs/roadmap.md)。当前技术栈继续使用 Vanilla HTML、CSS 和 JavaScript；阶段状态、准入条件、验收证据与非商业约束均在该路线图维护。

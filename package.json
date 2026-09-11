@@ -35,7 +35,8 @@
     "generate-sitemap": "node scripts/generate-sitemap.mjs",
     "build:json": "rollup --config",
     "build": "npm run build:json && node scripts/build-blog.mjs && npm run generate-sitemap",
-    "check:generated": "npm run build && node scripts/check-generated.mjs"
+    "check:generated": "npm run build && node scripts/check-generated.mjs",
+    "check:consistency": "bash scripts/consistency-gtr-x-ghpages.sh"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",

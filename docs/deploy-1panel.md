@@ -200,6 +200,16 @@ curl -fsS https://tools.songyuankun.top/googleb710668c9aa28d4e.html >/dev/null
 
 验收要求：生产首页可访问，`https://tools.songyuankun.top/content/` 精确返回 404，OpenResty 容器运行，两个验证端点可访问，状态 SHA 等于当前 `main`。同时确认 Test 和 GitHub Pages 对该 SHA 成功，以及 timer 使用十分钟 calendar 计划。
 
+### 双站一致性（GTR × GitHub Pages）
+
+在主站与 Pages 都更新到同一 `main` 后，可跑三栏巡检：
+
+```bash
+npm run check:consistency
+```
+
+脚本 [`scripts/consistency-gtr-x-ghpages.sh`](../scripts/consistency-gtr-x-ghpages.sh) 检查：A=18 路由双站 HTTP 200、B=8 个 `pages/tools/*.html` 关键字、C=`search-console.html` 内容指纹与 `search-gap|search-queries` 命中。全部通过时输出 `RESULT: ALL GREEN`。
+
 ## 升级与恢复
 
 升级时先在本地可信 checkout 审查 `scripts/poll-github-deploy.sh`、`scripts/deploy-1panel-local.sh`、`scripts/install-outbound-deployer.sh` 和 `ops/dev-tools-nav-deploy.{service,timer}`，再重新运行安装器。安装器必须先禁用已有 timer；若禁用失败或 oneshot 仍在运行，则不写目标文件并退出。安装过程先备份旧文件，再 staging 并原子替换 4 个目标；失败时逐项恢复、reload、重新禁用 timer 并验证状态。若恢复替换失败，错误会列出目标和保留的 backup 路径；不要删除该 backup 目录。文件与 timer 状态全部验证后才到 commit point，之后的 backup 清理失败只产生 warning 并保留 backup，不回滚新安装。成功后重复“初次运行和启用”步骤。永远不要让远端 checkout 自行升级本地脚本或 units。

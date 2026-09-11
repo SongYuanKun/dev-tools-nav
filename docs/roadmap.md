@@ -1,5 +1,5 @@
 ---
-last_verified: 2026-07-16
+last_verified: 2026-09-11
 ---
 
 # 产品路线图
@@ -59,6 +59,7 @@ Phase 2 已交付 JSON 工作台和 Markdown 博客流水线，其余项目仍�
 | 1 | 贡献者自助入门 | done | 新贡献者只依据仓库内文档即可完成本地运行、测试与提交：[贡献指南](../CONTRIBUTING.md)、[README 关于本项目](../README.md#关于本项目) |
 | 2 | 无障碍与性能基线门禁 | planned | 关键页面的无障碍与性能基线纳入 CI，回归可被拦截 |
 | 3 | 依赖与生成物可复现 | planned | 依赖升级和生成物漂移由 CI 检查，构建结果可在干净环境复现 |
+| 4 | 双站一致性巡检 | in_progress | `npm run check:consistency` 对 GTR × GitHub Pages 跑 A=18 HTTP / B=8 关键字 / C=search-console 指纹；证据见 [`consistency-gtr-x-ghpages.sh`](../scripts/consistency-gtr-x-ghpages.sh) |
 
 站点始终不出现弹窗、遮挡、自动播放和诱导点击；统计指标只用来判断维护投入方向，不服务于任何收入或转化目标。
 
