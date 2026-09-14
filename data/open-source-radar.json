@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-09-07T15:07:18+08:00",
-  "weekLabel": "2026-08-31 ~ 2026-09-07",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、编程 Agent、调研 / 知识 等方向。代表项目包括 archify、ponytail、OpenMAIC。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-09-14T15:41:19+08:00",
+  "weekLabel": "2026-09-07 ~ 2026-09-14",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、Agent Skills、多模态 等方向。代表项目包括 i-have-adhd、archify、ponytail。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,10 +31,30 @@
   "projects": [
     {
       "rank": 1,
+      "repo": "ayghri/i-have-adhd",
+      "language": "Python",
+      "stars": 44721,
+      "weekStars": 16740,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：i-have-adhd — A skill to stop your coding agent from burying the answer. ADHD-friendly output.",
+      "features": [
+        "A skill to stop your coding agent from burying the answer. ADHD-friendly output.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "i have adhd",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 2,
       "repo": "tt-a1i/archify",
       "language": "JavaScript",
-      "stars": 51391,
-      "weekStars": 17190,
+      "stars": 61336,
+      "weekStars": 10132,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：archify — Agent skill for beautiful, verifiable architecture, workflow, sequence, data-flow, and lifecycle diagrams—self-contained HTML with motion and crisp export.",
@@ -50,11 +70,11 @@
       ]
     },
     {
-      "rank": 2,
+      "rank": 3,
       "repo": "DietrichGebert/ponytail",
       "language": "JavaScript",
-      "stars": 129923,
-      "weekStars": 12186,
+      "stars": 137674,
+      "weekStars": 8444,
       "trending": true,
       "topic": "coding",
       "summary": "本周 GitHub Trending：ponytail — Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
@@ -69,30 +89,11 @@
       ]
     },
     {
-      "rank": 3,
-      "repo": "THU-MAIC/OpenMAIC",
-      "language": "TypeScript",
-      "stars": 32619,
-      "weekStars": 9193,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：OpenMAIC — Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
-      "features": [
-        "Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "OpenMAIC"
-      ]
-    },
-    {
       "rank": 4,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 251884,
-      "weekStars": 6394,
+      "stars": 257937,
+      "weekStars": 7264,
       "trending": true,
       "topic": "skills",
       "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
@@ -109,67 +110,66 @@
     },
     {
       "rank": 5,
-      "repo": "K-Dense-AI/scientific-agent-skills",
-      "language": "Python",
-      "stars": 43419,
-      "weekStars": 4718,
+      "repo": "cathrynlavery/diagram-design",
+      "language": "HTML",
+      "stars": 39450,
+      "weekStars": 7129,
       "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：scientific-agent-skills — Turn any AI agent into an AI Scientist. The #1 Agent Skills library for science, used by 190,000+ scientists worldwide. 165 ready-to-use validated skills plus 100+ scientific databases covering biology, chemistry, medicine, and drug discovery. Compatible with Cursor, Claude Code, Codex, Pi, Antigravity, and the open Agent Skills standard.",
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：diagram-design — 38 editorial diagram types for Claude Code, Codex, and Pi. Self-contained HTML + SVG. No shadows. No Mermaid slop.",
       "features": [
-        "Turn any AI agent into an AI Scientist. The #1 Agent Skills library for science, used by 190,000+ scientists worldwide. 165 ready-to-use validated skills plus 100+ scientific databases covering biology, chemistry, medicine, and drug discovery. Compatible with Cursor, Claude Code, Codex, Pi, Antigravity, and the open Agent Skills standard.",
+        "38 editorial diagram types for Claude Code, Codex, and Pi. Self-contained HTML + SVG. No shadows. No Mermaid slop.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "Agent Skills",
-        "scientific agent skills",
-        "Agent Skill"
+        "编程 Agent",
+        "diagram design"
       ]
     },
     {
       "rank": 6,
-      "repo": "jingyaogong/minimind",
-      "language": "Python",
-      "stars": 59268,
-      "weekStars": 3816,
+      "repo": "heygen-com/hyperframes",
+      "language": "TypeScript",
+      "stars": 49762,
+      "weekStars": 5146,
       "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：minimind — 🧠 Train a 64M-parameter LLM from scratch in just 2h!",
+      "topic": "multimodal",
+      "summary": "本周 GitHub Trending：hyperframes — Write HTML. Render video. Built for agents.",
       "features": [
-        "🧠 Train a 64M-parameter LLM from scratch in just 2h!",
+        "Write HTML. Render video. Built for agents.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "调研 / 知识",
-        "minimind"
+        "多模态",
+        "hyperframes"
       ]
     },
     {
       "rank": 7,
-      "repo": "google-research/timesfm",
-      "language": "Python",
-      "stars": 31701,
-      "weekStars": 3203,
+      "repo": "THU-MAIC/OpenMAIC",
+      "language": "TypeScript",
+      "stars": 36620,
+      "weekStars": 4202,
       "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：timesfm — TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：OpenMAIC — Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
       "features": [
-        "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
+        "Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "调研 / 知识",
-        "timesfm"
+        "编程 Agent",
+        "OpenMAIC"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 282533,
+      "stars": 286362,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -189,7 +189,7 @@
       "rank": 9,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 255205,
+      "stars": 261546,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -209,7 +209,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 242711,
+      "stars": 245261,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -229,7 +229,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 174925,
+      "stars": 176186,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -249,7 +249,7 @@
       "rank": 12,
       "repo": "openai/codex",
       "language": "Rust",
-      "stars": 122069,
+      "stars": 123955,
       "weekStars": 0,
       "trending": false,
       "topic": "coding",
