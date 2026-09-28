@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-09-21T15:45:00+08:00",
-  "weekLabel": "2026-09-14 ~ 2026-09-21",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、编程 Agent、调研 / 知识 等方向。代表项目包括 open-code-review、ECC、orca。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-09-28T16:24:02+08:00",
+  "weekLabel": "2026-09-21 ~ 2026-09-28",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、Agent Skills、记忆 / Harness 等方向。代表项目包括 hindsight、paperclip、orca。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,49 +31,48 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "alibaba/open-code-review",
-      "language": "Go",
-      "stars": 38699,
-      "weekStars": 15504,
+      "repo": "vectorize-io/hindsight",
+      "language": "Python",
+      "stars": 38850,
+      "weekStars": 11089,
+      "trending": true,
+      "topic": "memory",
+      "summary": "本周 GitHub Trending：hindsight — Hindsight: Agent Memory That Learns",
+      "features": [
+        "Hindsight: Agent Memory That Learns",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "记忆 / Harness",
+        "hindsight"
+      ]
+    },
+    {
+      "rank": 2,
+      "repo": "paperclipai/paperclip",
+      "language": "TypeScript",
+      "stars": 91044,
+      "weekStars": 7364,
       "trending": true,
       "topic": "coding",
-      "summary": "本周 GitHub Trending：open-code-review — Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+      "summary": "本周 GitHub Trending：paperclip — The open-source app everyone uses to manage agents at work",
       "features": [
-        "Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+        "The open-source app everyone uses to manage agents at work",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "编程 Agent",
-        "open code review"
-      ]
-    },
-    {
-      "rank": 2,
-      "repo": "affaan-m/ECC",
-      "language": "JavaScript",
-      "stars": 264098,
-      "weekStars": 6453,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-      "features": [
-        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "ECC",
-        "Agent Skill"
+        "paperclip"
       ]
     },
     {
       "rank": 3,
       "repo": "stablyai/orca",
       "language": "TypeScript",
-      "stars": 73988,
-      "weekStars": 5841,
+      "stars": 80045,
+      "weekStars": 6227,
       "trending": true,
       "topic": "coding",
       "summary": "本周 GitHub Trending：orca — Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and remote runtime.",
@@ -89,86 +88,87 @@
     },
     {
       "rank": 4,
-      "repo": "ayghri/i-have-adhd",
-      "language": "Python",
-      "stars": 49431,
-      "weekStars": 5249,
+      "repo": "affaan-m/ECC",
+      "language": "JavaScript",
+      "stars": 268586,
+      "weekStars": 5175,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：i-have-adhd — A skill to stop your coding agent from burying the answer. ADHD-friendly output.",
+      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
       "features": [
-        "A skill to stop your coding agent from burying the answer. ADHD-friendly output.",
+        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "i have adhd",
+        "ECC",
         "Agent Skill"
       ]
     },
     {
       "rank": 5,
-      "repo": "Tencent/WeKnora",
-      "language": "Go",
-      "stars": 28241,
-      "weekStars": 5242,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：WeKnora — Open-source LLM knowledge platform: turn raw documents into a queryable RAG, an autonomous reasoning agent, and a self-maintaining Wiki.",
-      "features": [
-        "Open-source LLM knowledge platform: turn raw documents into a queryable RAG, an autonomous reasoning agent, and a self-maintaining Wiki.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "WeKnora"
-      ]
-    },
-    {
-      "rank": 6,
-      "repo": "addyosmani/agent-skills",
+      "repo": "cloudflare/security-audit-skill",
       "language": "JavaScript",
-      "stars": 97881,
-      "weekStars": 3986,
+      "stars": 22477,
+      "weekStars": 4805,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：agent-skills — Production-grade engineering skills for AI coding agents.",
+      "summary": "本周 GitHub Trending：security-audit-skill — A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
       "features": [
-        "Production-grade engineering skills for AI coding agents.",
+        "A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
+        "security audit skill",
         "Agent Skill"
       ]
     },
     {
-      "rank": 7,
-      "repo": "Panniantong/Agent-Reach",
+      "rank": 6,
+      "repo": "rohitg00/ai-engineering-from-scratch",
       "language": "Python",
-      "stars": 84036,
-      "weekStars": 3690,
+      "stars": 59846,
+      "weekStars": 3850,
       "trending": true,
       "topic": "research",
-      "summary": "本周 GitHub Trending：Agent-Reach — Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
+      "summary": "本周 GitHub Trending：ai-engineering-from-scratch — Learn it. Build it. Ship it for others.",
       "features": [
-        "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
+        "Learn it. Build it. Ship it for others.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "调研 / 知识",
-        "Agent Reach"
+        "ai engineering from scra"
+      ]
+    },
+    {
+      "rank": 7,
+      "repo": "alibaba/open-code-review",
+      "language": "Go",
+      "stars": 42061,
+      "weekStars": 3727,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：open-code-review — Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+      "features": [
+        "Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "open code review"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 289427,
+      "stars": 292287,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -188,7 +188,7 @@
       "rank": 9,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 266672,
+      "stars": 270922,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -208,7 +208,7 @@
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 247568,
+      "stars": 249608,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -228,7 +228,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 177380,
+      "stars": 178711,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -248,7 +248,7 @@
       "rank": 12,
       "repo": "DietrichGebert/ponytail",
       "language": "JavaScript",
-      "stars": 143303,
+      "stars": 147108,
       "weekStars": 0,
       "trending": false,
       "topic": "coding",
