@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-09-28T16:24:02+08:00",
-  "weekLabel": "2026-09-21 ~ 2026-09-28",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、Agent Skills、记忆 / Harness 等方向。代表项目包括 hindsight、paperclip、orca。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-10-05T16:36:23+08:00",
+  "weekLabel": "2026-09-28 ~ 2026-10-05",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 记忆 / Harness、调研 / 知识、编程 Agent 等方向。代表项目包括 hindsight、paperclip、OpenShell。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -33,8 +33,8 @@
       "rank": 1,
       "repo": "vectorize-io/hindsight",
       "language": "Python",
-      "stars": 38850,
-      "weekStars": 11089,
+      "stars": 45641,
+      "weekStars": 10623,
       "trending": true,
       "topic": "memory",
       "summary": "本周 GitHub Trending：hindsight — Hindsight: Agent Memory That Learns",
@@ -52,8 +52,8 @@
       "rank": 2,
       "repo": "paperclipai/paperclip",
       "language": "TypeScript",
-      "stars": 91044,
-      "weekStars": 7364,
+      "stars": 97321,
+      "weekStars": 8732,
       "trending": true,
       "topic": "coding",
       "summary": "本周 GitHub Trending：paperclip — The open-source app everyone uses to manage agents at work",
@@ -69,69 +69,29 @@
     },
     {
       "rank": 3,
-      "repo": "stablyai/orca",
-      "language": "TypeScript",
-      "stars": 80045,
-      "weekStars": 6227,
+      "repo": "NVIDIA/OpenShell",
+      "language": "Rust",
+      "stars": 14922,
+      "weekStars": 5996,
       "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：orca — Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and remote runtime.",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：OpenShell — OpenShell is the safe, private runtime for autonomous AI agents.",
       "features": [
-        "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and remote runtime.",
+        "OpenShell is the safe, private runtime for autonomous AI agents.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "编程 Agent",
-        "orca"
+        "调研 / 知识",
+        "OpenShell"
       ]
     },
     {
       "rank": 4,
-      "repo": "affaan-m/ECC",
-      "language": "JavaScript",
-      "stars": 268586,
-      "weekStars": 5175,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-      "features": [
-        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "ECC",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "cloudflare/security-audit-skill",
-      "language": "JavaScript",
-      "stars": 22477,
-      "weekStars": 4805,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：security-audit-skill — A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
-      "features": [
-        "A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "security audit skill",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 6,
       "repo": "rohitg00/ai-engineering-from-scratch",
       "language": "Python",
-      "stars": 59846,
-      "weekStars": 3850,
+      "stars": 64133,
+      "weekStars": 4904,
       "trending": true,
       "topic": "research",
       "summary": "本周 GitHub Trending：ai-engineering-from-scratch — Learn it. Build it. Ship it for others.",
@@ -146,29 +106,67 @@
       ]
     },
     {
-      "rank": 7,
-      "repo": "alibaba/open-code-review",
-      "language": "Go",
-      "stars": 42061,
-      "weekStars": 3727,
+      "rank": 5,
+      "repo": "Panniantong/Agent-Reach",
+      "language": "Python",
+      "stars": 91257,
+      "weekStars": 4789,
       "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：open-code-review — Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：Agent-Reach — Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
       "features": [
-        "Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+        "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "编程 Agent",
-        "open code review"
+        "调研 / 知识",
+        "Agent Reach"
+      ]
+    },
+    {
+      "rank": 6,
+      "repo": "mvschwarz/openrig",
+      "language": "TypeScript",
+      "stars": 5047,
+      "weekStars": 4251,
+      "trending": true,
+      "topic": "memory",
+      "summary": "本周 GitHub Trending：openrig — Build your own network of agents from Claude Code, Codex and Pi: persistent teams with roles, shared context and owned work.",
+      "features": [
+        "Build your own network of agents from Claude Code, Codex and Pi: persistent teams with roles, shared context and owned work.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "记忆 / Harness",
+        "openrig"
+      ]
+    },
+    {
+      "rank": 7,
+      "repo": "pbakaus/impeccable",
+      "language": "JavaScript",
+      "stars": 76616,
+      "weekStars": 4242,
+      "trending": true,
+      "topic": "memory",
+      "summary": "本周 GitHub Trending：impeccable — The design language that makes your AI harness better at design.",
+      "features": [
+        "The design language that makes your AI harness better at design.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "记忆 / Harness",
+        "impeccable"
       ]
     },
     {
       "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 292287,
+      "stars": 295397,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -188,7 +186,7 @@
       "rank": 9,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 270922,
+      "stars": 276457,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -206,9 +204,29 @@
     },
     {
       "rank": 10,
+      "repo": "affaan-m/ECC",
+      "language": "JavaScript",
+      "stars": 273170,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "features": [
+        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "ECC",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 11,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 249608,
+      "stars": 251285,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -225,10 +243,10 @@
       ]
     },
     {
-      "rank": 11,
+      "rank": 12,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 178711,
+      "stars": 179699,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -242,25 +260,6 @@
         "官方 Skills",
         "Claude",
         "能力扩展"
-      ]
-    },
-    {
-      "rank": 12,
-      "repo": "DietrichGebert/ponytail",
-      "language": "JavaScript",
-      "stars": 147108,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：ponytail — Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
-      "features": [
-        "Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "ponytail"
       ]
     }
   ]
