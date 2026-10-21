@@ -1,0 +1,26 @@
+{
+  "dataKind": "demo",
+  "generatedAt": "2026-08-29",
+  "queries": [
+    { "query": "json 格式化", "clicks": 19, "impressions": 930, "ctr": 0.0204, "position": 6.4, "hasMatchingTool": true, "page": "/tools/json/", "tags": ["json"] },
+    { "query": "base64 解码 在线", "clicks": 18, "impressions": 870, "ctr": 0.0207, "position": 5.9, "hasMatchingTool": true, "page": "/tools/base64/", "tags": ["base64"] },
+    { "query": "时间戳转换", "clicks": 16, "impressions": 720, "ctr": 0.0222, "position": 5, "hasMatchingTool": true, "page": "/tools/timestamp/", "tags": ["timestamp"] },
+    { "query": "正则测试工具", "clicks": 12, "impressions": 610, "ctr": 0.0197, "position": 6.8, "hasMatchingTool": true, "page": "/tools/regex/", "tags": ["regex"] },
+    { "query": "jwt 解码", "clicks": 11, "impressions": 560, "ctr": 0.0196, "position": 7.1, "hasMatchingTool": true, "page": "/tools/jwt/", "tags": ["jwt"] },
+    { "query": "cron 表达式", "clicks": 10, "impressions": 510, "ctr": 0.0196, "position": 7.5, "hasMatchingTool": true, "page": "/tools/cron/", "tags": ["cron"] },
+    { "query": "sql 格式化", "clicks": 9, "impressions": 490, "ctr": 0.0184, "position": 8.2, "hasMatchingTool": true, "page": "/tools/sql-formatter/", "tags": ["sql"] },
+    { "query": "uuid 生成器", "clicks": 8, "impressions": 430, "ctr": 0.0186, "position": 8.8, "hasMatchingTool": true, "page": "/tools/uuid/", "tags": ["uuid"] },
+    { "query": "jsonpath 查询", "clicks": 7, "impressions": 390, "ctr": 0.0179, "position": 9.3, "hasMatchingTool": true, "page": "/tools/json/", "tags": ["jsonpath"] },
+    { "query": "文本 diff", "clicks": 6, "impressions": 340, "ctr": 0.0176, "position": 9.9, "hasMatchingTool": true, "page": "/tools/diff/", "tags": ["diff"] },
+    { "query": "颜色转换", "clicks": 5, "impressions": 310, "ctr": 0.0161, "position": 10.4, "hasMatchingTool": true, "page": "/tools/color/", "tags": ["color"] },
+    { "query": "yaml 转 json", "clicks": 5, "impressions": 280, "ctr": 0.0179, "position": 10.8, "hasMatchingTool": true, "page": "/tools/json/", "tags": ["yaml"] },
+    { "query": "url 编码解码", "clicks": 4, "impressions": 250, "ctr": 0.016, "position": 11.2, "hasMatchingTool": true, "page": "/tools/base64/", "tags": ["encode"] },
+    { "query": "在线 diff 文本", "clicks": 4, "impressions": 230, "ctr": 0.0174, "position": 11.7, "hasMatchingTool": true, "page": "/tools/diff/", "tags": ["diff"] },
+    { "query": "免费 ai 写作 工具 推荐", "clicks": 4, "impressions": 1560, "ctr": 0.0026, "position": 14.2, "hasMatchingTool": false, "page": "/pages/ai/index.html", "tags": ["ai", "gap"] },
+    { "query": "k8s yaml 自动生成 校验", "clicks": 3, "impressions": 830, "ctr": 0.0036, "position": 19.3, "hasMatchingTool": false, "page": "/pages/template.html?id=dev", "tags": ["k8s", "yaml", "gap"] },
+    { "query": "redis 在线 内存 分析", "clicks": 1, "impressions": 760, "ctr": 0.0013, "position": 22.6, "hasMatchingTool": false, "page": "/pages/template.html?id=ops", "tags": ["redis", "ops", "gap"] },
+    { "query": "md5 sha256 在线 破解 还原", "clicks": 2, "impressions": 510, "ctr": 0.0039, "position": 16.8, "hasMatchingTool": false, "page": "/pages/template.html?id=security", "tags": ["security", "legal-gap"] },
+    { "query": "java 线程 转存 分析", "clicks": 0, "impressions": 210, "ctr": 0, "position": 31.7, "hasMatchingTool": false, "page": "/pages/template.html?id=dev", "tags": ["java", "profiling", "gap"] },
+    { "query": "二维码 生成 logo 自定义", "clicks": 0, "impressions": 180, "ctr": 0, "position": 27.4, "hasMatchingTool": false, "page": "/pages/template.html?id=design", "tags": ["qr", "design", "gap"] }
+  ]
+}

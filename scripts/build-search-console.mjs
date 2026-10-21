@@ -2,23 +2,22 @@
 /**
  * build-search-console.mjs  OP-201
  *
- * 读取 logs/search-queries.json → 在仓库根生成 /search-console.html：
+ * 默认读取版本化演示样本；可用显式 --input 导入经核验的摘要数据。
  *   - 表 1：Top 查询（曝光或点击降序）
  *   - 表 2：CTR 低（有曝光但点击率 < 1%），建议优化标题摘要
  *   - 表 3：曝光高（>= 500）无匹配工具 → 自动生成 .github/ISSUE_TEMPLATE/search-gap.yml
  *   - 表 4：无匹配工具清单（hasMatchingTool=false），附一键提 Issue 按钮
  *
  * 非构建错误 fail-closed：
- *   - search-queries.json 无法 parse → process.exit(1)
- *   - 至少 20 条查询且 hasMatchingTool=false 至少 5 条 → 否则 WARN
+ *   - 输入无法 parse → process.exit(1)
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const ROOT = join(__dirname, '..')
-const DATA_PATH = join(ROOT, 'logs', 'search-queries.json')
+const DEMO_DATA_PATH = join(ROOT, 'data', 'search-console-demo.json')
 const OUT_HTML = join(ROOT, 'search-console.html')
 const OUT_ISSUE_TEMPLATE = join(ROOT, '.github', 'ISSUE_TEMPLATE', 'search-gap.yml')
 const BASE_URL = 'https://tools.songyuankun.top'
@@ -32,26 +31,29 @@ function fmtPct(n) { return (Number(n || 0) * 100).toFixed(2) + '%' }
 function fmtNum(n) { return Number(n || 0).toLocaleString('zh-CN') }
 function ymld(s) { return String(s).replace(/\n/g, '\n  ') }
 
-function loadQueries() {
-  if (!existsSync(DATA_PATH)) {
-    console.error('[search-console] FATAL: logs/search-queries.json 不存在，path=', DATA_PATH)
-    process.exit(1)
+function parseArgs(argv = process.argv.slice(2)) {
+  const options = { input: DEMO_DATA_PATH, output: OUT_HTML, issueTemplate: OUT_ISSUE_TEMPLATE }
+  for (let i = 0; i < argv.length; i += 1) {
+    const flag = argv[i]
+    const value = argv[i + 1]
+    if (!['--input', '--output', '--issue-template'].includes(flag) || !value) throw new Error('用法：--input <file> --output <file> --issue-template <file>；无参数时使用版本化演示样本。')
+    if (flag === '--input') options.input = resolve(value)
+    if (flag === '--output') options.output = resolve(value)
+    if (flag === '--issue-template') options.issueTemplate = resolve(value)
+    i += 1
   }
+  return options
+}
+
+function loadQueries(inputPath = DEMO_DATA_PATH) {
+  if (!existsSync(inputPath)) throw new Error(`输入文件不存在：${inputPath}`)
   let parsed
-  try { parsed = JSON.parse(readFileSync(DATA_PATH, 'utf-8')) }
-  catch (e) {
-    console.error('[search-console] FATAL: search-queries.json parse 失败：', e.message)
-    process.exit(1)
-  }
-  const list = Array.isArray(parsed?.queries) ? parsed.queries : null
-  if (!list || list.length < 20) {
-    console.warn(`[search-console] WARN: 查询不足 20 条（当前 ${list?.length ?? 0}）`)
-  }
+  try { parsed = JSON.parse(readFileSync(inputPath, 'utf-8')) }
+  catch (e) { throw new Error(`输入 JSON 解析失败：${e.message}`) }
+  const list = Array.isArray(parsed?.queries) ? parsed.queries : []
+  if (!list.length) throw new Error('输入中缺少 queries 数组。')
   const noMatch = list.filter(q => q.hasMatchingTool === false)
-  if (noMatch.length < 5) {
-    console.warn(`[search-console] WARN: hasMatchingTool=false 不足 5 条（当前 ${noMatch.length}）`)
-  }
-  return { meta: { generatedAt: parsed?.generatedAt ?? new Date().toISOString().slice(0, 10), total: list.length, noMatch: noMatch.length, dataKind: parsed?.dataKind === 'verified' ? 'verified' : 'demo' }, queries: list }
+  return { meta: { generatedAt: parsed?.generatedAt ?? new Date().toISOString().slice(0, 10), total: list.length, noMatch: noMatch.length, dataKind: parsed?.dataKind === 'verified' ? 'verified' : 'demo', source: inputPath }, queries: list }
 }
 
 function row(q, rank) {
@@ -90,6 +92,7 @@ function renderHtml({ meta, queries }) {
   const dataNotice = meta.dataKind === 'verified'
     ? '已导入经人工核验的 Search Console 摘要；不含访客或查询原始日志。'
     : '演示数据：仓库内模拟样本，仅用于说明看板和治理流程，不代表真实 Search Console 指标。'
+  const dataSource = meta.dataKind === 'verified' ? '经人工核验的摘要数据' : 'data/search-console-demo.json'
   const top = [...queries].sort((a, b) => (b.impressions * 10 + b.clicks) - (a.impressions * 10 + a.clicks)).slice(0, 10)
   const lowCtr = queries.filter(q => Number(q.impressions) >= 100 && Number(q.ctr) < 0.01)
     .sort((a, b) => a.ctr - b.ctr)
@@ -142,7 +145,7 @@ function renderHtml({ meta, queries }) {
 <div class="sc-wrap">
   <header class="sc-hero">
     <h1>🔍 搜索意图演示看板</h1>
-    <p>数据周期：<b>${esc(meta.generatedAt)}</b> · 来源：<code>logs/search-queries.json</code> · 站点：${BASE_URL}</p>
+    <p>数据周期：<b>${esc(meta.generatedAt)}</b> · 来源：<code>${dataSource}</code> · 站点：${BASE_URL}</p>
     <p><b>数据说明：</b>${dataNotice}</p>
     <p>治理规则：<b>曝光 ≥ 500 且 CTR < 1% 的缺口查询</b> 自动生成 Issue 模板，按需一键录入路线图。</p>
   </header>
@@ -176,7 +179,7 @@ function renderHtml({ meta, queries }) {
 </html>`
 }
 
-function renderIssueTemplate(queries) {
+function renderIssueTemplate(queries, meta) {
   const noMatchList = queries.filter(q => q.hasMatchingTool === false)
     .sort((a, b) => b.impressions - a.impressions)
     .slice(0, 10)
@@ -185,8 +188,12 @@ function renderIssueTemplate(queries) {
         `- [ ] **${ymld(q.query)}**（曝光 ${q.impressions} · CTR ${fmtPct(q.ctr)} · 标签 ${(q.tags||[]).join(', ')}）`
       ).join('\n')
     : '- （暂无缺口数据）'
+  const indentedBodyHint = bodyHint.split('\n').map(line => `        ${line}`).join('\n')
+  const sourceDescription = meta?.dataKind === 'verified'
+    ? '经人工核验的 Search Console 摘要数据'
+    : '版本化模拟演示样本，不代表真实 Search Console 数据'
   return `name: Search Gap Report
-description: 用于录入 Search Console 曝光高但站内无匹配工具的搜索缺口。
+description: 用于记录搜索意图演示看板中的站内工具缺口。
 title: "[Search Gap] "
 labels: ["search-gap", "roadmap-candidate"]
 body:
@@ -194,12 +201,12 @@ body:
     attributes:
       value: |
         ## 背景
-        该 Issue 由 \`scripts/build-search-console.mjs\` 根据 \`logs/search-queries.json\` 自动生成，用于登记 Search Console 中有曝光但站内无匹配工具的查询。
+        该 Issue 由 \`scripts/build-search-console.mjs\` 自动生成；当前来源为${sourceDescription}。
   - type: input
     id: query
     attributes:
       label: 缺口查询词
-      description: 来自 Search Console 的真实搜索查询（按曝光最高优先）。
+      description: 演示样本中的查询词；导入真实摘要前须人工核验来源与授权。
       placeholder: "redis 在线 内存 分析"
     validations:
       required: true
@@ -227,7 +234,7 @@ body:
       label: 候选高曝光 Gap 清单（脚本自动生成 TOP 10）
       description: 可复制勾选作为本期治理队列。
       value: |
-        ${bodyHint}
+${indentedBodyHint}
   - type: checkboxes
     id: jb_oss
     attributes:
@@ -242,17 +249,19 @@ body:
 `
 }
 
-function main() {
-  const data = loadQueries()
+function main(options = parseArgs()) {
+  const data = loadQueries(options.input)
   const html = renderHtml(data)
-  mkdirSync(dirname(OUT_HTML), { recursive: true })
-  writeFileSync(OUT_HTML, html, 'utf-8')
-  console.log(`[search-console] HTML 生成：${OUT_HTML}（queries=${data.queries.length}, noMatch=${data.meta.noMatch}）`)
-  mkdirSync(dirname(OUT_ISSUE_TEMPLATE), { recursive: true })
-  writeFileSync(OUT_ISSUE_TEMPLATE, renderIssueTemplate(data.queries), 'utf-8')
-  console.log(`[search-console] Issue 模板：${OUT_ISSUE_TEMPLATE}`)
+  mkdirSync(dirname(options.output), { recursive: true })
+  writeFileSync(options.output, html, 'utf-8')
+  console.log(`[search-console] HTML 生成：${options.output}（queries=${data.queries.length}, noMatch=${data.meta.noMatch}）`)
+  mkdirSync(dirname(options.issueTemplate), { recursive: true })
+  writeFileSync(options.issueTemplate, renderIssueTemplate(data.queries, data.meta), 'utf-8')
+  console.log(`[search-console] Issue 模板：${options.issueTemplate}`)
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main()
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try { main() } catch (error) { console.error(`[search-console] FATAL: ${error.message}`); process.exitCode = 1 }
+}
 
-export { loadQueries, renderHtml, renderIssueTemplate }
+export { DEMO_DATA_PATH, loadQueries, main, parseArgs, renderHtml, renderIssueTemplate }

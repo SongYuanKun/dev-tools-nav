@@ -11,12 +11,6 @@
       }
     } catch (_) {}
   }
-  function isDone() {
-    try {
-      var r = JSON.parse(localStorage.getItem(KEY) || 'null');
-      return !!(r && r.v === 1 && r.completedSteps >= 1);
-    } catch (_) { return false; }
-  }
   function markDone(step, skipped) {
     try {
       localStorage.setItem(KEY, JSON.stringify({
@@ -111,7 +105,6 @@
   }
 
   function run() {
-    if (isDone()) return;
     track('tour_start');
     var backdrop = createBackdrop();
     setTimeout(function () { backdrop.classList.add('is-open'); }, 0);

@@ -1,5 +1,5 @@
 name: Search Gap Report
-description: 用于录入 Search Console 曝光高但站内无匹配工具的搜索缺口。
+description: 用于记录搜索意图演示看板中的站内工具缺口。
 title: "[Search Gap] "
 labels: ["search-gap", "roadmap-candidate"]
 body:
@@ -7,12 +7,12 @@ body:
     attributes:
       value: |
         ## 背景
-        该 Issue 由 `scripts/build-search-console.mjs` 根据 `logs/search-queries.json` 自动生成，用于登记 Search Console 中有曝光但站内无匹配工具的查询。
+        该 Issue 由 `scripts/build-search-console.mjs` 自动生成；当前来源为版本化模拟演示样本，不代表真实 Search Console 数据。
   - type: input
     id: query
     attributes:
       label: 缺口查询词
-      description: 来自 Search Console 的真实搜索查询（按曝光最高优先）。
+      description: 演示样本中的查询词；导入真实摘要前须人工核验来源与授权。
       placeholder: "redis 在线 内存 分析"
     validations:
       required: true
@@ -41,11 +41,11 @@ body:
       description: 可复制勾选作为本期治理队列。
       value: |
         - [ ] **免费 ai 写作 工具 推荐**（曝光 1560 · CTR 0.26% · 标签 ai, gap）
-- [ ] **k8s yaml 自动生成 校验**（曝光 830 · CTR 0.36% · 标签 k8s, yaml, gap）
-- [ ] **redis 在线 内存 分析**（曝光 760 · CTR 0.13% · 标签 redis, ops, gap）
-- [ ] **md5 sha256 在线 破解 还原**（曝光 510 · CTR 0.39% · 标签 security, legal-gap）
-- [ ] **java 线程 转存 分析**（曝光 210 · CTR 0.00% · 标签 java, profiling, gap）
-- [ ] **二维码 生成 logo 自定义**（曝光 180 · CTR 0.00% · 标签 qr, design, gap）
+        - [ ] **k8s yaml 自动生成 校验**（曝光 830 · CTR 0.36% · 标签 k8s, yaml, gap）
+        - [ ] **redis 在线 内存 分析**（曝光 760 · CTR 0.13% · 标签 redis, ops, gap）
+        - [ ] **md5 sha256 在线 破解 还原**（曝光 510 · CTR 0.39% · 标签 security, legal-gap）
+        - [ ] **java 线程 转存 分析**（曝光 210 · CTR 0.00% · 标签 java, profiling, gap）
+        - [ ] **二维码 生成 logo 自定义**（曝光 180 · CTR 0.00% · 标签 qr, design, gap）
   - type: checkboxes
     id: jb_oss
     attributes:

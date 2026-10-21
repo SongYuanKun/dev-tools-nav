@@ -26,7 +26,16 @@ try {
     const page = await browser.newPage();
     await page.route(/^(?!http:\/\/127\.0\.0\.1:)/, (route) => route.abort());
     await page.goto(`${origin}${pathname}`, { waitUntil: "domcontentloaded" });
-    const report = await page.evaluate(() => {
+    const frameElement = page.locator("#toolFrame");
+    let documentTarget = page;
+    if (await frameElement.count()) {
+      await frameElement.waitFor({ state: "attached" });
+      documentTarget = await frameElement.contentFrame();
+      assert.ok(documentTarget, `${pathname}: tool iframe did not create a browsing context`);
+      await documentTarget.waitForLoadState("domcontentloaded");
+      await documentTarget.locator("body").waitFor();
+    }
+    const report = await documentTarget.evaluate(() => {
       const labelText = (element) => [...document.querySelectorAll("label")].some((label) => label.htmlFor === element.id && label.textContent.trim());
       const unnamed = [...document.querySelectorAll("a, button, input, select, textarea")]
         .filter((element) => !element.closest("[hidden]") && element.type !== "hidden")
@@ -36,11 +45,12 @@ try {
       const navigation = performance.getEntriesByType("navigation")[0];
       return { lang: document.documentElement.lang, title: document.title, unnamed, imagesWithoutAlt, domContentLoaded: navigation?.domContentLoadedEventEnd ?? Infinity };
     });
-    assert.ok(report.lang, `${pathname}: missing document language`);
-    assert.ok(report.title.trim(), `${pathname}: missing document title`);
-    assert.deepEqual(report.unnamed, [], `${pathname}: interactive control has no accessible name`);
-    assert.deepEqual(report.imagesWithoutAlt, [], `${pathname}: image has no alt attribute`);
-    assert.ok(report.domContentLoaded < 2500, `${pathname}: DOMContentLoaded exceeded 2.5s (${report.domContentLoaded}ms)`);
+    const targetName = documentTarget === page ? pathname : `${pathname} iframe`;
+    assert.ok(report.lang, `${targetName}: missing document language`);
+    assert.ok(report.title.trim(), `${targetName}: missing document title`);
+    assert.deepEqual(report.unnamed, [], `${targetName}: interactive control has no accessible name`);
+    assert.deepEqual(report.imagesWithoutAlt, [], `${targetName}: image has no alt attribute`);
+    assert.ok(report.domContentLoaded < 2500, `${targetName}: DOMContentLoaded exceeded 2.5s (${report.domContentLoaded}ms)`);
     await page.close();
   }
 } finally {
