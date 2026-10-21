@@ -36,3 +36,7 @@ docs/*jetbrains*/PROGRESS-TRACKER.md
 docs/*jetbrains*/emails/
 docs/*jetbrains*/submission-pack/
 docs/*jetbrains*/audit/
+
+# Local Claude workspace state
+.claude/worktrees/
+.claude/settings.local.json
