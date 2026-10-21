@@ -30,7 +30,13 @@ try {
     let documentTarget = page;
     if (await frameElement.count()) {
       await frameElement.waitFor({ state: "attached" });
-      documentTarget = await frameElement.contentFrame();
+      const frameHandle = await frameElement.elementHandle();
+      assert.ok(frameHandle, `${pathname}: tool iframe element is unavailable`);
+      try {
+        documentTarget = await frameHandle.contentFrame();
+      } finally {
+        await frameHandle.dispose();
+      }
       assert.ok(documentTarget, `${pathname}: tool iframe did not create a browsing context`);
       await documentTarget.waitForLoadState("domcontentloaded");
       await documentTarget.locator("body").waitFor();
