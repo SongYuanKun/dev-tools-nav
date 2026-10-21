@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-09-07T15:07:18+08:00",
-  "weekLabel": "2026-08-31 ~ 2026-09-07",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 Agent Skills、编程 Agent、调研 / 知识 等方向。代表项目包括 archify、ponytail、OpenMAIC。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-10-19T15:27:22+08:00",
+  "weekLabel": "2026-10-12 ~ 2026-10-19",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、多模态、调研 / 知识 等方向。代表项目包括 rea、diagram-design、hyperframes。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,145 +31,123 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "tt-a1i/archify",
-      "language": "JavaScript",
-      "stars": 51391,
-      "weekStars": 17190,
+      "repo": "morluto/rea",
+      "language": "TypeScript",
+      "stars": 327179,
+      "weekStars": 229268,
       "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：archify — Agent skill for beautiful, verifiable architecture, workflow, sequence, data-flow, and lifecycle diagrams—self-contained HTML with motion and crisp export.",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：rea — Reverse engineer anything with agents, from app behavior down to native binaries.",
       "features": [
-        "Agent skill for beautiful, verifiable architecture, workflow, sequence, data-flow, and lifecycle diagrams—self-contained HTML with motion and crisp export.",
+        "Reverse engineer anything with agents, from app behavior down to native binaries.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "Agent Skills",
-        "archify",
-        "Agent Skill"
+        "调研 / 知识",
+        "rea"
       ]
     },
     {
       "rank": 2,
-      "repo": "DietrichGebert/ponytail",
-      "language": "JavaScript",
-      "stars": 129923,
-      "weekStars": 12186,
+      "repo": "cathrynlavery/diagram-design",
+      "language": "HTML",
+      "stars": 57952,
+      "weekStars": 7901,
       "trending": true,
       "topic": "coding",
-      "summary": "本周 GitHub Trending：ponytail — Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
+      "summary": "本周 GitHub Trending：diagram-design — Editorial diagram design for Claude Code, Codex, GitHub Copilot, Cursor, Factory Droid, and Pi. 44 diagram types. Self-contained HTML + SVG. No shadows. No Mermaid slop.",
       "features": [
-        "Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.",
+        "Editorial diagram design for Claude Code, Codex, GitHub Copilot, Cursor, Factory Droid, and Pi. 44 diagram types. Self-contained HTML + SVG. No shadows. No Mermaid slop.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "编程 Agent",
-        "ponytail"
+        "diagram design"
       ]
     },
     {
       "rank": 3,
-      "repo": "THU-MAIC/OpenMAIC",
+      "repo": "heygen-com/hyperframes",
       "language": "TypeScript",
-      "stars": 32619,
-      "weekStars": 9193,
+      "stars": 67016,
+      "weekStars": 5883,
+      "trending": true,
+      "topic": "multimodal",
+      "summary": "本周 GitHub Trending：hyperframes — Write HTML. Render video. Built for agents.",
+      "features": [
+        "Write HTML. Render video. Built for agents.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "多模态",
+        "hyperframes"
+      ]
+    },
+    {
+      "rank": 4,
+      "repo": "MadsLorentzen/ai-job-search",
+      "language": "Python",
+      "stars": 54416,
+      "weekStars": 5742,
       "trending": true,
       "topic": "coding",
-      "summary": "本周 GitHub Trending：OpenMAIC — Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
+      "summary": "本周 GitHub Trending：ai-job-search — The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.",
       "features": [
-        "Open Multi-Agent Interactive Classroom — Get an immersive, multi-agent learning experience in just one click",
+        "The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "编程 Agent",
-        "OpenMAIC"
-      ]
-    },
-    {
-      "rank": 4,
-      "repo": "affaan-m/ECC",
-      "language": "JavaScript",
-      "stars": 251884,
-      "weekStars": 6394,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-      "features": [
-        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "ECC",
-        "Agent Skill"
+        "ai job search"
       ]
     },
     {
       "rank": 5,
-      "repo": "K-Dense-AI/scientific-agent-skills",
+      "repo": "anthropics/claude-plugins-official",
       "language": "Python",
-      "stars": 43419,
-      "weekStars": 4718,
+      "stars": 42914,
+      "weekStars": 4774,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：claude-plugins-official — Official, Anthropic-managed directory of high quality Claude Code Plugins.",
+      "features": [
+        "Official, Anthropic-managed directory of high quality Claude Code Plugins.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "claude plugins official"
+      ]
+    },
+    {
+      "rank": 6,
+      "repo": "mksglu/context-mode",
+      "language": "TypeScript",
+      "stars": 30861,
+      "weekStars": 4138,
       "trending": true,
       "topic": "skills",
-      "summary": "本周 GitHub Trending：scientific-agent-skills — Turn any AI agent into an AI Scientist. The #1 Agent Skills library for science, used by 190,000+ scientists worldwide. 165 ready-to-use validated skills plus 100+ scientific databases covering biology, chemistry, medicine, and drug discovery. Compatible with Cursor, Claude Code, Codex, Pi, Antigravity, and the open Agent Skills standard.",
+      "summary": "本周 GitHub Trending：context-mode — Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), persists session memory, and enforces routing across 17 platforms via MCP + hooks.",
       "features": [
-        "Turn any AI agent into an AI Scientist. The #1 Agent Skills library for science, used by 190,000+ scientists worldwide. 165 ready-to-use validated skills plus 100+ scientific databases covering biology, chemistry, medicine, and drug discovery. Compatible with Cursor, Claude Code, Codex, Pi, Antigravity, and the open Agent Skills standard.",
+        "Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), persists session memory, and enforces routing across 17 platforms via MCP + hooks.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "Agent Skills",
-        "scientific agent skills",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 6,
-      "repo": "jingyaogong/minimind",
-      "language": "Python",
-      "stars": 59268,
-      "weekStars": 3816,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：minimind — 🧠 Train a 64M-parameter LLM from scratch in just 2h!",
-      "features": [
-        "🧠 Train a 64M-parameter LLM from scratch in just 2h!",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "minimind"
+        "context mode"
       ]
     },
     {
       "rank": 7,
-      "repo": "google-research/timesfm",
-      "language": "Python",
-      "stars": 31701,
-      "weekStars": 3203,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：timesfm — TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
-      "features": [
-        "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "timesfm"
-      ]
-    },
-    {
-      "rank": 8,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 282533,
+      "stars": 301771,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -186,10 +164,10 @@
       ]
     },
     {
-      "rank": 9,
+      "rank": 8,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 255205,
+      "stars": 296591,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -206,10 +184,30 @@
       ]
     },
     {
+      "rank": 9,
+      "repo": "affaan-m/ECC",
+      "language": "JavaScript",
+      "stars": 283491,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：ECC — The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "features": [
+        "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "ECC",
+        "Agent Skill"
+      ]
+    },
+    {
       "rank": 10,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 242711,
+      "stars": 255031,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -229,7 +227,7 @@
       "rank": 11,
       "repo": "anthropics/skills",
       "language": "Python",
-      "stars": 174925,
+      "stars": 182069,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -243,25 +241,6 @@
         "官方 Skills",
         "Claude",
         "能力扩展"
-      ]
-    },
-    {
-      "rank": 12,
-      "repo": "openai/codex",
-      "language": "Rust",
-      "stars": 122069,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：codex — Lightweight coding agent that runs in your terminal",
-      "features": [
-        "Lightweight coding agent that runs in your terminal",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "codex"
       ]
     }
   ]
