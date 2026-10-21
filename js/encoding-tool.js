@@ -418,14 +418,15 @@
                 window.MruFav?.record?.("base64");
                 window.umamiTrack?.("tool_used", { tool: "base64", action: "to_json" });
               } catch (_) {}
-              // Base64 页在 /tools/base64/ 用 iframe 包装 → iframe 内的工具页相对路径 ../../tools/json/ 才对；
-              // 真实 encoding-tool.js 运行在 iframe 内（base64 tool 壳 /tools/base64/index.html 的 iframe），
-              // 看 iframe src 一般就是 shell 里的 data/id。这里统一用父级或 location 判：以 /tools 开头的 shell → ../json/ 即可
-              var target = "../json/?from_base64=1";
+              var target = new URL("../../tools/json/?from_base64=1", window.location.href).href;
               try {
-                var path = window.location.pathname;
-                if (/\/tools\/[^\/]+\/?/.test(path)) target = "../../tools/json/?from_base64=1";
-              } catch (_) {}
+                if (window.top && window.top !== window) {
+                  window.top.location.href = target;
+                  return;
+                }
+              } catch (_) {
+                // An isolated embedding may deny top access; the current frame remains a safe fallback.
+              }
               window.location.href = target;
             });
             linkSlot.appendChild(btn);

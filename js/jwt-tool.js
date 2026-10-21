@@ -184,6 +184,18 @@
     var verifyState = document.getElementById("jwtVerifyState");
     var genOutput = document.getElementById("jwtGenOutput");
 
+    function navigateTop(target) {
+      try {
+        if (window.top && window.top !== window) {
+          window.top.location.href = target;
+          return;
+        }
+      } catch (_) {
+        // Cross-origin embedding can deny access to top; stay usable in this frame.
+      }
+      window.location.href = target;
+    }
+
     function hideSections() {
       ["sectionHeader", "sectionPayload", "sectionSignature"].forEach(function (id) {
         var n = document.getElementById(id);
@@ -279,7 +291,7 @@
       if (payloadClaims) payloadClaims.innerHTML = renderPayloadClaims(payloadObj);
 
       var sigPart = parts.length > 2 ? parts.slice(2).join(".") : "";
-      var signatureBody = document.getElementById("sectionSignature");
+      var signatureBody = document.getElementById("signatureBody");
       if (signatureBody) {
         if (!sigPart) {
           signatureBody.innerHTML = "<p>未包含签名段（不签名的 JWT / 仅前两段）。</p>";
@@ -313,7 +325,7 @@
             if (typeof window.umami === "object" && typeof window.umami.track === "function") {
               window.umami.track("jwt_to_json_click", { op: "OP-105" });
             }
-            window.location.href = "../../tools/json/?from_jwt=1";
+            navigateTop(new URL("../../tools/json/?from_jwt=1", window.location.href).href);
           });
         }
       } catch (_) {}
@@ -449,6 +461,29 @@
       });
     }
 
+    function applyPendingGeneratePayload() {
+      var payloadField = document.getElementById("jwtGenPayload");
+      if (!payloadField) return;
+      var pending = null;
+      try {
+        pending = sessionStorage.getItem("jwt_encode_payload_v1");
+        if (pending !== null) sessionStorage.removeItem("jwt_encode_payload_v1");
+      } catch (_) {
+        return;
+      }
+      if (pending === null) return;
+      try {
+        var parsed = JSON.parse(pending);
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+          throw new Error("JWT Payload 必须是 JSON 对象。");
+        }
+        payloadField.value = pending;
+        switchTab("generate");
+      } catch (e) {
+        showToast("JSON 工作台传来的 Payload 无效：" + (e.message || "请检查 JSON 对象"));
+      }
+    }
+
     document.querySelectorAll("[data-jwt-tab]").forEach(function (tab) {
       tab.addEventListener("click", function () {
         switchTab(tab.getAttribute("data-jwt-tab") || "decode");
@@ -489,6 +524,7 @@
     });
 
     switchTab("decode");
+    applyPendingGeneratePayload();
     decodeAndRender();
   }
 

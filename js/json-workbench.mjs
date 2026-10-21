@@ -817,6 +817,7 @@ export function mountJsonWorkbench(mount) {
     ],
   });
   const view = new EditorView({ state, parent: mount });
+  window.__jsonWbView = view;
 
   document.addEventListener("json-mode-change", (event) => {
     const mode = event.detail?.mode;
