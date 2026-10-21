@@ -14,7 +14,7 @@
 
 ## Runner 架构
 
-- 在 GTR 上以普通用户 `kun` 安装仓库级 Runner，目录为 `/home/kun/.local/share/github-actions-runner/dev-tools-nav`。
+- 在 GTR 上以普通用户 `kun` 安装仓库级 Runner，目录为 `~/.local/share/github-actions-runner/dev-tools-nav`。
 - Runner 名称为 `gtr-dev-tools-nav`，增加自定义标签 `gtr`；部署任务使用 `[self-hosted, linux, x64, gtr]` 精确选择它。
 - 使用 GitHub 官方 Linux x64 Runner。安装时校验官方公布的 SHA-256；注册令牌通过 GitHub API 临时获取，不写入仓库、服务文件或日志。
 - 使用 `~/.config/systemd/user/github-actions-dev-tools-nav.service` 托管进程。当前用户已启用 linger，因此无需 sudo，也能在退出登录后持续运行并随机器启动。

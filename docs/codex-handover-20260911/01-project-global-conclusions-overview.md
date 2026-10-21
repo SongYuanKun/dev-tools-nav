@@ -36,7 +36,7 @@
 | 组件 | 关键配置 / 信任边界 | 证据路径 |
 |---|---|---|
 | **部署链路信任模型** | **GTR 出站主动读公开仓库（GTR → 443 → GitHub + npm）**，禁止：① GitHub Runner 注册回连 GTR ② webhook 推送 ③ 入站 22/80 除 frp 外全关。符合最小权限原则 | `scripts/deploy-1panel-local.sh` header 注释 |
-| **GTR 官方 SSH 入口 3 路**（infra servers-inventory.yaml）| ① Tailscale：`gtr`（100.x.x.x）/ `gtr-pub` alias ② frps 公网隧道：`kun@8.130.166.49:2222`（frpc 心跳必须在）③ 跳板：`public-srv (8.130.166.49:22 root) → SSH kun@192.168.31.195 内网段` | `~/.ssh/config` 对应 Host 段 / infra/servers/servers-inventory.yaml 第 16~30 行 |
+| **GTR 官方 SSH 入口 3 路** | Tailscale 内网、frp 公网隧道、内网跳板三种入口；具体主机地址、端口与账号只记录在私有 infra 清单，不进入公开仓库 | 私有 `~/.ssh/config` 与 infra 服务器清单 |
 | **核心部署脚本** | `deploy.sh`（顶部入口，检查 git 状态）→ `scripts/deploy-1panel-local.sh`（构建 + rsync 白名单 → docker cp 进 1Panel 容器 `1Panel-openresty-rRvM` → 原子性 `mv NEXT → TARGET` + 失败 trap 自动回滚 OLD 目录）。**rsync include 清单最新版本含 = assets/css/data/js/pages/tools/search-console/LICENSE/CODE_OF_CONDUCT/CONTRIBUTING/manual/sitemap.xml/robots.txt** | [scripts/deploy-1panel-local.sh](file:///Users/mac/vs-code/dev-tools-nav/scripts/deploy-1panel-local.sh#L39-L100) |
 | **1Panel 容器站点目录** | `/www/sites/tools.songyuankun.top/index/` → openresty 对外 443 → tools.songyuankun.top（Baidu / Google 2 个 verify HTML 必须保留，rsync 不能删） | deploy-1panel-local.sh 第 82~90 行 |
 | **GTR 本地部署验收标准（必须 PASS ≥ 14）** | HTTP 14 路由 × 200 = `/` + `/search-console.html` + `/sitemap.xml` + 11 个 `/tools/*/`（json/jwt/base64/uuid/color/cron/diff/regex/sql-formatter/timestamp + tools 根）+ search-console.html 关键字 `search-gap` + `search-queries` 命中 ≥ 3 | `06-consistency-check.sh` 历史三栏模型（现 Y480 已删除，验收标准沿用 HTTP 栏和关键字栏）|

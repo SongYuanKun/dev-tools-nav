@@ -64,6 +64,8 @@ jobs:
       - run: npx playwright install chromium --with-deps
       - run: npm test
       - run: npm run check:generated
+      - name: Check accessibility and performance baseline
+        run: node scripts/a11y-performance-gate.mjs
       - name: Upload test logs on failure
         if: failure()
         uses: actions/upload-artifact@v4

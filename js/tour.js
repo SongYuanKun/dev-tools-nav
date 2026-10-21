@@ -158,14 +158,14 @@
   }
 
   window.runTourIfNeeded = run;
-  // 启动
-  function boot() {
-    // 用户刚加载完成后再启动，避免 layout 偏移
-    setTimeout(run, 600);
+  function bindStartButtons() {
+    document.querySelectorAll('[data-start-tour]').forEach(function (button) {
+      button.addEventListener('click', run);
+    });
   }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
+    document.addEventListener('DOMContentLoaded', bindStartButtons);
   } else {
-    boot();
+    bindStartButtons();
   }
 })();

@@ -4,9 +4,7 @@
 >
 > **执行前提**：你（codex）已经在 GTR 联想主机上用 **SSH 登入了 kun 用户**（3 入口任选一活的就行）
 >
-> - 入口 1（最快，Tailscale 内网）：`ssh gtr` 或 `ssh gtr-pub`
-> - 入口 2（frp 公网隧道，frpc 心跳活着就行）：`ssh -p 2222 kun@8.130.166.49`
-> - 入口 3（跳板，GTR 关机但内网能通 public-srv）：`ssh public-srv` → 再 `ssh kun@192.168.31.195`
+> - SSH 入口（Tailscale 内网 / frp 公网隧道 / 内网跳板）的主机地址、端口与账号见私有 infra 清单，公开仓库不记录。
 >
 > **预计耗时 = 20~40 分钟**（npm ci 慢时 20 分钟，快的话 10 分钟内搞定）
 
@@ -15,7 +13,7 @@
 ## 📋 每次操作前先设身份（P0 强制，codex 每次登 GTR 先 Copy Paste 下面 4 行）
 
 ```bash
-cd /home/kun/vs_code/dev-tools-nav
+cd ~/vs_code/dev-tools-nav
 export GIT_AUTHOR_NAME="SongYuanKun" GIT_AUTHOR_EMAIL="123839070@qq.com"
 export GIT_COMMITTER_NAME="SongYuanKun" GIT_COMMITTER_EMAIL="123839070@qq.com"
 git config user.name  "SongYuanKun"
@@ -29,7 +27,7 @@ git config --global --get user.name ; git config --global --get user.email
 ## 🚀 Step 1 · 连通性 & 现状快照（5 分钟）
 
 ```bash
-cd /home/kun/vs_code/dev-tools-nav
+cd ~/vs_code/dev-tools-nav
 echo '=== 1.1 本机信息 ==='
 hostname && whoami && pwd && echo "DISK=$(df -h /home | tail -1 | awk '{print $4}')  FREE"
 echo '=== 1.2 Git 远端与当前 HEAD ==='
@@ -53,7 +51,7 @@ echo "MAIN_SITE_HTTP / = $HTTP_HOME  (200=OK, 000=frpc心跳断了先跑 STEP 4.
 ## 🔀 Step 2 · 拉取最新 main + 冲突解决（10 分钟）
 
 ```bash
-cd /home/kun/vs_code/dev-tools-nav
+cd ~/vs_code/dev-tools-nav
 echo '=== 2.1 先 stash 本地未提交变更（如果有） ==='
 STASH_COUNT_BEFORE=$(git stash list | wc -l | awk '{print $1}')
 git status --short
@@ -85,7 +83,7 @@ echo 'SYNCED_HEAD='$(git rev-parse --short HEAD)
 ## 🔨 Step 3 · npm ci + 构建 + 生成校验（15 分钟，HDD+境外 30 分钟）
 
 ```bash
-cd /home/kun/vs_code/dev-tools-nav
+cd ~/vs_code/dev-tools-nav
 echo '=== 3.0 可选：国内镜像加速（npm ci 卡住 30s 不动就跑）=== '
 # npm config set registry https://registry.npmmirror.com
 
@@ -113,7 +111,7 @@ CHECK_RC=$?
 ### 4.1 部署主流程（只要 HTTP_HOME=200 就跑这个）
 
 ```bash
-cd /home/kun/vs_code/dev-tools-nav
+cd ~/vs_code/dev-tools-nav
 echo '=== 4.1 deploy.sh 原子同步到 1Panel ==='
 bash deploy.sh 2>&1 | tail -25
 DEPLOY_RC=$?
@@ -142,7 +140,7 @@ echo "✅ frpc 心跳恢复；回到 Step 4.1 跑 deploy.sh"
 ## ✅ Step 5 · HTTP 14 路由验收 + Search Console 关键字命中（5 分钟）
 
 ```bash
-cd /home/kun/vs_code/dev-tools-nav
+cd ~/vs_code/dev-tools-nav
 echo '=== 5.1 GTR 主站 14 路由 ==='
 H="https://tools.songyuankun.top"
 PASS=0; FAIL=0

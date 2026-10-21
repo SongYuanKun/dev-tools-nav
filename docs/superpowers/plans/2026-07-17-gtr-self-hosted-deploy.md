@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- Runner install directory: `/home/kun/.local/share/github-actions-runner/dev-tools-nav`.
+- Runner install directory: `~/.local/share/github-actions-runner/dev-tools-nav`.
 - Runner name: `gtr-dev-tools-nav`; required labels: `self-hosted`, `linux`, `x64`, `gtr`.
 - Runner scope: repository `SongYuanKun/dev-tools-nav` only.
 - Runner service: `~/.config/systemd/user/github-actions-dev-tools-nav.service`, executed as `kun` without sudo.
@@ -452,7 +452,7 @@ Rewrite `docs/deploy-1panel.md` with these complete sections:
 
 - 仓库：`SongYuanKun/dev-tools-nav`
 - Runner：`gtr-dev-tools-nav`，标签 `self-hosted,linux,x64,gtr`
-- 安装目录：`/home/kun/.local/share/github-actions-runner/dev-tools-nav`
+- 安装目录：`~/.local/share/github-actions-runner/dev-tools-nav`
 - 服务：`~/.config/systemd/user/github-actions-dev-tools-nav.service`
 - 容器：`1Panel-openresty-rRvM`
 - 容器站点：`/www/sites/tools.songyuankun.top/index`
@@ -464,7 +464,7 @@ Rewrite `docs/deploy-1panel.md` with these complete sections:
 ```bash
 RUNNER_VERSION=2.335.1
 RUNNER_SHA256=4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf
-RUNNER_HOME=/home/kun/.local/share/github-actions-runner/dev-tools-nav
+RUNNER_HOME=$HOME/.local/share/github-actions-runner/dev-tools-nav
 ARCHIVE="actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
 mkdir -p "$RUNNER_HOME"
 curl -fL "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/${ARCHIVE}" -o "/tmp/${ARCHIVE}"
@@ -486,8 +486,8 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/kun/.local/share/github-actions-runner/dev-tools-nav
-ExecStart=/home/kun/.local/share/github-actions-runner/dev-tools-nav/run.sh
+WorkingDirectory=%h/.local/share/github-actions-runner/dev-tools-nav
+ExecStart=%h/.local/share/github-actions-runner/dev-tools-nav/run.sh
 Restart=always
 RestartSec=10
 KillSignal=SIGINT
@@ -534,7 +534,7 @@ curl -fsS https://tools.songyuankun.top/favicon.svg >/dev/null
 ```bash
 systemctl --user disable --now github-actions-dev-tools-nav.service
 TOKEN="$(gh api -X POST repos/SongYuanKun/dev-tools-nav/actions/runners/remove-token --jq .token)"
-/home/kun/.local/share/github-actions-runner/dev-tools-nav/config.sh remove --token "$TOKEN"
+$HOME/.local/share/github-actions-runner/dev-tools-nav/config.sh remove --token "$TOKEN"
 unset TOKEN
 ```
 
@@ -563,8 +563,8 @@ git commit -m "docs: add GTR runner deployment runbook"
 ### Task 4: Install and register the repository-scoped Runner on GTR
 
 **Files:**
-- Create outside repository: `/home/kun/.config/systemd/user/github-actions-dev-tools-nav.service`
-- Create outside repository: `/home/kun/.local/share/github-actions-runner/dev-tools-nav/**`
+- Create outside repository: `~/.config/systemd/user/github-actions-dev-tools-nav.service`
+- Create outside repository: `~/.local/share/github-actions-runner/dev-tools-nav/**`
 
 **Interfaces:**
 - Consumes: GitHub CLI authentication with repository administration permission, official runner v2.335.1 package, Docker access, outbound HTTPS, and the exact service/runbook from Task 3.
@@ -592,7 +592,7 @@ Run:
 ```bash
 RUNNER_VERSION=2.335.1
 RUNNER_SHA256=4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf
-RUNNER_HOME=/home/kun/.local/share/github-actions-runner/dev-tools-nav
+RUNNER_HOME=$HOME/.local/share/github-actions-runner/dev-tools-nav
 ARCHIVE="actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
 mkdir -p "$RUNNER_HOME"
 curl -fL "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/${ARCHIVE}" -o "/tmp/${ARCHIVE}"
@@ -608,7 +608,7 @@ Expected: SHA-256 check prints `OK`; `config.sh` reports successful authenticati
 
 - [ ] **Step 3: Install the user service**
 
-Create `/home/kun/.config/systemd/user/github-actions-dev-tools-nav.service` with `apply_patch` and this content:
+Create `~/.config/systemd/user/github-actions-dev-tools-nav.service` with `apply_patch` and this content:
 
 ```ini
 [Unit]
@@ -618,8 +618,8 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/kun/.local/share/github-actions-runner/dev-tools-nav
-ExecStart=/home/kun/.local/share/github-actions-runner/dev-tools-nav/run.sh
+WorkingDirectory=%h/.local/share/github-actions-runner/dev-tools-nav
+ExecStart=%h/.local/share/github-actions-runner/dev-tools-nav/run.sh
 Restart=always
 RestartSec=10
 KillSignal=SIGINT

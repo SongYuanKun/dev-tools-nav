@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>搜索意图复盘看板 | Koen的工具箱</title>
-  <meta name="description" content="Search Console 运营复盘：Top 查询、低 CTR 优化、工具缺口治理。纯静态生成，数据不出本地。" />
+  <title>搜索意图演示看板 | Koen的工具箱</title>
+  <meta name="description" content="搜索意图看板演示：以仓库内模拟样本说明 Top 查询、低 CTR 优化和工具缺口治理流程。" />
   <link rel="canonical" href="https://tools.songyuankun.top/search-console.html" />
   <link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
   <style>
@@ -41,8 +41,9 @@
 <body>
 <div class="sc-wrap">
   <header class="sc-hero">
-    <h1>🔍 搜索意图复盘看板</h1>
+    <h1>🔍 搜索意图演示看板</h1>
     <p>数据周期：<b>2026-08-29</b> · 来源：<code>logs/search-queries.json</code> · 站点：https://tools.songyuankun.top</p>
+    <p><b>数据说明：</b>演示数据：仓库内模拟样本，仅用于说明看板和治理流程，不代表真实 Search Console 指标。</p>
     <p>治理规则：<b>曝光 ≥ 500 且 CTR < 1% 的缺口查询</b> 自动生成 Issue 模板，按需一键录入路线图。</p>
   </header>
 
@@ -331,7 +332,7 @@
     </ol>
   </div>
 
-  <p class="sc-foot">构建脚本：<code>scripts/build-search-console.mjs</code> · 数据：<code>logs/search-queries.json</code> · <a href="/">返回首页</a> · <a href="https://github.com/SongYuanKun/dev-tools-nav/blob/main/search-console.html" target="_blank" rel="noopener noreferrer">源码（blob/main）</a></p>
+  <p class="sc-foot">构建脚本：<code>scripts/build-search-console.mjs</code> · 当前产物使用模拟样本，不能作为真实搜索表现依据 · <a href="/">返回首页</a> · <a href="https://github.com/SongYuanKun/dev-tools-nav/blob/main/search-console.html" target="_blank" rel="noopener noreferrer">源码（blob/main）</a></p>
 </div>
 </body>
 </html>

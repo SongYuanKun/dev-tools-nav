@@ -338,7 +338,7 @@ git commit -m "fix: publish deterministic sitemap on both hosts"
 ### Task 3: Integrate safely and clean the obsolete local drift
 
 **Files:**
-- Preserve all files in `/home/kun/vs_code/dev-tools-nav` except the verified date-only `sitemap.xml` drift.
+- Preserve all files in `~/vs_code/dev-tools-nav` except the verified date-only `sitemap.xml` drift.
 
 **Interfaces:**
 - Consumes: Tasks 1–2 passing commits.
@@ -369,15 +369,15 @@ Expected: non-force push succeeds and the SHAs match.
 First prove the original worktree still has no other modification:
 
 ```bash
-git -C /home/kun/vs_code/dev-tools-nav status --short
-git -C /home/kun/vs_code/dev-tools-nav diff -- sitemap.xml
+git -C ~/vs_code/dev-tools-nav status --short
+git -C ~/vs_code/dev-tools-nav diff -- sitemap.xml
 ```
 
 Expected: only `M sitemap.xml`, with changes limited to old generated dates. Then restore that one generated artifact and verify:
 
 ```bash
-git -C /home/kun/vs_code/dev-tools-nav restore -- sitemap.xml
-test -z "$(git -C /home/kun/vs_code/dev-tools-nav status --porcelain)"
+git -C ~/vs_code/dev-tools-nav restore -- sitemap.xml
+test -z "$(git -C ~/vs_code/dev-tools-nav status --porcelain)"
 ```
 
 If any unrelated change appears, stop and preserve it rather than cleaning the worktree.

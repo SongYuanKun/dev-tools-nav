@@ -13,10 +13,10 @@
 > 对应操作清单 = `HANDOVER-04 04-codex-boot-5step-checklist.md`（**codex 先读这个再执行**）
 
 ```
-① 连通性确认（入口 3 选 1：Tailscale gtr-pub / 8.130.166.49:2222 / public-srv 跳板）
+① 连通性确认（3 个 SSH 入口任选其一，地址见私有 infra 清单）
 ② git pull origin main → 合并冲突 → git status clean（必须 ahead=0 behind=0）
 ③ npm ci --no-audit --no-fund  →  npm run build  →  npm run check:generated
-④ bash /home/kun/vs_code/dev-tools-nav/deploy.sh → 同步进 1Panel 容器
+④ bash ~/vs_code/dev-tools-nav/deploy.sh → 同步进 1Panel 容器
 ⑤ HTTP 14 路由 × 200 + search-console 关键字命中 3
 ```
 
@@ -31,7 +31,7 @@ GIT_LOCAL_HEAD == origin/main HEAD（git rev-parse 一致）
 
 在 GTR 机上跑一次自检脚本：
 ```bash
-cd /home/kun/vs_code/dev-tools-nav
+cd ~/vs_code/dev-tools-nav
 # 身份双字段
 git config user.name "SongYuanKun"
 git config user.email "123839070@qq.com"
@@ -44,7 +44,7 @@ git log -1 --format="%an %ae %cn %ce"   # 必须= SongYuanKun 123839070@qq.com S
 ### P0-3 三项构建绿（本地开发环境准备）
 
 ```bash
-cd /home/kun/vs_code/dev-tools-nav
+cd ~/vs_code/dev-tools-nav
 npm ci --no-audit --no-fund      # 锁版本 package-lock
 npm run build                    # build.mjs rollup 打包所有 MJS/HTML
 npm run check:generated          # 输出文件完整性校验（build-search-console / sitemap.xml）
