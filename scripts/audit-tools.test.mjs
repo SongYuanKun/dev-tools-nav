@@ -95,7 +95,7 @@ test("README canonical policy rejects legacy paths in the public table", () => {
 
 test("catalog has the approved counts and unique IDs", () => {
   const result = auditTools(process.cwd());
-  assert.equal(result.total, 71);
+  assert.equal(result.total, 73);
   assert.equal(result.categoryCounts["online-tools"], 11);
   assert.deepEqual(result.duplicateIds, []);
   assert.deepEqual(result.invalidTools, []);
@@ -142,7 +142,7 @@ test("audit reports a self-built tool with the wrong catalog URL", () => {
 
 test("README states all three catalog counts and canonical URL policy", () => {
   const result = auditTools(process.cwd());
-  assert.deepEqual(result.readmeCounts, { total: 71, selfBuilt: 10, onlineTools: 11 });
+  assert.deepEqual(result.readmeCounts, { total: 73, selfBuilt: 10, onlineTools: 11 });
   assert.equal(result.readmeUsesCanonicalToolsPath, true);
 });
 
