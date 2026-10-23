@@ -29,3 +29,14 @@ test("diff action labels depend on the tool context", () => {
     },
   );
 });
+
+test("color tool_used maps to Chinese whitelist labels", () => {
+  assert.deepEqual(
+    { ...enrich({ tool: "color", action: "contrast" }) },
+    {
+      描述: "工具使用：颜色转换 · 对比度",
+      工具: "颜色转换",
+      操作: "对比度",
+    },
+  );
+});

@@ -25,6 +25,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <script src="data/tools.js"></script>
   <script defer src="js/base.js"></script>
 </head>
 <body class="redesign-v2">
@@ -60,6 +61,7 @@
           <div class="v2-hero-actions" aria-label="快捷入口">
             <a class="v2-btn v2-btn-primary" href="#tools">开始使用工具</a>
             <a class="v2-btn v2-btn-ghost" href="pages/ai/index.html">浏览 AI 专题</a>
+            <button class="v2-btn v2-btn-ghost" type="button" id="openCommandPalette" aria-label="打开快速搜索（Ctrl 或 ⌘ + K）">快速搜索 <kbd>Ctrl/⌘ K</kbd></button>
             <button class="v2-btn v2-btn-ghost" type="button" data-start-tour>查看 4 步使用引导</button>
           </div>
         </div>
@@ -409,5 +411,14 @@
   <!-- OP-102：由用户主动打开的 4 步使用引导（last in DOM 保证 z-index 顶层） -->
   <script defer src="js/tour.js"></script>
   <script defer src="js/footer.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var btn = document.getElementById("openCommandPalette");
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        if (window.CommandPalette) window.CommandPalette.open();
+      });
+    });
+  </script>
 </body>
 </html>

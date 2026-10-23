@@ -9,7 +9,7 @@
 - PV 是无事件名的 pageview；sessions 按相应报表层级对 `session_id` 去重；visitors 是浏览器 `distinct_id`，缺失时按 `session_id` 回退的近似访客口径。
 - “有效使用”是中文事件 `工具使用`。`effective_uses` 计通过白名单的事件次数；`effective_users` 对 `COALESCE(session.distinct_id, session_id::text)` 去重，不是 session 数。
 - 报表从 pageview 与有效使用的键集合出发；即使某周期、hostname、路径只有有效使用事件而没有 pageview，也会保留该行，north-star 指标不依附于 PV。
-- 有效使用采用 fail-closed 白名单，只接受当前持久值：`JSON 格式化`、`时间戳转换`、`Base64`、`正则表达式`、`Cron 表达式`、`JWT 解码`、`SQL 格式化`、`diff`、`uuid`。Color 当前没有 `tool_used` 上报；缺失工具属性、未知值及 KMS/JRebel 激活值都计为 0。
+- 有效使用采用 fail-closed 白名单，只接受当前持久值：`JSON 格式化`、`时间戳转换`、`Base64`、`正则表达式`、`Cron 表达式`、`JWT 解码`、`SQL 格式化`、`diff`、`uuid`、`颜色转换`。缺失工具属性、未知值及 KMS/JRebel 激活值都计为 0。
 
 可重复执行的查询是 [`scripts/umami-operations-report.sql`](../scripts/umami-operations-report.sql)。它输出 `report_level`、`period`、`hostname`、`normalized_path`、`pv`、`sessions`、`visitors`、`effective_uses`、`effective_users`。`report_level` 包含 `detail`、`hostname_summary`、`all_hosts_summary`；后两层的 sessions、visitors、effective_users 都从原始事件重新去重。
 

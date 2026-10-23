@@ -17,7 +17,8 @@ WITH target_hosts(hostname) AS (
     ('JWT 解码'),
     ('SQL 格式化'),
     ('diff'),
-    ('uuid')
+    ('uuid'),
+    ('颜色转换')
 ), normalized_events AS (
   SELECT
     e.*,
