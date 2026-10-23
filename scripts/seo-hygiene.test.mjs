@@ -91,8 +91,8 @@ test("template.html defaults to noindex and does not self-canonicalize the bare 
 
 test("online tool shell pages have unique titles, descriptions, OG, and canonicals", () => {
   const slugs = [
-    "base64", "color", "cron", "diff", "json",
-    "jwt", "regex", "sql-formatter", "timestamp", "uuid",
+    "base64", "color", "cron", "diff", "hash", "json",
+    "jwt", "qrcode", "regex", "sql-formatter", "timestamp", "url-encode", "uuid",
   ];
   const titles = new Set();
   for (const slug of slugs) {
