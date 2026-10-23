@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # GTR 主站 × GitHub Pages 三栏一致性检查（Y480 已废弃，仅双站）
-# A=18 路由 HTTP 200　B=8 工具实现页关键字矩阵　C=search-console 内容指纹
+# A=HTTP 路由双站 200　B=工具实现页关键字矩阵　C=search-console 内容指纹
 set -euo pipefail
 
 GTR_BASE="${GTR_BASE:-https://tools.songyuankun.top}"
@@ -14,6 +14,9 @@ ROUTES=(
   /sitemap.xml
   /robots.txt
   /feed.xml
+  /manifest.webmanifest
+  /sw.js
+  /offline.html
   /pages/blog/
   /pages/ai/
   /tools/
@@ -27,7 +30,11 @@ ROUTES=(
   /tools/regex/
   /tools/sql-formatter/
   /tools/timestamp/
+  /tools/hash/
+  /tools/url-encode/
+  /tools/qrcode/
 )
+ROUTE_TOTAL=${#ROUTES[@]}
 
 # 实现页（多数 /tools/*/ 为 iframe 壳）→ 关键字全部需命中
 declare -A TOOL_KEYWORDS=(
@@ -39,7 +46,24 @@ declare -A TOOL_KEYWORDS=(
   ["/pages/tools/sql-formatter.html"]="SQL|sql"
   ["/pages/tools/timestamp.html"]="时间戳|timestamp"
   ["/pages/tools/color.html"]="颜色|color"
+  ["/pages/tools/hash.html"]="哈希|Hash|MD5"
+  ["/pages/tools/url-encode.html"]="URL|encodeURIComponent"
+  ["/pages/tools/qrcode.html"]="二维码|QR"
 )
+TOOL_KEYWORD_PATHS=(
+  /pages/tools/json.html
+  /pages/tools/jwt.html
+  /pages/tools/base64.html
+  /pages/tools/cron.html
+  /pages/tools/regex.html
+  /pages/tools/sql-formatter.html
+  /pages/tools/timestamp.html
+  /pages/tools/color.html
+  /pages/tools/hash.html
+  /pages/tools/url-encode.html
+  /pages/tools/qrcode.html
+)
+TOOL_TOTAL=${#TOOL_KEYWORD_PATHS[@]}
 
 url_for() {
   local base="$1" path="$2"
@@ -71,7 +95,7 @@ echo
 
 a_pass=0
 a_fail=0
-echo "--- A · HTTP 18 路由 ---"
+echo "--- A · HTTP ${ROUTE_TOTAL} 路由 ---"
 for path in "${ROUTES[@]}"; do
   gtr_url="$(url_for "$GTR_BASE" "$path")"
   pages_url="$(url_for "$PAGES_BASE" "$path")"
@@ -85,22 +109,13 @@ for path in "${ROUTES[@]}"; do
     a_fail=$((a_fail + 1))
   fi
 done
-echo "A_SUMMARY: PASS=$a_pass/18 FAIL=$a_fail"
+echo "A_SUMMARY: PASS=$a_pass/$ROUTE_TOTAL FAIL=$a_fail"
 echo
 
 b_pass=0
 b_fail=0
-echo "--- B · 8 工具实现页关键字矩阵 ---"
-for path in \
-  /pages/tools/json.html \
-  /pages/tools/jwt.html \
-  /pages/tools/base64.html \
-  /pages/tools/cron.html \
-  /pages/tools/regex.html \
-  /pages/tools/sql-formatter.html \
-  /pages/tools/timestamp.html \
-  /pages/tools/color.html
-do
+echo "--- B · ${TOOL_TOTAL} 工具实现页关键字矩阵 ---"
+for path in "${TOOL_KEYWORD_PATHS[@]}"; do
   keys="${TOOL_KEYWORDS[$path]}"
   gtr_body="$(fetch_body "$(url_for "$GTR_BASE" "$path")")"
   pages_body="$(fetch_body "$(url_for "$PAGES_BASE" "$path")")"
@@ -125,7 +140,7 @@ do
     b_fail=$((b_fail + 1))
   fi
 done
-echo "B_SUMMARY: PASS=$b_pass/8 FAIL=$b_fail"
+echo "B_SUMMARY: PASS=$b_pass/$TOOL_TOTAL FAIL=$b_fail"
 echo
 
 echo "--- C · search-console 内容指纹 ---"
@@ -159,8 +174,8 @@ fi
 echo
 
 echo "====== FINAL ======"
-echo "A HTTP: PASS=$a_pass/18 FAIL=$a_fail"
-echo "B KEYS: PASS=$b_pass/8 FAIL=$b_fail"
+echo "A HTTP: PASS=$a_pass/$ROUTE_TOTAL FAIL=$a_fail"
+echo "B KEYS: PASS=$b_pass/$TOOL_TOTAL FAIL=$b_fail"
 if [[ "$c_ok" -eq 1 ]]; then
   echo "C SC:   PASS DIFF=0"
 else

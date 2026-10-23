@@ -39,6 +39,7 @@ trap cleanup EXIT
 required=(
   index.html sitemap.xml feed.xml favicon.svg
   search-console.html
+  manifest.webmanifest sw.js offline.html
   tools/json/index.html
   pages/blog/java-source-mybatis.html
 )
@@ -65,6 +66,9 @@ rsync -a --delete \
   --include='/feed.xml' \
   --include='/robots.txt' \
   --include='/sitemap.xml' \
+  --include='/manifest.webmanifest' \
+  --include='/sw.js' \
+  --include='/offline.html' \
   --include='/LICENSE' \
   --include='/CODE_OF_CONDUCT.md' \
   --include='/CONTRIBUTING.md' \
