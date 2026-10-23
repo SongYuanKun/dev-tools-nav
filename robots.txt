@@ -2,5 +2,11 @@ User-agent: *
 Allow: /
 Disallow: /node_modules/
 Disallow: /.git/
+Disallow: /content/
+Disallow: /scripts/
+Disallow: /ops/
+
+# Bare detail shell is noindex via meta; ?id= tool URLs stay crawlable.
+# robots.txt cannot express query-string exceptions.
 
 Sitemap: https://tools.songyuankun.top/sitemap.xml

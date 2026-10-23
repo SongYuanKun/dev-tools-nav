@@ -3,19 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <!-- Bare /pages/template.html is a JS detail shell; keep noindex until a valid ?id= loads. -->
+  <meta name="robots" content="noindex,follow" />
   <meta name="description" content="" />
   <meta property="og:title" content="工具详情 · Koen的工具箱" />
   <meta property="og:description" content="" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://tools.songyuankun.top/pages/template.html" />
-  <meta property="og:image" content="../assets/avatar.jpg" />
+  <meta property="og:url" content="https://tools.songyuankun.top/" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="工具详情 · Koen的工具箱" />
   <meta name="twitter:description" content="" />
   <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
-  <link rel="canonical" href="https://tools.songyuankun.top/pages/template.html" />
+  <link rel="canonical" href="https://tools.songyuankun.top/" />
   <title>工具详情 · Koen的工具箱</title>
+  <script>
+    (function () {
+      try {
+        var id = new URLSearchParams(location.search).get("id");
+        if (!id) return;
+        var robots = document.querySelector('meta[name="robots"]');
+        if (robots) robots.setAttribute("content", "index,follow,max-image-preview:large");
+      } catch (_) {}
+    })();
+  </script>
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../css/style.css" />
   <script defer src="../js/base.js"></script>
@@ -214,6 +225,8 @@
 
         const pageDesc = (tool.content && tool.content.intro) ? tool.content.intro : tool.description;
         const detailUrl = `https://tools.songyuankun.top/pages/template.html?id=${encodeURIComponent(tool.id)}`;
+        const robots = document.querySelector('meta[name="robots"]');
+        if (robots) robots.setAttribute("content", "index,follow,max-image-preview:large");
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) metaDesc.setAttribute("content", pageDesc);
         const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -381,6 +394,13 @@
       }
 
       function renderNotFound() {
+        document.title = "工具未找到 · Koen的工具箱";
+        const robots = document.querySelector('meta[name="robots"]');
+        if (robots) robots.setAttribute("content", "noindex,follow");
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) canonical.setAttribute("href", "https://tools.songyuankun.top/");
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.setAttribute("content", "https://tools.songyuankun.top/");
         document.getElementById("detailContent").innerHTML = `
           <div style="text-align:center; padding:80px 0;">
             <div style="font-size:56px; margin-bottom:16px;">😕</div>
