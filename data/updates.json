@@ -1,5 +1,10 @@
 [
   {
+    "date": "2026-10-23",
+    "title": "SEO 流量修复：模板页 noindex 与域名收敛",
+    "description": "template.html 空壳默认 noindex；全站 canonical/OG 指向 tools.songyuankun.top；GitHub Pages 客户端跳转到自定义域名；补齐工具壳页独立标题与描述。"
+  },
+  {
     "date": "2026-06-24",
     "title": "SEO 优化与页面 URL 修复",
     "description": "修复全站 canonical/OG URL 指向，更新 robots.txt 和 sitemap，提升搜索引擎友好度。"

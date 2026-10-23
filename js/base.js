@@ -4,6 +4,25 @@
  */
 
 // ============================================================
+// GitHub Pages → 自定义域名（与 scripts/site-host.mjs 规则保持一致）
+// 不使用仓库根 CNAME：自定义域名由 1Panel 托管，避免与 Pages 冲突。
+// ============================================================
+(function () {
+  try {
+    var hostname = window.location.hostname || "";
+    if (!hostname.endsWith(".github.io")) return;
+    var base = "/dev-tools-nav";
+    var pathname = window.location.pathname || "/";
+    if (pathname !== base && pathname !== base + "/" && pathname.indexOf(base + "/") !== 0) return;
+    var rest = (pathname === base || pathname === base + "/") ? "/" : pathname.slice(base.length);
+    if (rest.charAt(0) !== "/") rest = "/" + rest;
+    window.location.replace(
+      "https://tools.songyuankun.top" + rest + (window.location.search || "") + (window.location.hash || "")
+    );
+  } catch (_) {}
+})();
+
+// ============================================================
 // 统一导航注入 — 保证所有页面 nav 内容一致
 // ============================================================
 (function () {

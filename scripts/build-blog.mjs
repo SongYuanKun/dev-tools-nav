@@ -638,6 +638,15 @@ function renderBlogIndex(posts) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Koen 的技术博客：Java 源码、独立开发与 AI 实践。" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta property="og:title" content="技术博客 · Koen的工具箱" />
+  <meta property="og:description" content="Koen 的技术博客：Java 源码、独立开发与 AI 实践。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="${BASE_URL}/pages/blog/" />
+  <meta property="og:image" content="${BASE_URL}/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="技术博客 · Koen的工具箱" />
+  <meta name="twitter:description" content="Koen 的技术博客：Java 源码、独立开发与 AI 实践。" />
+  <meta name="twitter:image" content="${BASE_URL}/assets/avatar.jpg" />
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="${BASE_URL}/pages/blog/" />
   <link rel="alternate" type="application/atom+xml" href="${BASE_URL}/feed.xml" title="Koen 的技术博客" />
