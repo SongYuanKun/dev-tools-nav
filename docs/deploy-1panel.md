@@ -208,7 +208,7 @@ curl -fsS https://tools.songyuankun.top/googleb710668c9aa28d4e.html >/dev/null
 npm run check:consistency
 ```
 
-脚本 [`scripts/consistency-gtr-x-ghpages.sh`](../scripts/consistency-gtr-x-ghpages.sh) 检查：A=18 路由双站 HTTP 200、B=8 个 `pages/tools/*.html` 关键字、C=`search-console.html` 内容指纹与 `search-gap|search-queries` 命中。全部通过时输出 `RESULT: ALL GREEN`。
+脚本 [`scripts/consistency-gtr-x-ghpages.sh`](../scripts/consistency-gtr-x-ghpages.sh) 检查：A 栏路由双站 HTTP 200（含 PWA 的 `/manifest.webmanifest`、`/sw.js`、`/offline.html` 与全部自建 `/tools/*/`）、B 栏 `pages/tools/*.html` 关键字矩阵、C 栏 `search-console.html` 内容指纹与 `search-gap|search-queries` 命中。全部通过时输出 `RESULT: ALL GREEN`。
 
 ## 升级与恢复
 
