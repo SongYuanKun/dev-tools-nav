@@ -1,7 +1,7 @@
 {
   "name": "dev-tools-nav",
   "version": "1.0.0",
-  "description": "Koen's 工具箱 — 开源开发者工具导航站：收录 71 条开发/建站/AI 资源，内置 10 款浏览器端在线工具（JSON、时间戳、JWT、SQL 等），纯静态零服务端，数据不出浏览器。",
+  "description": "Koen's 工具箱 — 开源开发者工具导航站：收录 73 条开发/建站/AI 资源，内置 10 款浏览器端在线工具（JSON、时间戳、JWT、SQL 等），纯静态零服务端，数据不出浏览器。",
   "license": "MIT",
   "author": "SongYuanKun <123839070@qq.com>",
   "homepage": "https://tools.songyuankun.top",
@@ -41,16 +41,16 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
-    "playwright": "^1.51.0",
-    "rollup": "^4.62.2"
+    "playwright": "^1.64.1",
+    "rollup": "^4.65.0"
   },
   "dependencies": {
-    "@codemirror/commands": "^6.10.4",
+    "@codemirror/commands": "^6.11.1",
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/lint": "^6.9.7",
     "@codemirror/merge": "^6.12.2",
-    "@codemirror/state": "^6.7.1",
+    "@codemirror/state": "^6.7.6",
     "codemirror": "^6.0.2",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   }
 }
