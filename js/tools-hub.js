@@ -47,11 +47,12 @@
   function inferCategoryId(tool) {
     var slug = tool.slug;
     if (slug === "timestamp" || slug === "cron") return "time";
-    if (slug === "json" || slug === "sql-formatter" || slug === "uuid") return "data";
+    if (slug === "json" || slug === "sql-formatter" || slug === "uuid" || slug === "hash") return "data";
     if (slug === "jwt") return "auth";
     if (slug === "regex" || slug === "diff") return "regex";
-    if (slug === "base64") return "encode";
+    if (slug === "base64" || slug === "url-encode") return "encode";
     if (slug === "color") return "design";
+    if (slug === "qrcode") return "design";
     return "data";
   }
 

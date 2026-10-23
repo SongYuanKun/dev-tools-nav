@@ -98,7 +98,22 @@ export const BUNDLED_PACKAGES = [
     license: "ISC",
     copyright: "Copyright Eemeli Aro <eemeli@gmail.com>",
   },
+  {
+    name: "qrcode",
+    license: "MIT",
+    copyright: "Copyright (c) 2012 Ryan Day",
+    bundle: "qrcode",
+  },
+  {
+    name: "dijkstrajs",
+    license: "MIT",
+    copyright: "Copyright (C) 2008 Wyatt Baldwin <self@wyattbaldwin.com>",
+    bundle: "qrcode",
+  },
 ];
+
+export const JSON_BUNDLED_PACKAGES = BUNDLED_PACKAGES.filter((pkg) => pkg.bundle !== "qrcode");
+export const QRCODE_BUNDLED_PACKAGES = BUNDLED_PACKAGES.filter((pkg) => pkg.bundle === "qrcode");
 
 export const MIT_LICENSE_TEXT = `Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -130,17 +145,16 @@ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.`;
 
-function uniqueCopyrights(license) {
-  const lines = BUNDLED_PACKAGES.filter((pkg) => pkg.license === license).map((pkg) => pkg.copyright);
-  return [...new Set(lines)];
-}
-
-export function buildLicenseBanner() {
-  const mitPackages = BUNDLED_PACKAGES.filter((pkg) => pkg.license === "MIT").map((pkg) => pkg.name);
-  const iscPackages = BUNDLED_PACKAGES.filter((pkg) => pkg.license === "ISC").map((pkg) => pkg.name);
+export function buildLicenseBanner(options = {}) {
+  const title = options.title || "JSON 工作台构建产物";
+  const packages = Array.isArray(options.packages) ? options.packages : JSON_BUNDLED_PACKAGES;
+  const mitPackages = packages.filter((pkg) => pkg.license === "MIT").map((pkg) => pkg.name);
+  const iscPackages = packages.filter((pkg) => pkg.license === "ISC").map((pkg) => pkg.name);
+  const mitCopyrights = [...new Set(packages.filter((pkg) => pkg.license === "MIT").map((pkg) => pkg.copyright))];
+  const iscCopyrights = [...new Set(packages.filter((pkg) => pkg.license === "ISC").map((pkg) => pkg.copyright))];
 
   const sections = [
-    "Koen's 工具箱 (dev-tools-nav) — JSON 工作台构建产物",
+    `Koen's 工具箱 (dev-tools-nav) — ${title}`,
     "Copyright (c) 2026 SongYuanKun — MIT License, see LICENSE",
     "",
     "本文件由 Rollup 打包，内含以下第三方开源组件。完整清单见 THIRD-PARTY-NOTICES.md。",
@@ -148,16 +162,21 @@ export function buildLicenseBanner() {
     "",
     `=== MIT License — ${mitPackages.join(", ")} ===`,
     "",
-    ...uniqueCopyrights("MIT"),
+    ...mitCopyrights,
     "",
     MIT_LICENSE_TEXT,
-    "",
-    `=== ISC License — ${iscPackages.join(", ")} ===`,
-    "",
-    ...uniqueCopyrights("ISC"),
-    "",
-    ISC_LICENSE_TEXT,
   ];
+
+  if (iscPackages.length) {
+    sections.push(
+      "",
+      `=== ISC License — ${iscPackages.join(", ")} ===`,
+      "",
+      ...iscCopyrights,
+      "",
+      ISC_LICENSE_TEXT,
+    );
+  }
 
   return `/*!\n${sections.map((line) => (line ? ` * ${line}` : " *")).join("\n")}\n */`;
 }

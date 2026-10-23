@@ -3,8 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const SELF_BUILT_TOOLS = Object.freeze([
-  "base64", "color", "cron", "diff", "json",
-  "jwt", "regex", "sql-formatter", "timestamp", "uuid",
+  "base64", "color", "cron", "diff", "hash", "json",
+  "jwt", "qrcode", "regex", "sql-formatter", "timestamp", "url-encode", "uuid",
 ]);
 
 const SELF_BUILT_CATALOG = Object.freeze([
@@ -12,11 +12,14 @@ const SELF_BUILT_CATALOG = Object.freeze([
   { slug: "color", id: "online-color", url: "tools/color/" },
   { slug: "cron", id: "online-cron", url: "tools/cron/" },
   { slug: "diff", id: "online-diff", url: "tools/diff/" },
+  { slug: "hash", id: "online-hash", url: "tools/hash/" },
   { slug: "json", id: "online-json", url: "tools/json/" },
   { slug: "jwt", id: "online-jwt", url: "tools/jwt/" },
+  { slug: "qrcode", id: "online-qrcode", url: "tools/qrcode/" },
   { slug: "regex", id: "online-regex", url: "tools/regex/" },
   { slug: "sql-formatter", id: "online-sql", url: "tools/sql-formatter/" },
   { slug: "timestamp", id: "online-timestamp", url: "tools/timestamp/" },
+  { slug: "url-encode", id: "online-url-encode", url: "tools/url-encode/" },
   { slug: "uuid", id: "online-uuid", url: "tools/uuid/" },
 ]);
 

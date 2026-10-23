@@ -2,9 +2,9 @@
 
 本项目（Koen's 工具箱 / dev-tools-nav）以 [MIT 协议](LICENSE) 发布。
 
-除项目自身代码外，构建产物 `js/json-workbench.bundle.js` 中打包（redistribute）了下列第三方开源组件。MIT 与 ISC 许可证都要求在分发副本时保留原始版权声明与许可正文，因此本文件列出全部组件及其版权归属，同一份声明也会以 `/*! ... */` 注释形式内嵌在打包产物开头（见 `scripts/bundle-license-banner.mjs`）。
+除项目自身代码外，构建产物 `js/json-workbench.bundle.js` 与 `js/qrcode-tool.bundle.js` 中打包（redistribute）了下列第三方开源组件。MIT 与 ISC 许可证都要求在分发副本时保留原始版权声明与许可正文，因此本文件列出全部组件及其版权归属，同一份声明也会以 `/*! ... */` 注释形式内嵌在打包产物开头（见 `scripts/bundle-license-banner.mjs`）。
 
-This project is released under the [MIT License](LICENSE). The generated bundle `js/json-workbench.bundle.js` redistributes the third-party components listed below; their copyright notices and license texts are reproduced here and are also embedded in the bundle itself.
+This project is released under the [MIT License](LICENSE). The generated bundles `js/json-workbench.bundle.js` and `js/qrcode-tool.bundle.js` redistribute the third-party components listed below; their copyright notices and license texts are reproduced here and are also embedded in the bundles themselves.
 
 ## 组件清单 / Bundled components
 
@@ -29,8 +29,10 @@ This project is released under the [MIT License](LICENSE). The generated bundle 
 | [`style-mod`](https://github.com/marijnh/style-mod) | MIT | Copyright (C) 2018 by Marijn Haverbeke &lt;marijn@haverbeke.berlin&gt; and others |
 | [`w3c-keyname`](https://github.com/marijnh/w3c-keyname) | MIT | Copyright (C) 2016 by Marijn Haverbeke &lt;marijn@haverbeke.berlin&gt; and others |
 | [`yaml`](https://github.com/eemeli/yaml) | ISC | Copyright Eemeli Aro &lt;eemeli@gmail.com&gt; |
+| [`qrcode`](https://github.com/soldair/node-qrcode)（仅 `js/qrcode-tool.bundle.js`） | MIT | Copyright (c) 2012 Ryan Day |
+| [`dijkstrajs`](https://github.com/tcort/dijkstrajs)（仅 `js/qrcode-tool.bundle.js`） | MIT | Copyright (C) 2008 Wyatt Baldwin &lt;self@wyattbaldwin.com&gt; |
 
-仅用于本地开发、不进入任何分发产物的构建依赖（`rollup`、`@rollup/plugin-node-resolve`、`@rollup/plugin-terser`、`playwright`）不在上表内，因为它们不会被再分发。
+仅用于本地开发、不进入任何分发产物的构建依赖（`rollup`、`@rollup/plugin-node-resolve`、`@rollup/plugin-commonjs`、`@rollup/plugin-terser`、`playwright`）不在上表内，因为它们不会被再分发。
 
 ## MIT License 全文
 
@@ -76,6 +78,6 @@ THIS SOFTWARE.
 
 ## 维护约定
 
-- 新增或移除会进入 `js/json-workbench.bundle.js` 的运行时依赖时，必须同步更新本文件与 `scripts/bundle-license-banner.mjs`。
+- 新增或移除会进入 `js/json-workbench.bundle.js` 或 `js/qrcode-tool.bundle.js` 的运行时依赖时，必须同步更新本文件与 `scripts/bundle-license-banner.mjs`。
 - `scripts/json-build.test.mjs` 会校验两者与 `package.json` 依赖、`node_modules` 中的实际许可证保持一致，并校验打包产物开头确实带有署名 banner。
 - 修改后需执行 `npm run build` 重新生成产物并提交，否则 `npm run check:generated` 会报漂移。

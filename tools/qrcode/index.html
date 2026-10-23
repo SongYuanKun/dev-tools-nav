@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="免费在线二维码生成器：将文本或 URL 生成为 SVG 二维码，可调整纠错级别并下载，浏览器本地生成。" />
+  <meta property="og:title" content="在线二维码生成器 | Koen的工具箱" />
+  <meta property="og:description" content="文本 / URL 生成 SVG 二维码，本地处理。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/tools/qrcode/" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="在线二维码生成器 | Koen的工具箱" />
+  <meta name="twitter:description" content="生成 SVG 二维码，本地运行。" />
+  <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <link rel="canonical" href="https://tools.songyuankun.top/tools/qrcode/" />
+  <title>在线二维码生成器 - 文本转 SVG | Koen的工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/tools.css" />
+  <script defer src="../../js/base.js"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">首页</a>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="tool-workbench" id="toolWorkbench">
+    <header class="tool-workbench-bar">
+      <div class="tool-workbench-leading">
+        <a class="tool-workbench-back" href="../" aria-label="返回在线工具">← 工具</a>
+        <div class="tool-workbench-identity">
+          <h1 id="toolTitle" class="tool-workbench-title">加载中…</h1>
+          <div id="toolTags" class="tool-workbench-tags" aria-label="标签"></div>
+        </div>
+      </div>
+      <div class="tool-workbench-actions">
+        <button id="favBtn" type="button" class="tool-workbench-icon-btn" aria-label="收藏" title="收藏">☆</button>
+        <a id="legacyLink" class="tool-workbench-icon-btn" href="#" target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开" title="在新标签页打开">↗</a>
+      </div>
+    </header>
+    <p id="toolDesc" class="tool-workbench-desc"></p>
+    <div id="toolError" class="tools-empty" hidden>加载失败，可尝试在新标签页打开。</div>
+    <div class="tool-workbench-stage">
+      <iframe id="toolFrame" class="tool-workbench-frame" title="在线工具"></iframe>
+    </div>
+    <footer class="tool-workbench-foot">
+      <span class="tool-workbench-privacy">数据仅在浏览器本地处理，不会上传</span>
+    </footer>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="../../index.html">首页</a>
+        <span class="footer-divider">|</span>
+        <span class="footer-divider">|</span>
+        <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script src="../../data/tools.js"></script>
+  <script src="../../js/theme-mini.js"></script>
+  <script src="../../js/tools-prefs.js"></script>
+  <script src="../../js/tools-shell.js"></script>
+  <script defer src="../../js/footer.js"></script>
+</body>
+</html>
+

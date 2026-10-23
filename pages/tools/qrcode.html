@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-tool-slug="qrcode" data-canonical-slug="qrcode">
+<head>
+  <script>
+    (function () {
+      if (new URLSearchParams(location.search).get("embed") === "1") {
+        document.documentElement.classList.add("is-embed");
+        return;
+      }
+      var slug = document.documentElement.getAttribute("data-canonical-slug") || "qrcode";
+      location.replace("../../tools/" + slug + "/" + (location.search || ""));
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="免费在线二维码生成器：将文本或 URL 生成为 SVG 二维码，可调整纠错级别并下载，浏览器本地生成。" />
+  <meta name="keywords" content="二维码,QR Code,二维码生成器,SVG,在线工具" />
+  <meta property="og:title" content="在线二维码生成器 | Koen's 工具箱" />
+  <meta property="og:description" content="文本 / URL 生成 SVG 二维码，本地处理。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/tools/qrcode/" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="在线二维码生成器 | Koen's 工具箱" />
+  <meta name="twitter:description" content="生成 SVG 二维码，本地运行。" />
+  <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <link rel="canonical" href="https://tools.songyuankun.top/tools/qrcode/" />
+  <title>在线二维码生成器 | Koen's 工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/tools.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "在线二维码生成器",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+      "description": "在浏览器中将文本生成为 SVG 二维码。",
+      "url": "https://tools.songyuankun.top/tools/qrcode/",
+      "author": { "@type": "Person", "name": "Koen" },
+      "inLanguage": "zh-CN"
+    }
+  </script>
+  <script src="../../data/tools.js"></script>
+  <script defer src="../../js/base.js"></script>
+  <script defer src="../../js/tool-chrome.js"></script>
+  <script defer src="../../js/qrcode-tool.bundle.js"></script>
+</head>
+<body data-tool-slug="qrcode">
+
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">首页</a>
+          <a href="./index.html" class="nav-link active" aria-current="page">在线工具</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+        </div>
+        <button type="button" id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="tool-page" id="main">
+    <nav class="tool-nav" data-tool-nav aria-label="在线工具"></nav>
+
+    <header class="tool-page-header">
+      <h1>在线二维码生成器</h1>
+      <p>将文本或 URL 生成为 SVG 二维码，可选择纠错级别、复制 SVG 或下载文件。全部在浏览器本地完成。</p>
+    </header>
+
+    <section class="tool-panel" aria-labelledby="qr-options-heading">
+      <h2 id="qr-options-heading" class="tool-panel-title">生成选项</h2>
+      <label class="tool-label" for="qrInput">内容</label>
+      <textarea id="qrInput" class="tool-textarea" spellcheck="false" placeholder="输入文本或 URL…" rows="4"></textarea>
+      <label class="tool-label" for="qrLevel">纠错级别</label>
+      <select id="qrLevel" class="tool-select">
+        <option value="L">L · 约 7%</option>
+        <option value="M" selected>M · 约 15%</option>
+        <option value="Q">Q · 约 25%</option>
+        <option value="H">H · 约 30%</option>
+      </select>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn tool-btn-primary" id="btnQrGenerate">生成二维码</button>
+        <button type="button" class="tool-btn" id="btnQrDownload">下载 SVG</button>
+        <button type="button" class="tool-btn" id="btnQrCopySvg">复制 SVG</button>
+      </div>
+      <p id="qrStatus" class="timestamp-help" role="status" aria-live="polite">就绪</p>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="qr-preview-heading">
+      <h2 id="qr-preview-heading" class="tool-panel-title">预览</h2>
+      <div id="qrPreview" class="qr-preview" aria-live="polite"></div>
+    </section>
+
+    <nav class="tool-footer-nav" aria-label="相关工具">
+      <h3>相关工具</h3>
+      <div class="tool-footer-links" data-tool-footer></div>
+    </nav>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="../../index.html">首页</a>
+      </div>
+      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script defer src="../../js/footer.js"></script>
+</body>
+</html>

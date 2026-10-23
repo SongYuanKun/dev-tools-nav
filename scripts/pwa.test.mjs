@@ -69,8 +69,8 @@ test("homepage declares manifest and theme-color for install prompts", () => {
 test("precache list covers every self-built tool shell and legacy page", () => {
   const sw = read("sw.js");
   const slugs = [
-    "base64", "color", "cron", "diff", "json",
-    "jwt", "regex", "sql-formatter", "timestamp", "uuid",
+    "base64", "color", "cron", "diff", "hash", "json",
+    "jwt", "qrcode", "regex", "sql-formatter", "timestamp", "url-encode", "uuid",
   ];
   for (const slug of slugs) {
     assert.ok(existsSync(join(root, "tools", slug, "index.html")), `shell missing: ${slug}`);

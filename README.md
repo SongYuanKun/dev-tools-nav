@@ -10,11 +10,11 @@
 [![Security Policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-> 目录收录 73 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 **MIT 协议（OSI 认可）** 开源，**非商业** — 不展示广告、不做联盟推广、不提供付费功能。
+> 目录收录 76 条开发与建站资源，其中 13 款为浏览器内自研工具；`online-tools` 数据分类包含 14 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 **MIT 协议（OSI 认可）** 开源，**非商业** — 不展示广告、不做联盟推广、不提供付费功能。
 
-<!-- catalog-total: 73 -->
-<!-- catalog-self-built: 10 -->
-<!-- catalog-online-tools: 11 -->
+<!-- catalog-total: 76 -->
+<!-- catalog-self-built: 13 -->
+<!-- catalog-online-tools: 14 -->
 
 ## 关于本项目
 
@@ -23,7 +23,7 @@
 - **完全开源** — 代码、数据、文档和自动化脚本都在本仓库；`main` 分支即线上版本，构建、测试与发布由仓库内的 [测试工作流](.github/workflows/test.yml)和 [Pages 工作流](.github/workflows/deploy-pages.yml)完成。
 - **非商业** — 不展示广告，不接入联盟推广、付费排名或赞助位，也不提供付费功能与商业授权；访问统计只用于判断维护投入方向。
 - **内容边界** — 目录只收录正规工具与服务，不收录商业软件的破解、序列号或许可绕过类资源。
-- **数据不出站** — 10 款自研在线工具全部在浏览器内计算，不向服务端上传用户输入。
+- **数据不出站** — 13 款自研在线工具全部在浏览器内计算，不向服务端上传用户输入。
 - **可安装 / 离线自建工具** — PWA（`manifest.webmanifest` + `sw.js`）：自建工具 cache-first；博客 / CSDN / Feed network-first，避免陈旧内容。
 - **欢迎贡献** — 提 Issue 或 Pull Request 前请先读 [贡献指南](CONTRIBUTING.md)，其中写明贡献范围、本地运行、自查命令与提交要求。
 
@@ -31,7 +31,7 @@
 
 1. **永久非商业化** — 无广告、无付费墙、无联盟链接、外链不加 UTM / ref 追踪参数。
 2. **不收集 PII** — 不要求登录；Umami 仅做无 Cookie 的假名化访问统计（随机访客标识），不把工具正文、IP 或完整 User-Agent 当作业务数据上传。
-3. **纯本地运算** — JSON / JWT / Base64 / UUID / 颜色 / Cron / Diff / Regex / SQL / Timestamp 等自研工具的处理逻辑全部在浏览器内完成，用户输入不上传业务后端。
+3. **纯本地运算** — JSON / JWT / Base64 / URL / Hash / QR / UUID / 颜色 / Cron / Diff / Regex / SQL / Timestamp 等自研工具的处理逻辑全部在浏览器内完成，用户输入不上传业务后端。
 4. **许可证** — [MIT（blob/main/LICENSE）](https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE)。
 5. **可审计** — 源代码 100% 公开，可 fork、自建与审计；双站部署与测试门禁均在仓库内可见。
 6. **项目深度文章** — 两篇面向开发者的原创长文将在 CSDN 公开发布后，于本节补上永久链接（当前草稿已就绪，发布排在产品优化之后）。
@@ -54,7 +54,7 @@
 - **实时搜索**：按名称、描述、标签即时过滤
 - **暗色模式**：跟随系统偏好 + 手动切换，偏好持久化
 - **工具详情页**：每个工具独立详情页，含同类推荐
-- **在线工具集**：10 款浏览器内工具（JSON / 时间戳 / Cron / Base64 / JWT / SQL / 正则 / UUID / Diff / 颜色），纯前端、数据不出站
+- **在线工具集**：13 款浏览器内工具（JSON / 时间戳 / Cron / Base64 / URL / Hash / QR / JWT / SQL / 正则 / UUID / Diff / 颜色），纯前端、数据不出站
 - **Markdown 博客流水线**：原创正文单一来源，自动生成文章、索引、Atom Feed、结构化数据与 sitemap 日期
 - **搜索意图演示看板**：以仓库内模拟样本展示复盘流程，明确不代表真实 Search Console 数据
 - **响应式设计**：移动端、平板、桌面全适配
@@ -74,6 +74,9 @@
 | UUID 生成器 | `/tools/uuid/` | 批量生成 UUID |
 | 文本 Diff | `/tools/diff/` | 文本差异对比 |
 | 颜色工具 | `/tools/color/` | 颜色格式转换与预览 |
+| URL 编解码 | `/tools/url-encode/` | encodeURIComponent / encodeURI / 表单编码 |
+| 哈希生成器 | `/tools/hash/` | MD5 / SHA-1 / SHA-256 / SHA-384 / SHA-512 |
+| 二维码生成器 | `/tools/qrcode/` | 文本转 SVG 二维码，可下载 |
 
 公开规范 URL 统一使用 `/tools/<slug>/`。`pages/tools/*.html` 是实现、嵌入或兼容页面，不是公开规范 URL。各工具页由 `js/tool-chrome.js` 统一导航与复制反馈；能力分布在各 `js/*-tool.js` 中（Path 查询、验签、SQL 分析、Diff 等）。
 
@@ -89,9 +92,9 @@
 | 🔒 安全工具 | 6 | SSL Labs、VirusTotal、Bitwarden |
 | 📊 运维监控 | 7 | UptimeRobot、Grafana、Sentry |
 | 🎨 设计资源 | 7 | Figma、Iconify、Coolors、Google Fonts |
-| 🧰 在线工具 | 11 | **JSON 格式化**、JWT 解码、时间戳、Cron、SQL、正则（含 10 款自研工具） |
+| 🧰 在线工具 | 14 | **JSON 格式化**、JWT 解码、时间戳、Cron、SQL、正则、URL、Hash、QR（含 13 款自研工具） |
 
-> 目录合计 **71** 条，全部公开可见，没有隐藏分类。目录不收录商业软件激活、破解或许可绕过类内容。
+> 目录合计 **76** 条（含在线工具中心入口），全部公开可见，没有隐藏分类。目录不收录商业软件激活、破解或许可绕过类内容。
 
 ## 文件结构
 

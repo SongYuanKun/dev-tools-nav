@@ -433,6 +433,25 @@
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
+.qr-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 16px;
+  background: var(--surface-2, #f8fafc);
+  border-radius: 12px;
+}
+
+.qr-preview svg {
+  max-width: 280px;
+  height: auto;
+}
+
+.timestamp-help.is-error {
+  color: var(--danger, #dc2626);
+}
+
 .tool-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
