@@ -24,6 +24,7 @@
 - **非商业** — 不展示广告，不接入联盟推广、付费排名或赞助位，也不提供付费功能与商业授权；访问统计只用于判断维护投入方向。
 - **内容边界** — 目录只收录正规工具与服务，不收录商业软件的破解、序列号或许可绕过类资源。
 - **数据不出站** — 10 款自研在线工具全部在浏览器内计算，不向服务端上传用户输入。
+- **可安装 / 离线自建工具** — PWA（`manifest.webmanifest` + `sw.js`）：自建工具 cache-first；博客 / CSDN / Feed network-first，避免陈旧内容。
 - **欢迎贡献** — 提 Issue 或 Pull Request 前请先读 [贡献指南](CONTRIBUTING.md)，其中写明贡献范围、本地运行、自查命令与提交要求。
 
 ### 永久非商业 · 零追踪边界
@@ -97,6 +98,9 @@
 ```
 dev-tools-nav/
 ├── index.html              # 主页（导航 + 工具卡片列表）
+├── manifest.webmanifest    # PWA 安装清单（相对 scope，兼容 Pages 子路径）
+├── sw.js                   # Service Worker：工具 cache-first，博客/CSDN network-first
+├── offline.html            # 离线回退页（noindex）
 ├── favicon.ico / favicon.svg
 ├── css/
 │   ├── style.css           # 全站样式（CSS 变量、暗色模式、响应式）

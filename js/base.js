@@ -232,6 +232,90 @@
 })();
 
 // ============================================================
+// PWA：manifest / theme-color / Service Worker
+// 通过 base.js 脚本 URL 解析站点根路径，兼容 GitHub Pages 子路径与 1Panel 根路径
+// ============================================================
+(function () {
+  function isEmbed() {
+    try {
+      return new URLSearchParams(window.location.search).get("embed") === "1"
+        || document.documentElement.classList.contains("is-embed");
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function resolveSiteRoot() {
+    var scripts = document.getElementsByTagName("script");
+    for (var i = scripts.length - 1; i >= 0; i--) {
+      var src = scripts[i].src || "";
+      if (src.indexOf("/js/base.js") !== -1) {
+        return src.replace(/\/js\/base\.js(?:\?.*)?$/, "/");
+      }
+    }
+    try {
+      var path = window.location.pathname || "/";
+      var parts = path.split("/").filter(Boolean);
+      if (window.location.hostname.endsWith(".github.io") && parts.length > 0) {
+        return "/" + parts[0] + "/";
+      }
+    } catch (_) {}
+    return "/";
+  }
+
+  function ensureLink(rel, href, attrs) {
+    var existing = document.querySelector('link[rel="' + rel + '"]');
+    if (existing) {
+      if (!existing.getAttribute("href")) existing.setAttribute("href", href);
+      return existing;
+    }
+    var link = document.createElement("link");
+    link.rel = rel;
+    link.href = href;
+    if (attrs) {
+      Object.keys(attrs).forEach(function (key) {
+        link.setAttribute(key, attrs[key]);
+      });
+    }
+    document.head.appendChild(link);
+    return link;
+  }
+
+  function ensureMeta(name, content) {
+    var existing = document.querySelector('meta[name="' + name + '"]');
+    if (existing) {
+      if (!existing.getAttribute("content")) existing.setAttribute("content", content);
+      return existing;
+    }
+    var meta = document.createElement("meta");
+    meta.name = name;
+    meta.content = content;
+    document.head.appendChild(meta);
+    return meta;
+  }
+
+  if (!document.head || location.protocol === "file:") return;
+
+  var root = resolveSiteRoot();
+  ensureLink("manifest", root + "manifest.webmanifest");
+  ensureMeta("theme-color", "#6366f1");
+  ensureLink("apple-touch-icon", root + "assets/icons/icon-192.png", { sizes: "192x192" });
+
+  if (isEmbed()) return;
+  if (!("serviceWorker" in navigator)) return;
+
+  var register = function () {
+    navigator.serviceWorker.register(root + "sw.js", { scope: root }).catch(function () {});
+  };
+
+  if (document.readyState === "complete") {
+    register();
+  } else {
+    window.addEventListener("load", register);
+  }
+})();
+
+// ============================================================
 // Umami 数据采集（对齐官方 tracker：identify / performance / tag）
 // ============================================================
 (function () {
