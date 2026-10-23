@@ -25,11 +25,14 @@ const SELF_BUILT_RECORDS = [
   ["color", "online-color", "tools/color/"],
   ["cron", "online-cron", "tools/cron/"],
   ["diff", "online-diff", "tools/diff/"],
+  ["hash", "online-hash", "tools/hash/"],
   ["json", "online-json", "tools/json/"],
   ["jwt", "online-jwt", "tools/jwt/"],
+  ["qrcode", "online-qrcode", "tools/qrcode/"],
   ["regex", "online-regex", "tools/regex/"],
   ["sql-formatter", "online-sql", "tools/sql-formatter/"],
   ["timestamp", "online-timestamp", "tools/timestamp/"],
+  ["url-encode", "online-url-encode", "tools/url-encode/"],
   ["uuid", "online-uuid", "tools/uuid/"],
 ];
 

@@ -349,6 +349,12 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://tools.songyuankun.top/pages/template.html?id=online-hash</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://tools.songyuankun.top/pages/template.html?id=online-json</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
@@ -356,6 +362,12 @@
   </url>
   <url>
     <loc>https://tools.songyuankun.top/pages/template.html?id=online-jwt</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://tools.songyuankun.top/pages/template.html?id=online-qrcode</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -380,6 +392,12 @@
   </url>
   <url>
     <loc>https://tools.songyuankun.top/pages/template.html?id=online-tools-hub</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://tools.songyuankun.top/pages/template.html?id=online-url-encode</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -553,6 +571,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://tools.songyuankun.top/pages/tools/qrcode.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://tools.songyuankun.top/pages/tools/regex.html</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -567,6 +590,11 @@
   <url>
     <loc>https://tools.songyuankun.top/pages/tools/timestamp.html</loc>
     <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tools.songyuankun.top/pages/tools/url-encode.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -613,6 +641,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://tools.songyuankun.top/tools/hash/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://tools.songyuankun.top/tools/json/</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -621,6 +654,11 @@
   <url>
     <loc>https://tools.songyuankun.top/tools/jwt/</loc>
     <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tools.songyuankun.top/tools/qrcode/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -639,6 +677,11 @@
   <url>
     <loc>https://tools.songyuankun.top/tools/timestamp/</loc>
     <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tools.songyuankun.top/tools/url-encode/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

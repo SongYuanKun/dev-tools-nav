@@ -5,7 +5,9 @@ import { readFileSync, statSync } from "node:fs";
 import {
   BUNDLED_PACKAGES,
   ISC_LICENSE_TEXT,
+  JSON_BUNDLED_PACKAGES,
   MIT_LICENSE_TEXT,
+  QRCODE_BUNDLED_PACKAGES,
   buildLicenseBanner,
 } from "./bundle-license-banner.mjs";
 
@@ -28,12 +30,21 @@ test("the tracked JSON workbench bundle stays within the delivery budget", () =>
   assert.ok(bundle.size <= 750 * 1024, `bundle is ${bundle.size} bytes`);
 });
 
-test("Rollup is configured for one minified browser bundle that keeps the license banner", () => {
+test("the tracked QR code bundle stays within the delivery budget", () => {
+  const bundle = statSync("js/qrcode-tool.bundle.js");
+  assert.ok(bundle.isFile());
+  assert.ok(bundle.size > 0);
+  assert.ok(bundle.size <= 200 * 1024, `QR bundle is ${bundle.size} bytes`);
+});
+
+test("Rollup is configured for minified browser bundles that keep the license banner", () => {
   const config = readFileSync("rollup.config.mjs", "utf8");
   assert.match(config, /js\/json-workbench\.mjs/);
   assert.match(config, /js\/json-workbench\.bundle\.js/);
+  assert.match(config, /js\/qrcode-workbench\.mjs/);
+  assert.match(config, /js\/qrcode-tool\.bundle\.js/);
   assert.match(config, /terser/);
-  assert.match(config, /banner:\s*buildLicenseBanner\(\)/);
+  assert.match(config, /banner:\s*buildLicenseBanner\(/);
   // 剥离注释可以，但不能连 /*! */ 署名一起剥掉。
   assert.match(config, /comments:\s*\/\^!\//);
   assert.doesNotMatch(config, /comments:\s*false/);
@@ -66,14 +77,23 @@ test("recorded third-party licenses match the installed packages", () => {
   }
 });
 
-test("the built bundle carries the third-party attribution banner", () => {
-  const bundle = readFileSync("js/json-workbench.bundle.js", "utf8");
-  const banner = buildLicenseBanner();
+test("the built bundles carry the third-party attribution banner", () => {
+  const jsonBundle = readFileSync("js/json-workbench.bundle.js", "utf8");
+  const jsonBanner = buildLicenseBanner({ packages: JSON_BUNDLED_PACKAGES });
+  assert.ok(jsonBundle.startsWith(jsonBanner), "JSON bundle does not start with the license banner");
+  assert.ok(jsonBundle.includes(MIT_LICENSE_TEXT.split("\n")[0]), "JSON bundle is missing the MIT permission notice");
+  for (const { copyright } of JSON_BUNDLED_PACKAGES) {
+    assert.ok(jsonBundle.includes(copyright), `JSON bundle is missing a copyright notice: ${copyright}`);
+  }
 
-  assert.ok(bundle.startsWith(banner), "bundle does not start with the license banner");
-  assert.ok(bundle.includes(MIT_LICENSE_TEXT.split("\n")[0]), "bundle is missing the MIT permission notice");
-  for (const { copyright } of BUNDLED_PACKAGES) {
-    assert.ok(bundle.includes(copyright), `bundle is missing a copyright notice: ${copyright}`);
+  const qrBundle = readFileSync("js/qrcode-tool.bundle.js", "utf8");
+  const qrBanner = buildLicenseBanner({
+    title: "二维码工具构建产物",
+    packages: QRCODE_BUNDLED_PACKAGES,
+  });
+  assert.ok(qrBundle.startsWith(qrBanner), "QR bundle does not start with the license banner");
+  for (const { copyright } of QRCODE_BUNDLED_PACKAGES) {
+    assert.ok(qrBundle.includes(copyright), `QR bundle is missing a copyright notice: ${copyright}`);
   }
 });
 
@@ -83,8 +103,11 @@ function escapeAngleBrackets(text) {
 
 test("two consecutive Rollup builds emit byte-identical bundles", () => {
   execFileSync("npm", ["run", "build:json"], { stdio: "ignore" });
-  const first = readFileSync("js/json-workbench.bundle.js");
+  const firstJson = readFileSync("js/json-workbench.bundle.js");
+  const firstQr = readFileSync("js/qrcode-tool.bundle.js");
   execFileSync("npm", ["run", "build:json"], { stdio: "ignore" });
-  const second = readFileSync("js/json-workbench.bundle.js");
-  assert.deepEqual(second, first);
+  const secondJson = readFileSync("js/json-workbench.bundle.js");
+  const secondQr = readFileSync("js/qrcode-tool.bundle.js");
+  assert.deepEqual(secondJson, firstJson);
+  assert.deepEqual(secondQr, firstQr);
 });

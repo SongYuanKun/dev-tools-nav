@@ -9,6 +9,7 @@ const DEFAULT_ROOT = join(MODULE_DIR, "..");
 
 export const GENERATED_PATHS = [
   "js/json-workbench.bundle.js",
+  "js/qrcode-tool.bundle.js",
   "pages/blog",
   "data/blog-posts.js",
   "data/blog-manifest.json",

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-tool-slug="hash" data-canonical-slug="hash">
+<head>
+  <script>
+    (function () {
+      if (new URLSearchParams(location.search).get("embed") === "1") {
+        document.documentElement.classList.add("is-embed");
+        return;
+      }
+      var slug = document.documentElement.getAttribute("data-canonical-slug") || "hash";
+      location.replace("../../tools/" + slug + "/" + (location.search || ""));
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Koen" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="免费在线哈希生成器：支持 MD5、SHA-1、SHA-256、SHA-384、SHA-512，输出 Hex 或 Base64，浏览器本地计算。" />
+  <meta name="keywords" content="哈希,MD5,SHA-256,SHA1,摘要,在线工具" />
+  <meta property="og:title" content="在线哈希生成器 | Koen's 工具箱" />
+  <meta property="og:description" content="MD5 / SHA 族摘要，Hex 与 Base64 输出，本地计算。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/tools/hash/" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="在线哈希生成器 | Koen's 工具箱" />
+  <meta name="twitter:description" content="MD5 / SHA 摘要，本地运行。" />
+  <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <link rel="canonical" href="https://tools.songyuankun.top/tools/hash/" />
+  <title>在线哈希生成器 · MD5 / SHA | Koen's 工具箱</title>
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/tools.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "在线哈希生成器",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+      "description": "在浏览器中计算 MD5 与 SHA 族摘要。",
+      "url": "https://tools.songyuankun.top/tools/hash/",
+      "author": { "@type": "Person", "name": "Koen" },
+      "inLanguage": "zh-CN"
+    }
+  </script>
+  <script src="../../data/tools.js"></script>
+  <script defer src="../../js/base.js"></script>
+  <script defer src="../../js/tool-chrome.js"></script>
+  <script defer src="../../js/hash-tool.js"></script>
+</head>
+<body data-tool-slug="hash">
+
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links">
+          <a href="../../index.html" class="nav-link">首页</a>
+          <a href="./index.html" class="nav-link active" aria-current="page">在线工具</a>
+          <a href="../blog/index.html" class="nav-link">技术博客</a>
+        </div>
+        <button type="button" id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="tool-page" id="main">
+    <nav class="tool-nav" data-tool-nav aria-label="在线工具"></nav>
+
+    <header class="tool-page-header">
+      <h1>在线哈希生成器</h1>
+      <p>计算 MD5、SHA-1、SHA-256、SHA-384、SHA-512 摘要，输出 Hex 或 Base64。文本与小文件均在浏览器本地处理。</p>
+    </header>
+
+    <section class="tool-panel" aria-labelledby="hash-options-heading">
+      <h2 id="hash-options-heading" class="tool-panel-title">算法与格式</h2>
+      <div class="timestamp-grid">
+        <div>
+          <label class="tool-label" for="hashAlgo">算法</label>
+          <select id="hashAlgo" class="tool-select">
+            <option value="MD5">MD5</option>
+            <option value="SHA-1">SHA-1</option>
+            <option value="SHA-256" selected>SHA-256</option>
+            <option value="SHA-384">SHA-384</option>
+            <option value="SHA-512">SHA-512</option>
+          </select>
+        </div>
+        <div>
+          <label class="tool-label" for="hashFormat">输出格式</label>
+          <select id="hashFormat" class="tool-select">
+            <option value="hex" selected>Hex（小写）</option>
+            <option value="base64">Base64</option>
+          </select>
+        </div>
+      </div>
+      <label class="tool-label" for="hashFile">从文件读取（可选，≤ 2MB）</label>
+      <input type="file" id="hashFile" class="tool-input" />
+      <div class="tool-actions">
+        <button type="button" class="tool-btn tool-btn-primary" id="btnHashRun">计算哈希</button>
+        <button type="button" class="tool-btn" id="btnHashCopy">复制结果</button>
+      </div>
+      <p id="hashStatus" class="timestamp-help" role="status" aria-live="polite">就绪</p>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="hash-io-heading">
+      <h2 id="hash-io-heading" class="tool-panel-title">输入 / 输出</h2>
+      <label class="tool-label" for="hashInput">文本输入</label>
+      <textarea id="hashInput" class="tool-textarea" spellcheck="false" placeholder="输入要计算摘要的文本…"></textarea>
+      <label class="tool-label" for="hashOutput">哈希结果</label>
+      <textarea id="hashOutput" class="tool-textarea" readonly spellcheck="false" placeholder="摘要将显示在这里…"></textarea>
+    </section>
+
+    <nav class="tool-footer-nav" aria-label="相关工具">
+      <h3>相关工具</h3>
+      <div class="tool-footer-links" data-tool-footer></div>
+    </nav>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="../../assets/logo.svg" alt="K" class="footer-logo" />
+        <span class="footer-brand-name">Koen's 工具箱</span>
+      </div>
+      <div class="footer-links">
+        <a href="../../index.html">首页</a>
+      </div>
+      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+
+  <script defer src="../../js/footer.js"></script>
+</body>
+</html>

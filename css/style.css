@@ -3013,6 +3013,8 @@ body.redesign-v2 {
 .v2-tool-uuid .v2-tool-icon { background: #6366f1; }
 .v2-tool-diff .v2-tool-icon { background: #ec4899; }
 .v2-tool-color .v2-tool-icon { background: #8b5cf6; }
+.v2-tool-hash .v2-tool-icon { background: #0ea5e9; }
+.v2-tool-qrcode .v2-tool-icon { background: #334155; }
 .v2-tool-java .v2-tool-icon { background: #4f46e5; }
 
 .v2-contact { text-align: center; }

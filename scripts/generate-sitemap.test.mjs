@@ -29,11 +29,11 @@ test("collectStaticUrls excludes templates and returns sorted unique locations",
   assert.deepEqual(locations, [...locations].sort());
 });
 
-test("collectStaticUrls includes all ten canonical self-built tools", () => {
+test("collectStaticUrls includes all thirteen canonical self-built tools", () => {
   const locations = collectStaticUrls(process.cwd()).map((item) => item.loc);
   const expected = [
-    "base64", "color", "cron", "diff", "json",
-    "jwt", "regex", "sql-formatter", "timestamp", "uuid",
+    "base64", "color", "cron", "diff", "hash", "json",
+    "jwt", "qrcode", "regex", "sql-formatter", "timestamp", "url-encode", "uuid",
   ].map((slug) => `https://tools.songyuankun.top/tools/${slug}/`);
 
   for (const location of expected) assert.ok(locations.includes(location), location);
