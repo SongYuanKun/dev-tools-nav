@@ -55,6 +55,7 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
     readFileSync("manual.md", "utf8"),
     readFileSync("docs/README.md", "utf8"),
   ].join("\n");
+  assert.ok(activeWorkflowFiles.includes(".github/workflows/tool-submission.yml"));
   assert.doesNotMatch(activeWorkflowsUnitsAndSummaries, /self-hosted|gtr-dev-tools-nav|github-actions-dev-tools-nav|deploy-1panel\.yml/);
 
   const runbook = readFileSync("docs/deploy-1panel.md", "utf8");

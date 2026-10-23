@@ -1,0 +1,107 @@
+name: Tool submission to PR
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: tool-submission-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  create-pr:
+    if: github.event.label.name == 'tool-submission-approved'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Validate issue and patch catalog
+        id: patch
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          set -euo pipefail
+          node scripts/tool-submission.mjs --write=true | tee /tmp/tool-submission.json
+          ID="$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/tool-submission.json","utf8")).id)')"
+          echo "tool_id=$ID" >> "$GITHUB_OUTPUT"
+          node --input-type=module <<'EOF'
+          import { readFileSync } from "node:fs";
+          import { parseToolCatalog, auditTools } from "./scripts/audit-tools.mjs";
+          const source = readFileSync("data/tools.js", "utf8");
+          const { invalidTools } = parseToolCatalog(source);
+          if (invalidTools.length) {
+            console.error(invalidTools);
+            process.exit(1);
+          }
+          const result = auditTools(process.cwd());
+          if (result.duplicateIds.length || result.invalidTools.length) {
+            console.error(result);
+            process.exit(1);
+          }
+          if (result.readmeCounts.total !== result.total) {
+            console.error("README catalog-total mismatch", result.readmeCounts, result.total);
+            process.exit(1);
+          }
+          console.log("catalog ok:", result.total);
+          EOF
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          TOOL_ID: ${{ steps.patch.outputs.tool_id }}
+        run: |
+          set -euo pipefail
+          BRANCH="bot/tool-submission-${ISSUE_NUMBER}-${TOOL_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add data/tools.js README.md
+          if git diff --cached --quiet; then
+            echo "No catalog changes; aborting."
+            exit 1
+          fi
+          git commit -m "chore: 收录工具 ${TOOL_ID}（来自 #${ISSUE_NUMBER}）"
+          git push -u origin "$BRANCH"
+          PR_URL="$(gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "chore: 收录工具 ${TOOL_ID}" \
+            --body "$(printf '%s\n' \
+              "自动生成自 Issue #${ISSUE_NUMBER}（标签 \`tool-submission-approved\`）。" \
+              "" \
+              "- 仅写入 \`data/tools.js\` 与 README 目录计数标记" \
+              "- 已校验 HTTPS URL、ID 格式与分类白名单" \
+              "- **未**执行 Issue 正文中的任何代码" \
+              "" \
+              "请人工复核分类表数量与文案后合并。" \
+              "" \
+              "Closes #${ISSUE_NUMBER}"
+            )")"
+          echo "Created $PR_URL"
+          gh issue comment "$ISSUE_NUMBER" --body "已根据校验结果创建收录 PR：${PR_URL}"
+
+      - name: Comment on validation failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --body "工具投稿自动化未能创建 PR。请检查 Issue 表单字段（ID / HTTPS URL / 分类 / 标签），修正后移除并重新添加 \`tool-submission-approved\` 标签。"

@@ -197,16 +197,17 @@ export function auditTools(root) {
 }
 
 function invariantsHold(result) {
-  return result.total === 73
-    && result.selfBuilt.length === 10
-    && result.categoryCounts["online-tools"] === 11
+  return Number.isInteger(result.total)
+    && result.total > 0
+    && result.selfBuilt.length === SELF_BUILT_TOOLS.length
+    && result.categoryCounts["online-tools"] === (result.readmeCounts.onlineTools ?? -1)
     && result.duplicateIds.length === 0
     && result.invalidTools.length === 0
     && result.missingCanonical.length === 0
     && result.selfBuiltCatalogErrors.length === 0
-    && result.readmeCounts.total === 73
-    && result.readmeCounts.selfBuilt === 10
-    && result.readmeCounts.onlineTools === 11
+    && result.readmeCounts.total === result.total
+    && result.readmeCounts.selfBuilt === result.selfBuilt.length
+    && Number.isInteger(result.readmeCounts.onlineTools)
     && result.readmeUsesCanonicalToolsPath;
 }
 

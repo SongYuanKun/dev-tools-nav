@@ -1,0 +1,95 @@
+name: 🧰 工具目录投稿
+description: 提议将外部开发者工具收录到目录（data/tools.js）
+title: "[Tool]: "
+labels: ["tool-submission", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢投稿！请先阅读 [贡献指南](https://github.com/SongYuanKun/dev-tools-nav/blob/main/CONTRIBUTING.md)。
+        本表单只用于**外链目录条目**；站内自研工具请走功能需求模板。
+        打上 `tool-submission-approved` 标签后，自动化会校验字段并尝试开启收录 PR（不会执行 Issue 正文中的任何代码）。
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提报前检查
+      options:
+        - label: 我已搜索现有目录与 Issue，确认尚未收录该工具
+          required: true
+        - label: 该工具不是破解、序列号、许可绕过或其它违规内容
+          required: true
+        - label: 官网使用 HTTPS，且我确认链接可公开访问
+          required: true
+  - type: input
+    id: tool_id
+    attributes:
+      label: 工具 ID（英文短横线）
+      description: 仅小写字母、数字与短横线，用作 data/tools.js 的 id，例如 `excalidraw`。
+      placeholder: excalidraw
+    validations:
+      required: true
+  - type: input
+    id: tool_name
+    attributes:
+      label: 工具显示名称
+      description: 中文或英文名称，将显示在目录卡片上。
+      placeholder: Excalidraw
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 分类
+      options:
+        - ai
+        - dev
+        - hosting
+        - security
+        - ops
+        - design
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 一句话简介
+      description: 不超过 160 字，纯文本，不要粘贴 HTML/脚本。
+      placeholder: 开源手绘风格白板，适合架构草图与协作讨论。
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: 官网 URL
+      description: 必须是 https:// 开头的公开链接。
+      placeholder: https://excalidraw.com/
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: 标签（逗号分隔）
+      description: 最多 5 个，例如 `白板,协作,开源`。
+      placeholder: 白板,协作,开源
+    validations:
+      required: true
+  - type: input
+    id: icon
+    attributes:
+      label: 图标 URL（可选）
+      description: 仅允许 https:// 图片地址；留空则使用 icon.horse 根据官网域名生成。
+      placeholder: https://icon.horse/icon/excalidraw.com
+  - type: dropdown
+    id: featured
+    attributes:
+      label: 是否建议精选
+      options:
+        - "否"
+        - "是"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: 补充说明（可选）
+      description: 许可协议、免费额度、与现有条目差异等。请勿粘贴可执行代码。
