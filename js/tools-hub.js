@@ -148,6 +148,24 @@
       persist();
       draw();
       drawTagChips();
+      syncClearFilters();
+    }
+
+    function clearTagFilters() {
+      state.tags = [];
+      persist();
+      draw();
+      drawTagChips();
+      syncClearFilters();
+    }
+
+    function syncClearFilters() {
+      var clearBtn = document.getElementById("clearTagFilters");
+      if (!clearBtn) return;
+      clearBtn.hidden = state.tags.length === 0;
+      clearBtn.textContent = state.tags.length
+        ? "清除标签筛选（" + state.tags.length + "）"
+        : "清除标签筛选";
     }
 
     function drawCategoryChips() {
@@ -271,10 +289,22 @@
 
     drawCategoryChips();
     drawTagChips();
+    syncClearFilters();
 
     searchEl.value = state.q;
     sortEl.value = state.sort;
     setTab(state.tab);
+
+    var openPaletteBtn = document.getElementById("openCommandPalette");
+    if (openPaletteBtn) {
+      openPaletteBtn.addEventListener("click", function () {
+        if (window.CommandPalette) window.CommandPalette.open();
+      });
+    }
+    var clearFiltersBtn = document.getElementById("clearTagFilters");
+    if (clearFiltersBtn) {
+      clearFiltersBtn.addEventListener("click", clearTagFilters);
+    }
 
     categoryWrap.addEventListener("click", function (e) {
       var btn = e.target.closest("[data-category]");
@@ -362,6 +392,7 @@
           persist();
           drawCategoryChips();
           drawTagChips();
+          syncClearFilters();
           draw();
         }
       }

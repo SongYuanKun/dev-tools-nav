@@ -36,13 +36,13 @@ test("operations SQL defines effective use and excludes activation tools commerc
     persistedTools,
     [
       "JSON 格式化", "时间戳转换", "Base64", "正则表达式", "Cron 表达式",
-      "JWT 解码", "SQL 格式化", "diff", "uuid",
+      "JWT 解码", "SQL 格式化", "diff", "uuid", "颜色转换",
     ],
   );
   for (const excluded of [undefined, "", "未知工具", "KMS 激活", "JRebel 激活"]) {
     assert.equal(persistedTools.includes(excluded), false, String(excluded));
   }
-  assert.doesNotMatch(whitelist, /color|颜色|kms|jrebel|激活/i);
+  assert.doesNotMatch(whitelist, /kms|jrebel|激活/i);
   assert.doesNotMatch(sql, /NOT\s+IN/si);
   assert.doesNotMatch(sql, /COALESCE\(\s*d\.string_value/si);
   assert.match(

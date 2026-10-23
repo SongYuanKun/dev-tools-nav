@@ -47,7 +47,14 @@
     cron: 'Cron 表达式',
     jwt: 'JWT 解码',
     sql: 'SQL 格式化',
-    sql_formatter: 'SQL 格式化'
+    sql_formatter: 'SQL 格式化',
+    diff: 'diff',
+    uuid: 'uuid',
+    color: '颜色转换',
+    'url-encode': 'URL 编解码',
+    url_encode: 'URL 编解码',
+    hash: '哈希生成器',
+    qrcode: '二维码生成器'
   };
 
   var ACTION_LABELS = {
@@ -69,7 +76,17 @@
     batch: '批量转换',
     diff: '时间差计算',
     match: '匹配测试',
-    sample: '加载示例'
+    sample: '加载示例',
+    generate: '生成',
+    run: '运行',
+    pick: '取色',
+    contrast: '对比度',
+    copy_css_var: '复制 CSS 变量',
+    apply: '应用',
+    hash: '哈希',
+    to_json: '转 JSON',
+    template: '模板',
+    digest: '摘要'
   };
 
   var CATEGORY_LABELS = {

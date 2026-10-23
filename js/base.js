@@ -674,6 +674,14 @@
 
 // ==================== Umami 中文描述 + 自定义事件 helper ====================
 (function () {
+  // 工具脚本常在 umami-labels 异步加载完成前就触发 tool_used；先排队，避免静默丢事件。
+  var pendingTracks = [];
+  if (typeof window.umamiTrack !== "function") {
+    window.umamiTrack = function (name, data) {
+      pendingTracks.push([name, data]);
+    };
+  }
+
   var scripts = document.getElementsByTagName('script');
   var i = scripts.length;
   var baseJs = '';
@@ -693,11 +701,25 @@
     s.defer = true;
     s.src = src;
     s.onload = function () { if (cb) cb(); };
+    s.onerror = function () { if (cb) cb(); };
     document.head.appendChild(s);
   }
 
-  // 先加载中文描述，再加载事件委托
+  function flushPendingTracks() {
+    if (!pendingTracks.length) return;
+    var track = window.umamiTrack;
+    var queued = pendingTracks.splice(0, pendingTracks.length);
+    if (typeof track !== "function") return;
+    for (var qi = 0; qi < queued.length; qi++) {
+      try { track(queued[qi][0], queued[qi][1]); } catch (_) {}
+    }
+  }
+
+  // 先加载中文描述，再加载事件委托与命令面板
   loadScript(root + 'umami-labels.js', function () {
-    loadScript(root + 'umami-helper.js');
+    flushPendingTracks();
+    loadScript(root + 'umami-helper.js', function () {
+      loadScript(root + 'command-palette.js');
+    });
   });
 })();

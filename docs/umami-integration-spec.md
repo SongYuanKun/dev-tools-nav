@@ -52,7 +52,7 @@
 | `js/sql-tool.js` | `sql_formatter` → SQL 格式化 | `format` → 格式化；`minify` → 压缩；`analyze` → 分析 |
 | `js/diff-tool.js` | `diff` → `diff` | `run` → `run` |
 | `js/uuid-tool.js` | `uuid` → `uuid` | `generate` → `generate` |
-| `js/color-tool.js` | — | 当前没有 `tool_used` 调用，因此不能从 Umami 计算有效使用 |
+| `js/color-tool.js` | `color` → 颜色转换 | `contrast` → 对比度；`copy_css_var` → 复制 CSS 变量；`pick` → 取色 |
 
 这张表描述现状，不把“打开页面”“点击卡片”当成有效使用。补充或改名动作时，应同时修改业务调用、`js/umami-labels.js`、本表和报表契约测试。
 
@@ -68,7 +68,7 @@
 6. visitors 是浏览器 `distinct_id`，缺失时按 `session_id` 回退的近似访客口径，即 `COUNT(DISTINCT COALESCE(s.distinct_id, e.session_id::text))`。
 7. effective_users 使用 `COUNT(DISTINCT COALESCE(session.distinct_id, session_id::text))`，不是 session 数；路径明细保留，但指标阈值只引用汇总层的独立有效工具用户。
 8. 跨 hostname 因浏览器存储隔离通常无法共享 `distinct_id`，所以 `all_hosts_summary` 的独立用户只能视为现有标识下的近似去重，可能高估真实跨站人数。
-9. 有效使用采用 fail-closed 白名单。只有 `JSON 格式化`、`时间戳转换`、`Base64`、`正则表达式`、`Cron 表达式`、`JWT 解码`、`SQL 格式化`、`diff`、`uuid` 计入；Color 尚未上报。缺失工具属性、未知值、KMS/JRebel 激活值的 effective_uses/effective_users 均为 0。
+9. 有效使用采用 fail-closed 白名单。只有 `JSON 格式化`、`时间戳转换`、`Base64`、`正则表达式`、`Cron 表达式`、`JWT 解码`、`SQL 格式化`、`diff`、`uuid`、`颜色转换` 计入。缺失工具属性、未知值、KMS/JRebel 激活值的 effective_uses/effective_users 均为 0。
 
 Umami 3.2.0 实际 schema 已于 2026-07-13 在只读连接上验证：`event_data.website_event_id` 关联 `website_event.event_id`；文本事件属性保存在 `event_data.string_value`，属性名在 `event_data.data_key`。报表不得改用旧字段假设。
 

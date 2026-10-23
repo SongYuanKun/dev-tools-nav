@@ -41,8 +41,11 @@
     <div class="tools-hub-header">
       <div>
         <div class="tools-hub-title">在线工具</div>
-        <div class="tools-hub-subtitle">更好找、更好用、更一致。按 <kbd>/</kbd> 快速聚焦搜索，按 <kbd>Esc</kbd> 清空。</div>
+        <div class="tools-hub-subtitle">更好找、更好用、更一致。按 <kbd>/</kbd> 聚焦搜索，按 <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>K</kbd> 打开快速面板，按 <kbd>Esc</kbd> 清空筛选。</div>
       </div>
+      <button type="button" class="cmdk-trigger" id="openCommandPalette" aria-label="打开快速搜索">
+        快速搜索 <kbd>Ctrl/⌘ K</kbd>
+      </button>
     </div>
 
     <div class="tools-hub-toolbar">
@@ -54,8 +57,11 @@
           <button id="tabRecent" type="button" class="tools-segment">最近</button>
         </div>
       </div>
-      <div class="tools-chips" id="categoryChips" aria-label="分类"></div>
-      <div class="tools-chips" id="tagChips" aria-label="标签"></div>
+      <div class="tools-filter-row">
+        <div class="tools-chips" id="categoryChips" aria-label="分类"></div>
+        <button type="button" class="tools-clear-filters" id="clearTagFilters" hidden>清除标签筛选</button>
+      </div>
+      <div class="tools-chips" id="tagChips" aria-label="标签筛选"></div>
     </div>
 
     <div class="tools-summary">
