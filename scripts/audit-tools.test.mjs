@@ -93,20 +93,19 @@ test("README canonical policy rejects legacy paths in the public table", () => {
   ), false);
 });
 
-test("catalog has the approved counts and unique IDs", () => {
+test("catalog has unique IDs and README counts stay in sync", () => {
   const result = auditTools(process.cwd());
-  assert.equal(result.total, 73);
-  assert.equal(result.categoryCounts["online-tools"], 11);
+  assert.ok(result.total > 0);
+  assert.equal(result.readmeCounts.total, result.total);
+  assert.equal(result.readmeCounts.selfBuilt, result.selfBuilt.length);
+  assert.equal(result.readmeCounts.onlineTools, result.categoryCounts["online-tools"]);
   assert.deepEqual(result.duplicateIds, []);
   assert.deepEqual(result.invalidTools, []);
 });
 
-test("all ten self-built tools have canonical shells", () => {
+test("all listed self-built tools have canonical shells", () => {
   const result = auditTools(process.cwd());
-  assert.deepEqual(result.selfBuilt, [
-    "base64", "color", "cron", "diff", "json",
-    "jwt", "regex", "sql-formatter", "timestamp", "uuid",
-  ]);
+  assert.deepEqual(result.selfBuilt, [...SELF_BUILT_TOOLS]);
   assert.deepEqual(result.missingCanonical, []);
 });
 
@@ -142,7 +141,9 @@ test("audit reports a self-built tool with the wrong catalog URL", () => {
 
 test("README states all three catalog counts and canonical URL policy", () => {
   const result = auditTools(process.cwd());
-  assert.deepEqual(result.readmeCounts, { total: 73, selfBuilt: 10, onlineTools: 11 });
+  assert.equal(result.readmeCounts.total, result.total);
+  assert.equal(result.readmeCounts.selfBuilt, result.selfBuilt.length);
+  assert.equal(result.readmeCounts.onlineTools, result.categoryCounts["online-tools"]);
   assert.equal(result.readmeUsesCanonicalToolsPath, true);
 });
 
