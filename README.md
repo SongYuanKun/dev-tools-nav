@@ -10,9 +10,9 @@
 [![Security Policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-> 目录收录 71 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 **MIT 协议（OSI 认可）** 开源，**非商业** — 不展示广告、不做联盟推广、不提供付费功能。
+> 目录收录 73 条开发与建站资源，其中 10 款为浏览器内自研工具；`online-tools` 数据分类包含 11 条记录。纯静态实现，可直接部署到 **GitHub Pages**（默认）或 **1Panel**。分类与数量以 `data/tools.js` 为准。本项目以 **MIT 协议（OSI 认可）** 开源，**非商业** — 不展示广告、不做联盟推广、不提供付费功能。
 
-<!-- catalog-total: 71 -->
+<!-- catalog-total: 73 -->
 <!-- catalog-self-built: 10 -->
 <!-- catalog-online-tools: 11 -->
 

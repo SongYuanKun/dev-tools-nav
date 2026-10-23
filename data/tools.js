@@ -233,6 +233,35 @@ const TOOLS_DATA = [
       },
     },
   },
+  {
+    id: "codex-quota-overlay",
+    name: "Codex Quota Overlay",
+    description: "Codex Desktop 的本地额度浮层与 Quota Center，显示剩余额度、重置倒计时和使用节奏估算。",
+    category: "ai",
+    tags: ["AI编程", "Codex", "Windows"],
+    url: "https://cpys.github.io/codex-quota-overlay/",
+    icon: "https://icon.horse/icon/cpys.github.io",
+    featured: false,
+    content: {
+      intro: "Codex Quota Overlay 是面向 Codex Desktop 的免费开源 Windows 辅助工具，在对话窗口附近显示剩余额度、重置倒计时、额度桶与使用节奏估算。通过本地 Codex App Server 读取额度数据，不读取对话内容，与 OpenAI 无官方关系。",
+      features: ["本地额度浮层", "Quota Center 总览", "重置倒计时与使用节奏估算", "MIT 开源、无订阅付费墙"],
+      quickstart: [
+        { title: "查看项目与下载", code: "打开 https://cpys.github.io/codex-quota-overlay/ 获取说明与 Windows 分发包", lang: "bash" },
+        { title: "源码仓库", code: "https://github.com/cpys/codex-quota-overlay", lang: "bash" },
+      ],
+      tips: ["当前分发包面向 Windows 10/11 x64", "需本地 Codex Desktop / App Server 可用", "API-key-only 配置可能无法提供 ChatGPT 额度数据"],
+      links: [
+        { label: "项目主页", url: "https://cpys.github.io/codex-quota-overlay/" },
+        { label: "GitHub 源码", url: "https://github.com/cpys/codex-quota-overlay" },
+      ],
+      freeQuota: {
+        models: ["不适用（本地桌面辅助工具）"],
+        quota: "工具本身免费开源；显示的是本机 Codex 额度",
+        period: "随 Codex 账户额度周期",
+        refresh: "随 Codex 重置倒计时",
+      },
+    },
+  },
 
   // --- AI 图像/设计 ---
   {
@@ -377,6 +406,34 @@ const TOOLS_DATA = [
         quota: "有限试用体验，很快触达上限",
         period: "试用期",
         refresh: "不刷新（需订阅 $10/用户/月）",
+      },
+    },
+  },
+  {
+    id: "doc2x",
+    name: "Doc2X",
+    description: "PDF、扫描件、图片转 Word、Markdown、LaTeX，支持公式与表格识别及文档翻译。",
+    category: "ai",
+    tags: ["AI办公", "文档转换", "OCR"],
+    url: "https://doc2x.noedgeai.com/",
+    icon: "https://icon.horse/icon/doc2x.noedgeai.com",
+    featured: false,
+    content: {
+      intro: "Doc2X 是 NoEdgeAI 推出的文档解析与格式转换服务，可将 PDF、扫描件与图片转为 Word、Markdown、LaTeX，支持公式、表格识别与文档翻译。核心网页功能需账号，文档在云端处理；本站仅作目录外链收录，不实现上传或云处理。",
+      features: ["PDF / 扫描件 / 图片解析", "导出 Word、Markdown、LaTeX", "公式与表格识别", "文档翻译"],
+      quickstart: [
+        { title: "打开官网", code: "访问 https://doc2x.noedgeai.com/ 注册后上传文档转换", lang: "bash" },
+      ],
+      tips: ["核心功能有有限免费额度，超出可付费升级", "API 单独计费", "文档在云端处理，注意敏感资料合规"],
+      links: [
+        { label: "Doc2X 官网", url: "https://doc2x.noedgeai.com/" },
+        { label: "NoEdgeAI", url: "https://www.noedgeai.com/" },
+      ],
+      freeQuota: {
+        models: ["Doc2X 文档解析"],
+        quota: "有限免费额度，付费升级；API 单独计费",
+        period: "按账号额度",
+        refresh: "以官网当前套餐为准",
       },
     },
   },

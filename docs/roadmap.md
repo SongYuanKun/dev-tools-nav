@@ -24,7 +24,7 @@ last_verified: 2026-09-11
 |---|---|---|---|
 | 恢复测试并建立 CI 门禁 | done | `npm test` 全部通过；push 与 pull request 均执行 `npm ci`、`npm test` | [`scripts/*.test.mjs`](../scripts/audit-tools.test.mjs)、[测试工作流](../.github/workflows/test.yml) |
 | 修复截图自动化 | done | 本地与 Actions 均稳定生成首页、博客、JSON 三张有效 PNG；JSON 截图含示例内容；失败能定位页面与步骤 | [`capture-screenshots.mjs`](../scripts/capture-screenshots.mjs)、[截图工作流](../.github/workflows/update-screenshots.yml)、[2026-07-14 Actions 成功记录](https://github.com/SongYuanKun/dev-tools-nav/actions/runs/29305839196) |
-| 校验工具元数据与公开路径 | done | 工具总数 71、自研工具 10、`online-tools` 分类 11；ID 唯一；canonical 为 `/tools/*/` | [`audit-tools.mjs`](../scripts/audit-tools.mjs)、[`audit-tools.test.mjs`](../scripts/audit-tools.test.mjs) |
+| 校验工具元数据与公开路径 | done | 工具总数 73、自研工具 10、`online-tools` 分类 11；ID 唯一；canonical 为 `/tools/*/` | [`audit-tools.mjs`](../scripts/audit-tools.mjs)、[`audit-tools.test.mjs`](../scripts/audit-tools.test.mjs) |
 | 建立双 hostname 运营报表 | done | 输出 hostname、规范化路径、PV、会话、访客、有效使用次数与用户数；有效使用按 fail-closed 白名单统计 | [运营 SQL](../scripts/umami-operations-report.sql)、[Umami 规范](./umami-integration-spec.md) |
 | 建立活跃文档职责与一致性门禁 | done | 自动检查 README 路线源、AI 路线重复、部署 manifest 结论、Markdown 目标态和历史 Prompt 归档 | [文档一致性测试](../scripts/audit-tools.test.mjs)、[文档索引](./README.md) |
 
