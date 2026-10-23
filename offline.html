@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>离线可用 · Koen's 工具箱</title>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .offline-wrap {
+      max-width: 640px;
+      margin: 12vh auto;
+      padding: 24px;
+      text-align: center;
+    }
+    .offline-wrap h1 { margin-bottom: 12px; }
+    .offline-wrap p { color: var(--text-muted, #64748b); line-height: 1.7; }
+    .offline-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <main class="offline-wrap">
+    <h1>当前处于离线状态</h1>
+    <p>博客与 CSDN 同步内容需要联网刷新。已缓存的自建在线工具仍可打开使用，数据继续只在浏览器本地处理。</p>
+    <div class="offline-actions">
+      <a class="v2-btn v2-btn-primary" href="tools/">打开在线工具</a>
+      <a class="v2-btn v2-btn-ghost" href="index.html">返回首页</a>
+      <button class="v2-btn v2-btn-ghost" type="button" id="retryBtn">重新连接</button>
+    </div>
+  </main>
+  <script>
+    document.getElementById("retryBtn").addEventListener("click", function () {
+      location.reload();
+    });
+  </script>
+</body>
+</html>
