@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-10-19T15:27:22+08:00",
-  "weekLabel": "2026-10-12 ~ 2026-10-19",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、多模态、调研 / 知识 等方向。代表项目包括 rea、diagram-design、hyperframes。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-10-26T15:32:08+08:00",
+  "weekLabel": "2026-10-19 ~ 2026-10-26",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 编程 Agent、记忆 / Harness、Agent Skills 等方向。代表项目包括 security-audit-skill、orca、graphify。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,48 +31,88 @@
   "projects": [
     {
       "rank": 1,
-      "repo": "morluto/rea",
-      "language": "TypeScript",
-      "stars": 327179,
-      "weekStars": 229268,
+      "repo": "cloudflare/security-audit-skill",
+      "language": "JavaScript",
+      "stars": 47444,
+      "weekStars": 15072,
       "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：rea — Reverse engineer anything with agents, from app behavior down to native binaries.",
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：security-audit-skill — A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
       "features": [
-        "Reverse engineer anything with agents, from app behavior down to native binaries.",
+        "A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "调研 / 知识",
-        "rea"
+        "Agent Skills",
+        "security audit skill",
+        "Agent Skill"
       ]
     },
     {
       "rank": 2,
-      "repo": "cathrynlavery/diagram-design",
-      "language": "HTML",
-      "stars": 57952,
-      "weekStars": 7901,
+      "repo": "stablyai/orca",
+      "language": "TypeScript",
+      "stars": 106219,
+      "weekStars": 9622,
       "trending": true,
       "topic": "coding",
-      "summary": "本周 GitHub Trending：diagram-design — Editorial diagram design for Claude Code, Codex, GitHub Copilot, Cursor, Factory Droid, and Pi. 44 diagram types. Self-contained HTML + SVG. No shadows. No Mermaid slop.",
+      "summary": "本周 GitHub Trending：orca — Orca is the place for working with a fleet of agents (e.g. Grok Bot, Claude Code). Run any coding agent with your own subscription. Available on desktop, mobile and remote runtime.",
       "features": [
-        "Editorial diagram design for Claude Code, Codex, GitHub Copilot, Cursor, Factory Droid, and Pi. 44 diagram types. Self-contained HTML + SVG. No shadows. No Mermaid slop.",
+        "Orca is the place for working with a fleet of agents (e.g. Grok Bot, Claude Code). Run any coding agent with your own subscription. Available on desktop, mobile and remote runtime.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "编程 Agent",
-        "diagram design"
+        "orca"
       ]
     },
     {
       "rank": 3,
+      "repo": "Graphify-Labs/graphify",
+      "language": "Python",
+      "stars": 135522,
+      "weekStars": 6903,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：graphify — Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.",
+      "features": [
+        "Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "graphify",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 4,
+      "repo": "anomalyco/opencode",
+      "language": "TypeScript",
+      "stars": 221661,
+      "weekStars": 5921,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：opencode — The open source coding agent.",
+      "features": [
+        "The open source coding agent.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "opencode"
+      ]
+    },
+    {
+      "rank": 5,
       "repo": "heygen-com/hyperframes",
       "language": "TypeScript",
-      "stars": 67016,
-      "weekStars": 5883,
+      "stars": 72432,
+      "weekStars": 5612,
       "trending": true,
       "topic": "multimodal",
       "summary": "本周 GitHub Trending：hyperframes — Write HTML. Render video. Built for agents.",
@@ -87,67 +127,67 @@
       ]
     },
     {
-      "rank": 4,
-      "repo": "MadsLorentzen/ai-job-search",
-      "language": "Python",
-      "stars": 54416,
-      "weekStars": 5742,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：ai-job-search — The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.",
-      "features": [
-        "The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "ai job search"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "anthropics/claude-plugins-official",
-      "language": "Python",
-      "stars": 42914,
-      "weekStars": 4774,
-      "trending": true,
-      "topic": "coding",
-      "summary": "本周 GitHub Trending：claude-plugins-official — Official, Anthropic-managed directory of high quality Claude Code Plugins.",
-      "features": [
-        "Official, Anthropic-managed directory of high quality Claude Code Plugins.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "编程 Agent",
-        "claude plugins official"
-      ]
-    },
-    {
       "rank": 6,
-      "repo": "mksglu/context-mode",
-      "language": "TypeScript",
-      "stars": 30861,
-      "weekStars": 4138,
+      "repo": "akitaonrails/ai-memory",
+      "language": "Rust",
+      "stars": 13599,
+      "weekStars": 3254,
       "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：context-mode — Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), persists session memory, and enforces routing across 17 platforms via MCP + hooks.",
+      "topic": "memory",
+      "summary": "本周 GitHub Trending：ai-memory — Solution for long term memory for agent coding CLIs and to facilitate handoff between different agent vendors",
       "features": [
-        "Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), persists session memory, and enforces routing across 17 platforms via MCP + hooks.",
+        "Solution for long term memory for agent coding CLIs and to facilitate handoff between different agent vendors",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "Agent Skills",
-        "context mode"
+        "记忆 / Harness",
+        "ai memory"
       ]
     },
     {
       "rank": 7,
+      "repo": "ruvnet/ruflo",
+      "language": "TypeScript",
+      "stars": 79343,
+      "weekStars": 2987,
+      "trending": true,
+      "topic": "memory",
+      "summary": "本周 GitHub Trending：ruflo — 🌊 The original agent harness. Deploy intelligent multi-player swarms, coordinate autonomous workflows, and build conversational AI systems. Features adaptive memory, self-learning intelligence, federation, vector RAG integration, and native Claude Code / Codex / Hermes and many more Integrated",
+      "features": [
+        "🌊 The original agent harness. Deploy intelligent multi-player swarms, coordinate autonomous workflows, and build conversational AI systems. Features adaptive memory, self-learning intelligence, federation, vector RAG integration, and native Claude Code / Codex / Hermes and many more Integrated",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "记忆 / Harness",
+        "ruflo"
+      ]
+    },
+    {
+      "rank": 8,
+      "repo": "morluto/rea",
+      "language": "TypeScript",
+      "stars": 386603,
+      "weekStars": 0,
+      "trending": false,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：rea — Reverse engineer anything with agents, from app behavior down to native binaries.",
+      "features": [
+        "Reverse engineer anything with agents, from app behavior down to native binaries.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "rea"
+      ]
+    },
+    {
+      "rank": 9,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 301771,
+      "stars": 305213,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -164,10 +204,10 @@
       ]
     },
     {
-      "rank": 8,
+      "rank": 10,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 296591,
+      "stars": 303477,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -184,10 +224,10 @@
       ]
     },
     {
-      "rank": 9,
+      "rank": 11,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 283491,
+      "stars": 289071,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -204,10 +244,10 @@
       ]
     },
     {
-      "rank": 10,
+      "rank": 12,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 255031,
+      "stars": 257151,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
@@ -221,26 +261,6 @@
         "记忆 Agent",
         "持久化",
         "Agent 运行时"
-      ]
-    },
-    {
-      "rank": 11,
-      "repo": "anthropics/skills",
-      "language": "Python",
-      "stars": 182069,
-      "weekStars": 0,
-      "trending": false,
-      "topic": "skills",
-      "summary": "Anthropic 官方 Agent Skills 公开仓库，文件夹化指令 + 脚本 + 资源扩展 Claude 能力。",
-      "features": [
-        "SKILL.md + 脚本的标准结构，已成行业参考模板。",
-        "覆盖文档生成、数据分析、流程自动化等任务。",
-        "企业内部 Agent 技能库设计的最佳实践样本。"
-      ],
-      "tags": [
-        "官方 Skills",
-        "Claude",
-        "能力扩展"
       ]
     }
   ]
