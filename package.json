@@ -49,7 +49,7 @@
     "@codemirror/commands": "^6.11.1",
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/lint": "^6.9.7",
-    "@codemirror/merge": "^6.12.2",
+    "@codemirror/merge": "^6.12.3",
     "@codemirror/state": "^6.7.6",
     "codemirror": "^6.0.2",
     "qrcode": "^1.5.4",
