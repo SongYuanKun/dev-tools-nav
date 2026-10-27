@@ -628,7 +628,7 @@ const AI_WORKFLOW_DATA = [
           "用 AI 生成组件使用说明和代码示例",
           "让 AI 帮你写设计评审的汇报材料",
         ],
-        prompt: "请根据以下设计参数，生成一份完整的设计规范文档：主色 #6366f1，字体 Inter/Noto Sans SC，圆角 16px，间距 8px 基准",
+        prompt: "请根据以下设计参数，生成一份完整的设计规范文档：主色 #FF5C45，字体 Geist/Noto Sans SC，圆角 12px，间距 8px 基准",
       },
     ],
   },

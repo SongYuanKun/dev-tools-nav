@@ -3,6 +3,18 @@
 <head>
   <script>
     (function () {
+      try {
+        var t = localStorage.getItem("dev-tools-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
       if (new URLSearchParams(location.search).get("embed") === "1") {
         document.documentElement.classList.add("is-embed");
         return;
@@ -84,7 +96,7 @@
       <h2 id="color-preview-heading" class="tool-panel-title">颜色预览</h2>
       <div id="colorPreview" class="color-preview" role="img" aria-label="当前颜色预览"></div>
       <label class="tool-label" for="colorPicker">取色器</label>
-      <input type="color" id="colorPicker" class="tool-input" value="#6366f1" />
+      <input type="color" id="colorPicker" class="tool-input" value="#FF5C45" />
     </section>
 
     <section class="tool-panel" aria-labelledby="color-formats-heading">
@@ -92,7 +104,7 @@
       <div class="color-input-row">
         <div>
           <label class="tool-label" for="hexInput">HEX</label>
-          <input id="hexInput" class="tool-input" value="#6366f1" autocomplete="off" spellcheck="false" />
+          <input id="hexInput" class="tool-input" value="#FF5C45" autocomplete="off" spellcheck="false" />
         </div>
         <div>
           <label class="tool-label" for="rgbInput">RGB</label>
@@ -118,7 +130,7 @@
         </div>
         <div>
           <label class="tool-label" for="bgColor">背景色</label>
-          <input type="color" id="bgColor" class="tool-input" value="#6366f1" />
+          <input type="color" id="bgColor" class="tool-input" value="#FF5C45" />
         </div>
       </div>
       <div id="contrastResult" class="tool-result">调整前景色与背景色以检测 WCAG 对比度。</div>

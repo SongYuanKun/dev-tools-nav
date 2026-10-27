@@ -82,26 +82,35 @@
 
     return [
       '<div class="navbar-inner">',
-      '  <a href="' + prefix + 'index.html" class="logo" aria-label="Koen 首页">',
-      '    <img src="' + prefix + 'assets/logo.svg" alt="K" class="logo-img" />',
-      '    <span class="logo-text">Koen</span>',
+      '  <a href="' + prefix + 'index.html" class="logo" aria-label="Koen 工具箱首页">',
+      '    <span class="brand-led" aria-hidden="true"></span>',
+      '    <span class="logo-text">Koen 工具箱</span>',
+      '    <span class="logo-divider" aria-hidden="true"></span>',
+      '    <span class="logo-tagline">开发者工具导航</span>',
       '  </a>',
       '  <div class="nav-links">',
       '    ' + a(prefix + 'index.html', '首页', 'home', active),
       '    ' + aiDropdown,
-      '    ' + a(prefix + 'pages/tools/index.html', '工具', 'tools', active),
+      '    ' + a(prefix + 'tools/', '工具', 'tools', active),
       '    ' + a(prefix + 'pages/blog/index.html', '博客', 'blog', active),
       '  </div>',
-      '  <button id="themeToggle" class="theme-toggle"',
-      '    aria-label="切换主题" title="切换主题">亮色</button>',
+      '  <div class="nav-actions">',
+      '    <span class="local-mode-badge" title="数据留在本机，不上传"><span class="led-dim" aria-hidden="true"></span>本地模式</span>',
+      '    <button type="button" class="nav-search-pill" id="navSearchPill" aria-label="打开搜索（Ctrl 或 ⌘ + K）">',
+      '      <span class="label">搜索</span><kbd>⌘K</kbd>',
+      '    </button>',
+      '    <button id="themeToggle" class="theme-toggle" type="button"',
+      '      aria-label="切换主题" title="切换主题">亮</button>',
+      '  </div>',
       '</div>'
     ].join('');
   }
 
   function applyThemeToBtn(btn, theme) {
     if (!btn) return;
-    btn.textContent = theme === 'dark' ? '亮色' : '暗色';
+    btn.textContent = theme === 'dark' ? '亮' : '暗';
     btn.setAttribute('title', theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式');
+    btn.setAttribute('aria-label', theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式');
   }
 
   function stripDecorativeEmoji(root) {
@@ -187,6 +196,8 @@
         localStorage.setItem('dev-tools-theme', next);
         document.documentElement.setAttribute('data-theme', next);
         applyThemeToBtn(btn, next);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', '#FF5C45');
         if (typeof window.umamiTrack === 'function') {
           window.umamiTrack('theme_toggle', { from: cur, to: next });
         }
@@ -195,6 +206,19 @@
         }
         // 同步 main.js ThemeManager（如果存在）
         if (window.ThemeManager) window.ThemeManager.apply(next);
+      });
+    }
+
+    var searchPill = document.getElementById('navSearchPill');
+    if (searchPill) {
+      searchPill.addEventListener('click', function () {
+        var stage = document.getElementById('homeSearchInput');
+        if (stage) {
+          stage.focus();
+          stage.select();
+          return;
+        }
+        if (window.CommandPalette) window.CommandPalette.open();
       });
     }
 
@@ -284,7 +308,7 @@
   function ensureMeta(name, content) {
     var existing = document.querySelector('meta[name="' + name + '"]');
     if (existing) {
-      if (!existing.getAttribute("content")) existing.setAttribute("content", content);
+      existing.setAttribute("content", content);
       return existing;
     }
     var meta = document.createElement("meta");
@@ -298,7 +322,9 @@
 
   var root = resolveSiteRoot();
   ensureLink("manifest", root + "manifest.webmanifest");
-  ensureMeta("theme-color", "#6366f1");
+  ensureMeta("theme-color", "#FF5C45");
+  var themeColorMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeColorMeta) themeColorMeta.setAttribute("content", "#FF5C45");
   ensureLink("apple-touch-icon", root + "assets/icons/icon-192.png", { sizes: "192x192" });
 
   if (isEmbed()) return;

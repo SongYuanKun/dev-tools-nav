@@ -3,6 +3,18 @@
 <head>
   <script>
     (function () {
+      try {
+        var t = localStorage.getItem("dev-tools-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
       if (new URLSearchParams(location.search).get("embed") === "1") {
         document.documentElement.classList.add("is-embed");
         return;

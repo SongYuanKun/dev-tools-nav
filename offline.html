@@ -4,25 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
-  <title>离线可用 · Koen's 工具箱</title>
+  <meta name="theme-color" content="#FF5C45" />
+  <title>离线可用 · Koen 工具箱</title>
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("dev-tools-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     .offline-wrap {
       max-width: 640px;
-      margin: 12vh auto;
+      margin: 18vh auto;
       padding: 24px;
       text-align: center;
     }
-    .offline-wrap h1 { margin-bottom: 12px; }
-    .offline-wrap p { color: var(--text-muted, #64748b); line-height: 1.7; }
-    .offline-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+    .offline-wrap h1 {
+      margin-bottom: 12px;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .offline-wrap p {
+      color: rgb(var(--muted));
+      line-height: 1.7;
+    }
+    .offline-led {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgb(var(--signal));
+      box-shadow: 0 0 8px rgb(var(--signal) / 0.55);
+      margin-bottom: 16px;
+    }
+    .offline-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
   </style>
 </head>
-<body>
+<body class="site-v2">
   <main class="offline-wrap">
+    <span class="offline-led" aria-hidden="true"></span>
     <h1>当前处于离线状态</h1>
-    <p>博客与 CSDN 同步内容需要联网刷新。已缓存的自建在线工具仍可打开使用，数据继续只在浏览器本地处理。</p>
+    <p>博客与同步内容需要联网刷新。已缓存的自建在线工具仍可打开使用，数据继续只在浏览器本地处理，不上传。</p>
     <div class="offline-actions">
       <a class="v2-btn v2-btn-primary" href="tools/">打开在线工具</a>
       <a class="v2-btn v2-btn-ghost" href="index.html">返回首页</a>

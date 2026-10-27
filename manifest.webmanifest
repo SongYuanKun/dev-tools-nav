@@ -1,5 +1,5 @@
 {
-  "name": "Koen's 工具箱",
+  "name": "Koen 工具箱",
   "short_name": "Koen工具箱",
   "description": "开发者在线工具导航站：浏览器内自研工具，数据不出站。",
   "lang": "zh-CN",
@@ -8,8 +8,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0f172a",
-  "theme_color": "#6366f1",
+  "background_color": "#141312",
+  "theme_color": "#FF5C45",
   "icons": [
     {
       "src": "assets/icons/icon-192.png",

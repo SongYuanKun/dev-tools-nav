@@ -214,7 +214,7 @@ body.json-page .json-site-footer a {
 .json-error-locate { min-height: 44px; border: 0; background: transparent; color: inherit; text-decoration: underline; cursor: pointer; }
 
 .json-panels { min-height: clamp(460px, 62vh, 760px); background: #080d15; }
-[data-theme="light"] .json-panels { background: #fbfcff; }
+[data-theme="light"] .json-panels { background: rgb(var(--raised)); }
 .json-panels [role="tabpanel"] { min-height: inherit; }
 .json-panels [role="tabpanel"][hidden] { display: none; }
 .json-editor-heading {
@@ -261,7 +261,7 @@ body.json-page .json-site-footer a {
 .json-mode-error { min-height: 24px; margin: 0; padding: 10px 20px; color: var(--jw-danger); font-size: .82rem; overflow-wrap: anywhere; }
 .json-mode-result-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; color: var(--jw-text); }
 .json-mode-layout pre { min-height: 260px; margin: 0; padding: 16px; overflow: auto; border: 1px solid var(--jw-border); border-radius: 10px; background: #080d15; color: #dbe7f7; font: .86rem/1.65 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
-[data-theme="light"] .json-mode-layout pre { background: #f8fafc; color: #1e293b; }
+[data-theme="light"] .json-mode-layout pre { background: rgb(var(--raised)); color: #1e293b; }
 .jsonpath-history { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .json-history-chip { min-height: 44px; max-width: 100%; padding: 0 10px; overflow: hidden; border: 1px solid var(--jw-border); border-radius: 999px; background: var(--jw-surface-2); color: var(--jw-muted); font: .74rem ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
 
@@ -281,7 +281,7 @@ body.json-page .json-site-footer a {
 
 .json-secondary-editor, .json-merge-shell { min-height: clamp(380px, 52vh, 650px); }
 .json-secondary-editor .cm-editor, .json-merge-shell .cm-editor { min-height: inherit; background: #080d15; color: #dbe7f7; font-size: 13px; }
-[data-theme="light"] .json-secondary-editor .cm-editor, [data-theme="light"] .json-merge-shell .cm-editor { background: #fbfcff; color: #1e293b; }
+[data-theme="light"] .json-secondary-editor .cm-editor, [data-theme="light"] .json-merge-shell .cm-editor { background: rgb(var(--raised)); color: #1e293b; }
 .json-secondary-editor .cm-scroller, .json-merge-shell .cm-scroller { min-height: inherit; font-family: "SFMono-Regular", Consolas, monospace; line-height: 1.65; }
 .json-merge-shell .cm-mergeView { height: clamp(380px, 52vh, 650px); overflow: auto; }
 .json-merge-shell .cm-mergeViewEditor { min-width: 0; }

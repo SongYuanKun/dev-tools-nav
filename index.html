@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="description" content="Koen 工具箱：面向开发者的在线工具、AI 专题、技术文章和实用开发资源。" />
+  <meta name="description" content="Koen 工具箱：面向开发者的在线工具、AI 专题、技术文章和实用开发资源。数据留在本机，不上传。" />
   <meta name="keywords" content="Koen工具箱,在线工具,开发者工具,AI专题,JSON格式化,时间戳转换,Base64,正则表达式,SQL格式化,JWT解码" />
   <meta property="og:title" content="Koen 工具箱" />
-  <meta property="og:description" content="面向开发者的在线工具、AI 专题和技术文章，浏览器端运行，打开即用。" />
+  <meta property="og:description" content="面向开发者的在线工具、AI 专题和技术文章，浏览器端运行，打开即用，数据留在本机。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tools.songyuankun.top/" />
   <meta property="og:image" content="assets/avatar.jpg" />
@@ -17,352 +17,261 @@
   <meta name="twitter:description" content="面向开发者的在线工具、AI 专题和技术文章，浏览器端运行，打开即用。" />
   <link rel="canonical" href="https://tools.songyuankun.top/" />
   <title>Koen 工具箱 - 开发者在线工具与 AI 专题</title>
-  <meta name="theme-color" content="#6366f1" />
+  <meta name="theme-color" content="#FF5C45" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" sizes="192x192" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("dev-tools-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <script src="data/tools.js"></script>
   <script defer src="js/base.js"></script>
 </head>
-<body class="redesign-v2">
+<body class="signal-desk redesign-v2 site-v2">
   <header>
     <nav class="navbar" role="navigation" aria-label="主导航"></nav>
-    <div class="header-badges" aria-label="项目合规徽章">
-      <a href="https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" data-umami-event="badge_mit_click" data-umami-event-op="OP-203" title="MIT 开源协议（OSI 认可）">
-        <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" loading="lazy" />
-      </a>
-      <a href="https://www.jetbrains.com/community/opensource/" target="_blank" rel="noopener noreferrer" data-umami-event="badge_jetbrains_noncommercial_click" data-umami-event-op="OP-203" title="JetBrains Non-Commercial Open Source">
-        <img src="assets/jetbrains-noncommercial.svg" alt="JetBrains Non-Commercial Open Source" loading="lazy" />
-      </a>
-    </div>
   </header>
 
-  <!-- OP-303：隐私承诺横幅（三短语强制显式，可关闭 localStorage 记忆） -->
-  <aside class="privacy-banner" id="privacyBanner" role="note" aria-label="隐私承诺">
-    <div class="privacy-banner__copy">
-      <span>🔒 <strong>零上传</strong>：10 款工具全部浏览器内计算</span>
-      <span>🛑 <strong>零第三方 SDK</strong>：无 GA、无 Hotjar、无遥测</span>
-      <span>⚡ <strong>纯本地计算</strong>：任何输入都不离开你的设备</span>
-    </div>
-    <button type="button" class="privacy-banner__close" id="privacyBannerClose" aria-label="关闭隐私承诺">×</button>
-  </aside>
-
   <main>
-    <section class="v2-hero" aria-labelledby="heroTitle">
-      <div class="v2-container v2-hero-inner">
-        <div class="v2-hero-copy">
-          <p class="v2-eyebrow">Koen Tools · Developer Toolkit</p>
-          <h1 id="heroTitle">开发者在线工具箱</h1>
-          <p class="v2-hero-subtitle">把高频开发工具、AI 学习路径和技术文章放在一个稳定入口里。工具在浏览器端运行，打开即用，不登录，不上传。</p>
-          <div class="v2-hero-actions" aria-label="快捷入口">
-            <a class="v2-btn v2-btn-primary" href="#tools">开始使用工具</a>
-            <a class="v2-btn v2-btn-ghost" href="pages/ai/index.html">浏览 AI 专题</a>
-            <button class="v2-btn v2-btn-ghost" type="button" id="openCommandPalette" aria-label="打开快速搜索（Ctrl 或 ⌘ + K）">快速搜索 <kbd>Ctrl/⌘ K</kbd></button>
-            <button class="v2-btn v2-btn-ghost" type="button" data-start-tour>查看 4 步使用引导</button>
-          </div>
-        </div>
-        <aside class="v2-hero-panel" aria-label="站点概览">
-          <div class="v2-panel-head">
-            <span>当前站点</span>
-            <strong data-current-site>tools.songyuankun.top</strong>
-          </div>
-          <div class="v2-signal-list">
-            <a href="#tools">
-              <span>在线工具</span>
-              <strong>JSON、时间戳、Base64、正则、SQL、JWT</strong>
-            </a>
-            <a href="pages/ai/index.html">
-              <span>AI 专题</span>
-              <strong>入门路径、工作流、Prompt、工具横评</strong>
-            </a>
-            <a href="pages/blog/index.html">
-              <span>技术文章</span>
-              <strong>沉淀 Java、全栈、AI 与独立开发实践</strong>
-            </a>
-          </div>
-        </aside>
-      </div>
-      <a class="v2-scroll-hint" href="#tools" aria-label="查看工具列表">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m0 0 6-6m-6 6-6-6"/></svg>
-      </a>
-    </section>
-
-    <section class="v2-section" id="tasks" aria-labelledby="tasksTitle">
-      <div class="v2-container">
-        <div class="v2-section-head">
-          <p class="v2-eyebrow">Quick Start</p>
-          <h2 id="tasksTitle">我想完成什么</h2>
-          <p>按真实访问热度整理的高频任务入口，点开即用。</p>
-        </div>
-        <div class="v2-card-grid v2-card-grid-four">
-          <a class="v2-card v2-card-interactive" href="tools/json/">
-            <span class="v2-tag v2-tag-success">最热</span>
-            <h3>格式化 JSON</h3>
-            <p>实时校验、行号定位、树形视图，支持注释与尾逗号。</p>
-          </a>
-          <a class="v2-card v2-card-interactive" href="pages/ai/compare.html">
-            <span class="v2-tag">选型</span>
-            <h3>选择 AI 工具</h3>
-            <p>按编程、写作、绘图等场景横评对比，避免盲目跟风。</p>
-          </a>
-          <a class="v2-card v2-card-interactive" href="tools/jwt/">
-            <span class="v2-tag v2-tag-info">鉴权</span>
-            <h3>解码 JWT</h3>
-            <p>解析 Header/Payload，检查过期与 HMAC 签名。</p>
-          </a>
-          <a class="v2-card v2-card-interactive" href="pages/ai/open-source-radar.html">
-            <span class="v2-tag">雷达</span>
-            <h3>AI 开源雷达</h3>
-            <p>每周 GitHub Trending AI 项目中文速览。</p>
-          </a>
+    <section class="search-stage" aria-labelledby="heroTitle">
+      <h1 id="heroTitle" class="search-stage__title">
+        开发者工具，<span class="search-stage__title-muted">都在本机运行</span>
+      </h1>
+      <p class="search-stage__sub">
+        <span id="toolCountLabel">13</span> 个常用工具，支持中文、英文与拼音首字母搜索
+      </p>
+      <div class="search-stage__field" id="homeSearchField">
+        <svg class="search-stage__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-3.5-3.5"></path>
+        </svg>
+        <input
+          id="homeSearchInput"
+          class="search-stage__input"
+          type="search"
+          placeholder="搜索工具，如 json、时间戳、sjc"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="搜索工具"
+        />
+        <div class="search-stage__meta">
+          <span class="search-stage__shortcut"><kbd>⌘</kbd><kbd>K</kbd></span>
+          <span class="search-stage__count" id="homeSearchCount" hidden></span>
+          <button type="button" class="search-stage__clear" id="homeSearchClear" aria-label="清空搜索">×</button>
         </div>
       </div>
+      <p class="search-stage__trust">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+          <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+        </svg>
+        <strong>数据留在本机</strong>
+        <span>· 所有处理在浏览器内完成，不上传、不追踪</span>
+      </p>
     </section>
 
-    <!-- 近期更新 -->
-    <section class="v2-section" id="updates" aria-labelledby="updatesTitle">
-      <div class="v2-container">
-        <div class="v2-section-head">
-          <p class="v2-eyebrow">Recent Updates</p>
-          <h2 id="updatesTitle">近期更新</h2>
-          <p>工具箱持续迭代中，以下是近期的功能新增和改进。</p>
-        </div>
-        <div class="v2-card-grid" id="updateList">
-          <!-- 由脚本加载 data/updates.json 渲染 -->
-        </div>
-      </div>
-    </section>
+    <section class="catalog-section desk-container" id="tools" aria-labelledby="toolsTitle">
+      <h2 id="toolsTitle" class="visually-hidden">工具目录</h2>
+      <div class="category-leds" id="categoryLeds" role="toolbar" aria-label="工具分类"></div>
 
-    <!-- OP-107：MRU + 收藏夹 双栏（localStorage 持久化） -->
-    <section class="v2-section" id="mruAndFav" aria-labelledby="mruAndFavTitle" style="padding-bottom:0">
-      <div class="v2-container">
-        <div class="v2-section-head v2-section-head-row" id="fav-entry-anchor">
-          <div>
-            <p class="v2-eyebrow">Your Toolkit</p>
-            <h2 id="mruAndFavTitle">最近使用 · 我的收藏</h2>
-            <p>你的工具偏好只保存在本地浏览器，不会上传。</p>
-          </div>
+      <div class="desk-layout">
+        <div class="tool-columns" id="toolColumns">
+          <section class="tool-group" data-group="data" aria-labelledby="group-data">
+            <div class="tool-group__head">
+              <h3 class="tool-group__name" id="group-data">数据格式</h3>
+              <span class="tool-group__count">2</span>
+            </div>
+            <a class="tool-row v2-tool-card" href="tools/json/" data-tool-id="json" data-group="data" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="json" data-tool-name="JSON 格式化" data-tool-url="tools/json/" aria-label="收藏 JSON 格式化">🤍</button>
+              <span class="tool-row__glyph">{ }</span>
+              <span class="tool-row__body"><strong>JSON 格式化</strong><span>校验、树形视图、YAML、Diff、Path 查询</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+            <a class="tool-row v2-tool-card" href="tools/sql-formatter/" data-tool-id="sql-formatter" data-group="data" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="sql-formatter" data-tool-name="SQL 格式化" data-tool-url="tools/sql-formatter/" aria-label="收藏 SQL 格式化">🤍</button>
+              <span class="tool-row__glyph">SQL</span>
+              <span class="tool-row__body"><strong>SQL 格式化</strong><span>方言切换、压缩与结构分析</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+          </section>
+
+          <section class="tool-group" data-group="encode" aria-labelledby="group-encode">
+            <div class="tool-group__head">
+              <h3 class="tool-group__name" id="group-encode">编码解码</h3>
+              <span class="tool-group__count">2</span>
+            </div>
+            <a class="tool-row v2-tool-card" href="tools/base64/" data-tool-id="base64" data-group="encode" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="base64" data-tool-name="Base64 编解码" data-tool-url="tools/base64/" aria-label="收藏 Base64 编解码">🤍</button>
+              <span class="tool-row__glyph">Aa</span>
+              <span class="tool-row__body"><strong>Base64 编解码</strong><span>文本 / 文件编解码与预览</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+            <a class="tool-row v2-tool-card" href="tools/url-encode/" data-tool-id="url-encode" data-group="encode" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="url-encode" data-tool-name="URL 编解码" data-tool-url="tools/url-encode/" aria-label="收藏 URL 编解码">🤍</button>
+              <span class="tool-row__glyph">%</span>
+              <span class="tool-row__body"><strong>URL 编解码</strong><span>Component / URI / 表单编码</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+          </section>
+
+          <section class="tool-group" data-group="crypto" aria-labelledby="group-crypto">
+            <div class="tool-group__head">
+              <h3 class="tool-group__name" id="group-crypto">加密哈希</h3>
+              <span class="tool-group__count">2</span>
+            </div>
+            <a class="tool-row v2-tool-card" href="tools/hash/" data-tool-id="hash" data-group="crypto" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="hash" data-tool-name="哈希生成器" data-tool-url="tools/hash/" aria-label="收藏 哈希生成器">🤍</button>
+              <span class="tool-row__glyph">∑</span>
+              <span class="tool-row__body"><strong>哈希生成器</strong><span>MD5 / SHA 族摘要</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+            <a class="tool-row v2-tool-card" href="tools/jwt/" data-tool-id="jwt" data-group="crypto" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="jwt" data-tool-name="JWT 工具" data-tool-url="tools/jwt/" aria-label="收藏 JWT 工具">🤍</button>
+              <span class="tool-row__glyph">JWT</span>
+              <span class="tool-row__body"><strong>JWT 工具</strong><span>解码、生成、HMAC/RS 验签</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+          </section>
+
+          <section class="tool-group" data-group="time" aria-labelledby="group-time">
+            <div class="tool-group__head">
+              <h3 class="tool-group__name" id="group-time">时间</h3>
+              <span class="tool-group__count">2</span>
+            </div>
+            <a class="tool-row v2-tool-card" href="tools/timestamp/" data-tool-id="timestamp" data-group="time" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="timestamp" data-tool-name="时间戳转换" data-tool-url="tools/timestamp/" aria-label="收藏 时间戳转换">🤍</button>
+              <span class="tool-row__glyph">TS</span>
+              <span class="tool-row__body"><strong>时间戳转换</strong><span>多时区、批量、时间差与代码片段</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+            <a class="tool-row v2-tool-card" href="tools/cron/" data-tool-id="cron" data-group="time" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="cron" data-tool-name="Cron 生成器" data-tool-url="tools/cron/" aria-label="收藏 Cron 生成器">🤍</button>
+              <span class="tool-row__glyph">CR</span>
+              <span class="tool-row__body"><strong>Cron 生成器</strong><span>Linux / Quartz、执行预览与部署片段</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+          </section>
+
+          <section class="tool-group" data-group="gen" aria-labelledby="group-gen">
+            <div class="tool-group__head">
+              <h3 class="tool-group__name" id="group-gen">生成器</h3>
+              <span class="tool-group__count">2</span>
+            </div>
+            <a class="tool-row v2-tool-card" href="tools/uuid/" data-tool-id="uuid" data-group="gen" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="uuid" data-tool-name="UUID 生成器" data-tool-url="tools/uuid/" aria-label="收藏 UUID 生成器">🤍</button>
+              <span class="tool-row__glyph">ID</span>
+              <span class="tool-row__body"><strong>UUID 生成器</strong><span>v4 / v7 批量生成与复制</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+            <a class="tool-row v2-tool-card" href="tools/qrcode/" data-tool-id="qrcode" data-group="gen" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="qrcode" data-tool-name="二维码生成器" data-tool-url="tools/qrcode/" aria-label="收藏 二维码生成器">🤍</button>
+              <span class="tool-row__glyph">QR</span>
+              <span class="tool-row__body"><strong>二维码生成器</strong><span>文本转 SVG，可下载</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+          </section>
+
+          <section class="tool-group" data-group="text" aria-labelledby="group-text">
+            <div class="tool-group__head">
+              <h3 class="tool-group__name" id="group-text">文本</h3>
+              <span class="tool-group__count">2</span>
+            </div>
+            <a class="tool-row v2-tool-card" href="tools/regex/" data-tool-id="regex" data-group="text" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="regex" data-tool-name="正则表达式测试" data-tool-url="tools/regex/" aria-label="收藏 正则表达式测试">🤍</button>
+              <span class="tool-row__glyph">.*</span>
+              <span class="tool-row__body"><strong>正则表达式测试</strong><span>26+ 模板、多语言代码生成</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+            <a class="tool-row v2-tool-card" href="tools/diff/" data-tool-id="diff" data-group="text" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="diff" data-tool-name="文本 Diff" data-tool-url="tools/diff/" aria-label="收藏 文本 Diff">🤍</button>
+              <span class="tool-row__glyph">±</span>
+              <span class="tool-row__body"><strong>文本 Diff</strong><span>行级对比与 Unified Diff 导出</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+          </section>
+
+          <section class="tool-group" data-group="design" aria-labelledby="group-design">
+            <div class="tool-group__head">
+              <h3 class="tool-group__name" id="group-design">前端设计</h3>
+              <span class="tool-group__count">1</span>
+            </div>
+            <a class="tool-row v2-tool-card" href="tools/color/" data-tool-id="color" data-group="design" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
+              <button type="button" class="tool-card-fav" data-tool-id="color" data-tool-name="颜色转换" data-tool-url="tools/color/" aria-label="收藏 颜色转换">🤍</button>
+              <span class="tool-row__glyph">#</span>
+              <span class="tool-row__body"><strong>颜色转换</strong><span>HEX/RGB/HSL 与 WCAG 对比度</span></span>
+              <kbd class="tool-row__enter">↵</kbd>
+            </a>
+          </section>
         </div>
-        <div class="prefs-row">
-          <section id="mru-section" aria-labelledby="mruTitle">
-            <h3 id="mruTitle">🕒 最近使用 <em>（最多 8 个）</em></h3>
+
+        <aside class="library-aside" aria-label="最近与收藏" id="mruAndFav">
+          <section class="library-panel" id="mru-section" aria-labelledby="mruTitle">
+            <h3 id="mruTitle">最近</h3>
             <ul class="prefs-list" id="mruList">
               <li class="prefs-empty">暂无记录，打开任意工具后会出现在这里。</li>
             </ul>
           </section>
-          <section id="fav-section" aria-labelledby="favTitle">
-            <h3 id="favTitle">❤️ 我的收藏 <em>（点击卡片右上角 ❤️ 收藏）</em></h3>
+          <section class="library-panel" id="fav-section" aria-labelledby="favTitle">
+            <h3 id="favTitle">收藏</h3>
             <ul class="prefs-list" id="favList">
-              <li class="prefs-empty">还没收藏，试试点下面工具卡片的 ❤️。</li>
+              <li class="prefs-empty">还没收藏，悬停工具行点 ❤️。</li>
             </ul>
           </section>
-        </div>
+          <p class="library-note">最近与收藏只保存在本机浏览器，不会上传。</p>
+        </aside>
       </div>
     </section>
 
-    <!-- OP-101：首屏双栏（60% 自研工具高亮 + 40% 目录导航） -->
-    <section class="v2-section" id="tools" aria-labelledby="toolsTitle">
-      <div class="v2-container">
-        <div class="v2-section-head v2-section-head-row">
-          <div>
-            <p class="v2-eyebrow">Tools</p>
-            <h2 id="toolsTitle">常用在线工具</h2>
-            <p>13 款浏览器内工具：格式化、转换、生成与对比，数据本地处理，无需注册。</p>
-          </div>
-          <a class="v2-text-link" href="tools/">全部工具</a>
+    <section class="desk-secondary desk-container" aria-labelledby="aiTitle">
+      <div class="v2-section-head v2-section-head-row">
+        <div>
+          <h2 id="aiTitle">AI 专题</h2>
+          <p>入门路径、工作流、Prompt 与工具横评。</p>
         </div>
-        <div class="self-built-layout">
-          <div class="self-built-tools-area">
-            <div class="v2-tool-grid v2-tool-grid-ten" id="selfBuiltGrid">
-              <a class="v2-tool-card v2-tool-format" href="tools/json/" data-tool-id="json" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="json" data-tool-name="JSON 格式化" data-tool-url="tools/json/" aria-label="收藏 JSON 格式化">🤍</button>
-                <span class="v2-tool-icon">{ }</span>
-                <strong>JSON 格式化</strong>
-                <span>校验、树形视图、YAML、Diff、Path 查询</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-time" href="tools/timestamp/" data-tool-id="timestamp" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="timestamp" data-tool-name="时间戳转换" data-tool-url="tools/timestamp/" aria-label="收藏 时间戳转换">🤍</button>
-                <span class="v2-tool-icon">TS</span>
-                <strong>时间戳转换</strong>
-                <span>多时区、批量、时间差与代码片段</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-cron" href="tools/cron/" data-tool-id="cron" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="cron" data-tool-name="Cron 生成器" data-tool-url="tools/cron/" aria-label="收藏 Cron 生成器">🤍</button>
-                <span class="v2-tool-icon">CR</span>
-                <strong>Cron 生成器</strong>
-                <span>Linux / Quartz、执行预览与部署片段</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-encode" href="tools/base64/" data-tool-id="base64" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="base64" data-tool-name="Base64 编解码" data-tool-url="tools/base64/" aria-label="收藏 Base64 编解码">🤍</button>
-                <span class="v2-tool-icon">Aa</span>
-                <strong>Base64 编解码</strong>
-                <span>Hash、Hex、文件摘要与图片预览</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-match" href="tools/regex/" data-tool-id="regex" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="regex" data-tool-name="正则表达式测试" data-tool-url="tools/regex/" aria-label="收藏 正则表达式测试">🤍</button>
-                <span class="v2-tool-icon">.*</span>
-                <strong>正则表达式测试</strong>
-                <span>26+ 模板、多语言代码生成</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-sql" href="tools/sql-formatter/" data-tool-id="sql-formatter" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="sql-formatter" data-tool-name="SQL 格式化" data-tool-url="tools/sql-formatter/" aria-label="收藏 SQL 格式化">🤍</button>
-                <span class="v2-tool-icon">SQL</span>
-                <strong>SQL 格式化</strong>
-                <span>方言切换、压缩与结构分析</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-jwt" href="tools/jwt/" data-tool-id="jwt" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="jwt" data-tool-name="JWT 工具" data-tool-url="tools/jwt/" aria-label="收藏 JWT 工具">🤍</button>
-                <span class="v2-tool-icon">JWT</span>
-                <strong>JWT 工具</strong>
-                <span>解码、生成、HMAC/RS 验签</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-uuid" href="tools/uuid/" data-tool-id="uuid" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="uuid" data-tool-name="UUID 生成器" data-tool-url="tools/uuid/" aria-label="收藏 UUID 生成器">🤍</button>
-                <span class="v2-tool-icon">ID</span>
-                <strong>UUID 生成器</strong>
-                <span>v4 / v7 批量生成与复制</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-diff" href="tools/diff/" data-tool-id="diff" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="diff" data-tool-name="文本 Diff" data-tool-url="tools/diff/" aria-label="收藏 文本 Diff">🤍</button>
-                <span class="v2-tool-icon">±</span>
-                <strong>文本 Diff</strong>
-                <span>行级对比与 Unified Diff 导出</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-color" href="tools/color/" data-tool-id="color" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="color" data-tool-name="颜色转换" data-tool-url="tools/color/" aria-label="收藏 颜色转换">🤍</button>
-                <span class="v2-tool-icon">#</span>
-                <strong>颜色转换</strong>
-                <span>HEX/RGB/HSL 与 WCAG 对比度</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-encode" href="tools/url-encode/" data-tool-id="url-encode" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="url-encode" data-tool-name="URL 编解码" data-tool-url="tools/url-encode/" aria-label="收藏 URL 编解码">🤍</button>
-                <span class="v2-tool-icon">%</span>
-                <strong>URL 编解码</strong>
-                <span>Component / URI / 表单编码</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-hash" href="tools/hash/" data-tool-id="hash" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="hash" data-tool-name="哈希生成器" data-tool-url="tools/hash/" aria-label="收藏 哈希生成器">🤍</button>
-                <span class="v2-tool-icon">∑</span>
-                <strong>哈希生成器</strong>
-                <span>MD5 / SHA 族摘要</span>
-                <em>打开</em>
-              </a>
-              <a class="v2-tool-card v2-tool-qrcode" href="tools/qrcode/" data-tool-id="qrcode" data-umami-event="selfbuilt_click" data-umami-event-op="OP-101">
-                <button type="button" class="tool-card-fav" data-tool-id="qrcode" data-tool-name="二维码生成器" data-tool-url="tools/qrcode/" aria-label="收藏 二维码生成器">🤍</button>
-                <span class="v2-tool-icon">QR</span>
-                <strong>二维码生成器</strong>
-                <span>文本转 SVG，可下载</span>
-                <em>打开</em>
-              </a>
-            </div>
-          </div>
-          <aside class="directory-nav" aria-label="分类目录导航">
-            <h3 class="directory-nav__title">📂 资源分类目录</h3>
-            <ul class="directory-nav__list" id="directoryNavList">
-              <li><a href="#tools-dir-ai">🤖 AI 工具 <span class="directory-nav__count">21</span></a></li>
-              <li><a href="#tools-dir-dev">💻 开发工具 <span class="directory-nav__count">11</span></a></li>
-              <li><a href="#tools-dir-hosting">🌐 建站资源 <span class="directory-nav__count">8</span></a></li>
-              <li><a href="#tools-dir-security">🛡️ 安全工具 <span class="directory-nav__count">6</span></a></li>
-              <li><a href="#tools-dir-ops">🔧 运维监控 <span class="directory-nav__count">7</span></a></li>
-              <li><a href="#tools-dir-design">🎨 设计资源 <span class="directory-nav__count">7</span></a></li>
-              <li><a href="#tools-dir-online">🛠️ 在线工具 <span class="directory-nav__count">14</span></a></li>
-              <li><a href="search-console.html" style="font-weight:600;color:#2563eb">🔍 搜索意图复盘看板 <span class="directory-nav__count">NEW</span></a></li>
-            </ul>
-          </aside>
-        </div>
+        <a class="v2-text-link" href="pages/ai/index.html">进入专题</a>
+      </div>
+      <div class="v2-card-grid v2-card-grid-four">
+        <a class="v2-card v2-card-interactive" href="pages/ai/beginner.html">
+          <span class="v2-tag">入门</span>
+          <h3>AI 新手入门</h3>
+          <p>从模型、Token、上下文这些基础概念开始。</p>
+        </a>
+        <a class="v2-card v2-card-interactive" href="pages/ai/workflow.html">
+          <span class="v2-tag v2-tag-info">工作流</span>
+          <h3>场景工作流</h3>
+          <p>写作、编程、办公和学习场景的组合用法。</p>
+        </a>
+        <a class="v2-card v2-card-interactive" href="pages/ai/prompts.html">
+          <span class="v2-tag v2-tag-success">模板</span>
+          <h3>Prompt 模板</h3>
+          <p>可直接复制、修改和复用的提示词模板。</p>
+        </a>
+        <a class="v2-card v2-card-interactive" href="pages/ai/compare.html">
+          <span class="v2-tag">选型</span>
+          <h3>工具横评</h3>
+          <p>按任务、预算和使用门槛选择合适工具。</p>
+        </a>
       </div>
     </section>
 
-    <section class="v2-section" aria-labelledby="aiTitle">
-      <div class="v2-container">
-        <div class="v2-section-head v2-section-head-row">
-          <div>
-            <p class="v2-eyebrow">AI Topic</p>
-            <h2 id="aiTitle">AI 专题导航</h2>
-            <p>面向普通用户和开发者，把 AI 概念、工具选择和可复用工作流整理成可执行路径。</p>
-          </div>
-          <a class="v2-text-link" href="pages/ai/index.html">进入专题</a>
-        </div>
-        <div class="v2-card-grid v2-card-grid-four">
-          <a class="v2-card v2-card-interactive" href="pages/ai/beginner.html">
-            <span class="v2-tag">入门</span>
-            <h3>AI 新手入门</h3>
-            <p>从模型、Token、上下文这些基础概念开始。</p>
-          </a>
-          <a class="v2-card v2-card-interactive" href="pages/ai/workflow.html">
-            <span class="v2-tag v2-tag-info">工作流</span>
-            <h3>场景工作流</h3>
-            <p>写作、编程、办公和学习场景的组合用法。</p>
-          </a>
-          <a class="v2-card v2-card-interactive" href="pages/ai/prompts.html">
-            <span class="v2-tag v2-tag-success">模板</span>
-            <h3>Prompt 模板</h3>
-            <p>可直接复制、修改和复用的提示词模板。</p>
-          </a>
-          <a class="v2-card v2-card-interactive" href="pages/ai/compare.html">
-            <span class="v2-tag">选型</span>
-            <h3>工具横评</h3>
-            <p>按任务、预算和使用门槛选择合适工具。</p>
-          </a>
-        </div>
+    <section class="desk-secondary desk-container" aria-labelledby="updatesTitle">
+      <div class="v2-section-head">
+        <h2 id="updatesTitle">近期更新</h2>
+        <p>工具箱持续迭代中。</p>
       </div>
-    </section>
-
-    <section class="v2-section" aria-labelledby="latestTitle">
-      <div class="v2-container">
-        <div class="v2-section-head">
-          <p class="v2-eyebrow">Latest</p>
-          <h2 id="latestTitle">最近更新</h2>
-        </div>
-        <div class="v2-card-grid v2-card-grid-three">
-          <article class="v2-card">
-            <span class="v2-tag v2-tag-success">在线工具</span>
-            <h3>10 款工具全面升级</h3>
-            <p>统一壳层与排版，新增 UUID / Diff / 颜色，JSON/YAML/Diff、JWT 生成验签等。</p>
-            <time>2026.06</time>
-          </article>
-          <article class="v2-card">
-            <span class="v2-tag">AI 专题</span>
-            <h3>入门、工作流、Prompt、横评合并为主线</h3>
-            <p>减少分散页面，让用户更快找到可执行内容。</p>
-            <time>2026.06</time>
-          </article>
-          <article class="v2-card">
-            <span class="v2-tag v2-tag-info">部署</span>
-            <h3>多平台文章同步</h3>
-            <p>CSDN 文章列表自动同步到工具站博客模块。</p>
-            <time>2026.06</time>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="v2-section v2-contact" aria-labelledby="contactTitle">
-      <div class="v2-container">
-        <p class="v2-eyebrow">More</p>
-        <h2 id="contactTitle">需要了解 Koen 本人？</h2>
-        <p>个人介绍、项目作品和联系方式放在独立个人页，工具箱保持为工具与内容入口。</p>
-        <div class="v2-contact-links">
-          <a href="https://koen.songyuankun.top/" target="_blank" rel="noopener">访问个人页</a>
-          <a href="https://github.com/SongYuanKun" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://blog.csdn.net/syk123839070" target="_blank" rel="noopener">CSDN</a>
-        </div>
-      </div>
+      <div class="v2-card-grid v2-card-grid-three" id="updateList"></div>
     </section>
   </main>
 
@@ -371,30 +280,41 @@
   </button>
 
   <footer class="footer">
+    <div class="site-footer-meta">
+      <p>© 2024-2026 Koen 工具箱 · 开发者工具导航</p>
+      <p>离线可用 · 无需账号 · 零追踪 · <a href="https://github.com/SongYuanKun/dev-tools-nav" target="_blank" rel="noopener">在 GitHub 开源</a></p>
+    </div>
     <div class="footer-content">
-      <div class="footer-brand">
-        <img src="assets/logo.svg" alt="K" class="footer-logo" />
-        <span class="footer-brand-name">Koen 工具箱</span>
-      </div>
       <div class="footer-links">
         <a href="index.html">首页</a>
         <a href="pages/ai/index.html">AI 专题</a>
         <a href="tools/">工具</a>
         <a href="pages/blog/index.html">博客</a>
-        <a href="search-console.html" data-umami-event="footer_search_console" data-umami-event-op="OP-201" title="搜索意图复盘看板">🔍 搜索复盘</a>
+        <a href="search-console.html" data-umami-event="footer_search_console" data-umami-event-op="OP-201" title="搜索意图复盘看板">搜索复盘</a>
         <a href="https://koen.songyuankun.top/" target="_blank" rel="noopener">个人页</a>
       </div>
       <p class="footer-privacy">隐私：工具数据仅在浏览器内处理 · Umami 无 Cookie 的假名化访问统计 · 无广告</p>
-      <p class="footer-jetbrains">
-        <a href="https://www.jetbrains.com/community/opensource/" rel="noopener noreferrer" target="_blank" title="Powered by JetBrains Non-Commercial Open Source licenses">
+      <div class="footer-badges" aria-label="项目合规徽章">
+        <a href="https://github.com/SongYuanKun/dev-tools-nav/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" data-umami-event="badge_mit_click" data-umami-event-op="OP-203" title="MIT 开源协议（OSI 认可）">
+          <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" loading="lazy" />
+        </a>
+        <a href="https://www.jetbrains.com/community/opensource/" target="_blank" rel="noopener noreferrer" data-umami-event="badge_jetbrains_noncommercial_click" data-umami-event-op="OP-203" title="JetBrains Non-Commercial Open Source">
           <img src="assets/jetbrains-noncommercial.svg" alt="JetBrains Non-Commercial Open Source" loading="lazy" />
         </a>
-      </p>
-      <p class="footer-copyright">
-        Made with code by Koen · © 2024-2026
-      </p>
+      </div>
+      <p class="footer-copyright">Made with code by Koen</p>
     </div>
   </footer>
+
+  <style>
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+  </style>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -418,28 +338,15 @@
         var list = document.getElementById('updateList');
         if (!list || !updates.length) return;
         list.innerHTML = updates.slice(0, 6).map(function (u) {
-          return '<div class="v2-card"><div class="v2-card-body"><span class="v2-tag v2-tag-info" style="float:right">' + u.date + '</span><h3>' + u.title + '</h3><p>' + u.description + '</p></div></div>';
+          return '<div class="v2-card"><span class="v2-tag v2-tag-info">' + u.date + '</span><h3>' + u.title + '</h3><p>' + u.description + '</p></div>';
         }).join('');
       } catch (e) { /* 静默失败 */ }
     });
   </script>
-  <!-- OP-103：通用 Toast 组件（先加载，供后续 OP 消费） -->
   <script defer src="js/toast.js"></script>
-  <!-- OP-303：隐私横幅关闭逻辑 -->
-  <script defer src="js/privacy-banner.js"></script>
-  <!-- OP-107：MRU + 收藏夹渲染（与 Favorites/RecentVisits 复用 SafeStorage） -->
   <script defer src="js/mru-fav.js"></script>
-  <!-- OP-102：由用户主动打开的 4 步使用引导（last in DOM 保证 z-index 顶层） -->
+  <script defer src="js/home-desk.js"></script>
   <script defer src="js/tour.js"></script>
   <script defer src="js/footer.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var btn = document.getElementById("openCommandPalette");
-      if (!btn) return;
-      btn.addEventListener("click", function () {
-        if (window.CommandPalette) window.CommandPalette.open();
-      });
-    });
-  </script>
 </body>
 </html>
