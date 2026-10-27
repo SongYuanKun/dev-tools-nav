@@ -4946,8 +4946,8 @@ body.signal-desk .privacy-banner {
 
 .tool-group {
   break-inside: avoid;
-  margin-bottom: 16px;
-  padding: 6px;
+  margin-bottom: 12px;
+  padding: 4px;
   border: 1px solid rgb(var(--line));
   border-radius: var(--radius-panel);
   background: rgb(var(--surface));
@@ -4960,12 +4960,12 @@ body.signal-desk .privacy-banner {
   align-items: baseline;
   justify-content: space-between;
   gap: 8px;
-  padding: 10px 10px 6px;
+  padding: 6px 8px 4px;
 }
 
 .tool-group__name {
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: rgb(var(--ink));
 }
@@ -4976,23 +4976,32 @@ body.signal-desk .privacy-banner {
   color: rgb(var(--muted));
 }
 
-.tool-row {
+.tool-row,
+.tool-row.v2-tool-card {
   position: relative;
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr) auto;
-  gap: 10px;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  gap: 8px;
   align-items: center;
-  padding: 10px;
-  border-radius: 10px;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
   color: inherit;
   text-decoration: none;
   transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
-.tool-row:hover {
-  transform: translateY(-1px);
+.tool-row:hover,
+.tool-row.v2-tool-card:hover {
+  transform: none;
   background: rgb(var(--raised));
-  box-shadow: var(--shadow-lift);
+  box-shadow: none;
+  border-color: transparent;
 }
 
 .tool-row.is-hit {
@@ -5003,12 +5012,12 @@ body.signal-desk .privacy-banner {
 .tool-row__glyph {
   display: inline-grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
   background: rgb(var(--signal) / 0.12);
   color: rgb(var(--signal));
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   font-family: var(--font-mono);
 }
@@ -5016,17 +5025,23 @@ body.signal-desk .privacy-banner {
 .tool-row__body {
   min-width: 0;
   display: grid;
-  gap: 2px;
+  gap: 0;
 }
 
-.tool-row__body strong {
-  font-size: 14px;
+.tool-row__body strong,
+.tool-row.v2-tool-card strong {
+  display: block;
+  margin: 0;
+  font-size: 13px;
   font-weight: 600;
+  line-height: 1.25;
   color: rgb(var(--ink));
 }
 
-.tool-row__body span {
-  font-size: 12px;
+.tool-row__body span,
+.tool-row.v2-tool-card span:not(.tool-row__glyph) {
+  font-size: 11px;
+  line-height: 1.3;
   color: rgb(var(--muted));
   white-space: nowrap;
   overflow: hidden;
@@ -5036,11 +5051,11 @@ body.signal-desk .privacy-banner {
 .tool-row__enter {
   opacity: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   color: rgb(var(--muted));
   border: 1px solid rgb(var(--line));
   border-radius: 4px;
-  padding: 2px 5px;
+  padding: 1px 4px;
 }
 
 .tool-row.is-hit .tool-row__enter,
@@ -5048,15 +5063,15 @@ body.signal-desk .privacy-banner {
 
 .tool-row .tool-card-fav {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 2px;
+  right: 2px;
   opacity: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1;
-  padding: 4px;
+  padding: 2px;
 }
 
 .tool-row:hover .tool-card-fav,
