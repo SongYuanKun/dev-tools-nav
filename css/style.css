@@ -163,8 +163,12 @@ img {
   display: block;
 }
 
-/* Author `img { display:block }` must not defeat the hidden attribute. */
-[hidden] {
+/*
+ * 仅收窄到 img：author `img { display:block }` 会盖掉 UA [hidden]。
+ * 不做全局 [hidden]{display:none!important}，避免误伤工作台/对话框等节点。
+ * Base64 预览空态另见 tools.css 的 .hex-preview[hidden] / #hashOutput[hidden]。
+ */
+img[hidden] {
   display: none !important;
 }
 
