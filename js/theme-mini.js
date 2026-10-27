@@ -6,7 +6,7 @@
     var btn = document.getElementById("themeToggle");
     if (!btn) return;
     var title = theme === "dark" ? "切换到亮色模式" : "切换到暗色模式";
-    btn.textContent = theme === "dark" ? "☀️" : "🌙";
+    btn.textContent = theme === "dark" ? "亮" : "暗";
     btn.setAttribute("title", title);
     btn.setAttribute("aria-label", title);
   }

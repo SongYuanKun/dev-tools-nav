@@ -20,7 +20,7 @@
     { label: "中文字符", pattern: "[\\u4e00-\\u9fa5]+", flags: "g", sample: "Hello 世界 World 你好" },
     { label: "微信号", pattern: "[a-zA-Z][a-zA-Z0-9_-]{5,19}", flags: "g", sample: "wxid_koen_dev tools_nav_2024" },
     { label: "semver", pattern: "v?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[\\w.-]+)?(?:\\+[\\w.-]+)?", flags: "g", sample: "发布 v1.2.3 与 2.0.0-beta.1+build.42" },
-    { label: "十六进制颜色", pattern: "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\\b", flags: "gi", sample: "颜色：#6366f1 #fff #FF0000" },
+    { label: "十六进制颜色", pattern: "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\\b", flags: "gi", sample: "颜色：#FF5C45 #fff #FF0000" },
     { label: "Base64", pattern: "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?", flags: "g", sample: "token SGVsbG8gV29ybGQh" },
     { label: "整数", pattern: "-?\\d+", flags: "g", sample: "数字 42，-100，0，9999" },
     { label: "浮点数", pattern: "-?\\d+\\.\\d+", flags: "g", sample: "pi=3.14159 温度 -12.5" },

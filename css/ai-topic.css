@@ -19,7 +19,7 @@
 .ai-hero-title {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 800;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, rgb(var(--signal)), rgb(255 120 90), rgb(255 150 110));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -406,7 +406,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(90deg, rgb(var(--signal)), rgb(255 120 90), rgb(255 150 110));
   opacity: 0;
   transition: opacity var(--transition);
 }
@@ -704,7 +704,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+  background: linear-gradient(135deg, var(--color-primary), rgb(255 120 90));
   color: white;
   display: flex;
   align-items: center;
@@ -1361,7 +1361,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, rgb(var(--signal)), rgb(255 120 90));
   color: white;
   display: flex;
   align-items: center;
@@ -2260,14 +2260,14 @@
    亮色主题：墨绿强调，收敛紫粉渐变
    ============================================================ */
 [data-theme="light"] .ai-hero-title {
-  background: linear-gradient(135deg, #134e4a, #0f766e, #115e59);
+  background: linear-gradient(135deg, rgb(var(--signal) / 0.9), rgb(230 90 70), rgb(200 70 55));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 [data-theme="light"] .ai-topic-card::before {
-  background: linear-gradient(90deg, #0f766e, #0e7490, #0369a1);
+  background: linear-gradient(90deg, rgb(var(--signal)), rgb(255 120 90), rgb(230 100 80));
 }
 
 [data-theme="light"] .compare-summary {
@@ -2276,6 +2276,6 @@
 }
 
 [data-theme="light"] .beginner-step-number {
-  background: linear-gradient(135deg, #0f766e, #0e7490);
+  background: linear-gradient(135deg, rgb(var(--signal)), rgb(230 100 80));
   box-shadow: 0 4px 16px rgba(15, 118, 110, 0.22);
 }

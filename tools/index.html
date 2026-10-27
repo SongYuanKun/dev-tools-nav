@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("dev-tools-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
@@ -15,13 +27,17 @@
   <meta name="twitter:description" content="在线工具中心：搜索、筛选、最近/收藏，快速找到你要用的工具。" />
   <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <link rel="canonical" href="https://tools.songyuankun.top/tools/" />
-  <title>在线工具中心 · Koen的工具箱</title>
+  <title>在线工具中心 · Koen 工具箱</title>
+  <meta name="theme-color" content="#FF5C45" />
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/tools.css" />
   <script defer src="../js/base.js"></script>
 </head>
-<body>
+<body class="site-v2">
   <header>
     <nav class="navbar" role="navigation" aria-label="主导航">
       <div class="navbar-inner">

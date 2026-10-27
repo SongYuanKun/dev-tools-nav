@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("dev-tools-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Koen" />
@@ -115,7 +127,7 @@
 
       function getScoreColor(score) {
         if (score >= 9) return "#10b981";
-        if (score >= 8) return "#6366f1";
+        if (score >= 8) return "#FF5C45";
         if (score >= 7) return "#f59e0b";
         return "#94a3b8";
       }

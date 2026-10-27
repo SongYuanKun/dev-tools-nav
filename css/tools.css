@@ -12,7 +12,7 @@
   --text-18: 1.125rem;
 
   --brand-primary: var(--color-primary);
-  --brand-accent: #06b6d4;
+  --brand-accent: rgb(var(--signal));
 }
 
 .skip-link {
@@ -49,7 +49,7 @@
 .tool-surface {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  border-radius: 1rem;
+  border-radius: var(--radius-panel, 12px);
   box-shadow: var(--shadow-card);
   padding: var(--space-3);
 }
@@ -567,7 +567,7 @@
 }
 
 .jwt-header-section .jwt-section-title { color: #ef4444; }
-.jwt-payload-section .jwt-section-title { color: #8b5cf6; }
+.jwt-payload-section .jwt-section-title { color: rgb(var(--signal)); }
 .jwt-signature-section .jwt-section-title { color: #10b981; }
 
 /* ============================================================
@@ -838,8 +838,8 @@
 }
 
 .tools-clear-filters:hover {
-  color: var(--text-primary, #0f172a);
-  border-color: var(--color-primary, #6366f1);
+  color: var(--text-primary, #1A1A1A);
+  border-color: var(--color-primary, #FF5C45);
 }
 
 .tools-hub-title {
@@ -930,27 +930,46 @@
 .tools-chip {
   display: inline-flex;
   align-items: center;
-  padding: 7px 12px;
+  gap: 8px;
+  height: 32px;
+  padding: 0 10px 0 12px;
   border-radius: var(--radius-full);
-  border: 1px solid var(--border-color);
-  background: var(--bg-tag);
-  color: var(--text-tag);
-  font-size: 12px;
+  border: 1px solid rgb(var(--line));
+  background: transparent;
+  color: rgb(var(--muted));
+  font-size: 13px;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
   user-select: none;
 }
 
-.tools-chip:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  background: var(--color-primary-light);
+.tools-chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgb(var(--muted) / 0.4);
+  transition: background 200ms ease, box-shadow 200ms ease;
 }
 
-.tools-chip.is-active {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
-  color: var(--text-on-primary);
+.tools-chip:hover {
+  border-color: rgb(var(--ink) / 0.15);
+  color: rgb(var(--ink));
+  background: transparent;
+}
+
+.tools-chip.is-active,
+.tools-chip[aria-pressed="true"] {
+  border-color: rgb(var(--ink) / 0.15);
+  background: rgb(var(--surface));
+  color: rgb(var(--ink));
+  box-shadow: var(--shadow-lift);
+}
+
+.tools-chip.is-active::before,
+.tools-chip[aria-pressed="true"]::before {
+  background: rgb(var(--signal));
+  box-shadow: 0 0 0 3px rgb(var(--signal) / 0.18), 0 0 8px rgb(var(--signal) / 0.6);
 }
 
 .tools-summary {
