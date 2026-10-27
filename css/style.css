@@ -168,6 +168,19 @@ img {
   display: none !important;
 }
 
+/* 快捷键徽章：覆盖 UA 浅色 kbd，亮暗都跟主题 token */
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  font-weight: 500;
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  border: 1px solid rgb(var(--line));
+  background: rgb(var(--raised));
+  color: rgb(var(--ink));
+  box-shadow: none;
+}
+
 /* ============================================================
    顶部导航
    ============================================================ */
@@ -2801,7 +2814,7 @@ body.site-v2 {
   border-radius: 4px;
   background: rgb(var(--raised));
   border: 1px solid rgb(var(--line));
-  color: rgb(var(--muted));
+  color: rgb(var(--ink));
   box-shadow: none;
 }
 
@@ -4611,10 +4624,11 @@ html.cmdk-open { overflow: hidden; }
   display: inline-block;
   padding: 1px 5px;
   margin: 0 2px;
-  border: 1px solid var(--border, #cbd5e1);
+  border: 1px solid rgb(var(--line));
   border-radius: 4px;
   font: 0.72rem ui-monospace, SFMono-Regular, Menlo, monospace;
-  background: rgba(148, 163, 184, 0.15);
+  background: rgb(var(--raised));
+  color: rgb(var(--ink));
 }
 .cmdk-label {
   position: absolute;
@@ -4722,19 +4736,26 @@ html.cmdk-open { overflow: hidden; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--border, #cbd5e1);
-  background: var(--bg, #f8fafc);
-  color: var(--text-muted, #64748b);
+  border: 1px solid rgb(var(--line));
+  background: rgb(var(--surface));
+  color: rgb(var(--muted));
   border-radius: 999px;
   padding: 6px 12px;
   cursor: pointer;
   font-size: 0.85rem;
 }
+.cmdk-trigger:hover {
+  color: rgb(var(--ink));
+  border-color: rgb(var(--ink) / 0.18);
+}
 .cmdk-trigger kbd {
   font: 0.72rem ui-monospace, SFMono-Regular, Menlo, monospace;
-  padding: 1px 5px;
+  padding: 2px 6px;
   border-radius: 4px;
-  border: 1px solid var(--border, #cbd5e1);
+  border: 1px solid rgb(var(--line));
+  background: rgb(var(--raised));
+  color: rgb(var(--ink));
+  box-shadow: none;
 }
 
 /* ============================================================
