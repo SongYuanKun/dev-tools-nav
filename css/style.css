@@ -2799,9 +2799,10 @@ body.site-v2 {
   font-size: 11px;
   padding: 2px 5px;
   border-radius: 4px;
-  background: rgb(var(--bg));
+  background: rgb(var(--raised));
   border: 1px solid rgb(var(--line));
   color: rgb(var(--muted));
+  box-shadow: none;
 }
 
 .nav-link,
