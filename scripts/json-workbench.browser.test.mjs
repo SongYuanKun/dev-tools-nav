@@ -91,8 +91,8 @@ async function openWorkbench({ colorScheme = "dark", reducedMotion = "no-prefere
       errors.push(`requestfailed: ${request.url()} ${request.failure()?.errorText}`);
     }
   });
-  await page.goto(`${origin}/tools/json/`);
-  await page.locator(".cm-content").waitFor();
+  await page.goto(`${origin}/tools/json/`, { waitUntil: "domcontentloaded" });
+  await page.locator(".cm-content").first().waitFor({ state: "visible", timeout: 60000 });
   await page.evaluate(() => {
     window.__umamiEvents = [];
     window.umami = { track: (name, properties) => window.__umamiEvents.push({ name, properties }) };

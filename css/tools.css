@@ -856,6 +856,28 @@
   line-height: 1.6;
 }
 
+.tools-hub-subtitle kbd {
+  font-size: 0.78em;
+  padding: 1px 5px;
+  border: 1px solid rgb(var(--line));
+  border-radius: 4px;
+  background: rgb(var(--raised));
+  color: rgb(var(--ink));
+  box-shadow: none;
+}
+
+.tools-hub .cmdk-trigger {
+  border-color: rgb(var(--line));
+  background: rgb(var(--surface));
+  color: rgb(var(--muted));
+}
+
+.tools-hub .cmdk-trigger kbd {
+  border-color: rgb(var(--line));
+  background: rgb(var(--raised));
+  color: rgb(var(--ink));
+}
+
 .tools-hub-toolbar {
   display: grid;
   grid-template-columns: 1fr;
@@ -1770,11 +1792,30 @@
   margin-right: 6px;
 }
 
+.hex-preview {
+  margin-top: 12px;
+}
+
+.hex-preview[hidden] {
+  display: none !important;
+}
+
 .hex-preview img {
   max-width: 100%;
   max-height: 200px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
+  background: var(--bg-page);
+}
+
+.hex-preview img[hidden],
+.hex-preview img:not([src]),
+.hex-preview img[src=""] {
+  display: none !important;
+}
+
+#hashOutput[hidden] {
+  display: none !important;
 }
 
 @media (max-width: 860px) {

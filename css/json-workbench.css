@@ -332,6 +332,16 @@ body.json-page .json-site-footer a {
 .json-related-grid strong, .json-related-grid span { display: block; }
 .json-related-grid span { margin-top: 9px; color: var(--jw-muted); font-size: 0.86rem; }
 .json-related-grid b { position: absolute; top: 24px; right: 24px; color: var(--jw-accent-strong); }
+/* OP-105 场景互链：跟主题表面，避免内联 #fff 回退在暗色下露白 */
+.json-scene-links {
+  margin-top: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.json-scene-links a {
+  background: var(--jw-surface);
+  color: var(--jw-text);
+  border-color: var(--jw-border);
+}
 
 .json-button:focus-visible,
 .json-button:focus,
