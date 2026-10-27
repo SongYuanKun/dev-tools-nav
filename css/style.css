@@ -148,8 +148,9 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid rgb(var(--signal) / 0.5);
+  outline: 2px solid rgb(var(--ink));
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgb(var(--signal) / 0.28);
 }
 
 a {
@@ -250,7 +251,7 @@ img {
 
 .search-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgb(var(--signal) / 0.15);
 }
 
 /* 导航链接 */
@@ -279,7 +280,7 @@ img {
 
 .nav-link:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+  box-shadow: 0 0 0 3px rgb(var(--signal) / 0.18);
   background: var(--color-primary-light);
 }
 
@@ -422,9 +423,10 @@ img {
 }
 
 .theme-toggle:focus-visible {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+  outline: 2px solid rgb(var(--ink));
+  outline-offset: 2px;
+  border-color: rgb(var(--signal));
+  box-shadow: 0 0 0 4px rgb(var(--signal) / 0.28);
 }
 
 .theme-toggle:hover {
@@ -489,7 +491,7 @@ img {
   background: var(--color-primary);
   border-color: var(--color-primary);
   color: var(--text-on-primary);
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 2px 8px rgb(var(--signal) / 0.35);
 }
 
 /* ============================================================
@@ -695,7 +697,7 @@ img {
 .visit-btn:hover {
   background: var(--color-primary-hover);
   transform: translateX(2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgb(var(--signal) / 0.4);
 }
 
 .visit-btn svg {
@@ -908,7 +910,7 @@ img {
 }
 
 .hero-author:hover {
-  border-color: rgba(99, 102, 241, 0.35);
+  border-color: rgb(var(--signal) / 0.35);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -923,7 +925,7 @@ img {
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(99, 102, 241, 0.45);
+  border: 2px solid rgb(var(--signal) / 0.45);
   flex-shrink: 0;
 }
 
@@ -1067,7 +1069,7 @@ img {
 
 .side-panel-toggle:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 6px 20px rgb(var(--signal) / 0.3);
 }
 
 .side-panel-toggle img {
@@ -1166,7 +1168,7 @@ img {
 
 .panel-link:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgb(var(--signal) / 0.4);
 }
 
 .panel-link--ghost {
@@ -1276,7 +1278,7 @@ img {
 
 .detail-visit-btn:hover {
   background: var(--color-primary-hover);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 16px rgb(var(--signal) / 0.4);
 }
 
 .detail-section {
@@ -1599,7 +1601,7 @@ img {
    选中文字颜色
    ============================================================ */
 ::selection {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgb(var(--signal) / 0.2);
   color: var(--color-primary);
 }
 
@@ -1715,7 +1717,7 @@ img {
 
 .hero-mirror-link:hover {
   color: var(--color-primary);
-  border-color: rgba(99, 102, 241, 0.45);
+  border-color: rgb(var(--signal) / 0.45);
   background: var(--bg-card);
 }
 
@@ -1955,7 +1957,7 @@ img {
   object-fit: cover;
   border: 4px solid var(--color-primary);
   margin-bottom: 20px;
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 8px 24px rgb(var(--signal) / 0.2);
 }
 
 .about-name {
@@ -2509,7 +2511,7 @@ img {
   color: white;
   border-color: var(--color-primary);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 6px 16px rgb(var(--signal) / 0.3);
 }
 
 @media (max-width: 768px) {
@@ -2536,8 +2538,8 @@ img {
   gap: 14px;
   padding: 16px 20px;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.06));
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: linear-gradient(135deg, rgb(var(--signal) / 0.08), rgb(var(--signal) / 0.08), rgba(236, 72, 153, 0.06));
+  border: 1px solid rgb(var(--signal) / 0.2);
   border-radius: var(--radius-lg);
   text-decoration: none;
   transition: all var(--transition);
@@ -2562,8 +2564,8 @@ img {
 }
 
 [data-theme="dark"] .ai-banner {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12), rgba(236, 72, 153, 0.08));
-  border-color: rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, rgb(var(--signal) / 0.12), rgb(var(--signal) / 0.12), rgba(236, 72, 153, 0.08));
+  border-color: rgb(var(--signal) / 0.3);
 }
 
 .ai-banner-icon {
@@ -2674,9 +2676,10 @@ body.site-v2 {
 .navbar-inner {
   pointer-events: auto;
   width: min(1200px, calc(100% - 24px));
-  height: 56px;
+  min-height: 56px;
+  height: auto;
   margin: 0 auto;
-  padding: 0 12px 0 16px;
+  padding: 6px 12px 6px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2693,6 +2696,7 @@ body.site-v2 {
   align-items: center;
   gap: 10px;
   min-width: 0;
+  min-height: 44px;
   color: rgb(var(--ink));
   text-decoration: none;
 }
@@ -2769,8 +2773,9 @@ body.site-v2 {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 32px;
-  padding: 0 12px;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 14px;
   border: 1px solid rgb(var(--line));
   border-radius: var(--radius-full);
   background: rgb(var(--bg) / 0.55);
@@ -2798,8 +2803,10 @@ body.site-v2 {
 .nav-menu-trigger {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
-  padding: 0 10px;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 12px;
   border-radius: 8px;
   color: rgb(var(--muted));
   font-size: 13px;
@@ -2855,9 +2862,9 @@ body.site-v2 {
 .nav-menu-panel a:hover { background: rgb(var(--raised)); }
 
 .theme-toggle {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   padding: 0;
   border: 1px solid rgb(var(--line));
   border-radius: 50%;
@@ -4624,7 +4631,7 @@ html.cmdk-open { overflow: hidden; }
   font-size: 1rem;
 }
 .cmdk-input:focus {
-  outline: 2px solid var(--color-primary, #FF5C45);
+  outline: 2px solid rgb(var(--signal));
   outline-offset: 1px;
 }
 .cmdk-results {
@@ -4651,7 +4658,7 @@ html.cmdk-open { overflow: hidden; }
 }
 .cmdk-item:hover,
 .cmdk-item.is-active {
-  background: rgba(99, 102, 241, 0.12);
+  background: rgb(var(--signal) / 0.12);
 }
 .cmdk-item-icon {
   flex: 0 0 auto;
@@ -4684,7 +4691,7 @@ html.cmdk-open { overflow: hidden; }
   display: inline-flex;
   padding: 1px 6px;
   border-radius: 999px;
-  background: rgba(99, 102, 241, 0.12);
+  background: rgb(var(--signal) / 0.12);
 }
 .cmdk-footer {
   display: flex;

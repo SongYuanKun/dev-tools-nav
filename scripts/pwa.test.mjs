@@ -14,7 +14,7 @@ function read(rel) {
 
 test("PWA manifest declares installable metadata and icons", () => {
   const manifest = JSON.parse(read("manifest.webmanifest"));
-  assert.equal(manifest.name, "Koen's 工具箱");
+  assert.equal(manifest.name, "Koen 工具箱");
   assert.ok(manifest.short_name);
   assert.equal(manifest.start_url, "./");
   assert.equal(manifest.scope, "./");

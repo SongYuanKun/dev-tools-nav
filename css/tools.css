@@ -160,7 +160,7 @@
 
 .tool-textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgb(var(--signal) / 0.12);
 }
 
 .tool-textarea::placeholder {
@@ -183,7 +183,7 @@
 
 .tool-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgb(var(--signal) / 0.12);
 }
 
 /* ============================================================
@@ -216,7 +216,7 @@
 .tool-btn:focus-visible {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+  box-shadow: 0 0 0 3px rgb(var(--signal) / 0.18);
 }
 
 .tool-btn:hover {
@@ -236,7 +236,7 @@
   background: var(--color-primary-hover);
   border-color: var(--color-primary-hover);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 12px rgb(var(--signal) / 0.35);
 }
 
 .tool-btn-danger {
@@ -385,7 +385,7 @@
 }
 
 .tool-status-info {
-  background: rgba(99, 102, 241, 0.08);
+  background: rgb(var(--signal) / 0.08);
   color: var(--color-primary);
   border-left-color: var(--color-primary);
 }
@@ -430,7 +430,7 @@
 
 .tool-select:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgb(var(--signal) / 0.12);
 }
 
 .qr-preview {
@@ -549,8 +549,8 @@
 }
 
 .jwt-payload-section {
-  background: rgba(139, 92, 246, 0.07);
-  border: 1px solid rgba(139, 92, 246, 0.18);
+  background: rgb(var(--signal) / 0.07);
+  border: 1px solid rgb(var(--signal) / 0.18);
 }
 
 .jwt-signature-section {
@@ -601,7 +601,7 @@
   color: var(--color-primary);
   font-size: 0.75rem;
   font-weight: 700;
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgb(var(--signal) / 0.25);
 }
 
 .tools-count {
@@ -649,14 +649,14 @@
 
 .tool-index-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(99, 102, 241, 0.4);
+  border-color: rgb(var(--signal) / 0.4);
   box-shadow: var(--shadow-card-hover);
 }
 
 .tool-index-card:focus-visible {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.22), var(--shadow-card-hover);
+  box-shadow: 0 0 0 4px rgb(var(--signal) / 0.22), var(--shadow-card-hover);
 }
 
 /* 顶部彩色细条 */
@@ -688,7 +688,7 @@
   font-size: 20px;
   margin-bottom: var(--space-2);
   background: var(--color-primary-light);
-  border: 1px solid rgba(99, 102, 241, 0.18);
+  border: 1px solid rgb(var(--signal) / 0.18);
   flex-shrink: 0;
 }
 
@@ -885,7 +885,7 @@
 
 .tools-search:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgb(var(--signal) / 0.15);
 }
 
 .tools-pillbar {
@@ -1017,7 +1017,7 @@
 .tools-card:focus-visible {
   transform: translateY(-2px);
   box-shadow: var(--shadow-card-hover);
-  border-color: rgba(99, 102, 241, 0.35);
+  border-color: rgb(var(--signal) / 0.35);
 }
 
 .tools-card-top {
@@ -1092,7 +1092,7 @@
 }
 
 .tools-card mark {
-  background: rgba(99, 102, 241, 0.18);
+  background: rgb(var(--signal) / 0.18);
   color: inherit;
   padding: 0 3px;
   border-radius: 6px;
@@ -2017,9 +2017,9 @@
 }
 
 .tool-status-pill.tool-status-info {
-  background: rgba(99, 102, 241, 0.12);
+  background: rgb(var(--signal) / 0.12);
   color: var(--color-primary);
-  border: 1px solid rgba(99, 102, 241, 0.22);
+  border: 1px solid rgb(var(--signal) / 0.22);
 }
 
 .tool-status-pill.tool-status-success {

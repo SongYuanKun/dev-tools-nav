@@ -646,16 +646,16 @@
 
 /* 总结卡片 */
 .compare-summary {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08));
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: linear-gradient(135deg, rgb(var(--signal) / 0.08), rgb(var(--signal) / 0.08));
+  border: 1px solid rgb(var(--signal) / 0.2);
   border-radius: var(--radius-lg);
   padding: 22px 24px;
   margin-top: 24px;
 }
 
 [data-theme="dark"] .compare-summary {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
-  border-color: rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, rgb(var(--signal) / 0.12), rgb(var(--signal) / 0.12));
+  border-color: rgb(var(--signal) / 0.3);
 }
 
 .compare-summary-label {
@@ -712,7 +712,7 @@
   font-size: 16px;
   font-weight: 700;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 12px rgb(var(--signal) / 0.3);
 }
 
 .workflow-step-connector {
@@ -989,7 +989,7 @@
   padding: 4px 10px;
   border-radius: var(--radius-full);
   border: 1px solid var(--border-color);
-  background: var(--bg-secondary, rgba(99, 102, 241, 0.06));
+  background: var(--bg-secondary, rgb(var(--signal) / 0.06));
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 600;
@@ -1369,7 +1369,7 @@
   font-size: 20px;
   font-weight: 800;
   flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 16px rgb(var(--signal) / 0.3);
 }
 
 .beginner-step-content {
@@ -2102,7 +2102,7 @@
 .compare-meta-box {
   margin: 0 0 20px;
   padding: 12px 14px;
-  background: var(--bg-secondary, rgba(99, 102, 241, 0.06));
+  background: var(--bg-secondary, rgb(var(--signal) / 0.06));
   border: 1px solid var(--border-card);
   border-radius: var(--radius-md);
 }

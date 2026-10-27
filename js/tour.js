@@ -1,6 +1,6 @@
 /**
  * OP-102：新手引导 4 步 Tour（localStorage.tour_done_v1 记录完成状态）
- * 4 Step：① 欢迎 ② 自研工具区高亮（.self-built-tools-area）③ 收藏入口（#fav-entry-anchor）④ JSON 工作台卡片
+ * 4 Step：① 欢迎 ② 工具目录（#toolColumns）③ 收藏侧栏（#fav-section）④ JSON 工作台卡片
  */
 (function () {
   var KEY = 'tour_done_v1';
@@ -32,19 +32,19 @@
     {
       title: '🛠️ 10 款可直接运行的站内工具',
       desc: '不用跳外链啦，这里 10 款全部浏览器内计算：JSON/JWT/Cron 等，打开就用。',
-      targetSel: '.self-built-tools-area',
+      targetSel: '#toolColumns',
       pos: 'bottom'
     },
     {
       title: '❤️ 最近使用 · 我的收藏',
-      desc: '喜欢的工具点卡片右上角 🤍 收藏；下次回访直接从这里进。',
-      targetSel: '#fav-entry-anchor',
-      pos: 'bottom'
+      desc: '喜欢的工具悬停后点 🤍 收藏；下次回访直接从右侧侧栏进。',
+      targetSel: '#fav-section',
+      pos: 'left'
     },
     {
       title: '🎯 新手推荐：JSON 工作台',
-      desc: '最热门工具：实时诊断、树视图、YAML、Diff、JSONPath，点「完成直达。',
-      targetSel: '.v2-tool-card[data-tool-id="json"]',
+      desc: '最热门工具：实时诊断、树视图、YAML、Diff、JSONPath，点「完成」直达。',
+      targetSel: '.tool-row[data-tool-id="json"]',
       pos: 'top',
       ctaText: '打开 JSON 工作台',
       ctaHref: 'tools/json/'
