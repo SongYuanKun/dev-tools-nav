@@ -163,6 +163,11 @@ img {
   display: block;
 }
 
+/* Author `img { display:block }` must not defeat the hidden attribute. */
+[hidden] {
+  display: none !important;
+}
+
 /* ============================================================
    顶部导航
    ============================================================ */
@@ -4485,16 +4490,16 @@ html.is-embed body.site-v2 .tool-workbench-inner {
   margin-bottom: 24px;
 }
 .prefs-row section {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: var(--radius-panel);
   padding: 14px 16px 16px;
 }
 .prefs-row h3 {
   margin: 0 0 10px;
   font-size: 15px;
   font-weight: 700;
-  color: #111827;
+  color: rgb(var(--ink));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4503,7 +4508,7 @@ html.is-embed body.site-v2 .tool-workbench-inner {
   font-style: normal;
   font-size: 12px;
   font-weight: 500;
-  color: #6b7280;
+  color: rgb(var(--muted));
 }
 .prefs-list {
   list-style: none;
@@ -4519,19 +4524,20 @@ html.is-embed body.site-v2 .tool-workbench-inner {
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  background: #f3f4f6;
+  background: rgb(var(--raised));
   border-radius: 999px;
-  color: #111827;
+  color: rgb(var(--ink));
   font-size: 13px;
   text-decoration: none;
 }
 .prefs-list li a:hover {
-  background: #e5e7eb;
+  background: rgb(var(--ink) / 0.08);
 }
 .prefs-empty {
-  color: #9ca3af;
+  color: rgb(var(--muted));
   font-size: 13px;
   padding: 6px 2px;
+  background: transparent;
 }
 .tool-card-fav {
   position: absolute;
@@ -4821,13 +4827,31 @@ body.signal-desk .privacy-banner {
   flex-shrink: 0;
 }
 
+.search-stage__shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid rgb(var(--line));
+  border-radius: 8px;
+  background: rgb(var(--raised));
+  color: rgb(var(--muted));
+  line-height: 1;
+  pointer-events: none;
+}
+
+.search-stage__shortcut kbd,
 .search-stage__meta kbd {
   font-family: var(--font-mono);
   font-size: 11px;
-  padding: 3px 6px;
-  border-radius: 4px;
-  border: 1px solid rgb(var(--line));
-  background: rgb(var(--bg));
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  outline: none;
 }
 
 .search-stage__clear {
@@ -5111,6 +5135,7 @@ body.signal-desk .privacy-banner {
   display: block;
   padding: 8px 10px;
   border-radius: 8px;
+  background: transparent;
   color: rgb(var(--ink));
   font-size: 13px;
   text-decoration: none;
@@ -5125,6 +5150,8 @@ body.signal-desk .privacy-banner {
   color: rgb(var(--muted));
   font-size: 12px;
   line-height: 1.5;
+  background: transparent;
+  border-radius: 0;
 }
 
 .library-note {

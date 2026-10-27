@@ -100,12 +100,11 @@
       var related = document.querySelector(".json-related");
       if (related) {
         var wrap = document.createElement("div");
-        wrap.className = "json-related-grid";
-        wrap.style.cssText = "margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;";
+        wrap.className = "json-related-grid json-scene-links";
         wrap.innerHTML =
-          '<a href="#json-tab-yaml" data-jump-mode="yaml" data-umami-event="json_to_yaml_click" data-umami-event-op="OP-105" style="display:block;padding:14px 16px;border:1px solid var(--color-border, #e5e7eb);border-radius:12px;background:var(--bg-surface,#fff);text-decoration:none;color:inherit;"><strong>🔁 当前 JSON 转 YAML</strong><span style="display:block;margin-top:6px;font-size:13px;color:var(--text-secondary,#666);">跳到 YAML 模式，自动取当前编辑器内容</span><b aria-hidden="true" style="float:right;color:var(--color-primary,#2563eb);">↗</b></a>' +
-          '<a href="javascript:void(0)" data-json-upload-yaml-action data-umami-event="yaml_to_json_click" data-umami-event-op="OP-105" style="display:block;padding:14px 16px;border:1px solid var(--color-border, #e5e7eb);border-radius:12px;background:var(--bg-surface,#fff);text-decoration:none;color:inherit;"><strong>📥 从 YAML 导入到 JSON</strong><span style="display:block;margin-top:6px;font-size:13px;color:var(--text-secondary,#666);">打开文件选择器，自动转成 JSON 写入编辑器</span><b aria-hidden="true" style="float:right;color:var(--color-primary,#2563eb);">↗</b></a>' +
-          '<a href="../jwt/" data-umami-event="json_to_jwt_click" data-umami-event-op="OP-105" style="display:block;padding:14px 16px;border:1px solid var(--color-border, #e5e7eb);border-radius:12px;background:var(--bg-surface,#fff);text-decoration:none;color:inherit;"><strong>🔐 编辑 JWT 的 Payload</strong><span style="display:block;margin-top:6px;font-size:13px;color:var(--text-secondary,#666);">当前 JSON 作为 JWT payload 传到生成器</span><b aria-hidden="true" style="float:right;color:var(--color-primary,#2563eb);">↗</b></a>';
+          '<a href="#json-tab-yaml" data-jump-mode="yaml" data-umami-event="json_to_yaml_click" data-umami-event-op="OP-105"><strong>当前 JSON 转 YAML</strong><span>跳到 YAML 模式，自动取当前编辑器内容</span><b aria-hidden="true">↗</b></a>' +
+          '<a href="javascript:void(0)" data-json-upload-yaml-action data-umami-event="yaml_to_json_click" data-umami-event-op="OP-105"><strong>从 YAML 导入到 JSON</strong><span>打开文件选择器，自动转成 JSON 写入编辑器</span><b aria-hidden="true">↗</b></a>' +
+          '<a href="../jwt/" data-umami-event="json_to_jwt_click" data-umami-event-op="OP-105"><strong>编辑 JWT 的 Payload</strong><span>当前 JSON 作为 JWT payload 传到生成器</span><b aria-hidden="true">↗</b></a>';
         related.parentNode.insertBefore(wrap, related.nextSibling);
         wrap.querySelector('[data-jump-mode="yaml"]').addEventListener("click", function (e) {
           var tab = document.getElementById("json-tab-yaml");

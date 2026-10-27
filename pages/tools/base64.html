@@ -158,10 +158,11 @@
         <span id="outputCount">字符数：0</span>
       </div>
 
-      <pre id="hashOutput" class="tool-pro-result">Hash 结果会显示在这里。</pre>
+      <pre id="hashOutput" class="tool-pro-result" hidden aria-live="polite"></pre>
 
-      <div class="hex-preview">
-        <img id="imgPreview" alt="Base64 图片预览" hidden />
+      <div class="hex-preview" id="imgPreviewWrap" hidden>
+        <p class="tool-label" id="imgPreviewLabel">Base64 图片预览</p>
+        <img id="imgPreview" alt="" />
       </div>
     </section>
 

@@ -49,6 +49,7 @@
     var toolMsg = document.getElementById("toolMsg");
     var b64Options = document.getElementById("b64Options");
     var imgPreview = document.getElementById("imgPreview");
+    var imgPreviewWrap = document.getElementById("imgPreviewWrap");
     var hashOutput = document.getElementById("hashOutput");
     var encFileInput = document.getElementById("encFileInput");
     var encStatSize = document.getElementById("encStatSize");
@@ -56,6 +57,7 @@
     var mainTab = "encode";
     var encodeMode = "base64";
     var textEncoder = new TextEncoder();
+    var HASH_PLACEHOLDER = "Hash 结果会显示在这里。";
 
     function showMsg(text, kind) {
       if (!toolMsg) return;
@@ -94,7 +96,21 @@
       encStatSize.textContent = inputArea.value.length + " 字符 / " + bytes + " bytes";
     }
 
-    // data:image URL 预览
+    function syncHashOutputVisibility() {
+      if (!hashOutput) return;
+      var onHashTab = mainTab === "hash" || mainTab === "file";
+      var hasResult = !!(hashOutput.textContent && hashOutput.textContent.trim() && hashOutput.textContent.trim() !== HASH_PLACEHOLDER);
+      if (!onHashTab) {
+        hashOutput.hidden = true;
+        return;
+      }
+      if (!hasResult) {
+        hashOutput.textContent = HASH_PLACEHOLDER;
+      }
+      hashOutput.hidden = false;
+    }
+
+    // data:image URL 预览：仅在有效 data:image 时展示，避免空 src 破图
     function updateImagePreview(input, output) {
       if (!imgPreview) return;
       var src = "";
@@ -102,10 +118,14 @@
       else if (/^data:image\//i.test(input)) src = input.trim();
       if (src) {
         imgPreview.src = src;
+        imgPreview.alt = "Base64 图片预览";
         imgPreview.hidden = false;
+        if (imgPreviewWrap) imgPreviewWrap.hidden = false;
       } else {
         imgPreview.removeAttribute("src");
+        imgPreview.alt = "";
         imgPreview.hidden = true;
+        if (imgPreviewWrap) imgPreviewWrap.hidden = true;
       }
     }
 
@@ -282,8 +302,10 @@
       try {
         var buf = await crypto.subtle.digest(alg, textEncoder.encode(inputArea.value));
         var out = alg + "\n" + hex(buf);
-        if (hashOutput) hashOutput.textContent = out;
-        else if (outputArea) outputArea.value = out;
+        if (hashOutput) {
+          hashOutput.textContent = out;
+          syncHashOutputVisibility();
+        } else if (outputArea) outputArea.value = out;
         showMsg(alg + " 计算完成", "ok");
       } catch (e) {
         showMsg(e.message || "Hash 计算失败", "error");
@@ -297,8 +319,10 @@
       try {
         var buf = await crypto.subtle.digest("SHA-256", await f.arrayBuffer());
         var out = "文件：" + f.name + "\n大小：" + f.size + " bytes\nSHA-256\n" + hex(buf);
-        if (hashOutput) hashOutput.textContent = out;
-        else if (outputArea) outputArea.value = out;
+        if (hashOutput) {
+          hashOutput.textContent = out;
+          syncHashOutputVisibility();
+        } else if (outputArea) outputArea.value = out;
         showMsg("文件摘要完成", "ok");
       } catch (err) {
         showMsg(err.message || "文件摘要失败", "error");
@@ -319,7 +343,10 @@
       clearMsg();
       inputArea.value = "";
       if (outputArea) outputArea.value = "";
-      if (hashOutput) hashOutput.textContent = "";
+      if (hashOutput) {
+        hashOutput.textContent = "";
+        syncHashOutputVisibility();
+      }
       updateCounts();
       inputArea.focus();
     }
@@ -328,6 +355,7 @@
       var t = "";
       if (mainTab === "hash" || mainTab === "file") {
         t = hashOutput ? hashOutput.textContent : "";
+        if (t === HASH_PLACEHOLDER) t = "";
       } else if (outputArea) {
         t = outputArea.value;
       }
@@ -353,6 +381,7 @@
       if (b64Options) {
         b64Options.classList.toggle("is-visible", name === "encode" && encodeMode === "base64");
       }
+      syncHashOutputVisibility();
       clearMsg();
     }
 
@@ -461,6 +490,7 @@
 
     switchMainTab("encode");
     switchEncodeMode("base64");
+    syncHashOutputVisibility();
     updateCounts();
   }
 

@@ -1770,11 +1770,30 @@
   margin-right: 6px;
 }
 
+.hex-preview {
+  margin-top: 12px;
+}
+
+.hex-preview[hidden] {
+  display: none !important;
+}
+
 .hex-preview img {
   max-width: 100%;
   max-height: 200px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
+  background: var(--bg-page);
+}
+
+.hex-preview img[hidden],
+.hex-preview img:not([src]),
+.hex-preview img[src=""] {
+  display: none !important;
+}
+
+#hashOutput[hidden] {
+  display: none !important;
 }
 
 @media (max-width: 860px) {
