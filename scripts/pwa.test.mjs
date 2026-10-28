@@ -45,6 +45,8 @@ test("service worker keeps blog/CSDN fresh and cache-first for self-built tools"
   assert.match(sw, /\/pages\/tools\//);
   assert.match(sw, /SELF_BUILT_SLUGS/);
   assert.match(sw, /offline\.html/);
+  assert.match(sw, /pwa-__ASSET_VERSION__/);
+  assert.match(sw, /style\.css\?v=__ASSET_VERSION__/);
   assert.doesNotMatch(sw, /cacheFirst\(.*blog/s);
 });
 
@@ -56,6 +58,8 @@ test("base.js injects manifest and registers SW against the site root", () => {
   assert.match(base, /scope:\s*root/);
   assert.match(base, /isEmbed\(\)/);
   assert.match(base, /theme-color/);
+  assert.match(base, /readAssetVersion/);
+  assert.match(base, /withAssetVersion/);
 });
 
 test("homepage declares manifest and theme-color for install prompts", () => {

@@ -216,7 +216,10 @@
     }
     var prefix = getRootPrefix();
     var s = document.createElement("script");
-    s.src = prefix + "data/tools.js";
+    var toolsUrl = prefix + "data/tools.js";
+    var ver = window.__ASSET_VERSION__;
+    if (ver) toolsUrl += (toolsUrl.indexOf("?") >= 0 ? "&" : "?") + "v=" + encodeURIComponent(ver);
+    s.src = toolsUrl;
     s.onload = function () { cb(); };
     s.onerror = function () { cb(); };
     document.head.appendChild(s);

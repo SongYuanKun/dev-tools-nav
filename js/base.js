@@ -722,10 +722,37 @@
     ? baseJs.replace(/\/js\/base\.js(?:\?.*)?$/, '/js/')
     : 'js/';
 
+  // 与 HTML ?v= 对齐：动态注入的脚本复用 base.js 自身的版本查询
+  function readAssetVersion() {
+    if (!baseJs) return '';
+    try {
+      var u = new URL(baseJs, window.location.href);
+      return u.searchParams.get('v') || '';
+    } catch (_) {
+      var m = baseJs.match(/[?&]v=([^&#]*)/);
+      return m ? decodeURIComponent(m[1]) : '';
+    }
+  }
+  var assetVersion = readAssetVersion();
+  if (assetVersion) window.__ASSET_VERSION__ = assetVersion;
+
+  function withAssetVersion(url) {
+    if (!assetVersion) return url;
+    var hashIdx = url.indexOf('#');
+    var hash = hashIdx >= 0 ? url.slice(hashIdx) : '';
+    var base = hashIdx >= 0 ? url.slice(0, hashIdx) : url;
+    var qIdx = base.indexOf('?');
+    var path = qIdx >= 0 ? base.slice(0, qIdx) : base;
+    var query = qIdx >= 0 ? base.slice(qIdx + 1) : '';
+    var params = query ? query.split('&').filter(function (p) { return p && p.indexOf('v=') !== 0; }) : [];
+    params.push('v=' + encodeURIComponent(assetVersion));
+    return path + '?' + params.join('&') + hash;
+  }
+
   function loadScript(src, cb) {
     var s = document.createElement('script');
     s.defer = true;
-    s.src = src;
+    s.src = withAssetVersion(src);
     s.onload = function () { if (cb) cb(); };
     s.onerror = function () { if (cb) cb(); };
     document.head.appendChild(s);
