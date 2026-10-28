@@ -34,8 +34,8 @@ test("canonical JSON page loads the direct workbench without an iframe", () => {
   assert.doesNotMatch(html, /<iframe\b/i);
   assert.doesNotMatch(html, /pages\/tools\/json\.html|[?&]embed=1/i);
   assert.match(html, /<link[^>]+rel=["']canonical["'][^>]+href=["']https:\/\/tools\.songyuankun\.top\/tools\/json\/["']/i);
-  assert.match(html, /href=["']\.\.\/\.\.\/css\/json-workbench\.css["']/i);
-  assert.match(html, /src=["']\.\.\/\.\.\/js\/json-workbench\.bundle\.js["']/i);
+  assert.match(html, /href=["']\.\.\/\.\.\/css\/json-workbench\.css(?:\?[^"']*)?["']/i);
+  assert.match(html, /src=["']\.\.\/\.\.\/js\/json-workbench\.bundle\.js(?:\?[^"']*)?["']/i);
 });
 
 test("legacy JSON page is a noindex redirect that preserves non-embed query parameters", async () => {
@@ -158,7 +158,7 @@ test("upload, favorites, recents, and desktop sticky controls remain accessible"
   assert.match(html, /<input[^>]+type=["']file["'][^>]+class=["'][^"']*json-visually-hidden/i);
   assert.doesNotMatch(html, /<input[^>]+type=["']file["'][^>]+\shidden(?:\s|=|\/?>)/i);
   assert.match(html, /data-json-favorite/);
-  assert.match(html, /src=["']\.\.\/\.\.\/js\/tools-prefs\.js["']/);
+  assert.match(html, /src=["']\.\.\/\.\.\/js\/tools-prefs\.js(?:\?[^"']*)?["']/);
   assert.match(workbenchSource, /ToolsPrefs\.addRecent\(["']json["']\)/);
   assert.match(workbenchSource, /ToolsPrefs\.toggleFavorite\(["']json["']\)/);
   assert.match(css, /\.json-app-topbar[\s\S]*?position:\s*sticky/i);
