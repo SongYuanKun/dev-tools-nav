@@ -12,6 +12,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const targets = [
   ['scripts/poll-github-deploy.sh', '.local/libexec/dev-tools-nav-deploy/poll-github-deploy.sh', 0o755],
   ['scripts/deploy-1panel-local.sh', '.local/libexec/dev-tools-nav-deploy/deploy-1panel-local.sh', 0o755],
+  ['scripts/stamp-asset-version.mjs', '.local/libexec/dev-tools-nav-deploy/stamp-asset-version.mjs', 0o644],
   ['ops/dev-tools-nav-deploy.service', '.config/systemd/user/dev-tools-nav-deploy.service', 0o644],
   ['ops/dev-tools-nav-deploy.timer', '.config/systemd/user/dev-tools-nav-deploy.timer', 0o644],
 ];
@@ -140,7 +141,7 @@ esac
     RELOAD_COUNT: path.join(fixture, 'reload.count'),
     DISABLE_COUNT: path.join(fixture, 'disable.count'),
     SERVICE_STATE_FILE: serviceState,
-    TIMER_TARGET: path.join(home, targets[3][1]),
+    TIMER_TARGET: path.join(home, targets[4][1]),
   };
   const invoke = async (extraEnv = {}) => {
     try {

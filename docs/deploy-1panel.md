@@ -185,7 +185,24 @@ remove token 只放在当前 shell，不写入仓库、命令脚本、日志或�
 
 ## 静态资源版本号
 
-`scripts/deploy-1panel-local.sh` 在 STAGE 目录上运行 `scripts/stamp-asset-version.mjs`：把 HTML / `sw.js` 中的 `__ASSET_VERSION__` 换成当前提交 short SHA（可用环境变量 `ASSET_VERSION` 覆盖）。源仓库 HTML 保持占位符；只有发布副本带真实 `?v=`，用于 CSS/JS 缓存失效。GitHub Pages 在组装 `_site` 时做同样的 stamp。
+`scripts/deploy-1panel-local.sh` 在 STAGE 目录上运行 `scripts/stamp-asset-version.mjs`：把 HTML / `sw.js` 中的 `__ASSET_VERSION__` 换成当前提交 short SHA（可用环境变量 `ASSET_VERSION` 覆盖；poller 会传入 `main` SHA 的前 12 位）。源仓库 HTML 保持占位符；只有发布副本带真实 `?v=`，用于 CSS/JS 缓存失效。GitHub Pages 在组装 `_site` 时做同样的 stamp。
+
+安装器会把 `stamp-asset-version.mjs` 一并安装到 `~/.local/libexec/dev-tools-nav-deploy/`，与 `deploy-1panel-local.sh` 同目录。部署器按顺序查找：`SITE_SOURCE_DIR/scripts/` → libexec 旁路副本 → `SCRIPT_ROOT/scripts/`。**找不到 stamp 脚本、缺少 node、无法解析版本号、或 stamp 后 STAGE 仍含 `__ASSET_VERSION__`，部署会立即失败并回滚，不会把占位符发布到生产。**
+
+合并含 stamp 逻辑的更新后，必须在 GTR 上重新运行 `scripts/install-outbound-deployer.sh` 再启 timer；远端 checkout 不会自动升级 libexec。
+
+### 部署后校验（GTR 操作者）
+
+生产 HTML / `sw.js` 不得再出现字面量占位符：
+
+```bash
+# 应无输出（exit 1 = 干净）；若打印出 __ASSET_VERSION__ 则 stamp 未生效，需停用 timer 并排查
+curl -fsS https://tools.songyuankun.top/ | grep -F '__ASSET_VERSION__' && echo 'FAIL: placeholder still live' && exit 1
+curl -fsS https://tools.songyuankun.top/sw.js | grep -F '__ASSET_VERSION__' && echo 'FAIL: placeholder still live' && exit 1
+curl -fsS https://tools.songyuankun.top/offline.html | grep -F '__ASSET_VERSION__' && echo 'FAIL: placeholder still live' && exit 1
+# 应能看到真实 ?v=<short-sha>（与当前 main short SHA / Pages 一致或同一次发布）
+curl -fsS https://tools.songyuankun.top/ | grep -oE 'css/style\.css\?v=[0-9a-f]+'
+```
 
 ## 生产验收
 
@@ -200,9 +217,12 @@ curl -fsS https://tools.songyuankun.top/ >/dev/null
 test "$(curl -sS -o /dev/null -w '%{http_code}' https://tools.songyuankun.top/content/)" = 404
 curl -fsS https://tools.songyuankun.top/baidu_verify_codeva-TByQYpVHM2.html >/dev/null
 curl -fsS https://tools.songyuankun.top/googleb710668c9aa28d4e.html >/dev/null
+# 静态资源版本号：字面量占位符不得出现在生产 HTML / sw.js
+! curl -fsS https://tools.songyuankun.top/ | grep -F '__ASSET_VERSION__'
+! curl -fsS https://tools.songyuankun.top/sw.js | grep -F '__ASSET_VERSION__'
 ```
 
-验收要求：生产首页可访问，`https://tools.songyuankun.top/content/` 精确返回 404，OpenResty 容器运行，两个验证端点可访问，状态 SHA 等于当前 `main`。同时确认 Test 和 GitHub Pages 对该 SHA 成功，以及 timer 使用十分钟 calendar 计划。
+验收要求：生产首页可访问，`https://tools.songyuankun.top/content/` 精确返回 404，OpenResty 容器运行，两个验证端点可访问，状态 SHA 等于当前 `main`，且首页 / `sw.js` 不含字面量 `__ASSET_VERSION__`。同时确认 Test 和 GitHub Pages 对该 SHA 成功，以及 timer 使用十分钟 calendar 计划。
 
 ### 双站一致性（GTR × GitHub Pages）
 
@@ -216,7 +236,7 @@ npm run check:consistency
 
 ## 升级与恢复
 
-升级时先在本地可信 checkout 审查 `scripts/poll-github-deploy.sh`、`scripts/deploy-1panel-local.sh`、`scripts/install-outbound-deployer.sh` 和 `ops/dev-tools-nav-deploy.{service,timer}`，再重新运行安装器。安装器必须先禁用已有 timer；若禁用失败或 oneshot 仍在运行，则不写目标文件并退出。安装过程先备份旧文件，再 staging 并原子替换 4 个目标；失败时逐项恢复、reload、重新禁用 timer 并验证状态。若恢复替换失败，错误会列出目标和保留的 backup 路径；不要删除该 backup 目录。文件与 timer 状态全部验证后才到 commit point，之后的 backup 清理失败只产生 warning 并保留 backup，不回滚新安装。成功后重复“初次运行和启用”步骤。永远不要让远端 checkout 自行升级本地脚本或 units。
+升级时先在本地可信 checkout 审查 `scripts/poll-github-deploy.sh`、`scripts/deploy-1panel-local.sh`、`scripts/stamp-asset-version.mjs`、`scripts/install-outbound-deployer.sh` 和 `ops/dev-tools-nav-deploy.{service,timer}`，再重新运行安装器。安装器必须先禁用已有 timer；若禁用失败或 oneshot 仍在运行，则不写目标文件并退出。安装过程先备份旧文件，再 staging 并原子替换 5 个目标（poller、deploy、stamp、service、timer）；失败时逐项恢复、reload、重新禁用 timer 并验证状态。若恢复替换失败，错误会列出目标和保留的 backup 路径；不要删除该 backup 目录。文件与 timer 状态全部验证后才到 commit point，之后的 backup 清理失败只产生 warning 并保留 backup，不回滚新安装。成功后重复“初次运行和启用”步骤。永远不要让远端 checkout 自行升级本地脚本或 units。
 
 若发布中断，重新运行 oneshot；原子部署会根据 `.deploy-in-progress` 和 `.index-old` 恢复或完成切换。若必须停止自动发布：
 

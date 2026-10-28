@@ -58,7 +58,9 @@ function makeFixture() {
   ].join('\n'));
   const deploy = path.join(bin, 'deploy');
   executable(deploy, [
-    'printf "deploy:%s\\n" "$SITE_SOURCE_DIR" >> "$COMMAND_LOG"',
+    'printf "deploy:%s ASSET_VERSION=%s\\n" "$SITE_SOURCE_DIR" "${ASSET_VERSION:-}" >> "$COMMAND_LOG"',
+    '[[ -n "${ASSET_VERSION:-}" ]] || { echo "missing ASSET_VERSION" >&2; exit 44; }',
+    '[[ "$ASSET_VERSION" != *__ASSET_VERSION__* ]] || { echo "placeholder ASSET_VERSION" >&2; exit 45; }',
     '[[ "${FAIL_DEPLOY:-0}" != 1 ]]',
   ].join('\n'));
   const git = path.join(bin, 'git');
@@ -162,8 +164,10 @@ test('successful exact-SHA push Test runs all gates in order and records state',
     const lines = readFileSync(f.commandLog, 'utf8').trim().split('\n');
     assert.equal(lines.length, 5, 'unexpected extra gate or deploy command');
     assert.deepEqual(lines.slice(0, 4), ['npm:ci', 'npm:test', 'npm:run build', 'npm:run check:generated']);
-    assert.match(lines[4], /^deploy:\/.*\/checkout\.[^/]+$/);
-    assert.equal(existsSync(lines[4].slice('deploy:'.length)), false, 'successful checkout was not cleaned');
+    assert.match(lines[4], /^deploy:\/.*\/checkout\.[^/]+ ASSET_VERSION=[0-9a-f]{12}$/);
+    const deployedCheckout = lines[4].replace(/^deploy:(\/\S+) ASSET_VERSION=.+$/, '$1');
+    assert.equal(existsSync(deployedCheckout), false, 'successful checkout was not cleaned');
+    assert.equal(lines[4].includes(`ASSET_VERSION=${f.sha.slice(0, 12)}`), true);
     assert.equal(readFileSync(path.join(f.state, 'last-deployed-sha'), 'utf8').trim(), f.sha);
     const curlArgs = readFileSync(f.curlLog, 'utf8');
     assert.match(curlArgs, new RegExp(`https://api\\.example\\.test/repos/example/project/actions/workflows/test\\.yml/runs\\?branch=main&event=push&head_sha=${f.sha}&per_page=20`));
@@ -274,7 +278,7 @@ test('checkout, every npm gate, and deploy failures stop immediately without adv
         if (name === 'deploy') {
           assert.equal(commands.length, 5);
           assert.deepEqual(commands.slice(0, 4), ['npm:ci', 'npm:test', 'npm:run build', 'npm:run check:generated']);
-          assert.match(commands[4], /^deploy:\/.*\/checkout\.[^/]+$/);
+          assert.match(commands[4], /^deploy:\/.*\/checkout\.[^/]+ ASSET_VERSION=[0-9a-f]{12}$/);
         }
         const leftovers = existsSync(f.cache) ? run('find', [f.cache, '-maxdepth', '1', '-type', 'd', '-name', 'checkout*']) : '';
         assert.equal(leftovers, '', 'temporary checkout was not cleaned');

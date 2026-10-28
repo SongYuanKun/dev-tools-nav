@@ -98,7 +98,9 @@ fi
   "$NPM_BIN" run build
   "$NPM_BIN" run check:generated
 )
-SITE_SOURCE_DIR="$checkout" "$DEPLOY_BIN"
+# Pass a concrete short SHA so deploy never publishes __ASSET_VERSION__ even if
+# git lookup inside the deployer fails; stamp still runs on STAGE only.
+ASSET_VERSION="${remote_sha:0:12}" SITE_SOURCE_DIR="$checkout" "$DEPLOY_BIN"
 
 state_tmp=$(mktemp "$STATE_DIR/.last-deployed-sha.XXXXXX")
 printf '%s\n' "$remote_sha" > "$state_tmp"

@@ -37,16 +37,18 @@ unit_dir="$HOME/.config/systemd/user"
 sources=(
   scripts/poll-github-deploy.sh
   scripts/deploy-1panel-local.sh
+  scripts/stamp-asset-version.mjs
   ops/dev-tools-nav-deploy.service
   ops/dev-tools-nav-deploy.timer
 )
 targets=(
   "$libexec_dir/poll-github-deploy.sh"
   "$libexec_dir/deploy-1panel-local.sh"
+  "$libexec_dir/stamp-asset-version.mjs"
   "$unit_dir/dev-tools-nav-deploy.service"
   "$unit_dir/dev-tools-nav-deploy.timer"
 )
-modes=(0755 0755 0644 0644)
+modes=(0755 0755 0644 0644 0644)
 
 timer_preexisted=0
 [[ -e "${targets[3]}" ]] && timer_preexisted=1
@@ -71,11 +73,11 @@ fi
 
 install -d -m 0700 "$libexec_dir" "$cache_dir" "$state_dir" "$unit_dir"
 
-staged=("" "" "" "")
-backups=("" "" "" "")
-backup_dirs=("" "" "" "")
-original_exists=(0 0 0 0)
-restored=(0 0 0 0)
+staged=("" "" "" "" "")
+backups=("" "" "" "" "")
+backup_dirs=("" "" "" "" "")
+original_exists=(0 0 0 0 0)
+restored=(0 0 0 0 0)
 transaction_started=1
 install_committed=0
 

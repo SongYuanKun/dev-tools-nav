@@ -176,6 +176,22 @@ export function stampTree(root, version) {
   return { version, files };
 }
 
+/**
+ * List HTML / sw.js paths under root that still contain the publish placeholder.
+ * @param {string} root
+ * @returns {string[]}
+ */
+export function findAssetVersionPlaceholders(root) {
+  const leftover = [];
+  walkFiles(root, (relPath) => {
+    const lower = relPath.toLowerCase();
+    if (!lower.endsWith(".html") && lower !== "sw.js" && !lower.endsWith("/sw.js")) return;
+    const text = readFileSync(join(root, relPath), "utf8");
+    if (text.includes(ASSET_VERSION_PLACEHOLDER)) leftover.push(relPath);
+  });
+  return leftover;
+}
+
 function parseArgs(argv) {
   const out = { root: DEFAULT_ROOT, version: null, dryRun: false, check: false };
   for (let i = 0; i < argv.length; i++) {
@@ -253,7 +269,19 @@ VERSION + precache asset queries. Default version: ASSET_VERSION, else GITHUB_SH
     return 0;
   }
 
+  if (!version || version.includes(ASSET_VERSION_PLACEHOLDER)) {
+    console.error(`stamp-asset-version: refusing invalid version: ${JSON.stringify(version)}`);
+    return 1;
+  }
+
   const result = stampTree(root, version);
+  const leftover = findAssetVersionPlaceholders(root);
+  if (leftover.length) {
+    console.error(
+      `stamp-asset-version: ${ASSET_VERSION_PLACEHOLDER} remains after stamp:\n${leftover.map((f) => `  ${f}`).join("\n")}`,
+    );
+    return 1;
+  }
   console.log(
     `Stamped asset version ${result.version} into ${result.files.length} file(s) under ${relative(process.cwd(), root) || "."}`,
   );

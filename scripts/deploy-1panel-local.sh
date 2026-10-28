@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Repo layout: .../scripts/deploy-1panel-local.sh → SCRIPT_ROOT = repo root.
+# Libexec layout: .../dev-tools-nav-deploy/deploy-1panel-local.sh → SCRIPT_ROOT =
+# parent of the install dir (only used as a last-resort default for SOURCE_DIR).
+DEPLOY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_ROOT="$(cd "$DEPLOY_DIR/.." && pwd)"
 SOURCE_DIR="${SITE_SOURCE_DIR:-$SCRIPT_ROOT}"
 DOCKER_BIN="${DOCKER_BIN:-docker}"
 OPENRESTY_CONTAINER="${OPENRESTY_CONTAINER:-1Panel-openresty-rRvM}"
@@ -14,6 +18,7 @@ OLD="$SITE_BASE/.index-old"
 MARKER="$SITE_BASE/.deploy-in-progress"
 STAGE="$(mktemp -d)"
 REMOTE_DIRTY=0
+ASSET_VERSION_PLACEHOLDER='__ASSET_VERSION__'
 
 cleanup() {
   status=$?
@@ -77,26 +82,52 @@ rsync -a --delete \
   "$SOURCE_DIR/" "$STAGE/"
 
 # Stamp CSS/JS ?v= on the staging tree only (source keeps __ASSET_VERSION__ placeholder).
-# Prefer SOURCE_DIR (checkout / repo): installed libexec copy is not next to scripts/.
+# Lookup order: checkout scripts/ → companion next to this deploy script (libexec) →
+# SCRIPT_ROOT/scripts/ (repo layout when SOURCE_DIR is overridden oddly).
+# Missing stamp, missing node, unresolved version, or leftover placeholders fail the deploy.
 stamp_script=""
-if [[ -f "$SOURCE_DIR/scripts/stamp-asset-version.mjs" ]]; then
-  stamp_script="$SOURCE_DIR/scripts/stamp-asset-version.mjs"
-elif [[ -f "$SCRIPT_ROOT/scripts/stamp-asset-version.mjs" ]]; then
-  stamp_script="$SCRIPT_ROOT/scripts/stamp-asset-version.mjs"
+for candidate in \
+  "$SOURCE_DIR/scripts/stamp-asset-version.mjs" \
+  "$DEPLOY_DIR/stamp-asset-version.mjs" \
+  "$SCRIPT_ROOT/scripts/stamp-asset-version.mjs"
+do
+  if [[ -f "$candidate" ]]; then
+    stamp_script="$candidate"
+    break
+  fi
+done
+if [[ -z "$stamp_script" ]]; then
+  echo "ERROR: stamp-asset-version.mjs not found (looked under SOURCE_DIR/scripts, $DEPLOY_DIR, SCRIPT_ROOT/scripts). Refusing to publish $ASSET_VERSION_PLACEHOLDER placeholders." >&2
+  exit 1
 fi
-if [[ -n "$stamp_script" ]]; then
-  stamp_version="${ASSET_VERSION:-}"
-  if [[ -z "$stamp_version" ]]; then
-    stamp_version="$(git -C "$SOURCE_DIR" rev-parse --short HEAD 2>/dev/null || true)"
-  fi
-  if [[ -z "$stamp_version" ]]; then
-    stamp_version="$(git -C "$SCRIPT_ROOT" rev-parse --short HEAD 2>/dev/null || true)"
-  fi
-  if [[ -n "$stamp_version" ]]; then
-    node "$stamp_script" --root "$STAGE" --version "$stamp_version"
-  else
-    node "$stamp_script" --root "$STAGE"
-  fi
+if ! command -v node >/dev/null 2>&1; then
+  echo "ERROR: node is required to stamp asset versions before deploy." >&2
+  exit 1
+fi
+
+stamp_version="${ASSET_VERSION:-}"
+if [[ -z "$stamp_version" ]]; then
+  stamp_version="$(git -C "$SOURCE_DIR" rev-parse --short HEAD 2>/dev/null || true)"
+fi
+if [[ -z "$stamp_version" ]]; then
+  stamp_version="$(git -C "$SCRIPT_ROOT" rev-parse --short HEAD 2>/dev/null || true)"
+fi
+if [[ -z "$stamp_version" ]]; then
+  echo "ERROR: cannot resolve asset version (set ASSET_VERSION or deploy from a git checkout)." >&2
+  exit 1
+fi
+if [[ "$stamp_version" == *"$ASSET_VERSION_PLACEHOLDER"* ]]; then
+  echo "ERROR: invalid ASSET_VERSION resolves to the placeholder itself." >&2
+  exit 1
+fi
+
+node "$stamp_script" --root "$STAGE" --version "$stamp_version"
+
+leftover="$(grep -R -l --include='*.html' --include='sw.js' -F -- "$ASSET_VERSION_PLACEHOLDER" "$STAGE" 2>/dev/null || true)"
+if [[ -n "$leftover" ]]; then
+  echo "ERROR: $ASSET_VERSION_PLACEHOLDER remains in STAGE after stamp; aborting deploy:" >&2
+  printf '%s\n' "$leftover" >&2
+  exit 1
 fi
 
 REMOTE_DIRTY=1
