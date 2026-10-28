@@ -21,7 +21,7 @@ test("test workflow gates pushes and pull requests with npm ci and npm test", ()
   assert.match(workflow, /run: npm ci/);
   assert.match(workflow, /run: npx playwright install chromium --with-deps/);
   assert.match(workflow, /run: npm test/);
-  assertStepsInOrder(workflow, ["run: npm ci", "run: npx playwright install chromium --with-deps", "run: npm test", "run: npm run check:generated", "run: node scripts/a11y-performance-gate.mjs"]);
+  assertStepsInOrder(workflow, ["run: npm ci", "run: npx playwright install chromium --with-deps", "run: npm test", "run: npm run check:asset-versions", "run: npm run check:generated", "run: node scripts/a11y-performance-gate.mjs"]);
 });
 
 test("Pages installs dependencies and builds before publishing", () => {
@@ -29,6 +29,8 @@ test("Pages installs dependencies and builds before publishing", () => {
   assert.match(pages, /node-version: ["']24["']/);
   assertStepsInOrder(pages, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Assemble site"]);
   assert.match(pages, /name: Assemble site[\s\S]*?--exclude='node_modules'[\s\S]*?\.\/ _site\//);
+  assert.match(pages, /name: Assemble site[\s\S]*?stamp-asset-version\.mjs --root _site/);
+  assert.match(pages, /ASSET_VERSION:\s*\$\{\{\s*github\.sha\s*\}\}/);
   assert.doesNotMatch(pages, /^\s+enablement:\s*true\s*$/m);
   assert.doesNotMatch(pages, /static_site_generator:\s*none/);
 });

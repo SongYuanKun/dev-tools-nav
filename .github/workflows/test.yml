@@ -63,6 +63,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium --with-deps
       - run: npm test
+      - run: npm run check:asset-versions
       - run: npm run check:generated
       - name: Check accessibility and performance baseline
         run: node scripts/a11y-performance-gate.mjs

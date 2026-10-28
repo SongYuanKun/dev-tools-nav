@@ -76,6 +76,29 @@ rsync -a --delete \
   --exclude='*' \
   "$SOURCE_DIR/" "$STAGE/"
 
+# Stamp CSS/JS ?v= on the staging tree only (source keeps __ASSET_VERSION__ placeholder).
+# Prefer SOURCE_DIR (checkout / repo): installed libexec copy is not next to scripts/.
+stamp_script=""
+if [[ -f "$SOURCE_DIR/scripts/stamp-asset-version.mjs" ]]; then
+  stamp_script="$SOURCE_DIR/scripts/stamp-asset-version.mjs"
+elif [[ -f "$SCRIPT_ROOT/scripts/stamp-asset-version.mjs" ]]; then
+  stamp_script="$SCRIPT_ROOT/scripts/stamp-asset-version.mjs"
+fi
+if [[ -n "$stamp_script" ]]; then
+  stamp_version="${ASSET_VERSION:-}"
+  if [[ -z "$stamp_version" ]]; then
+    stamp_version="$(git -C "$SOURCE_DIR" rev-parse --short HEAD 2>/dev/null || true)"
+  fi
+  if [[ -z "$stamp_version" ]]; then
+    stamp_version="$(git -C "$SCRIPT_ROOT" rev-parse --short HEAD 2>/dev/null || true)"
+  fi
+  if [[ -n "$stamp_version" ]]; then
+    node "$stamp_script" --root "$STAGE" --version "$stamp_version"
+  else
+    node "$stamp_script" --root "$STAGE"
+  fi
+fi
+
 REMOTE_DIRTY=1
 "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" sh -ec '
   target=$1; next=$2; old=$3; marker=$4

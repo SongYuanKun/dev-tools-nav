@@ -102,7 +102,7 @@
 dev-tools-nav/
 ├── index.html              # 主页（导航 + 工具卡片列表）
 ├── manifest.webmanifest    # PWA 安装清单（相对 scope，兼容 Pages 子路径）
-├── sw.js                   # Service Worker：工具 cache-first，博客/CSDN network-first
+├── sw.js                   # Service Worker：工具 cache-first，博客/CSDN network-first（发布时 stamp 版本）
 ├── offline.html            # 离线回退页（noindex）
 ├── favicon.ico / favicon.svg
 ├── css/
@@ -133,6 +133,7 @@ dev-tools-nav/
 ├── assets/                 # Logo、预览截图（screenshot*.png）
 ├── scripts/
 │   ├── build-blog.mjs           # 生成文章、索引、清单与 Atom Feed
+│   ├── stamp-asset-version.mjs  # 发布前给 CSS/JS 打 ?v= 版本（cache bust）
 │   ├── capture-screenshots.mjs  # Playwright 截取 README 用预览图
 │   ├── sync-csdn-rss.py         # 同步 CSDN RSS
 │   └── sync-open-source-radar.py # 同步 AI 开源项目雷达
@@ -206,6 +207,18 @@ BASE_URL=http://127.0.0.1:9876 npm run capture-screenshots
 | `assets/screenshot-blog.png` | 博客列表 |
 
 CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/update-screenshots.yml) 每周计划运行；成功状态以 GitHub Actions 为准。
+
+## 静态资源版本号（Cache Busting）
+
+站内 HTML / `sw.js` 对本地 CSS、JS 使用统一占位查询串 `?v=__ASSET_VERSION__`。发布时由 [`scripts/stamp-asset-version.mjs`](scripts/stamp-asset-version.mjs) 替换为 **git short SHA**（或环境变量 `ASSET_VERSION`）：
+
+| 路径 | 何时 stamp |
+|------|------------|
+| GitHub Pages | `deploy-pages.yml` 组装 `_site` 后，`ASSET_VERSION=$GITHUB_SHA` |
+| GTR / 1Panel | `deploy-1panel-local.sh` 写入 STAGE 后，默认 `git rev-parse --short HEAD` |
+| 本地预览 | 可选：`ASSET_VERSION=dev npm run stamp-assets`（会改工作区文件，勿提交） |
+
+源码保留占位符，避免每次发布污染 diff；`npm run check:asset-versions` 校验 HTML 均已带版本查询。动态加载的脚本（`base.js` → umami / command-palette，以及 palette 拉取 `data/tools.js`）复用 `base.js` 自身的 `?v=`。
 
 ## 部署到 GitHub Pages
 

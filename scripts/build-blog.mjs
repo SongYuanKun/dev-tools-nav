@@ -437,10 +437,10 @@ function renderPage(meta, slug, contentHtml, relatedPosts = []) {
   <link rel="alternate" type="application/atom+xml" href="${BASE_URL}/feed.xml" title="Koen 的技术博客" />
   <title>${esc(title)} · Koen的工具箱</title>
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/style.css?v=__ASSET_VERSION__" />
   <script>(function(){var t=localStorage.getItem('dev-tools-theme');if(t){document.documentElement.setAttribute('data-theme',t)}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}})();</script>
   <script type="application/ld+json">${articleJsonLd}</script>
-  <script defer src="../../js/base.js"></script>
+  <script defer src="../../js/base.js?v=__ASSET_VERSION__"></script>
   <style>
     .blog-post-page { max-width: 720px; margin: 0 auto; padding: 24px 24px 80px; }
     .blog-post-header { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color); }
@@ -584,7 +584,7 @@ function renderPage(meta, slug, contentHtml, relatedPosts = []) {
       document.addEventListener("DOMContentLoaded", initTheme);
     })();
   </script>
-  <script defer src="../../js/footer.js"></script>
+  <script defer src="../../js/footer.js?v=__ASSET_VERSION__"></script>
 </body>
 </html>`
 }
@@ -650,11 +650,11 @@ function renderBlogIndex(posts) {
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="${BASE_URL}/pages/blog/" />
   <link rel="alternate" type="application/atom+xml" href="${BASE_URL}/feed.xml" title="Koen 的技术博客" />
-  <link rel="stylesheet" href="../../css/style.css" />
-  <link rel="stylesheet" href="../../css/blog.css" />
+  <link rel="stylesheet" href="../../css/style.css?v=__ASSET_VERSION__" />
+  <link rel="stylesheet" href="../../css/blog.css?v=__ASSET_VERSION__" />
   <title>技术博客 · Koen的工具箱</title>
   <script type="application/ld+json">${blogJsonLd}</script>
-  <script defer src="../../js/base.js"></script>
+  <script defer src="../../js/base.js?v=__ASSET_VERSION__"></script>
 </head>
 <body class="site-v2">
   <header><nav class="navbar" aria-label="主导航"><a href="../../index.html" class="logo">Koen's 工具箱</a></nav></header>
@@ -679,9 +679,9 @@ function renderBlogIndex(posts) {
     </section>
   </main>
   <footer class="footer"></footer>
-  <script src="../../data/blog-posts.js"></script>
-  <script src="../../js/blog-list.js"></script>
-  <script defer src="../../js/footer.js"></script>
+  <script src="../../data/blog-posts.js?v=__ASSET_VERSION__"></script>
+  <script src="../../js/blog-list.js?v=__ASSET_VERSION__"></script>
+  <script defer src="../../js/footer.js?v=__ASSET_VERSION__"></script>
 </body>
 </html>`
 }

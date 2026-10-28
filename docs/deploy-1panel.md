@@ -183,6 +183,10 @@ systemctl --user daemon-reload
 
 remove token 只放在当前 shell，不写入仓库、命令脚本、日志或配置文件。若注销失败，保留目录，重新取得临时 remove token 后重试。不要为公开仓库创建新的注册令牌；无论结果如何，都不得重新注册 Runner。
 
+## 静态资源版本号
+
+`scripts/deploy-1panel-local.sh` 在 STAGE 目录上运行 `scripts/stamp-asset-version.mjs`：把 HTML / `sw.js` 中的 `__ASSET_VERSION__` 换成当前提交 short SHA（可用环境变量 `ASSET_VERSION` 覆盖）。源仓库 HTML 保持占位符；只有发布副本带真实 `?v=`，用于 CSS/JS 缓存失效。GitHub Pages 在组装 `_site` 时做同样的 stamp。
+
 ## 生产验收
 
 记录 `main` SHA、状态 SHA、容器状态和 HTTP 结果：

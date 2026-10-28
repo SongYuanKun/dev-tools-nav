@@ -54,6 +54,8 @@ jobs:
       - run: npm run check:generated
 
       - name: Assemble site
+        env:
+          ASSET_VERSION: ${{ github.sha }}
         run: |
           mkdir -p _site
           echo -n > _site/.nojekyll
@@ -76,6 +78,9 @@ jobs:
             --exclude='scripts' \
             --exclude='ops' \
             ./ _site/
+          # Publish copy only: replace __ASSET_VERSION__ / append ?v= so CSS/JS caches bust per deploy
+          node scripts/stamp-asset-version.mjs --root _site
+          node scripts/stamp-asset-version.mjs --root _site --check
           echo "site size: $(du -sh _site | cut -f1) files: $(find _site -type f | wc -l)"
 
       - uses: actions/configure-pages@v5
