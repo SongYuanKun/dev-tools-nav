@@ -6,6 +6,7 @@ import { join } from "node:path";
 
 import {
   ASSET_VERSION_PLACEHOLDER,
+  findAssetVersionPlaceholders,
   resolveAssetVersion,
   shouldVersionUrl,
   stampMarkupAssetUrls,
@@ -101,6 +102,24 @@ test("stampTree writes HTML and sw.js under a publish root", () => {
     assert.match(html, /base\.js\?v=ship1/);
     assert.match(sw, /VERSION = "pwa-ship1"/);
     assert.match(sw, /style\.css\?v=ship1/);
+    assert.deepEqual(findAssetVersionPlaceholders(root), []);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("findAssetVersionPlaceholders reports leftover HTML and sw.js placeholders", () => {
+  const root = mkdtempSync(join(tmpdir(), "stamp-leftover-"));
+  try {
+    writeFileSync(
+      join(root, "index.html"),
+      `<link href="css/style.css?v=${ASSET_VERSION_PLACEHOLDER}" />\n`,
+    );
+    writeFileSync(join(root, "sw.js"), `const VERSION = "pwa-${ASSET_VERSION_PLACEHOLDER}";\n`);
+    writeFileSync(join(root, "ok.html"), `<link href="css/style.css?v=ok" />\n`);
+    assert.deepEqual(findAssetVersionPlaceholders(root).sort(), ["index.html", "sw.js"]);
+    stampTree(root, "fixed");
+    assert.deepEqual(findAssetVersionPlaceholders(root), []);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

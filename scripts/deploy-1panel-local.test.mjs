@@ -85,6 +85,7 @@ function fixture() {
     chmodSync(join(verificationSource, file), 0o600);
   }
   cpSync("scripts/deploy-1panel-local.sh", join(repo, "scripts/deploy-1panel-local.sh"));
+  cpSync("scripts/stamp-asset-version.mjs", join(repo, "scripts/stamp-asset-version.mjs"));
   chmodSync(join(repo, "scripts/deploy-1panel-local.sh"), 0o755);
   const fakeDocker = join(bin, "docker");
   writeFileSync(fakeDocker, `#!/usr/bin/env bash
@@ -162,6 +163,8 @@ function deploy({ repo, site, verificationSource, fakeDocker }, extraEnv = {}, o
       SITE_OWNER: `${process.getuid()}:${process.getgid()}`,
       VERIFICATION_SOURCE_DIR: verificationSource,
       PATH: `${dirname(fakeDocker)}:${process.env.PATH}`,
+      // Fixture repos are not git checkouts; production poll/manual paths set this or use git.
+      ASSET_VERSION: "teststamp",
       ...extraEnv,
     },
   });
@@ -173,6 +176,7 @@ test("deploys from SITE_SOURCE_DIR instead of the installed script directory", (
     const installedScript = join(data.root, "installed", "deploy-1panel-local.sh");
     mkdirSync(dirname(installedScript), { recursive: true });
     cpSync(join(data.repo, "scripts/deploy-1panel-local.sh"), installedScript);
+    cpSync(join(data.repo, "scripts/stamp-asset-version.mjs"), join(dirname(installedScript), "stamp-asset-version.mjs"));
     chmodSync(installedScript, 0o755);
     write(data.repo, "index.html", "new:from-site-source-dir");
 
@@ -184,6 +188,112 @@ test("deploys from SITE_SOURCE_DIR instead of the installed script directory", (
 
     assert.equal(result.status, 0, result.stderr);
     assert.equal(readFileSync(join(data.site, "index/index.html"), "utf8"), "new:from-site-source-dir");
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("deploy stamp replaces __ASSET_VERSION__ before publishing", () => {
+  const data = fixture();
+  try {
+    write(
+      data.repo,
+      "index.html",
+      `<link rel="stylesheet" href="css/style.css?v=__ASSET_VERSION__" />\n<script src="js/base.js?v=__ASSET_VERSION__"></script>\n`,
+    );
+    write(
+      data.repo,
+      "sw.js",
+      `const VERSION = "pwa-__ASSET_VERSION__";\nconst PRECACHE_URLS = ["./css/style.css?v=__ASSET_VERSION__"];\n`,
+    );
+    write(
+      data.repo,
+      "offline.html",
+      `<link rel="stylesheet" href="css/style.css?v=__ASSET_VERSION__" />\n`,
+    );
+
+    const result = deploy(data, { ASSET_VERSION: "c6e6e79c7983" });
+    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+    assert.match(result.stdout, /Stamped asset version c6e6e79c7983/);
+
+    const html = readFileSync(join(data.site, "index/index.html"), "utf8");
+    const sw = readFileSync(join(data.site, "index/sw.js"), "utf8");
+    const offline = readFileSync(join(data.site, "index/offline.html"), "utf8");
+    assert.match(html, /style\.css\?v=c6e6e79c7983/);
+    assert.match(html, /base\.js\?v=c6e6e79c7983/);
+    assert.doesNotMatch(html, /__ASSET_VERSION__/);
+    assert.match(sw, /VERSION = "pwa-c6e6e79c7983"/);
+    assert.doesNotMatch(sw, /__ASSET_VERSION__/);
+    assert.doesNotMatch(offline, /__ASSET_VERSION__/);
+    // Source checkout keeps placeholders for the next publish path.
+    assert.match(readFileSync(join(data.repo, "index.html"), "utf8"), /__ASSET_VERSION__/);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("deploy fails closed when stamp-asset-version.mjs is missing", () => {
+  const data = fixture();
+  try {
+    const installedDir = join(data.root, "installed");
+    const installedScript = join(installedDir, "deploy-1panel-local.sh");
+    mkdirSync(installedDir, { recursive: true });
+    cpSync(join(data.repo, "scripts/deploy-1panel-local.sh"), installedScript);
+    chmodSync(installedScript, 0o755);
+    rmSync(join(data.repo, "scripts/stamp-asset-version.mjs"));
+
+    const result = deploy(
+      data,
+      { SITE_SOURCE_DIR: data.repo, ASSET_VERSION: "deadbeef" },
+      { script: installedScript, cwd: data.root },
+    );
+
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /stamp-asset-version\.mjs not found/);
+    assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+    assert.equal(existsSync(join(data.site, ".index-next")), false);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("libexec companion stamp-asset-version.mjs works when checkout scripts/ lacks it", () => {
+  const data = fixture();
+  try {
+    const installedDir = join(data.root, "installed");
+    const installedScript = join(installedDir, "deploy-1panel-local.sh");
+    mkdirSync(installedDir, { recursive: true });
+    cpSync(join(data.repo, "scripts/deploy-1panel-local.sh"), installedScript);
+    cpSync(join(data.repo, "scripts/stamp-asset-version.mjs"), join(installedDir, "stamp-asset-version.mjs"));
+    chmodSync(installedScript, 0o755);
+    rmSync(join(data.repo, "scripts/stamp-asset-version.mjs"));
+    write(
+      data.repo,
+      "index.html",
+      `<link rel="stylesheet" href="css/style.css?v=__ASSET_VERSION__" />\n`,
+    );
+
+    const result = deploy(
+      data,
+      { SITE_SOURCE_DIR: data.repo, ASSET_VERSION: "libexec1" },
+      { script: installedScript, cwd: data.root },
+    );
+
+    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+    assert.match(readFileSync(join(data.site, "index/index.html"), "utf8"), /style\.css\?v=libexec1/);
+    assert.doesNotMatch(readFileSync(join(data.site, "index/index.html"), "utf8"), /__ASSET_VERSION__/);
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("deploy fails closed when ASSET_VERSION cannot be resolved", () => {
+  const data = fixture();
+  try {
+    const result = deploy(data, { ASSET_VERSION: "" });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /cannot resolve asset version/);
+    assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
   } finally {
     rmSync(data.root, { recursive: true, force: true });
   }

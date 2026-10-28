@@ -107,6 +107,9 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
     'rm -f "$HOME/.config/systemd/user/github-actions-dev-tools-nav.service"',
   ]);
   assert.match(runbook, /^curl -fsS https:\/\/tools\.songyuankun\.top\/ >\/dev\/null$/m);
+  assert.match(runbook, /grep -F '__ASSET_VERSION__'/);
+  assert.match(runbook, /stamp-asset-version\.mjs/);
+  assert.match(runbook, /原子替换 5 个目标/);
   assert.match(runbook, /curl -sS -o \/dev\/null -w '%\{http_code\}' https:\/\/tools\.songyuankun\.top\/content\//);
   assert.doesNotMatch(runbook, /this-path-must-not-exist/);
   assert.match(runbook, /^curl -fsS https:\/\/tools\.songyuankun\.top\/baidu_verify_codeva-TByQYpVHM2\.html >\/dev\/null$/m);
