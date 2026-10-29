@@ -92,6 +92,38 @@
     return String(pattern || "").replace(/\(\?<([A-Za-z_][A-Za-z0-9_]*)>/g, "(?P<$1>");
   }
 
+  // Translate JS replacement refs ($1, $<name>) into each target language's syntax.
+  function translateReplaceRefs(replaceWith, lang) {
+    var s = String(replaceWith || "");
+    if (!s || lang === "js") return s;
+    // Protect $$ (literal dollar in JS) while rewriting numbered / named refs.
+    var parts = [];
+    var i = 0;
+    while (i < s.length) {
+      if (s[i] === "$" && s[i + 1] === "$") {
+        parts.push(lang === "python" ? "$" : "$$");
+        i += 2;
+        continue;
+      }
+      var named = /^\$<([A-Za-z_][A-Za-z0-9_]*)>/.exec(s.slice(i));
+      if (named) {
+        if (lang === "python") parts.push("\\g<" + named[1] + ">");
+        else parts.push("${" + named[1] + "}"); // Java / Go / PHP
+        i += named[0].length;
+        continue;
+      }
+      var num = /^\$(\d+)/.exec(s.slice(i));
+      if (num) {
+        parts.push(lang === "python" ? "\\" + num[1] : "$" + num[1]);
+        i += num[0].length;
+        continue;
+      }
+      parts.push(s[i]);
+      i += 1;
+    }
+    return parts.join("");
+  }
+
   function updateCodeGen() {
     var out = document.getElementById("regexCodeOut");
     var patternEl = document.getElementById("regexPattern");
@@ -112,8 +144,13 @@
     if (flags.indexOf("i") >= 0) pyFlags.push("re.IGNORECASE");
     if (flags.indexOf("m") >= 0) pyFlags.push("re.MULTILINE");
     if (flags.indexOf("s") >= 0) pyFlags.push("re.DOTALL");
-    var pyFlagStr = pyFlags.length ? ", " + pyFlags.join(" | ") : "";
+    // Keyword form: re.sub's 4th positional arg is count, not flags.
+    var pyFlagKw = pyFlags.length ? ", flags=" + pyFlags.join(" | ") : "";
     var pyPattern = toPythonNamedPattern(pattern);
+    var pyReplaceText = translateReplaceRefs(replaceWith, "python");
+    var goReplaceText = translateReplaceRefs(replaceWith, "go");
+    var javaReplaceText = translateReplaceRefs(replaceWith, "java");
+    var phpReplaceText = translateReplaceRefs(replaceWith, "php");
 
     var goFlags = "";
     if (flags.indexOf("i") >= 0) goFlags += "(?i)";
@@ -132,21 +169,23 @@
     var namedHint = named.length
       ? "\n# 命名捕获组：" + named.join(", ") + "\n"
       : "\n";
+    var isGlobal = flags.indexOf("g") >= 0;
+    var pySubCount = isGlobal ? "" : ", count=1";
 
     var jsReplace = replaceWith
       ? 'const replaced = text.replace(re, ' + JSON.stringify(replaceWith) + ');\nconsole.log(replaced);\n'
-      : (flags.indexOf("g") >= 0
+      : (isGlobal
         ? "const matches = [...text.matchAll(re)];\nconsole.log(matches.map(m => ({ value: m[0], groups: m.groups || null })));\n"
         : "const match = text.match(re);\nconsole.log(match && { value: match[0], groups: match.groups || null });\n");
 
     var pyReplace = replaceWith
-      ? 'replaced = re.sub(pattern, "' + escapePy(replaceWith) + '", text' + pyFlagStr + ")\nprint(replaced)\n"
-      : (flags.indexOf("g") >= 0
-        ? "for m in re.finditer(pattern, text" + pyFlagStr + "):\n    print(m.group(0), m.groupdict())\n"
-        : "m = re.search(pattern, text" + pyFlagStr + ")\nif m:\n    print(m.group(0), m.groupdict())\n");
+      ? 'replaced = re.sub(pattern, "' + escapePy(pyReplaceText) + '", text' + pySubCount + pyFlagKw + ")\nprint(replaced)\n"
+      : (isGlobal
+        ? "for m in re.finditer(pattern, text" + pyFlagKw + "):\n    print(m.group(0), m.groupdict())\n"
+        : "m = re.search(pattern, text" + pyFlagKw + ")\nif m:\n    print(m.group(0), m.groupdict())\n");
 
     var javaReplace = replaceWith
-      ? 'System.out.println(pattern.matcher(text).replaceAll("' + escapeJava(replaceWith) + '"));\n'
+      ? 'System.out.println(pattern.matcher(text).replaceAll("' + escapeJava(javaReplaceText) + '"));\n'
       : "Matcher matcher = pattern.matcher(text);\nwhile (matcher.find()) {\n    System.out.println(matcher.group());\n" +
         (named.length ? named.map(function (n) {
           return '    System.out.println("' + n + '=" + matcher.group("' + n + '"));\n';
@@ -155,7 +194,7 @@
 
     var phpReplace = replaceWith
       ? '$out = preg_replace(\'/' + pattern.replace(/\//g, "\\/") + '/' + phpModifiers + '\', ' +
-        JSON.stringify(replaceWith) + ", $text);\necho $out;\n"
+        JSON.stringify(phpReplaceText) + ", $text);\necho $out;\n"
       : "if (preg_match_all('/" + pattern.replace(/\//g, "\\/") + "/" + phpModifiers +
         "', $text, $matches, PREG_SET_ORDER)) {\n    print_r($matches);\n}\n";
 
@@ -176,7 +215,7 @@
       '    re := regexp.MustCompile(`' + escapeGo(goPattern) + "`)\n" +
       '    text := "your text here"\n' +
       (replaceWith
-        ? '    fmt.Println(re.ReplaceAllString(text, `' + replaceWith.replace(/`/g, "") + "`))\n"
+        ? '    fmt.Println(re.ReplaceAllString(text, `' + goReplaceText.replace(/`/g, "") + "`))\n"
         : "    fmt.Println(re.FindAllString(text, -1))\n") +
       "}\n" +
       "\n// Java\n" +

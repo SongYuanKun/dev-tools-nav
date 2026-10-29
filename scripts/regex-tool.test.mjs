@@ -34,7 +34,7 @@ test("regex tool ships named-group templates and multi-language snippet generato
   }
 
   const patternEl = el({ value: "(?<year>\\d{4})-(?<month>\\d{2})" });
-  const flagsEl = el({ value: "g" });
+  const flagsEl = el({ value: "gi" });
   const testInput = el({ value: "2024-01" });
   const replaceWith = el({ value: "$<year>/$<month>" });
   const codeOut = el();
@@ -87,6 +87,12 @@ test("regex tool ships named-group templates and multi-language snippet generato
   assert.match(codeOut.textContent, /JavaScript/);
   assert.match(codeOut.textContent, /# Python/);
   assert.match(codeOut.textContent, /\(\?P<year>/);
+  // Python: flags= keyword (not positional count) + named-group replace refs
+  assert.match(codeOut.textContent, /re\.sub\([^)]*flags=re\.IGNORECASE/);
+  assert.match(codeOut.textContent, /\\\\g<year>\/\\\\g<month>/);
+  // Java / Go / PHP: $<name> → ${name}
+  assert.match(codeOut.textContent, /\$\{year\}\/\$\{month\}/);
   assert.equal(replaceOut.textContent, "2024/01");
   assert.match(matchStats.textContent, /命名组/);
+  assert.match(source, /translateReplaceRefs/);
 });
