@@ -197,6 +197,17 @@ body.json-page .json-site-footer a {
   border: 0;
 }
 
+.json-size-note {
+  margin: 10px 18px 0;
+  padding: 10px 12px;
+  border: 1px dashed color-mix(in srgb, var(--jw-accent, #ff5c45) 40%, transparent);
+  border-radius: 10px;
+  color: var(--jw-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.json-size-note[hidden] { display: none; }
+
 .json-error-banner {
   display: flex;
   align-items: center;
@@ -211,7 +222,61 @@ body.json-page .json-site-footer a {
 }
 .json-error-banner[hidden] { display: none; }
 .json-error-banner strong { margin-right: 10px; }
+.json-error-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.json-error-hint {
+  display: block;
+  color: color-mix(in srgb, var(--jw-danger) 78%, var(--jw-muted));
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+.json-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
 .json-error-locate { min-height: 44px; border: 0; background: transparent; color: inherit; text-decoration: underline; cursor: pointer; }
+.json-diff-roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px 20px 0;
+  color: var(--jw-muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+.json-diff-roles strong {
+  display: block;
+  color: var(--jw-text);
+  margin-bottom: 2px;
+}
+.json-diff-paths {
+  margin: 0;
+  padding: 10px 20px 0;
+  max-height: 140px;
+  overflow: auto;
+  color: var(--jw-text);
+  font: 0.75rem/1.45 ui-monospace, monospace;
+  white-space: pre-wrap;
+}
+.json-http-snippet {
+  margin: 8px 0 12px;
+  padding: 12px;
+  max-height: 180px;
+  overflow: auto;
+  border: 1px solid var(--jw-border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--jw-panel, #0b1220) 92%, transparent);
+  color: var(--jw-text);
+  font: 0.78rem/1.45 ui-monospace, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 
 .json-panels { min-height: clamp(460px, 62vh, 760px); background: #080d15; }
 [data-theme="light"] .json-panels { background: rgb(var(--raised)); }

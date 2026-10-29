@@ -52,7 +52,15 @@
   }
 
   function scoreTool(tool, terms) {
-    if (!terms.length) return 1;
+    var category = tool.category || "";
+    var isSelfBuilt = category === "online-tools";
+    var isSecondaryCatalog = category === "ai" || category === "hosting";
+    // 空查询时优先露出自建工具；AI / 建站目录权重更低
+    if (!terms.length) {
+      if (isSelfBuilt) return tool.featured ? 4 : 3;
+      if (isSecondaryCatalog) return 0.4;
+      return 1;
+    }
     var name = String(tool.name || "").toLowerCase();
     var desc = String(tool.description || "").toLowerCase();
     var tags = (Array.isArray(tool.tags) ? tool.tags : []).join(" ").toLowerCase();
@@ -69,7 +77,8 @@
       else return 0;
     }
     if (tool.featured) score += 0.5;
-    if (tool.category === "online-tools") score += 0.25;
+    if (isSelfBuilt) score += 2;
+    else if (isSecondaryCatalog) score -= 1.25;
     return score;
   }
 
@@ -138,7 +147,13 @@
       var tags = (Array.isArray(tool.tags) ? tool.tags : []).slice(0, 3).map(function (tag) {
         return '<span class="cmdk-tag">' + escapeHtml(tag) + '</span>';
       }).join("");
-      var kind = tool.category === "online-tools" ? "自建工具" : "目录";
+      var kind = tool.category === "online-tools"
+        ? "自建工具"
+        : tool.category === "hosting"
+          ? "建站目录"
+          : tool.category === "ai"
+            ? "AI 目录"
+            : "目录";
       return (
         '<button type="button" class="cmdk-item' + active + '" role="option" aria-selected="' +
         (index === state.active ? "true" : "false") + '" data-cmdk-index="' + index + '">' +

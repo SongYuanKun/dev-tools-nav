@@ -1,25 +1,27 @@
 (function () {
   "use strict";
 
-  // 常用正则模板（20+）
+  // 常用正则模板（含命名捕获组示例）
   var TEMPLATES = [
     { label: "中国手机号", pattern: "1[3-9]\\d{9}", flags: "g", sample: "联系方式：13812345678 或 15987654321" },
     { label: "+86 手机号", pattern: "(?:\\+86|0086)?[-\\s]?1[3-9]\\d{9}", flags: "g", sample: "致电 +86-13812345678 或 0086 15987654321" },
     { label: "座机号", pattern: "0\\d{2,3}-?\\d{7,8}", flags: "g", sample: "北京 010-88886666，上海 02187654321" },
     { label: "邮箱", pattern: "[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}", flags: "gi", sample: "发送到 hello@example.com 或 support@koen.top" },
+    { label: "邮箱（命名组）", pattern: "(?<user>[a-zA-Z0-9._%+\\-]+)@(?<domain>[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,})", flags: "gi", sample: "账号 hello@example.com / support@koen.top" },
     { label: "URL", pattern: "https?://[^\\s/$.?#].[^\\s]*", flags: "gi", sample: "访问 https://tools.songyuankun.top 或 http://example.com/path?q=1" },
+    { label: "URL（命名组）", pattern: "(?<scheme>https?):\\/\\/(?<host>[^\\/\\s]+)(?<path>\\/[^\\s]*)?", flags: "gi", sample: "打开 https://tools.songyuankun.top/tools/regex/ 看看" },
     { label: "IPv4", pattern: "\\b(?:(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\b", flags: "g", sample: "服务器 IP：192.168.1.1 和 10.0.0.255" },
     { label: "IPv6", pattern: "(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|:(?::[0-9a-fA-F]{1,4}){1,7}|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}", flags: "g", sample: "地址 2001:0db8:85a3:0000:0000:8a2e:0370:7334 与 ::1" },
     { label: "MAC 地址", pattern: "(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}", flags: "g", sample: "网卡 AA:BB:CC:DD:EE:FF 或 00-11-22-33-44-55" },
     { label: "UUID", pattern: "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}", flags: "gi", sample: "id=550e8400-e29b-41d4-a716-446655440000" },
-    { label: "日期 YYYY-MM-DD", pattern: "\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])", flags: "g", sample: "日期：2024-01-15 至 2024-12-31" },
+    { label: "日期 YYYY-MM-DD", pattern: "(?<year>\\d{4})-(?<month>0[1-9]|1[0-2])-(?<day>0[1-9]|[12]\\d|3[01])", flags: "g", sample: "日期：2024-01-15 至 2024-12-31" },
     { label: "时间 HH:MM:SS", pattern: "(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?", flags: "g", sample: "日志 09:30:00 与 23:59" },
     { label: "身份证号", pattern: "[1-9]\\d{5}(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[0-9Xx]", flags: "g", sample: "证件号：110101199003077890" },
     { label: "银行卡号", pattern: "\\b[1-9]\\d{12,18}\\b", flags: "g", sample: "卡号 6222021234567890123" },
     { label: "车牌号", pattern: "[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼][A-HJ-NP-Z][A-HJ-NP-Z0-9]{4,5}[A-HJ-NP-Z0-9挂学警港澳]", flags: "g", sample: "京A12345 沪B88888 粤AD12345" },
     { label: "中文字符", pattern: "[\\u4e00-\\u9fa5]+", flags: "g", sample: "Hello 世界 World 你好" },
     { label: "微信号", pattern: "[a-zA-Z][a-zA-Z0-9_-]{5,19}", flags: "g", sample: "wxid_koen_dev tools_nav_2024" },
-    { label: "semver", pattern: "v?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[\\w.-]+)?(?:\\+[\\w.-]+)?", flags: "g", sample: "发布 v1.2.3 与 2.0.0-beta.1+build.42" },
+    { label: "semver", pattern: "v?(?<major>0|[1-9]\\d*)\\.(?<minor>0|[1-9]\\d*)\\.(?<patch>0|[1-9]\\d*)(?:-(?<prerelease>[\\w.-]+))?(?:\\+(?<build>[\\w.-]+))?", flags: "g", sample: "发布 v1.2.3 与 2.0.0-beta.1+build.42" },
     { label: "十六进制颜色", pattern: "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\\b", flags: "gi", sample: "颜色：#FF5C45 #fff #FF0000" },
     { label: "Base64", pattern: "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?", flags: "g", sample: "token SGVsbG8gV29ybGQh" },
     { label: "整数", pattern: "-?\\d+", flags: "g", sample: "数字 42，-100，0，9999" },
@@ -27,11 +29,12 @@
     { label: "英文单词", pattern: "\\b[A-Za-z]{2,}\\b", flags: "g", sample: "The quick brown fox jumps" },
     { label: "强密码", pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$", flags: "gm", sample: "Passw0rd!\nweak\nAa1!bbbb" },
     { label: "空行", pattern: "^\\s*$", flags: "gm", sample: "第一行\n\n\n第四行\n\n末尾" },
-    { label: "HTML 标签", pattern: "<[^>]+>", flags: "g", sample: "<div class=\"box\"><p>内容</p></div>" },
+    { label: "HTML 标签", pattern: "<(?<tag>[^>\\s]+)(?<attrs>[^>]*)>", flags: "g", sample: "<div class=\"box\"><p>内容</p></div>" },
     { label: "Java 包名", pattern: "[a-z][a-z0-9]*(\\.[a-z][a-z0-9]*)+", flags: "g", sample: "import com.example.service.UserService;" },
+    { label: "键值对日志", pattern: "(?<key>[A-Za-z_][\\w-]*)=(?<value>[^\\s]+)", flags: "g", sample: "user=koen status=ok latency=12ms" },
+    { label: "ISO 日期时间", pattern: "(?<date>\\d{4}-\\d{2}-\\d{2})[T ](?<time>\\d{2}:\\d{2}:\\d{2})(?<tz>Z|[+-]\\d{2}:?\\d{2})?", flags: "g", sample: "2024-06-01T12:30:00+08:00 与 2024-06-01 09:00:00Z" },
   ];
 
-  // 标志说明（悬停 tooltip）
   var FLAG_HELP = {
     g: "全局匹配（global）— 查找所有匹配项",
     i: "忽略大小写（ignore case）",
@@ -42,7 +45,7 @@
   };
 
   function html(s) {
-    if (window.ToolChrome && ToolChrome.html) return ToolChrome.html(s);
+    if (window.ToolChrome && window.ToolChrome.html) return window.ToolChrome.html(s);
     return String(s == null ? "" : s)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -64,6 +67,14 @@
     }
   }
 
+  function extractNamedGroupNames(pattern) {
+    var names = [];
+    var re = /\(\?<([A-Za-z_][A-Za-z0-9_]*)>/g;
+    var m;
+    while ((m = re.exec(String(pattern || ""))) !== null) names.push(m[1]);
+    return names;
+  }
+
   function escapePy(s) {
     return String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
   }
@@ -72,17 +83,60 @@
     return String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
   }
 
-  // 生成 Python / Go 代码片段
+  function escapeJava(s) {
+    return String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  }
+
+  function toPythonNamedPattern(pattern) {
+    // JS (?<name>...) → Python (?P<name>...)
+    return String(pattern || "").replace(/\(\?<([A-Za-z_][A-Za-z0-9_]*)>/g, "(?P<$1>");
+  }
+
+  // Translate JS replacement refs ($1, $<name>) into each target language's syntax.
+  function translateReplaceRefs(replaceWith, lang) {
+    var s = String(replaceWith || "");
+    if (!s || lang === "js") return s;
+    // Protect $$ (literal dollar in JS) while rewriting numbered / named refs.
+    var parts = [];
+    var i = 0;
+    while (i < s.length) {
+      if (s[i] === "$" && s[i + 1] === "$") {
+        parts.push(lang === "python" ? "$" : "$$");
+        i += 2;
+        continue;
+      }
+      var named = /^\$<([A-Za-z_][A-Za-z0-9_]*)>/.exec(s.slice(i));
+      if (named) {
+        if (lang === "python") parts.push("\\g<" + named[1] + ">");
+        else parts.push("${" + named[1] + "}"); // Java / Go / PHP
+        i += named[0].length;
+        continue;
+      }
+      var num = /^\$(\d+)/.exec(s.slice(i));
+      if (num) {
+        parts.push(lang === "python" ? "\\" + num[1] : "$" + num[1]);
+        i += num[0].length;
+        continue;
+      }
+      parts.push(s[i]);
+      i += 1;
+    }
+    return parts.join("");
+  }
+
   function updateCodeGen() {
     var out = document.getElementById("regexCodeOut");
     var patternEl = document.getElementById("regexPattern");
     var flagsEl = document.getElementById("regexFlags");
+    var replaceWithEl = document.getElementById("replaceWith");
     if (!out || !patternEl) return;
 
     var pattern = patternEl.value;
     var flags = flagsEl ? flagsEl.value.replace(/[^gimsuy]/g, "") : "g";
+    var replaceWith = replaceWithEl ? replaceWithEl.value : "";
+    var named = extractNamedGroupNames(pattern);
     if (!pattern) {
-      out.textContent = "# 输入正则表达式后将生成 Python / Go 示例代码";
+      out.textContent = "# 输入正则表达式后将生成 JS / Python / Go / Java / PHP 示例代码";
       return;
     }
 
@@ -90,35 +144,94 @@
     if (flags.indexOf("i") >= 0) pyFlags.push("re.IGNORECASE");
     if (flags.indexOf("m") >= 0) pyFlags.push("re.MULTILINE");
     if (flags.indexOf("s") >= 0) pyFlags.push("re.DOTALL");
-    var pyFlagStr = pyFlags.length ? ", " + pyFlags.join(" | ") : "";
+    // Keyword form: re.sub's 4th positional arg is count, not flags.
+    var pyFlagKw = pyFlags.length ? ", flags=" + pyFlags.join(" | ") : "";
+    var pyPattern = toPythonNamedPattern(pattern);
+    var pyReplaceText = translateReplaceRefs(replaceWith, "python");
+    var goReplaceText = translateReplaceRefs(replaceWith, "go");
+    var javaReplaceText = translateReplaceRefs(replaceWith, "java");
+    var phpReplaceText = translateReplaceRefs(replaceWith, "php");
 
-    var goFlags = [];
-    if (flags.indexOf("i") >= 0) goFlags.push("(?i)");
-    var goPattern = goFlags.join("") + pattern;
+    var goFlags = "";
+    if (flags.indexOf("i") >= 0) goFlags += "(?i)";
+    if (flags.indexOf("m") >= 0) goFlags += "(?m)";
+    if (flags.indexOf("s") >= 0) goFlags += "(?s)";
+    var goPattern = goFlags + pattern;
+
+    var javaFlags = [];
+    if (flags.indexOf("i") >= 0) javaFlags.push("Pattern.CASE_INSENSITIVE");
+    if (flags.indexOf("m") >= 0) javaFlags.push("Pattern.MULTILINE");
+    if (flags.indexOf("s") >= 0) javaFlags.push("Pattern.DOTALL");
+    var javaFlagExpr = javaFlags.length ? ", " + javaFlags.join(" | ") : "";
+
+    var phpModifiers = flags.replace(/[^ims]/g, "");
+    var jsFlags = flags;
+    var namedHint = named.length
+      ? "\n# 命名捕获组：" + named.join(", ") + "\n"
+      : "\n";
+    var isGlobal = flags.indexOf("g") >= 0;
+    var pySubCount = isGlobal ? "" : ", count=1";
+
+    var jsReplace = replaceWith
+      ? 'const replaced = text.replace(re, ' + JSON.stringify(replaceWith) + ');\nconsole.log(replaced);\n'
+      : (isGlobal
+        ? "const matches = [...text.matchAll(re)];\nconsole.log(matches.map(m => ({ value: m[0], groups: m.groups || null })));\n"
+        : "const match = text.match(re);\nconsole.log(match && { value: match[0], groups: match.groups || null });\n");
+
+    var pyReplace = replaceWith
+      ? 'replaced = re.sub(pattern, "' + escapePy(pyReplaceText) + '", text' + pySubCount + pyFlagKw + ")\nprint(replaced)\n"
+      : (isGlobal
+        ? "for m in re.finditer(pattern, text" + pyFlagKw + "):\n    print(m.group(0), m.groupdict())\n"
+        : "m = re.search(pattern, text" + pyFlagKw + ")\nif m:\n    print(m.group(0), m.groupdict())\n");
+
+    var javaReplace = replaceWith
+      ? 'System.out.println(pattern.matcher(text).replaceAll("' + escapeJava(javaReplaceText) + '"));\n'
+      : "Matcher matcher = pattern.matcher(text);\nwhile (matcher.find()) {\n    System.out.println(matcher.group());\n" +
+        (named.length ? named.map(function (n) {
+          return '    System.out.println("' + n + '=" + matcher.group("' + n + '"));\n';
+        }).join("") : "") +
+        "}\n";
+
+    var phpReplace = replaceWith
+      ? '$out = preg_replace(\'/' + pattern.replace(/\//g, "\\/") + '/' + phpModifiers + '\', ' +
+        JSON.stringify(phpReplaceText) + ", $text);\necho $out;\n"
+      : "if (preg_match_all('/" + pattern.replace(/\//g, "\\/") + "/" + phpModifiers +
+        "', $text, $matches, PREG_SET_ORDER)) {\n    print_r($matches);\n}\n";
 
     out.textContent =
-      "# Python\n" +
+      "// JavaScript" + namedHint +
+      "const re = /" + pattern.replace(/\//g, "\\/") + "/" + jsFlags + ";\n" +
+      'const text = "your text here";\n' +
+      jsReplace +
+      "\n# Python\n" +
       "import re\n\n" +
-      'pattern = r"' + escapePy(pattern) + '"\n' +
-      "text = \"your text here\"\n\n" +
-      (flags.indexOf("g") >= 0
-        ? "matches = re.findall(pattern, text" + pyFlagStr + ")\n" +
-          "for m in matches:\n    print(m)\n"
-        : "match = re.search(pattern, text" + pyFlagStr + ")\n" +
-          "if match:\n    print(match.group())\n") +
-      "\n# Go\n" +
+      'pattern = r"' + escapePy(pyPattern) + '"\n' +
+      'text = "your text here"\n' +
+      pyReplace +
+      "\n// Go\n" +
       "package main\n\n" +
-      "import \"regexp\"\n\n" +
+      "import (\n    \"fmt\"\n    \"regexp\"\n)\n\n" +
       "func main() {\n" +
       '    re := regexp.MustCompile(`' + escapeGo(goPattern) + "`)\n" +
       '    text := "your text here"\n' +
-      (flags.indexOf("g") >= 0
-        ? "    matches := re.FindAllString(text, -1)\n    _ = matches\n"
-        : "    match := re.FindString(text)\n    _ = match\n") +
-      "}";
+      (replaceWith
+        ? '    fmt.Println(re.ReplaceAllString(text, `' + goReplaceText.replace(/`/g, "") + "`))\n"
+        : "    fmt.Println(re.FindAllString(text, -1))\n") +
+      "}\n" +
+      "\n// Java\n" +
+      "import java.util.regex.*;\n\n" +
+      "class RegexDemo {\n" +
+      "  public static void main(String[] args) {\n" +
+      '    Pattern pattern = Pattern.compile("' + escapeJava(pattern) + '"' + javaFlagExpr + ");\n" +
+      '    String text = "your text here";\n' +
+      "    " + javaReplace.replace(/\n/g, "\n    ") +
+      "  }\n}\n" +
+      "\n<?php\n" +
+      "// PHP\n" +
+      '$text = "your text here";\n' +
+      phpReplace;
   }
 
-  // 为标志字符绑定 tooltip
   function bindFlagTooltips() {
     var flagsEl = document.getElementById("regexFlags");
     var helpEl = document.querySelector(".regex-flags-help");
@@ -148,6 +261,46 @@
     refreshTips();
   }
 
+  function previewReplace() {
+    var out = document.getElementById("replaceOutput");
+    var previewMeta = document.getElementById("replacePreviewMeta");
+    var re = getRegex();
+    var testInput = document.getElementById("testInput");
+    var text = testInput ? testInput.value : "";
+    var replaceWithEl = document.getElementById("replaceWith");
+    var replaceWith = replaceWithEl ? replaceWithEl.value : "";
+
+    if (!out) return;
+    if (!re) {
+      out.textContent = "";
+      if (previewMeta) previewMeta.textContent = "输入正则与替换串后显示实时预览。";
+      return;
+    }
+    if (re.error) {
+      out.textContent = "正则表达式有误，无法替换。";
+      if (previewMeta) previewMeta.textContent = "修复正则后再预览。";
+      return;
+    }
+    if (!text) {
+      out.textContent = "";
+      if (previewMeta) previewMeta.textContent = "请先输入测试字符串。";
+      return;
+    }
+    try {
+      var replaced = text.replace(re, replaceWith);
+      out.textContent = replaced;
+      if (previewMeta) {
+        var changed = replaced !== text;
+        previewMeta.textContent = changed
+          ? "实时预览已更新（支持 $1 / $<name> 等替换引用）。"
+          : "预览结果与原文相同（可能无匹配或替换串等于匹配）。";
+      }
+    } catch (e) {
+      out.textContent = "替换出错：" + e.message;
+      if (previewMeta) previewMeta.textContent = "替换表达式无效。";
+    }
+  }
+
   function run() {
     var patternError = document.getElementById("patternError");
     var highlightBox = document.getElementById("highlightBox");
@@ -163,6 +316,8 @@
 
     var re = getRegex();
     var text = testInput.value;
+    var patternEl = document.getElementById("regexPattern");
+    var namedNames = extractNamedGroupNames(patternEl ? patternEl.value : "");
 
     if (!re) {
       highlightBox.textContent = text;
@@ -172,6 +327,7 @@
       }
       if (patternError) patternError.style.display = "none";
       updateCodeGen();
+      previewReplace();
       return;
     }
 
@@ -186,6 +342,7 @@
         matchStats.textContent = "正则表达式有误，请检查。";
       }
       updateCodeGen();
+      previewReplace();
       return;
     }
 
@@ -197,6 +354,7 @@
         matchStats.textContent = "请在下方输入测试字符串。";
       }
       updateCodeGen();
+      previewReplace();
       return;
     }
 
@@ -207,12 +365,26 @@
       var m;
       re.lastIndex = 0;
       while ((m = re.exec(text)) !== null) {
-        matches.push({ index: m.index, length: m[0].length, value: m[0], groups: Array.from(m) });
+        matches.push({
+          index: m.index,
+          length: m[0].length,
+          value: m[0],
+          groups: Array.from(m),
+          named: m.groups || null,
+        });
         if (m[0].length === 0) re.lastIndex++;
       }
     } else {
       var single = re.exec(text);
-      if (single) matches.push({ index: single.index, length: single[0].length, value: single[0], groups: Array.from(single) });
+      if (single) {
+        matches.push({
+          index: single.index,
+          length: single[0].length,
+          value: single[0],
+          groups: Array.from(single),
+          named: single.groups || null,
+        });
+      }
     }
 
     if (matches.length === 0) {
@@ -222,6 +394,7 @@
         matchStats.textContent = "未找到匹配项。";
       }
       updateCodeGen();
+      previewReplace();
       return;
     }
 
@@ -237,7 +410,9 @@
 
     if (matchStats) {
       matchStats.className = "tool-status tool-status-success";
-      matchStats.textContent = "共找到 " + matches.length + " 个匹配项。";
+      matchStats.textContent =
+        "共找到 " + matches.length + " 个匹配项" +
+        (namedNames.length ? " · 命名组：" + namedNames.join(", ") : "") + "。";
     }
 
     if (matchDetailSection && matchList) {
@@ -261,6 +436,18 @@
             li.appendChild(row);
           });
         }
+
+        if (item.named) {
+          Object.keys(item.named).forEach(function (name) {
+            var row = document.createElement("div");
+            row.className = "match-group-row match-group-row--named";
+            var value = item.named[name];
+            row.innerHTML =
+              '<span class="match-group-label">命名组 &lt;' + html(name) + "&gt;：</span>" +
+              '<span class="match-group-value">' + (value != null ? html(value) : "<em>undefined</em>") + "</span>";
+            li.appendChild(row);
+          });
+        }
         matchList.appendChild(li);
       });
 
@@ -274,6 +461,7 @@
     }
 
     updateCodeGen();
+    previewReplace();
   }
 
   function init() {
@@ -314,30 +502,14 @@
     if (flagsEl) flagsEl.addEventListener("input", debounceRun);
     var testInput = document.getElementById("testInput");
     if (testInput) testInput.addEventListener("input", debounceRun);
+    var replaceWithEl = document.getElementById("replaceWith");
+    if (replaceWithEl) replaceWithEl.addEventListener("input", debounceRun);
 
     var btnReplace = document.getElementById("btnReplace");
     if (btnReplace) {
       btnReplace.addEventListener("click", function () {
         window.umamiTrack?.("tool_used", { tool: "regex", action: "replace" });
-        var re = getRegex();
-        var text = testInput ? testInput.value : "";
-        var replaceWithEl = document.getElementById("replaceWith");
-        var replaceWith = replaceWithEl ? replaceWithEl.value : "";
-        var out = document.getElementById("replaceOutput");
-
-        if (!re || re.error) {
-          if (out) out.textContent = "正则表达式有误，无法替换。";
-          return;
-        }
-        if (!text) {
-          if (out) out.textContent = "请先输入测试字符串。";
-          return;
-        }
-        try {
-          if (out) out.textContent = text.replace(re, replaceWith);
-        } catch (e) {
-          if (out) out.textContent = "替换出错：" + e.message;
-        }
+        previewReplace();
       });
     }
 
@@ -347,11 +519,26 @@
         var out = document.getElementById("replaceOutput");
         var text = out ? out.textContent : "";
         if (!text) return;
-        var copyFn = window.ToolChrome && ToolChrome.copyText ? ToolChrome.copyText : function (t) {
+        var copyFn = window.ToolChrome && window.ToolChrome.copyText ? window.ToolChrome.copyText : function (t) {
           return navigator.clipboard.writeText(t);
         };
         copyFn(text, "替换结果已复制").catch(function () {
-          if (ToolChrome && ToolChrome.showToast) ToolChrome.showToast("复制失败，请手动选择");
+          if (window.ToolChrome && window.ToolChrome.showToast) window.ToolChrome.showToast("复制失败，请手动选择");
+        });
+      });
+    }
+
+    var btnCopyCode = document.getElementById("btnCopyRegexCode");
+    if (btnCopyCode) {
+      btnCopyCode.addEventListener("click", function () {
+        var out = document.getElementById("regexCodeOut");
+        var text = out ? out.textContent : "";
+        if (!text) return;
+        var copyFn = window.ToolChrome && window.ToolChrome.copyText ? window.ToolChrome.copyText : function (t) {
+          return navigator.clipboard.writeText(t);
+        };
+        copyFn(text, "代码片段已复制").catch(function () {
+          if (window.ToolChrome && window.ToolChrome.showToast) window.ToolChrome.showToast("复制失败，请手动选择");
         });
       });
     }
@@ -360,7 +547,7 @@
     run();
   }
 
-  var ready = window.ToolChrome && ToolChrome.ready ? ToolChrome.ready : function (fn) {
+  var ready = window.ToolChrome && window.ToolChrome.ready ? window.ToolChrome.ready : function (fn) {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
     else fn();
   };
