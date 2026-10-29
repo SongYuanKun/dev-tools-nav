@@ -190,15 +190,26 @@
             <strong id="jwtVerifyState">支持 HS256 / HS384 / HS512</strong>
           </div>
         </div>
+        <div class="timestamp-grid">
+          <div>
+            <label class="tool-label" for="jwtClockSkew">时钟偏差容差（秒）</label>
+            <input id="jwtClockSkew" class="tool-input" type="number" min="0" max="600" value="60" />
+          </div>
+          <div>
+            <label class="tool-label" for="jwtJwksUrl">JWKS URL（可选，仅浏览器直连）</label>
+            <input id="jwtJwksUrl" class="tool-input" type="url" placeholder="https://example.com/.well-known/jwks.json" autocomplete="off" />
+          </div>
+        </div>
         <label class="tool-label" for="jwtVerifySecret">HMAC Secret</label>
         <input id="jwtVerifySecret" class="tool-input" type="password" placeholder="输入服务端共享密钥" autocomplete="off" />
         <label class="tool-label" for="jwtVerifyPubKey">PEM 公钥（RS256，可选）</label>
         <textarea id="jwtVerifyPubKey" class="tool-textarea" spellcheck="false" placeholder="-----BEGIN PUBLIC KEY-----&#10;...&#10;-----END PUBLIC KEY-----"></textarea>
         <div class="tool-actions">
           <button type="button" class="tool-btn tool-btn-primary" id="btnJwtVerify">验证签名</button>
+          <button type="button" class="tool-btn" id="btnJwtFetchJwks">拉取 JWKS</button>
         </div>
         <pre id="jwtVerifyOut" class="tool-pro-result">验签结果会显示在这里。</pre>
-        <p class="timestamp-help">验签将使用「解码」面板中的 JWT 输入，或可在解码页粘贴 Token 后切换到此页验证。</p>
+        <p class="timestamp-help">验签与 JWKS 拉取均在当前浏览器完成，Token / 密钥不会上传到本站服务器。若 JWKS 域名未开放 CORS，浏览器会拦截请求——这是预期失败模式。</p>
       </div>
     </section>
 
