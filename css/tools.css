@@ -439,7 +439,7 @@
   justify-content: center;
   min-height: 200px;
   padding: 16px;
-  background: var(--surface-2, #f8fafc);
+  background: rgb(var(--raised));
   border-radius: 12px;
 }
 
@@ -569,6 +569,26 @@
 .jwt-header-section .jwt-section-title { color: #ef4444; }
 .jwt-payload-section .jwt-section-title { color: rgb(var(--signal)); }
 .jwt-signature-section .jwt-section-title { color: #10b981; }
+
+.jwt-to-json-cta { margin: 12px 0 4px; }
+.jwt-to-json-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgb(var(--signal) / 0.12);
+  color: rgb(var(--signal));
+  border: 1px solid rgb(var(--signal) / 0.28);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.jwt-to-json-btn:hover {
+  background: rgb(var(--signal) / 0.18);
+  border-color: rgb(var(--signal) / 0.4);
+}
 
 /* ============================================================
    在线工具汇总页
@@ -828,9 +848,9 @@
 }
 
 .tools-clear-filters {
-  border: 1px solid var(--border-color, #cbd5e1);
+  border: 1px solid var(--border-color);
   background: transparent;
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary);
   border-radius: 999px;
   padding: 6px 12px;
   cursor: pointer;
@@ -838,8 +858,8 @@
 }
 
 .tools-clear-filters:hover {
-  color: var(--text-primary, #1A1A1A);
-  border-color: var(--color-primary, #FF5C45);
+  color: var(--text-primary);
+  border-color: var(--color-primary);
 }
 
 .tools-hub-title {

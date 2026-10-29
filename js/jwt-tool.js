@@ -426,11 +426,11 @@
           if (oldCta) oldCta.parentNode.removeChild(oldCta);
           var cta = document.createElement("div");
           cta.className = "jwt-to-json-cta";
-          cta.style.cssText = "margin: 12px 0 4px;";
           cta.innerHTML =
-            '<a class="jwt-to-json-btn" type="button" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;">🔍 美化 claims → 去 JSON 工作台</a>';
+            '<a class="jwt-to-json-btn" type="button" href="#">🔍 美化 claims → 去 JSON 工作台</a>';
           secPayload.appendChild(cta);
-          cta.querySelector("a").addEventListener("click", function () {
+          cta.querySelector("a").addEventListener("click", function (ev) {
+            if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
             try {
               var x = JSON.stringify({ header: headerObj, payload: payloadObj, token: token }, null, 2);
               sessionStorage.setItem("jwt_decode_payload_v1", x);

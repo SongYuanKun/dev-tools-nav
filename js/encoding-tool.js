@@ -426,7 +426,7 @@
         if (!linkSlot && outputArea) {
           var p = document.createElement("p");
           p.id = "base64JsonGoSlot";
-          p.style.cssText = "margin:8px 0 0;font-size:13px;color:#2563eb;";
+          p.style.cssText = "margin:8px 0 0;font-size:13px;color:rgb(var(--signal));";
           outputArea.parentNode.insertBefore(p, outputArea.nextSibling);
           linkSlot = p;
         }
