@@ -212,7 +212,7 @@ test("core commands, shortcuts, undo, feedback, status, and private analytics wo
   assert.match(await page.locator("[data-json-feedback]").textContent(), /校验通过/);
 
   await setDocument(page, '{"name":"JSON 工作台","items":[1,2]}');
-  await page.getByRole("button", { name: "复制" }).click();
+  await page.getByRole("button", { name: "复制", exact: true }).click();
   assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '{"name":"JSON 工作台","items":[1,2]}');
   assert.match(await page.locator("[data-json-feedback]").textContent(), /已复制/);
   await page.getByRole("button", { name: "清空" }).click();
@@ -232,7 +232,7 @@ test("diagnostics expose a line and column, lint marker, and focusable location"
   await assert.doesNotReject(() => banner.waitFor({ state: "visible" }));
   assert.match(await banner.textContent(), /第 3 行，第 \d+ 列/);
   assert.ok(await page.locator(".cm-lintRange-error").count());
-  await page.getByRole("button", { name: "定位错误" }).click();
+  await page.locator("[data-json-locate]").click();
   assert.equal(await page.evaluate(() => document.activeElement?.closest(".cm-editor") !== null), true);
   assert.match(await page.locator("[data-json-selection-status]").textContent(), /第 3 行/);
   await context.close();
@@ -533,8 +533,8 @@ test("Diff preserves both drafts, summarizes structure, and only explicit apply 
   await page.locator("[data-diff-merge] .cm-mergeView").waitFor({ timeout: 2_000 });
   const left = page.locator("[data-diff-left] .cm-content");
   const right = page.locator("[data-diff-right] .cm-content");
-  assert.equal(await left.getAttribute("aria-label"), "Diff 左侧 JSON 编辑器");
-  assert.equal(await right.getAttribute("aria-label"), "Diff 右侧 JSON 编辑器");
+  assert.equal(await left.getAttribute("aria-label"), "Diff 左侧 · 请求 / Before");
+  assert.equal(await right.getAttribute("aria-label"), "Diff 右侧 · 响应 / After");
   const editorText = async (editor) => {
     const text = await editor.innerText();
     return text === "\n" ? "" : text;

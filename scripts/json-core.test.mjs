@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  assessJsonPayloadSize,
+  buildHttpSnippets,
   diffJson,
   escapeUnicode,
   formatJson,
+  formatJsonPath,
   jsonToYaml,
   jsonStats,
   minifyJson,
@@ -12,6 +15,7 @@ import {
   queryJsonPath,
   repairJson,
   sortJsonKeys,
+  summarizeDiffChanges,
   unescapeUnicode,
   yamlToJson,
 } from "../js/json-core.mjs";
@@ -465,4 +469,39 @@ test("deep direct values are handled without recursive stack overflow", () => {
   assert.equal(stats.depth, 15_000);
   assert.deepEqual(diff, { equal: true, changes: [] });
   assert.equal(added.changes[0].type, "added");
+});
+
+test("formatJsonPath and summarizeDiffChanges produce copy-friendly path digests", () => {
+  assert.equal(formatJsonPath(["items", 0, "name"]), "$.items[0].name");
+  assert.equal(formatJsonPath(["weird key"]), '$["weird key"]');
+  const digest = summarizeDiffChanges([
+    { type: "added", path: ["a"] },
+    { type: "removed", path: ["b", 1] },
+    { type: "changed", path: ["c"] },
+  ], { limit: 2 });
+  assert.deepEqual(digest.counts, { added: 1, removed: 1, changed: 1 });
+  assert.equal(digest.truncated, true);
+  assert.match(digest.text, /^\+ \$\.a\n- \$\.b\[1]$/);
+});
+
+test("buildHttpSnippets wraps JSON body as local fetch/curl copy targets", () => {
+  const body = '{\n  "ok": true\n}';
+  const snippets = buildHttpSnippets(body, { url: "https://example.test/v1", method: "post" });
+  assert.equal(snippets.method, "POST");
+  assert.match(snippets.curl, /curl -sS -X POST 'https:\/\/example\.test\/v1'/);
+  assert.match(snippets.curl, /-d '\{\n  "ok": true\n}'/);
+  assert.match(snippets.fetch, /method: "POST"/);
+  assert.match(snippets.fetch, /body: "\{\\n  \\"ok\\": true\\n}"/);
+});
+
+test("assessJsonPayloadSize flags soft and heavy paste budgets", () => {
+  const small = assessJsonPayloadSize('{"a":1}');
+  assert.equal(small.warn, false);
+  assert.equal(small.heavy, false);
+  const warn = assessJsonPayloadSize("x".repeat(300 * 1024));
+  assert.equal(warn.warn, true);
+  assert.equal(warn.heavy, false);
+  const heavy = assessJsonPayloadSize("y".repeat(1100 * 1024));
+  assert.equal(heavy.heavy, true);
+  assert.equal(heavy.skipAutoLint, true);
 });

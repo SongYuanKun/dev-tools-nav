@@ -880,3 +880,70 @@ export function diffJson(left, right, { includeValues = true, maxChanges = Infin
 
   return { equal: !truncated && changes.length === 0, changes, ...(truncated ? { truncated: true } : {}) };
 }
+
+export function formatJsonPath(path) {
+  if (!Array.isArray(path) || path.length === 0) return "$";
+  return path.reduce((acc, segment) => {
+    if (typeof segment === "number") return `${acc}[${segment}]`;
+    const key = String(segment);
+    if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) return `${acc}.${key}`;
+    return `${acc}[${JSON.stringify(key)}]`;
+  }, "$");
+}
+
+export function summarizeDiffChanges(changes, { limit = 40 } = {}) {
+  const list = Array.isArray(changes) ? changes : [];
+  const counts = { added: 0, removed: 0, changed: 0 };
+  for (const change of list) {
+    if (change?.type && Object.prototype.hasOwnProperty.call(counts, change.type)) {
+      counts[change.type] += 1;
+    }
+  }
+  const rows = list.slice(0, Math.max(0, limit)).map((change) => ({
+    type: change.type,
+    path: formatJsonPath(change.path),
+  }));
+  return {
+    counts,
+    rows,
+    truncated: list.length > rows.length,
+    text: rows
+      .map((row) => `${row.type === "added" ? "+" : row.type === "removed" ? "-" : "~"} ${row.path}`)
+      .join("\n"),
+  };
+}
+
+export function assessJsonPayloadSize(text) {
+  const source = String(text ?? "");
+  const size = new TextEncoder().encode(source).byteLength;
+  return {
+    bytes: size,
+    chars: source.length,
+    warn: size >= 256 * 1024,
+    heavy: size >= 1024 * 1024,
+    skipAutoLint: size > 1024 * 1024,
+  };
+}
+
+export function buildHttpSnippets(bodyText, {
+  url = "https://api.example.com/endpoint",
+  method = "POST",
+  contentType = "application/json",
+} = {}) {
+  const body = String(bodyText ?? "");
+  const safeMethod = String(method || "POST").toUpperCase();
+  const curlBody = body.replace(/'/g, `'\\''`);
+  const curl = [
+    `curl -sS -X ${safeMethod} '${url}'`,
+    `  -H 'Content-Type: ${contentType}'`,
+    `  -d '${curlBody}'`,
+  ].join(" \\\n");
+  const fetchSnippet = [
+    `await fetch(${JSON.stringify(url)}, {`,
+    `  method: ${JSON.stringify(safeMethod)},`,
+    `  headers: { "Content-Type": ${JSON.stringify(contentType)} },`,
+    `  body: ${JSON.stringify(body)}`,
+    `});`,
+  ].join("\n");
+  return { curl, fetch: fetchSnippet, method: safeMethod, url, contentType };
+}

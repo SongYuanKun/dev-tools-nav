@@ -5,6 +5,8 @@ import { json } from "@codemirror/lang-json";
 import { forceLinting, linter } from "@codemirror/lint";
 import { MergeView } from "@codemirror/merge";
 import {
+  assessJsonPayloadSize,
+  buildHttpSnippets,
   diffJson,
   escapeUnicode,
   formatJson,
@@ -14,6 +16,7 @@ import {
   queryJsonPath,
   repairJson,
   sortJsonKeys,
+  summarizeDiffChanges,
   unescapeUnicode,
   yamlToJson,
 } from "./json-core.mjs";
@@ -21,6 +24,7 @@ import {
 const AUTO_DIAGNOSTIC_LIMIT = 1024 * 1024;
 const UPLOAD_LIMIT = 5 * 1024 * 1024;
 const TREE_NODE_LIMIT = 2_000;
+const LARGE_INPUT_SOFT_LIMIT = 256 * 1024;
 const PREFS_KEY = "json-workbench-prefs-v1";
 const SAMPLE = JSON.stringify({
   name: "Koen's 工具箱",
@@ -30,7 +34,7 @@ const SAMPLE = JSON.stringify({
   lastUpdated: new Date(Date.now() - 86400000).toISOString().slice(0, 10)
 }, null, 2);
 const DEFAULT_PREFS = Object.freeze({ indent: 2, relaxed: false, escapeUnicode: false });
-const ACTION_KEYS = new Set(["format", "minify", "copy", "clear", "sample", "upload", "download", "repair", "sort", "unicode", "validate", "diff"]);
+const ACTION_KEYS = new Set(["format", "minify", "copy", "clear", "sample", "upload", "download", "repair", "sort", "unicode", "validate", "diff", "http"]);
 const lintCompartment = new Compartment();
 
 function safePreferences() {
@@ -500,6 +504,11 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
     return;
   }
   panel.dataset.ready = "true";
+  const roleBar = document.createElement("div");
+  roleBar.className = "json-diff-roles";
+  roleBar.innerHTML =
+    '<span><strong>左侧 · 请求 / Before</strong>默认取自主编辑器</span>' +
+    '<span><strong>右侧 · 响应 / After</strong>粘贴另一份 JSON 对比结构</span>';
   const toolbar = document.createElement("div");
   toolbar.className = "json-mode-toolbar json-diff-toolbar";
   const controls = [
@@ -507,6 +516,8 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
     ["应用左侧为主 JSON", "应用左侧"],
     ["应用右侧为主 JSON", "应用右侧"],
     ["更新结构差异汇总", "更新汇总"],
+    ["复制路径差异列表", "复制路径 Diff"],
+    ["从剪贴板粘贴到右侧", "粘贴到右侧"],
   ].map(([label, text]) => {
     const button = document.createElement("button");
     button.type = "button";
@@ -520,6 +531,10 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
   summary.className = "json-diff-summary";
   summary.dataset.diffSummary = "";
   summary.setAttribute("role", "status");
+  const pathList = document.createElement("pre");
+  pathList.className = "json-diff-paths";
+  pathList.dataset.diffPaths = "";
+  pathList.hidden = true;
   const error = document.createElement("p");
   error.className = "json-mode-error";
   error.dataset.diffError = "";
@@ -527,16 +542,20 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
   const mount = document.createElement("div");
   mount.className = "json-merge-shell";
   mount.dataset.diffMerge = "";
-  panel.append(toolbar, summary, error, mount);
+  panel.append(roleBar, toolbar, summary, pathList, error, mount);
   let merge;
   let diffTracked = false;
   let summaryTimer;
+  let lastDiffText = "";
   const renderSummary = (forceSummary = false) => {
     if (!merge) return;
     const left = merge.a.state.doc.toString();
     const right = merge.b.state.doc.toString();
     if (!right.trim()) {
-      summary.textContent = "在右侧输入 JSON 后显示结构差异";
+      summary.textContent = "在右侧粘贴响应 / After JSON 后显示结构差异";
+      pathList.hidden = true;
+      pathList.textContent = "";
+      lastDiffText = "";
       return;
     }
     if (!forceSummary && bytes(left) + bytes(right) > AUTO_DIAGNOSTIC_LIMIT) {
@@ -547,6 +566,7 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
     const rightParsed = parseJson(right, { relaxed: preferences.relaxed });
     if (!leftParsed.ok || !rightParsed.ok) {
       summary.textContent = "等待两侧有效 JSON";
+      pathList.hidden = true;
       return;
     }
     if (right.trim() && !diffTracked) {
@@ -561,11 +581,18 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
     const changes = difference.changes;
     if (changes.length === 0) {
       summary.textContent = difference.truncated ? "已达到统计上限，未完成结构扫描" : "无结构差异";
+      pathList.hidden = true;
+      pathList.textContent = "";
+      lastDiffText = "";
       return;
     }
-    const counts = { added: 0, removed: 0, changed: 0 };
-    changes.forEach((change) => { counts[change.type] += 1; });
-    summary.textContent = `新增 ${counts.added} · 删除 ${counts.removed} · 修改 ${counts.changed}${difference.truncated ? " · 已达到统计上限" : ""}`;
+    const digest = summarizeDiffChanges(changes, { limit: 40 });
+    summary.textContent =
+      `新增 ${digest.counts.added} · 删除 ${digest.counts.removed} · 修改 ${digest.counts.changed}` +
+      (difference.truncated ? " · 已达到统计上限" : digest.truncated ? " · 已截断路径列表" : "");
+    pathList.textContent = digest.text || "";
+    pathList.hidden = !digest.text;
+    lastDiffText = digest.text || "";
   };
   const scheduleSummary = () => {
     clearTimeout(summaryTimer);
@@ -577,11 +604,11 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
   merge = new MergeView({
     a: {
       doc: initialSource,
-      extensions: [basicSetup, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 左侧 JSON 编辑器" })],
+      extensions: [basicSetup, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 左侧 · 请求 / Before" })],
     },
     b: {
       doc: "",
-      extensions: [basicSetup, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 右侧 JSON 编辑器" })],
+      extensions: [basicSetup, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 右侧 · 响应 / After" })],
     },
     parent: mount,
     orientation: "a-b",
@@ -617,6 +644,32 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
   controls[3].addEventListener("click", () => {
     clearTimeout(summaryTimer);
     renderSummary(true);
+  });
+  controls[4].addEventListener("click", async () => {
+    if (!lastDiffText) {
+      announce("暂无路径差异可复制", true);
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(lastDiffText);
+      announce("已复制路径 Diff");
+    } catch {
+      announce("复制失败，请手动选择路径列表。", true);
+    }
+  });
+  controls[5].addEventListener("click", async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!String(text || "").trim()) {
+        announce("剪贴板为空", true);
+        return;
+      }
+      replaceSide(merge.b, text);
+      error.textContent = "";
+      announce("已粘贴到右侧（响应 / After）");
+    } catch {
+      announce("无法读取剪贴板，请直接粘贴到右侧编辑器。", true);
+    }
   });
 }
 
@@ -690,11 +743,34 @@ export function mountJsonWorkbench(mount) {
     scrollIntoView: true,
     annotations: isolateHistory.of("full"),
   });
+  const sizeNote = document.querySelector("[data-json-size-note]");
+  const errorHint = document.querySelector("[data-json-error-hint]");
+  const updateSizeNote = (text) => {
+    if (!sizeNote) return;
+    const size = assessJsonPayloadSize(text);
+    if (!text) {
+      sizeNote.hidden = true;
+      sizeNote.textContent = "";
+      return;
+    }
+    if (size.heavy) {
+      sizeNote.hidden = false;
+      sizeNote.textContent = `大文件模式：约 ${(size.bytes / (1024 * 1024)).toFixed(2)} MiB。已暂停实时校验与部分自动分析，可手动点「校验 / 格式化」。`;
+    } else if (size.warn) {
+      sizeNote.hidden = false;
+      sizeNote.textContent = `输入较大（约 ${Math.round(size.bytes / 1024)} KiB）。树视图与 Diff 汇总会节流，建议先压缩再深入分析。`;
+    } else {
+      sizeNote.hidden = true;
+      sizeNote.textContent = "";
+    }
+  };
   const renderDiagnostics = () => {
     const text = source();
+    updateSizeNote(text);
     if (!text) {
       currentError = null;
       errorBanner.hidden = true;
+      if (errorHint) errorHint.textContent = "";
       validityNode.innerHTML = '<i aria-hidden="true"></i>等待输入';
       delete validityNode.dataset.valid;
       return;
@@ -702,6 +778,7 @@ export function mountJsonWorkbench(mount) {
     if (bytes(text) > AUTO_DIAGNOSTIC_LIMIT) {
       currentError = null;
       errorBanner.hidden = true;
+      if (errorHint) errorHint.textContent = "";
       validityNode.innerHTML = '<i aria-hidden="true"></i>超过 1 MiB，已暂停自动校验';
       delete validityNode.dataset.valid;
       return;
@@ -710,12 +787,17 @@ export function mountJsonWorkbench(mount) {
     if (result.ok) {
       currentError = null;
       errorBanner.hidden = true;
+      if (errorHint) errorHint.textContent = "";
       validityNode.innerHTML = '<i aria-hidden="true"></i>JSON 有效';
       validityNode.dataset.valid = "true";
       return;
     }
     currentError = result.error;
+    const fixHint = inferJsonFixHint(result.error.message, result.error.line, text);
     errorMessage.textContent = `${result.error.message} · 第 ${result.error.line} 行，第 ${result.error.column} 列`;
+    if (errorHint) {
+      errorHint.textContent = fixHint || "可先「定位错误」，或尝试开启宽松解析 / 安全修复。";
+    }
     errorBanner.hidden = false;
     validityNode.innerHTML = '<i aria-hidden="true"></i>JSON 无效';
     validityNode.dataset.valid = "false";
@@ -726,17 +808,13 @@ export function mountJsonWorkbench(mount) {
       const lastAt = Number(localStorage.getItem(lastToastKey) || 0);
       if (now - lastAt > 1000 && typeof window.Toast?.show === "function") {
         localStorage.setItem(lastToastKey, String(now));
-        const fixHint = inferJsonFixHint(result.error.message, result.error.line, view.state.doc.toString());
         window.Toast.show({
           type: "error",
           title: "JSON 语法有误",
           msg: `${result.error.message}（第 ${result.error.line} 行，第 ${result.error.column} 列）`,
           fixHint: fixHint || "试试「安全修复」按钮，能自动补尾逗号和替换单引号。",
-          actionText: "📖 看 JSON 教程",
-          onAction: () => {
-            const guide = document.querySelector("#json-guide-title");
-            if (guide) guide.scrollIntoView({ behavior: "smooth", block: "start" });
-          },
+          actionText: "定位错误",
+          onAction: () => document.querySelector("[data-json-locate]")?.click(),
           duration: 8000,
           op: "OP-103"
         });
@@ -977,6 +1055,65 @@ export function mountJsonWorkbench(mount) {
     const offset = Math.min(currentError.offset, view.state.doc.length);
     view.dispatch({ selection: { anchor: offset }, scrollIntoView: true });
     view.focus();
+  });
+
+  document.querySelector("[data-json-enable-relaxed]")?.addEventListener("click", () => {
+    preferences.relaxed = true;
+    savePreferences(preferences);
+    const relaxedInput = settingsDialog?.querySelector('[name="relaxed"]');
+    if (relaxedInput) relaxedInput.checked = true;
+    renderDiagnostics();
+    view.dispatch({ effects: lintCompartment.reconfigure(linter(diagnostics, { delay: 220 })) });
+    forceLinting(view);
+    announce("已开启宽松解析（允许注释与尾逗号）");
+  });
+
+  document.querySelector("[data-json-try-repair]")?.addEventListener("click", () => {
+    document.querySelector('[data-json-action="repair"]')?.click();
+  });
+
+  const openHttpDialog = () => {
+    const dialog = document.querySelector("[data-json-http-dialog]");
+    const curlOut = dialog?.querySelector("[data-json-http-curl]");
+    const fetchOut = dialog?.querySelector("[data-json-http-fetch]");
+    if (!dialog || !curlOut || !fetchOut) return;
+    const body = source();
+    if (!body.trim()) {
+      announce("请先粘贴 JSON body，再复制 fetch / curl。", true);
+      return;
+    }
+    const size = assessJsonPayloadSize(body);
+    if (size.bytes > LARGE_INPUT_SOFT_LIMIT) {
+      announce("内容较大，片段仍会生成；粘贴到终端前请确认不会泄露敏感字段。");
+    }
+    const snippets = buildHttpSnippets(body);
+    curlOut.textContent = snippets.curl;
+    fetchOut.textContent = snippets.fetch;
+    dialog.showModal();
+    track("http");
+  };
+
+  document.querySelector('[data-json-action="http"]')?.addEventListener("click", openHttpDialog);
+  document.querySelector("[data-json-http-dialog]")?.querySelectorAll("[data-dialog-close]").forEach((button) => {
+    button.addEventListener("click", () => document.querySelector("[data-json-http-dialog]")?.close());
+  });
+  document.querySelector("[data-json-copy-curl]")?.addEventListener("click", async () => {
+    const text = document.querySelector("[data-json-http-curl]")?.textContent || "";
+    try {
+      await navigator.clipboard.writeText(text);
+      announce("已复制 curl 片段");
+    } catch {
+      announce("复制失败", true);
+    }
+  });
+  document.querySelector("[data-json-copy-fetch]")?.addEventListener("click", async () => {
+    const text = document.querySelector("[data-json-http-fetch]")?.textContent || "";
+    try {
+      await navigator.clipboard.writeText(text);
+      announce("已复制 fetch 片段");
+    } catch {
+      announce("复制失败", true);
+    }
   });
 
   const settingsTrigger = document.querySelector("[data-json-settings]");

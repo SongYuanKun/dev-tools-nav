@@ -196,6 +196,7 @@
           <button type="button" class="json-button" data-json-action="minify">压缩 <kbd>Ctrl/⌘ ⇧ M</kbd></button>
           <button type="button" class="json-button" data-json-action="validate">校验</button>
           <button type="button" class="json-button" data-json-action="copy">复制</button>
+          <button type="button" class="json-button" data-json-action="http">复制为 fetch/curl</button>
           <button type="button" class="json-button json-button-danger" data-json-action="clear">清空</button>
         </div>
         <div class="json-secondary-actions" aria-label="更多操作">
@@ -212,12 +213,19 @@
         </div>
       </div>
 
+      <p class="json-size-note" data-json-size-note hidden role="status"></p>
+
       <div class="json-error-banner" data-json-error role="alert" aria-live="assertive" hidden>
-        <div>
+        <div class="json-error-copy">
           <strong>JSON 语法有误</strong>
           <span data-json-error-message>等待诊断</span>
+          <span class="json-error-hint" data-json-error-hint></span>
         </div>
-        <button type="button" class="json-error-locate" data-json-locate>定位错误</button>
+        <div class="json-error-actions">
+          <button type="button" class="json-error-locate" data-json-locate>定位错误</button>
+          <button type="button" class="json-button" data-json-enable-relaxed>开启宽松解析</button>
+          <button type="button" class="json-button" data-json-try-repair>一键修复</button>
+        </div>
       </div>
 
       <div class="json-panels">
@@ -272,6 +280,22 @@
         <p data-json-repair-summary>将显示修复摘要。</p>
         <p class="json-dialog-note">应用前原文不会改变，修复后仍可撤销。</p>
         <div class="json-dialog-actions"><button type="button" class="json-button" data-dialog-close>取消</button><button type="button" class="json-button json-button-primary" data-json-repair-apply>应用修复</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="json-dialog" data-json-http-dialog aria-labelledby="json-http-title">
+      <form method="dialog">
+        <div class="json-dialog-heading"><div><p>HTTP SNIPPETS</p><h2 id="json-http-title">复制为 fetch / curl</h2></div><button type="button" data-dialog-close aria-label="关闭">×</button></div>
+        <p class="json-dialog-note">以当前编辑器内容作为 JSON body 生成片段；不会发起网络请求，也不会上传内容。</p>
+        <label class="tool-label" for="jsonHttpCurl">curl</label>
+        <pre id="jsonHttpCurl" class="json-http-snippet" data-json-http-curl></pre>
+        <div class="json-dialog-actions"><button type="button" class="json-button" data-json-copy-curl>复制 curl</button></div>
+        <label class="tool-label" for="jsonHttpFetch">fetch</label>
+        <pre id="jsonHttpFetch" class="json-http-snippet" data-json-http-fetch></pre>
+        <div class="json-dialog-actions">
+          <button type="button" class="json-button" data-json-copy-fetch>复制 fetch</button>
+          <button type="button" class="json-button json-button-primary" data-dialog-close>完成</button>
+        </div>
       </form>
     </dialog>
 
