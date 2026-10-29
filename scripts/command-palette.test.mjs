@@ -61,4 +61,8 @@ test("CommandPalette.search ranks online tools and matches tags", async () => {
   assert.equal(hits[0].slug, "json");
   const tagHits = context.window.CommandPalette.search("格式化");
   assert.ok(tagHits.some((tool) => tool.slug === "json"));
+  const empty = context.window.CommandPalette.search("");
+  assert.equal(empty[0].slug, "json");
+  assert.ok(empty.some((tool) => tool.category === "ai"));
+  assert.ok(empty.findIndex((tool) => tool.slug === "json") < empty.findIndex((tool) => tool.category === "ai"));
 });

@@ -66,9 +66,10 @@
 
   function buildNav(prefix, active) {
     var aiActive = active === 'ai';
+    // AI 专题降为次要入口：排在自建工具之后，视觉权重更轻
     var aiDropdown = [
-      '<details class="nav-menu">',
-      '  <summary class="nav-link nav-menu-trigger' + (aiActive ? ' active' : '') + '"',
+      '<details class="nav-menu nav-menu--secondary">',
+      '  <summary class="nav-link nav-link--secondary nav-menu-trigger' + (aiActive ? ' active' : '') + '"',
       '    aria-label="展开 AI 专题子页面导航">AI 专题</summary>',
       '  <div class="nav-menu-panel" aria-label="AI 专题子页面">',
       '    <a href="' + prefix + 'pages/ai/index.html">专题首页<span>学习路径与场景速查</span></a>',
@@ -86,13 +87,13 @@
       '    <span class="brand-led" aria-hidden="true"></span>',
       '    <span class="logo-text">Koen 工具箱</span>',
       '    <span class="logo-divider" aria-hidden="true"></span>',
-      '    <span class="logo-tagline">开发者工具导航</span>',
+      '    <span class="logo-tagline">本机开发者工具</span>',
       '  </a>',
       '  <div class="nav-links">',
       '    ' + a(prefix + 'index.html', '首页', 'home', active),
-      '    ' + aiDropdown,
       '    ' + a(prefix + 'tools/', '工具', 'tools', active),
       '    ' + a(prefix + 'pages/blog/index.html', '博客', 'blog', active),
+      '    ' + aiDropdown,
       '  </div>',
       '  <div class="nav-actions">',
       '    <span class="local-mode-badge" title="数据留在本机，不上传"><span class="led-dim" aria-hidden="true"></span>本地模式</span>',
