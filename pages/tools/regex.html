@@ -89,7 +89,7 @@
 
     <header class="tool-page-header">
       <h1>在线正则表达式测试</h1>
-      <p>实时测试正则表达式，高亮显示所有匹配结果与捕获组。支持 <code>g</code> <code>i</code> <code>m</code> <code>s</code> 标志，内置常用正则模板与 Python/Go 代码生成，数据不会上传到服务器。</p>
+      <p>实时测试正则表达式，高亮匹配结果、编号捕获组与命名组；支持替换实时预览，以及 JS / Python / Go / Java / PHP 可运行片段。数据不会上传到服务器。</p>
     </header>
 
     <section class="tool-panel" aria-labelledby="pattern-heading">
@@ -143,20 +143,21 @@
     </section>
 
     <section class="tool-panel" aria-labelledby="replace-heading">
-      <h2 id="replace-heading" class="tool-panel-title">替换</h2>
+      <h2 id="replace-heading" class="tool-panel-title">替换预览</h2>
       <div class="tool-pro-inline">
         <input
           type="text"
           id="replaceWith"
           class="tool-input"
-          placeholder="替换为（支持 $1 $2 引用捕获组）"
+          placeholder="替换为（支持 $1、$2、以及命名组 $<name>）"
           spellcheck="false"
           autocomplete="off"
           aria-label="替换字符串"
         />
-        <button type="button" class="tool-btn tool-btn-primary" id="btnReplace">执行替换</button>
+        <button type="button" class="tool-btn tool-btn-primary" id="btnReplace">刷新预览</button>
         <button type="button" class="tool-btn" id="btnCopyReplace">复制结果</button>
       </div>
+      <p id="replacePreviewMeta" class="tool-pro-muted" role="status">输入正则与替换串后显示实时预览。</p>
       <pre id="replaceOutput" class="tool-result" tabindex="0" aria-readonly="true"></pre>
     </section>
 
@@ -166,8 +167,11 @@
     </section>
 
     <section class="tool-panel" aria-labelledby="code-heading">
-      <h2 id="code-heading" class="tool-panel-title">代码生成</h2>
-      <pre id="regexCodeOut" class="tool-pro-result"># 输入正则表达式后将生成 Python / Go 示例代码</pre>
+      <h2 id="code-heading" class="tool-panel-title">多语言代码片段</h2>
+      <div class="tool-actions">
+        <button type="button" class="tool-btn" id="btnCopyRegexCode">复制全部片段</button>
+      </div>
+      <pre id="regexCodeOut" class="tool-pro-result"># 输入正则表达式后将生成 JS / Python / Go / Java / PHP 示例代码</pre>
     </section>
 
     <section class="tool-panel" aria-labelledby="tpl-heading">
