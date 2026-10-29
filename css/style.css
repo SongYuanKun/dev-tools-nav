@@ -360,7 +360,7 @@ kbd {
   background: var(--bg-card);
   border: 1px solid rgba(148, 163, 184, 0.22);
   border-radius: var(--radius-xl);
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14), 0 6px 16px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 45px rgb(var(--shadow) / calc(var(--shadow-alpha) * 0.45)), 0 6px 16px rgb(var(--shadow) / calc(var(--shadow-alpha) * 0.28));
   transform: translateX(-50%);
   z-index: 220;
 }
@@ -1781,7 +1781,7 @@ kbd {
 }
 
 [data-theme="dark"] .hero-mirror-link {
-  background: rgba(15, 23, 42, 0.5);
+  background: rgb(var(--bg) / 0.72);
 }
 
 [data-theme="dark"] .hero-mirror-link:hover {
@@ -3311,7 +3311,7 @@ body.site-v2:not(.redesign-v2):not(.signal-desk) {
   object-fit: cover;
   object-position: center top;
   padding: 6px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  border: 1px solid rgb(var(--ink) / 0.12);
   border-radius: 8px;
   background: #fff;
 }
@@ -3531,7 +3531,6 @@ body.sponsor-modal-open {
   .v2-tool-card { animation: none; transition: none; }
 }
 
-
 /* ============================================================
    Site-wide v2 alignment for secondary pages
    ============================================================ */
@@ -3569,7 +3568,6 @@ body.site-v2 a {
 }
 
 .site-v2 .ai-hero,
-.site-v2 .tool-index-hero,
 .site-v2 .blog-header,
 .site-v2 .about-hero,
 .site-v2 .detail-hero,
@@ -3581,7 +3579,6 @@ body.site-v2 a {
 }
 
 .site-v2 .ai-hero,
-.site-v2 .tool-index-hero,
 .site-v2 .blog-header,
 .site-v2 .about-hero,
 .site-v2 .detail-hero {
@@ -3596,7 +3593,6 @@ body.site-v2 a {
 }
 
 .site-v2 .ai-hero-kicker,
-.site-v2 .tool-index-eyebrow,
 .site-v2 .hero__badge,
 .site-v2 .about-tag,
 .site-v2 .section-kicker {
@@ -3614,7 +3610,6 @@ body.site-v2 a {
 }
 
 .site-v2 .ai-hero-title,
-.site-v2 .tool-index-title,
 .site-v2 .blog-header h1,
 .site-v2 .about-name,
 .site-v2 .detail-title,
@@ -3627,7 +3622,6 @@ body.site-v2 a {
 }
 
 .site-v2 .ai-hero-subtitle,
-.site-v2 .tool-index-subtitle,
 .site-v2 .blog-header p,
 .site-v2 .about-tagline,
 .site-v2 .detail-subtitle,
@@ -3643,7 +3637,7 @@ body.site-v2 a {
   top: 60px;
   z-index: 850;
   border-bottom: 1px solid var(--v2-border);
-  background: rgba(15, 23, 42, 0.72);
+  background: rgb(var(--surface) / 0.72);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -3694,7 +3688,6 @@ body.site-v2 a {
 .site-v2 .ai-scenario-card,
 .site-v2 .ai-tool-card,
 .site-v2 .ai-changelog-item,
-.site-v2 .tool-index-card,
 .site-v2 .tool-card,
 .site-v2 .blog-card,
 .site-v2 .about-section,
@@ -3711,7 +3704,6 @@ body.site-v2 a {
 .site-v2 .ai-learn-card:hover,
 .site-v2 .ai-scenario-card:hover,
 .site-v2 .ai-tool-card:hover,
-.site-v2 .tool-index-card:hover,
 .site-v2 .tool-card:hover,
 .site-v2 .blog-card:hover,
 .site-v2 .portfolio-card:hover,
@@ -3725,8 +3717,7 @@ body.site-v2 a {
 .site-v2 .ai-overview-grid,
 .site-v2 .ai-learn-path-grid,
 .site-v2 .ai-scenario-grid,
-.site-v2 .tools-grid,
-.site-v2 .tool-index-grid {
+.site-v2 .tools-grid {
   gap: 18px;
 }
 
@@ -3735,7 +3726,6 @@ body.site-v2 a {
 .site-v2 .ai-learn-card-title,
 .site-v2 .ai-section-title,
 .site-v2 .tool-card-title,
-.site-v2 .tool-index-card-title,
 .site-v2 .about-section-title,
 .site-v2 .portfolio-card__title {
   color: var(--v2-text);
@@ -3746,7 +3736,6 @@ body.site-v2 a {
 .site-v2 .ai-card-desc,
 .site-v2 .ai-learn-card-desc,
 .site-v2 .tool-card-desc,
-.site-v2 .tool-index-card-desc,
 .site-v2 .about-story p,
 .site-v2 .portfolio-card__desc {
   color: var(--v2-text-secondary);
@@ -3755,7 +3744,6 @@ body.site-v2 a {
 
 .site-v2 .visit-btn,
 .site-v2 .detail-link,
-.site-v2 .tool-index-card-action,
 .site-v2 .articles-more,
 .site-v2 .about-social-btn,
 .site-v2 .panel-link,
@@ -3772,7 +3760,7 @@ body.site-v2 a {
 .site-v2 select {
   border-color: var(--v2-border);
   border-radius: var(--v2-radius);
-  background: rgba(15, 23, 42, 0.46);
+  background: rgb(var(--raised) / 0.92);
   color: var(--v2-text);
 }
 
@@ -3799,17 +3787,14 @@ body.site-v2 a {
   margin-top: 0;
 }
 
-
 .site-v2 .ai-hero-icon,
 .site-v2 .ai-banner-icon,
-.site-v2 .tool-index-icon-wrap,
 .site-v2 .path-card-icon,
 .site-v2 .contact-icon,
 .site-v2 .empty-state__icon {
   display: none;
 }
-
-.site-v2 .tool-index-card,
+,
 .site-v2 .tool-card,
 .site-v2 .blog-card,
 .site-v2 .about-section,
@@ -3827,14 +3812,12 @@ body.site-v2 a {
   display: none;
 }
 
-
 /* ============================================================
    Hard unification pass for legacy subpage modules
    ============================================================ */
 .site-v2 .blog-page,
 .site-v2 .blog-post-page,
 .site-v2 .tool-page,
-.site-v2 .tool-shell,
 .site-v2 .tool-workbench,
 .site-v2 .main-content {
   width: min(1120px, calc(100% - 40px)) !important;
@@ -3847,8 +3830,7 @@ body.site-v2 a {
 .site-v2 .blog-post-page {
   width: min(920px, calc(100% - 40px)) !important;
 }
-
-.site-v2 .tool-shell,
+,
 .site-v2 .tool-workbench {
   display: block !important;
   min-height: auto !important;
@@ -3857,8 +3839,7 @@ body.site-v2 a {
 .site-v2 .tool-page-header,
 .site-v2 .blog-post-header,
 .site-v2 .blog-header,
-.site-v2 .ai-hero,
-.site-v2 .tool-index-hero {
+.site-v2 .ai-hero {
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
@@ -3873,8 +3854,7 @@ body.site-v2 a {
 .site-v2 .tool-page-header h1,
 .site-v2 .blog-post-header h1,
 .site-v2 .blog-header h1,
-.site-v2 .ai-hero-title,
-.site-v2 .tool-index-title {
+.site-v2 .ai-hero-title {
   margin: 0 !important;
   color: var(--v2-text) !important;
   font-size: clamp(34px, 5vw, 58px) !important;
@@ -3895,8 +3875,7 @@ body.site-v2 a {
 .site-v2 .tool-page-header p,
 .site-v2 .blog-post-meta,
 .site-v2 .blog-header p,
-.site-v2 .ai-hero-desc,
-.site-v2 .tool-index-subtitle {
+.site-v2 .ai-hero-desc {
   max-width: 820px !important;
   color: var(--v2-text-secondary) !important;
   font-size: 16px !important;
@@ -4032,7 +4011,7 @@ html.is-embed body.site-v2 {
 .site-v2 pre {
   border: 1px solid var(--v2-border) !important;
   border-radius: var(--v2-radius) !important;
-  background: rgba(15, 23, 42, 0.58) !important;
+  background: rgb(var(--surface) / 0.92) !important;
   color: var(--v2-text) !important;
   box-shadow: none !important;
 }
@@ -4070,7 +4049,6 @@ html.is-embed body.site-v2 {
 .site-v2 .blog-post-tags .tag,
 .site-v2 .tag,
 .site-v2 .tools-tag,
-.site-v2 .tool-index-badge,
 .site-v2 .blog-card-tag,
 .site-v2 .ai-tool-badge {
   border-radius: 999px !important;
@@ -4088,8 +4066,7 @@ html.is-embed body.site-v2 {
   .site-v2 .blog-page,
   .site-v2 .blog-post-page,
   .site-v2 .tool-page,
-  .site-v2 .tool-shell,
-  .site-v2 .tool-workbench,
+    .site-v2 .tool-workbench,
   .site-v2 .main-content {
     width: min(100% - 28px, 1120px) !important;
     padding: 38px 0 64px !important;
@@ -4098,16 +4075,14 @@ html.is-embed body.site-v2 {
   .site-v2 .tool-page-header,
   .site-v2 .blog-post-header,
   .site-v2 .blog-header,
-  .site-v2 .ai-hero,
-  .site-v2 .tool-index-hero {
+  .site-v2 .ai-hero {
     padding: 24px !important;
   }
 
   .site-v2 .tool-page-header h1,
   .site-v2 .blog-post-header h1,
   .site-v2 .blog-header h1,
-  .site-v2 .ai-hero-title,
-  .site-v2 .tool-index-title {
+  .site-v2 .ai-hero-title {
     font-size: 34px !important;
   }
 
@@ -4124,8 +4099,6 @@ html.is-embed body.site-v2 {
     padding: 22px 20px !important;
   }
 }
-
-
 
 @media (max-width: 820px) {
   body.site-v2:not(.redesign-v2) {
@@ -4149,8 +4122,7 @@ html.is-embed body.site-v2 {
   }
 
   .site-v2 .ai-hero,
-  .site-v2 .tool-index-hero,
-  .site-v2 .blog-header,
+    .site-v2 .blog-header,
   .site-v2 .about-hero,
   .site-v2 .detail-hero,
   .site-v2 .hero {
@@ -4170,96 +4142,15 @@ html.is-embed body.site-v2 .tool-workbench-inner {
 }
 
 /* OP-203：Header 合规徽章 */
-.header-badges {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 16px 10px;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-}
-.header-badges img {
-  display: block;
-  height: 20px;
-  border-radius: 4px;
-}
-.header-badges a:hover {
-  transform: translateY(-1px);
-  transition: transform 120ms ease;
-  opacity: 0.92;
-}
+
 @media (max-width: 640px) {
-  .header-badges {
-    padding: 6px 10px 8px;
-    gap: 6px;
-  }
-  .header-badges img {
-    height: 18px;
-  }
+
 }
 
 /* OP-303：隐私承诺横幅（首屏，三短语强制显式） */
-.privacy-banner {
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #fff7ed 0%, #ecfdf5 100%);
-  border-bottom: 1px solid #fde68a;
-  color: #111827;
-  font-size: 14px;
-  line-height: 1.5;
-}
-.privacy-banner__copy {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  align-items: center;
-  font-weight: 500;
-}
-.privacy-banner__copy span {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-}
-.privacy-banner__copy strong {
-  color: #047857;
-}
-.privacy-banner__close {
-  border: 0;
-  background: transparent;
-  padding: 4px 8px;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-  color: #6b7280;
-  border-radius: 6px;
-}
-.privacy-banner__close:hover {
-  background: #ffffff;
-  color: #111827;
-}
+
 @media (max-width: 720px) {
-  .privacy-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 14px 8px;
-    gap: 6px;
-  }
-  .privacy-banner__copy {
-    gap: 8px;
-    font-size: 13px;
-  }
-  .privacy-banner__close {
-    align-self: flex-end;
-  }
+
 }
 
 /* OP-101：首屏双栏（60% 自研工具高亮区 + 40% 目录导航） */
@@ -4350,11 +4241,12 @@ html.is-embed body.site-v2 .tool-workbench-inner {
   position: fixed;
   z-index: 210;
   max-width: min(420px, calc(100vw - 32px));
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
   border-radius: 14px;
   padding: 18px 18px 16px;
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.22);
+  box-shadow: var(--shadow-lift);
+  color: rgb(var(--ink));
 }
 .tour-tooltip__step {
   font-size: 12px;
@@ -4367,13 +4259,13 @@ html.is-embed body.site-v2 .tool-workbench-inner {
   margin: 4px 0 8px;
   font-size: 17px;
   font-weight: 700;
-  color: #111827;
+  color: rgb(var(--ink));
 }
 .tour-tooltip__desc {
   margin: 0 0 14px;
   font-size: 14px;
   line-height: 1.6;
-  color: #4b5563;
+  color: rgb(var(--muted));
 }
 .tour-tooltip__actions {
   display: flex;
@@ -4384,17 +4276,17 @@ html.is-embed body.site-v2 .tool-workbench-inner {
 .tour-tooltip__skip {
   background: transparent;
   border: 0;
-  color: #6b7280;
+  color: rgb(var(--muted));
   font-size: 13px;
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 8px;
 }
 .tour-tooltip__skip:hover {
-  background: #f3f4f6;
+  background: rgb(var(--ink) / 0.06);
 }
 .tour-tooltip__next {
-  background: #111827;
+  background: rgb(var(--signal));
   color: #ffffff;
   border: 0;
   border-radius: 8px;
@@ -4404,7 +4296,7 @@ html.is-embed body.site-v2 .tool-workbench-inner {
   cursor: pointer;
 }
 .tour-tooltip__next:hover {
-  background: #000000;
+  background: var(--color-primary-hover);
 }
 .tour-highlight {
   position: relative;
@@ -4761,11 +4653,6 @@ html.cmdk-open { overflow: hidden; }
 /* ============================================================
    Signal Desk — 首页搜索舞台 / LED 分类 / 目录栅格
    ============================================================ */
-body.signal-desk .header-badges,
-body.signal-desk .privacy-banner {
-  display: none !important;
-}
-
 .search-stage {
   max-width: 720px;
   margin: 0 auto;

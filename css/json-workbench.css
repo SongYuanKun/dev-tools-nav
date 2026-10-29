@@ -22,6 +22,8 @@
 [data-theme="light"] {
   --jw-surface-3: color-mix(in srgb, rgb(var(--raised)) 88%, rgb(var(--ink)));
   --jw-accent-soft: rgb(var(--signal) / 0.1);
+  /* 亮色下珊瑚描边对比不足 3:1，对齐站点 focus：ink 环 + signal 软光由 box-shadow 承担时可另加 */
+  --jw-focus: rgb(var(--ink));
   --jw-good: #087d5a;
   --jw-danger: #c6364b;
   --jw-shadow: var(--shadow-card);

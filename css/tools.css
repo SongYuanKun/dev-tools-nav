@@ -46,14 +46,6 @@
   }
 }
 
-.tool-surface {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-panel, 12px);
-  box-shadow: var(--shadow-card);
-  padding: var(--space-3);
-}
-
 /* ============================================================
    工具切换导航条 — Tab / 下划线风格
    ============================================================ */
@@ -253,30 +245,6 @@
 /* ============================================================
    高级工具增强面板
    ============================================================ */
-.tool-pro-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.tool-pro-grid-three {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.tool-pro-card {
-  min-width: 0;
-  padding: 14px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-page);
-}
-
-.tool-pro-card strong {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--text-primary);
-  font-size: 14px;
-}
 
 .tool-pro-card span,
 .tool-pro-muted {
@@ -452,21 +420,6 @@
   color: var(--danger, #dc2626);
 }
 
-.tool-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.tool-separator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 12px 0;
-  color: var(--text-muted);
-  font-size: 18px;
-}
-
 /* ============================================================
    底部相关工具导航
    ============================================================ */
@@ -589,182 +542,16 @@
   background: rgb(var(--signal) / 0.18);
   border-color: rgb(var(--signal) / 0.4);
 }
-
-/* ============================================================
-   在线工具汇总页
-   ============================================================ */
-.tool-index-page {
-  display: grid;
-  gap: var(--space-3);
-}
-
-.tool-index-hero {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.tool-index-intro {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.tool-index-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0.375rem 0.75rem;
-  border-radius: 9999px;
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  border: 1px solid rgb(var(--signal) / 0.25);
-}
-
-.tools-count {
-  font-size: var(--text-14);
-  color: var(--text-muted);
-}
-
-.tool-index-title {
-  font-size: var(--text-18);
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: -0.2px;
-}
-
-.tool-index-subtitle {
-  font-size: var(--text-16);
-  color: var(--text-secondary);
-  line-height: 1.7;
-  max-width: 46rem;
-}
-
-.tool-index-section {
-  display: grid;
-  gap: var(--space-2);
-}
-
-.tool-index-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-2);
-}
-
-.tool-index-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 1rem;
-  overflow: clip;
-  text-decoration: none;
-  transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
-  box-shadow: var(--shadow-card);
-}
-
-.tool-index-card:hover {
-  transform: translateY(-3px);
-  border-color: rgb(var(--signal) / 0.4);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.tool-index-card:focus-visible {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgb(var(--signal) / 0.22), var(--shadow-card-hover);
-}
-
 /* 顶部彩色细条 */
-.tool-index-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
-}
-
-.tool-index-body {
-  padding: var(--space-3);
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
 
 /* 圆角图标容器 */
-.tool-index-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  margin-bottom: var(--space-2);
-  background: var(--color-primary-light);
-  border: 1px solid rgb(var(--signal) / 0.18);
-  flex-shrink: 0;
-}
-
-.tool-index-name {
-  font-size: var(--text-16);
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 6px;
-  letter-spacing: -0.2px;
-}
-
-.tool-index-desc {
-  font-size: var(--text-14);
-  color: var(--text-secondary);
-  line-height: 1.65;
-  overflow-wrap: anywhere;
-  flex: 1;
-}
-
-.tool-index-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: var(--space-2);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--border-color);
-}
-
-.tool-index-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-}
-
-.tool-index-cta {
-  font-size: var(--text-14);
-  font-weight: 700;
-  color: var(--color-primary);
-  white-space: nowrap;
-  flex-shrink: 0;
-  letter-spacing: 0.2px;
-}
 
 @media (min-width: 36rem) {
-  .tool-index-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+
 }
 
 @media (min-width: 56rem) {
-  .tool-index-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+
 }
 
 /* Shared compact option controls used by timestamp, cron, UUID, and SQL tools. */
@@ -798,10 +585,6 @@
 
   .tool-panel {
     padding: 16px;
-  }
-
-  .tool-grid {
-    grid-template-columns: 1fr;
   }
 
   .tool-row {
@@ -1164,49 +947,6 @@
   text-align: center;
 }
 
-.tool-shell {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 24px 24px 60px;
-}
-
-.tool-shell-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.tool-shell-title {
-  font-size: clamp(20px, 3vw, 28px);
-  font-weight: 800;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-
-.tool-shell-desc {
-  margin-top: 8px;
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.tool-shell-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.tool-shell-iframe {
-  width: 100%;
-  height: min(82vh, 920px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  background: var(--bg-card);
-}
-
 .is-embed body {
   background: var(--bg-card);
   /* iframe 内 100vh 会随外壳逐帧变高，与 tools-shell 自动增高形成正反馈 */
@@ -1239,36 +979,6 @@
   display: none !important;
 }
 
-.tool-shell-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  font-size: 13px;
-  transition: all var(--transition);
-}
-
-.tool-shell-back:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  background: var(--color-primary-light);
-}
-
-.tool-shell-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.tool-shell-meta .tools-tag {
-  background: var(--bg-page);
-}
-
 @media (max-width: 1024px) {
   .tools-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -1277,9 +987,7 @@
   .tools-hub { padding: 20px 16px 56px; }
   .tools-search-row { grid-template-columns: 1fr; }
   .tools-grid { grid-template-columns: 1fr; }
-  .tool-shell { padding: 18px 16px 52px; }
-  .tool-shell-actions { justify-content: flex-start; }
-  .tool-shell-iframe { height: 78vh; }
+
   .is-embed .tool-page { padding: 16px; }
 }
 
@@ -1320,43 +1028,6 @@
 .tool-toast.is-visible {
   opacity: 1;
   transform: translate(-50%, 0);
-}
-
-.tool-workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-}
-
-.tool-workspace-single {
-  grid-template-columns: 1fr;
-}
-
-.tool-workspace-tabs {
-  display: none;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.tool-ws-tab {
-  padding: 7px 14px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-page);
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: var(--font-sans);
-  transition: all var(--transition);
-}
-
-.tool-ws-tab.is-active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: #fff;
 }
 
 .tool-stat-row {
@@ -1546,11 +1217,6 @@
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-.tool-btn-sm {
-  padding: 6px 14px;
-  font-size: 13px;
-}
-
 /* 时间戳 */
 .timestamp-grid {
   display: grid;
@@ -1666,13 +1332,6 @@
   border-bottom: none;
 }
 
-.timestamp-format-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: end;
-}
-
 /* Cron */
 .cron-toolbar {
   display: flex;
@@ -1757,13 +1416,6 @@
   letter-spacing: 0.05em;
 }
 
-.cron-mode-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
 /* Diff */
 .diff-grid {
   display: grid;
@@ -1802,16 +1454,6 @@
   gap: 12px;
 }
 
-.color-swatch {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  border: 1px solid var(--border-color);
-  vertical-align: middle;
-  margin-right: 6px;
-}
-
 .hex-preview {
   margin-top: 12px;
 }
@@ -1839,18 +1481,7 @@
 }
 
 @media (max-width: 860px) {
-  .tool-workspace {
-    grid-template-columns: 1fr;
-  }
-  .tool-workspace-tabs {
-    display: flex;
-  }
-  .tool-workspace [data-ws-panel]:not(:first-child) {
-    display: none;
-  }
-  .tool-workspace [data-ws-panel][hidden] {
-    display: none !important;
-  }
+
   .timestamp-grid,
   .timestamp-grid-three,
   .timestamp-form-grid,
@@ -2107,33 +1738,6 @@
   border: 0;
 }
 
-.tool-action-dock {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border-color);
-}
-
-.tool-action-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
-.tool-action-group-end {
-  margin-left: auto;
-}
-
-.tool-action-dock .tool-btn {
-  min-height: 34px;
-  padding: 6px 12px;
-  font-size: 12px;
-}
-
 .tool-module,
 .tool-module-secondary {
   margin-top: 0;
@@ -2206,12 +1810,4 @@
     white-space: normal;
   }
 
-  .tool-action-dock {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .tool-action-group-end {
-    margin-left: 0;
-  }
 }

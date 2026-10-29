@@ -43,33 +43,6 @@
   font-weight: 600;
 }
 
-.blog-quick-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 22px;
-}
-
-.blog-quick-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 36px;
-  padding: 8px 14px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-card);
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: border-color 0.15s ease, color 0.15s ease;
-}
-
-.blog-quick-link:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
 .blog-toolbar {
   display: flex;
   flex-direction: column;
