@@ -616,12 +616,12 @@
     }
 
     document.getElementById("btnParse").addEventListener("click", function () {
-      window.umamiTrack?.("tool_used", { tool: "cron", action: "parse" });
       var raw = document.getElementById("parseInput").value;
       if (syncFromExpression(raw)) {
         switchCronTab("gen");
         refreshUI();
         setCronStatus("ok", "已同步到生成器");
+        window.umamiTrack?.("tool_used", { tool: "cron", action: "parse" });
         window.umamiTrack?.("tool_used", { tool: "cron", action: "apply" });
       } else {
         setCronStatus("err", "请输入有效的五段或六段表达式");

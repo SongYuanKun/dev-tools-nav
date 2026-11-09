@@ -4819,6 +4819,16 @@ html.cmdk-open { overflow: hidden; }
   color: rgb(var(--signal));
 }
 
+.search-stage__cta {
+  margin: 14px 0 0;
+  display: flex;
+  justify-content: center;
+}
+
+.search-stage__cta .v2-btn {
+  text-decoration: none;
+}
+
 .catalog-section {
   padding: 0 0 80px;
 }

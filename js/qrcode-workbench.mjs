@@ -26,7 +26,8 @@ ready(function init() {
     status.classList.toggle("is-error", !!isError);
   }
 
-  async function generate() {
+  async function generate(options) {
+    const trackSuccess = !!(options && options.track);
     const text = input.value;
     const level = levelEl ? levelEl.value : "M";
     try {
@@ -38,7 +39,10 @@ ready(function init() {
         svg.setAttribute("aria-label", "二维码预览");
       }
       setStatus("已生成（纠错 " + level + "）· " + new TextEncoder().encode(text).length + " 字节");
-      window.umamiTrack?.("tool_used", { tool: "qrcode", action: "generate", level });
+      // 仅显式点击计入有效使用；自动预览/输入防抖不计入外部使用。
+      if (trackSuccess) {
+        window.umamiTrack?.("tool_used", { tool: "qrcode", action: "generate", level });
+      }
     } catch (err) {
       lastSvg = "";
       preview.innerHTML = "";
@@ -46,12 +50,12 @@ ready(function init() {
     }
   }
 
-  if (btnGenerate) btnGenerate.addEventListener("click", generate);
+  if (btnGenerate) btnGenerate.addEventListener("click", function () { void generate({ track: true }); });
   input.addEventListener("input", function () {
     clearTimeout(input._qrTimer);
-    input._qrTimer = setTimeout(generate, 280);
+    input._qrTimer = setTimeout(function () { void generate({ track: false }); }, 280);
   });
-  if (levelEl) levelEl.addEventListener("change", generate);
+  if (levelEl) levelEl.addEventListener("change", function () { void generate({ track: false }); });
 
   if (btnDownload) {
     btnDownload.addEventListener("click", function () {
@@ -95,9 +99,6 @@ ready(function init() {
     });
   }
 
-  if (input.value.trim()) generate();
-  else {
-    input.value = "https://tools.songyuankun.top/";
-    generate();
-  }
+  if (!input.value.trim()) input.value = "https://tools.songyuankun.top/";
+  void generate({ track: false });
 });

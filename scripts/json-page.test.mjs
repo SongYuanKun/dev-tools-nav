@@ -97,6 +97,15 @@ test("workbench exposes one editor, five accessible modes, and complete command 
   assert.match(html, /data-json-error[^>]+role=["']alert["'][^>]+aria-live=["']assertive["']/i);
   assert.match(html, /data-json-status[^>]+role=["']status["']/i);
   assert.match(html, /data-json-selection-status/i);
+  assert.match(html, /data-json-empty-hint/);
+});
+
+test("workbench starts empty and tracks entry without counting sample as core success", () => {
+  assert.match(workbenchSource, /trackOpen\(entryClass\)/);
+  assert.match(workbenchSource, /readEntryClass/);
+  assert.match(workbenchSource, /不自动灌入 SAMPLE|空编辑器起步/);
+  assert.match(workbenchSource, /window\.confirm/);
+  assert.doesNotMatch(workbenchSource, /if \(!initialDoc\) initialDoc = SAMPLE/);
 });
 
 test("page has semantic chrome, learning content, FAQ, related tools, and privacy copy", () => {

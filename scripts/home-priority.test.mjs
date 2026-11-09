@@ -6,6 +6,8 @@ test("home first screen prioritizes self-built tools and softens AI/catalog chro
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   assert.match(html, /开发者工具，[\s\S]*都在本机运行/);
   assert.match(html, /data-tool-id="json"/);
+  assert.match(html, /tools\/json\/\?from=home/);
+  assert.match(html, /打开 JSON 格式化 · 本地粘贴即用/);
   assert.match(html, /desk-secondary--quiet/);
   assert.match(html, /<details class="desk-more">/);
   assert.match(html, /更多资源/);

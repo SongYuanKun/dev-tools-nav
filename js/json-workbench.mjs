@@ -26,16 +26,39 @@ const UPLOAD_LIMIT = 5 * 1024 * 1024;
 const TREE_NODE_LIMIT = 2_000;
 const LARGE_INPUT_SOFT_LIMIT = 256 * 1024;
 const PREFS_KEY = "json-workbench-prefs-v1";
-const SAMPLE = JSON.stringify({
+const SAMPLE_OBJECT = {
   name: "Koen's 工具箱",
   tools: ["JSON 工作台", "JWT 解码", "Cron 生成器"],
   tags: ["本地计算", "零上传", "MIT 开源"],
   owner: "SongYuanKun",
-  lastUpdated: new Date(Date.now() - 86400000).toISOString().slice(0, 10)
-}, null, 2);
+  lastUpdated: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
+};
+/** 压缩示例：点「格式化」可见结果；初始化本身不计入有效使用 */
+const SAMPLE = JSON.stringify(SAMPLE_OBJECT);
 const DEFAULT_PREFS = Object.freeze({ indent: 2, relaxed: false, escapeUnicode: false });
 const ACTION_KEYS = new Set(["format", "minify", "copy", "clear", "sample", "upload", "download", "repair", "sort", "unicode", "validate", "diff", "http"]);
+const ENTRY_QUERY_KEYS = new Set(["home", "handbook", "tour", "jwt", "base64", "direct"]);
 const lintCompartment = new Compartment();
+
+function readEntryClass() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const from = (params.get("from") || "").trim().toLowerCase();
+    if (ENTRY_QUERY_KEYS.has(from)) return from;
+    if (params.get("from_jwt") === "1") return "jwt";
+    if (params.get("from_base64") === "1") return "base64";
+    if (from) return "unknown";
+  } catch {
+    /* ignore */
+  }
+  return "direct";
+}
+
+function syncEmptyHint(text) {
+  const hint = document.querySelector("[data-json-empty-hint]");
+  if (!hint) return;
+  hint.hidden = Boolean(text && String(text).trim());
+}
 
 function safePreferences() {
   try {
@@ -85,14 +108,25 @@ function inferJsonFixHint(message, line, doc) {
   return null;
 }
 
-function track(action) {
+function track(action, extra = {}) {
   if (!ACTION_KEYS.has(action)) return;
-  const properties = { tool: "json", action };
+  const properties = { tool: "json", action, ...extra };
+  if (!properties.entry && window.__jsonEntryClass) properties.entry = window.__jsonEntryClass;
   try {
     if (typeof window.umamiTrack === "function") window.umamiTrack("tool_used", properties);
     else window.umami?.track?.("tool_used", properties);
   } catch {
     // Analytics is optional and receives no document-derived properties.
+  }
+}
+
+function trackOpen(entry) {
+  try {
+    const properties = { tool: "json", entry };
+    if (typeof window.umamiTrack === "function") window.umamiTrack("tool_open", properties);
+    else window.umami?.track?.("tool_open", properties);
+  } catch {
+    // Analytics is optional.
   }
 }
 
@@ -837,18 +871,19 @@ export function mountJsonWorkbench(mount) {
   const updateDocumentStatus = () => {
     const text = source();
     countsNode.textContent = `${text.length} 字符 · ${bytes(text)} B`;
+    syncEmptyHint(text);
     scheduleDiagnostics();
   };
 
-  // OP-103 + OP-105 初值策略（优先级低→高：mount.dataset.initialValue < 空态SAMPLE < sessionStorage jwt_decode_payload_v1
+  // 初值：空编辑器起步；仅 dataset / #data= / 跨工具 sessionStorage 预填。
+  // 不自动灌入 SAMPLE，避免「有浏览无成功使用」与覆盖用户输入。
   let initialDoc = mount.dataset.initialValue ?? "";
-  if (!initialDoc) initialDoc = SAMPLE; // 空态默认给 5 行示例
+  let seededEntry = null;
   try {
     const fromJwt = sessionStorage.getItem("jwt_decode_payload_v1");
     if (fromJwt) {
       try {
         const parsed = JSON.parse(fromJwt);
-        // 拼接：payload 最有价值，单独放；整包保留给用户保留；没有 payload 存 token 用全文拼接
         if (parsed && typeof parsed === "object") {
           initialDoc = JSON.stringify(
             Object.prototype.hasOwnProperty.call(parsed, "payload") && parsed.payload
@@ -864,6 +899,7 @@ export function mountJsonWorkbench(mount) {
         initialDoc = fromJwt;
       }
       sessionStorage.removeItem("jwt_decode_payload_v1");
+      seededEntry = "jwt";
     }
   } catch {
     /* storage failing must not crash */
@@ -877,10 +913,14 @@ export function mountJsonWorkbench(mount) {
         initialDoc = fromBase64;
       }
       sessionStorage.removeItem("base64_decode_json_v1");
+      seededEntry = "base64";
     }
   } catch {
     /* storage failing must not crash */
   }
+  const entryClass = seededEntry || readEntryClass();
+  window.__jsonEntryClass = entryClass;
+  trackOpen(entryClass);
 
   const state = EditorState.create({
     doc: initialDoc,
@@ -1008,9 +1048,18 @@ export function mountJsonWorkbench(mount) {
         track(action);
         announce(shouldDecode ? "已还原 Unicode 字符" : "已转换为 Unicode 转义");
       } else if (action === "sample") {
+        const current = source();
+        if (current.trim() && current !== SAMPLE) {
+          const ok = window.confirm("当前编辑器已有内容，加载示例会覆盖，是否继续？");
+          if (!ok) {
+            announce("已取消加载示例");
+            return;
+          }
+        }
         replaceDocument(SAMPLE);
+        // sample 仅作可观测动作，不在有效使用白名单；初始化本身亦不计入。
         track(action);
-        announce("示例已载入");
+        announce("示例已载入（压缩态）。点「格式化」可完成本地处理。");
       } else if (action === "clear") {
         replaceDocument("");
         track(action);

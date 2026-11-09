@@ -40,3 +40,44 @@ test("color tool_used maps to Chinese whitelist labels", () => {
     },
   );
 });
+
+test("hash and qrcode tool labels map for whitelist coverage", () => {
+  assert.deepEqual(
+    { ...enrich({ tool: "hash", action: "digest" }) },
+    {
+      描述: "工具使用：哈希生成器 · 摘要",
+      工具: "哈希生成器",
+      操作: "摘要",
+    },
+  );
+  assert.deepEqual(
+    { ...enrich({ tool: "qrcode", action: "generate" }) },
+    {
+      描述: "工具使用：二维码生成器 · 生成",
+      工具: "二维码生成器",
+      操作: "生成",
+    },
+  );
+});
+
+test("tool_used and tool_open carry low-cardinality entry class", () => {
+  const window = {};
+  vm.runInNewContext(source, { window });
+  assert.deepEqual(
+    { ...window.umamiEnrich("tool_used", { tool: "json", action: "format", entry: "home" }) },
+    {
+      描述: "工具使用：JSON 格式化 · 格式化（首页）",
+      工具: "JSON 格式化",
+      操作: "格式化",
+      入口: "首页",
+    },
+  );
+  assert.deepEqual(
+    { ...window.umamiEnrich("tool_open", { tool: "json", entry: "handbook" }) },
+    {
+      描述: "工具打开：JSON 格式化 · 手册",
+      工具: "JSON 格式化",
+      入口: "手册",
+    },
+  );
+});

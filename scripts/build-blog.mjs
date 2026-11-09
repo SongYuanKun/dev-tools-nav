@@ -493,7 +493,7 @@ function renderPage(meta, slug, contentHtml, relatedPosts = []) {
         </a>
         <div class="nav-links">
           <a href="../../index.html" class="nav-link">首页</a>
-          <a href="../tools/json.html" class="nav-link">在线工具</a>
+          <a href="../../tools/json/?from=handbook" class="nav-link">在线工具</a>
           <a href="index.html" class="nav-link active">技术博客</a>
         </div>
         <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
@@ -554,7 +554,7 @@ function renderPage(meta, slug, contentHtml, relatedPosts = []) {
         <span class="footer-divider">|</span>
         <a href="../../index.html">首页</a>
         <span class="footer-divider">|</span>
-        <a href="../tools/json.html">在线工具</a>
+        <a href="../../tools/json/?from=handbook">在线工具</a>
         <span class="footer-divider">|</span>
       </div>
       <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>

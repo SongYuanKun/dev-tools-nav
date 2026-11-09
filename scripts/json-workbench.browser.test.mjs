@@ -178,11 +178,54 @@ async function assertVisibleFocus(control) {
   assert.ok(focus.contrast >= 3, `focus contrast below 3:1: ${await control.getAttribute("aria-label") || await control.textContent()} ${JSON.stringify(focus)}`);
 }
 
+test("empty start, intentional sample, and home entry funnel semantics", async () => {
+  const context = await browser.newContext({
+    permissions: ["clipboard-read", "clipboard-write"],
+  });
+  await context.addInitScript(() => {
+    window.__umamiEvents = [];
+    window.umami = { track: (name, properties) => window.__umamiEvents.push({ name, properties }) };
+    window.umamiTrack = (name, properties) => window.__umamiEvents.push({ name, properties });
+  });
+  const page = await context.newPage();
+  await page.route("https://umami.songyuankun.top/**", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: "{}",
+  }));
+  await page.goto(`${origin}/tools/json/?from=home`, { waitUntil: "domcontentloaded" });
+  await page.locator(".cm-content").first().waitFor({ state: "visible", timeout: 60000 });
+  assert.equal(await documentText(page), "");
+  assert.equal(await page.locator("[data-json-empty-hint]").isVisible(), true);
+  assert.equal(await page.evaluate(() => window.__jsonEntryClass), "home");
+  // base.js / labels 会覆盖 init 钩子；在交互前重新挂上本地采集。
+  await page.evaluate(() => {
+    window.__umamiEvents = [];
+    window.umami = { track: (name, properties) => window.__umamiEvents.push({ name, properties }) };
+    window.umamiTrack = (name, properties) => window.__umamiEvents.push({ name, properties });
+  });
+  await page.getByRole("button", { name: "示例" }).click();
+  assert.match(await documentText(page), /"name":"Koen's 工具箱"/);
+  const afterSample = await page.evaluate(() => window.__umamiEvents.slice());
+  assert.ok(afterSample.some((e) => e.name === "tool_used" && e.properties?.action === "sample"));
+  assert.equal(afterSample.some((e) => e.properties?.action === "format"), false);
+  await page.locator('[data-json-action="format"]').click();
+  const afterFormat = await page.evaluate(() => window.__umamiEvents.slice());
+  assert.ok(afterFormat.some((e) => (
+    e.name === "tool_used"
+    && e.properties?.tool === "json"
+    && e.properties?.action === "format"
+    && e.properties?.entry === "home"
+  )));
+  assert.match(await documentText(page), /\n  "name"/);
+  await context.close();
+});
+
 test("core commands, shortcuts, undo, feedback, status, and private analytics work", async () => {
   const { context, page } = await openWorkbench();
   await page.getByRole("button", { name: "示例" }).click();
-  assert.match(await documentText(page), /"name": "Koen's 工具箱"/);
-  assert.match(await documentText(page), /"tools": \[/);
+  assert.match(await documentText(page), /"name":"Koen's 工具箱"/);
+  assert.match(await documentText(page), /"tools":\[/);
   await setDocument(page, '{"name":"JSON 工作台","items":[1,2]}');
   await page.keyboard.press("Control+Enter");
   assert.match(await documentText(page), /\n  "name"/);
@@ -291,7 +334,7 @@ test("settings persist only allowlisted preferences and content does not survive
   assert.deepEqual(workbenchPrefs, { indent: 4, relaxed: true, escapeUnicode: true });
   await page.reload();
   await page.locator(".cm-content").waitFor();
-  assert.match(await documentText(page), /"name": "Koen's 工具箱"/);
+  assert.equal(await documentText(page), "");
   assert.doesNotMatch(await documentText(page), /must-not-persist|secret|quote|u0022/);
   await context.close();
 });
@@ -379,7 +422,7 @@ test("legacy q deep links migrate through a fragment, clean the URL, and do not 
   assert.match(contentRequests[0], /\/pages\/tools\/json\.html/);
   await page.reload();
   await page.locator("[data-json-editor] .cm-content").waitFor();
-  assert.match(await documentText(page), /"name": "Koen's 工具箱"/);
+  assert.equal(await documentText(page), "");
   assert.doesNotMatch(await documentText(page), /"plus"|"unicode"/);
   await context.close();
 });
