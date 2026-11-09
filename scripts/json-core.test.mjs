@@ -8,6 +8,7 @@ import {
   escapeUnicode,
   formatJson,
   formatJsonPath,
+  isJsonNumber,
   jsonToYaml,
   jsonStats,
   minifyJson,
@@ -15,6 +16,7 @@ import {
   queryJsonPath,
   repairJson,
   sortJsonKeys,
+  stringifyJson,
   summarizeDiffChanges,
   unescapeUnicode,
   yamlToJson,
@@ -345,8 +347,9 @@ test("JSON and YAML conversion preserves nested values and scalar types", () => 
     users: [{ name: "Koen", tags: ["dev", "工具"] }],
   };
   const yaml = jsonToYaml(value);
-  assert.match(yaml, /title:\s+["']?true["']?/);
-  const converted = yamlToJson(yaml);
+  assert.equal(yaml.ok, true);
+  assert.match(yaml.text, /title:\s+["']?true["']?/);
+  const converted = yamlToJson(yaml.text);
   assert.equal(converted.ok, true);
   assert.deepEqual(converted.value, value);
   assert.deepEqual(JSON.parse(converted.text), value);
@@ -504,4 +507,89 @@ test("assessJsonPayloadSize flags soft and heavy paste budgets", () => {
   const heavy = assessJsonPayloadSize("y".repeat(1100 * 1024));
   assert.equal(heavy.heavy, true);
   assert.equal(heavy.skipAutoLint, true);
+});
+
+test("format/minify preserve unsafe integer lexemes end-to-end", () => {
+  const source = '{"id":9007199254740993,"name":"中文","items":[{"x":true},null]}';
+  // Number 字面量本身已丢精度；用字符串对照证明 JSON.parse 静默损坏。
+  assert.equal(String(JSON.parse(source).id), "9007199254740992");
+  const formatted = formatJson(source);
+  assert.equal(formatted.ok, true);
+  assert.equal(formatted.preservedNumbers, 1);
+  assert.match(formatted.text, /"id": 9007199254740993/);
+  assert.equal(isJsonNumber(formatted.value.id), true);
+  assert.equal(formatted.value.id.raw, "9007199254740993");
+  const minified = minifyJson(formatted.text);
+  assert.equal(minified.ok, true);
+  assert.equal(minified.text, source);
+  const sorted = stringifyJson(sortJsonKeys(formatted.value), { indent: 0 });
+  assert.match(sorted, /9007199254740993/);
+  const queried = queryJsonPath(formatted.value, "$.id");
+  assert.equal(queried.ok, true);
+  assert.equal(isJsonNumber(queried.value), true);
+  assert.equal(stringifyJson(queried.value), "9007199254740993");
+});
+
+test("numeric preservation keeps strings, negatives, fractions, exponents and nested values", () => {
+  const source = `{
+    "safe": 42,
+    "unsafe": -9007199254740993,
+    "asString": "9007199254740993",
+    "fraction": 0.1,
+    "exponent": 1e2,
+    "negZero": -0,
+    "nested": { "deep": [9007199254740995, {"k": 1}] }
+  }`;
+  const parsed = parseJson(source);
+  assert.equal(parsed.ok, true);
+  assert.equal(typeof parsed.value.safe, "number");
+  assert.equal(parsed.value.safe, 42);
+  assert.equal(isJsonNumber(parsed.value.unsafe), true);
+  assert.equal(parsed.value.unsafe.raw, "-9007199254740993");
+  assert.equal(parsed.value.asString, "9007199254740993");
+  assert.equal(typeof parsed.value.fraction, "number");
+  assert.equal(parsed.value.exponent, 100);
+  assert.equal(Object.is(parsed.value.negZero, -0) || isJsonNumber(parsed.value.negZero), true);
+  assert.equal(isJsonNumber(parsed.value.nested.deep[0]), true);
+  const roundTrip = minifyJson(formatJson(source).text);
+  assert.equal(roundTrip.ok, true);
+  assert.match(roundTrip.text, /"unsafe":-9007199254740993/);
+  assert.match(roundTrip.text, /"asString":"9007199254740993"/);
+  assert.match(roundTrip.text, /9007199254740995/);
+});
+
+test("diffJson compares preserved number lexemes without collapsing precision", () => {
+  const left = parseJson('{"id":9007199254740993}').value;
+  const right = parseJson('{"id":9007199254740992}').value;
+  const same = diffJson(left, parseJson('{"id":9007199254740993}').value);
+  assert.equal(same.equal, true);
+  const changed = diffJson(left, right);
+  assert.equal(changed.equal, false);
+  assert.equal(changed.changes[0].type, "changed");
+});
+
+test("repairJson preserves unsafe integers while fixing trailing commas", () => {
+  const repaired = repairJson('{"id":9007199254740993,}');
+  assert.equal(repaired.ok, true);
+  assert.match(repaired.text, /9007199254740993/);
+  assert.equal(isJsonNumber(repaired.value.id), true);
+});
+
+test("jsonToYaml honestly fails for unsafe integer lexemes instead of corrupting", () => {
+  const parsed = parseJson('{"id":9007199254740993}');
+  const yaml = jsonToYaml(parsed.value);
+  assert.equal(yaml.ok, false);
+  assert.equal(yaml.error.code, "YAML_NUMBER_LOSSY");
+  assert.equal("text" in yaml, false);
+});
+
+test("yamlToJson preserves safe numbers and unsafe integer lexemes when representable as plain scalars", () => {
+  const safe = yamlToJson("count: 2\n");
+  assert.equal(safe.ok, true);
+  assert.equal(safe.value.count, 2);
+  const unsafe = yamlToJson("id: 9007199254740993\n");
+  assert.equal(unsafe.ok, true);
+  assert.equal(isJsonNumber(unsafe.value.id), true);
+  assert.equal(unsafe.value.id.raw, "9007199254740993");
+  assert.match(unsafe.text, /9007199254740993/);
 });

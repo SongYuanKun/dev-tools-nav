@@ -310,6 +310,50 @@ test("repair uses an accessible confirmation dialog and only applies after confi
   await context.close();
 });
 
+test("repair apply refreshes validity immediately without stale invalid status", async () => {
+  const { context, page } = await openWorkbench();
+  await setDocument(page, "{'a':1,}");
+  assert.match(await page.locator("[data-json-status]").textContent(), /JSON 无效|无效/);
+  await page.getByRole("button", { name: "安全修复" }).click();
+  const dialog = page.getByRole("dialog", { name: "确认安全修复" });
+  await dialog.waitFor({ state: "visible" });
+  await dialog.getByRole("button", { name: "应用修复" }).click();
+  await waitForDocumentText(page, '{\n  "a": 1\n}');
+  // 程序化替换后应立即有效，不得卡在防抖窗口里的旧「JSON 无效」。
+  const statusSamples = [];
+  for (let index = 0; index < 8; index += 1) {
+    statusSamples.push(await page.locator("[data-json-status]").textContent());
+    await page.waitForTimeout(40);
+  }
+  assert.ok(statusSamples.every((text) => /JSON 有效|有效/.test(text)), JSON.stringify(statusSamples));
+  assert.ok(statusSamples.every((text) => !/无效/.test(text)), JSON.stringify(statusSamples));
+  await context.close();
+});
+
+test("format minify tree path and yaml paths preserve unsafe integer lexemes", async () => {
+  const { context, page } = await openWorkbench();
+  const source = '{"id":9007199254740993,"name":"中文","items":[{"x":true},null]}';
+  await setDocument(page, source);
+  await page.getByRole("button", { name: /^格式化/ }).click();
+  const formatted = await documentText(page);
+  assert.match(formatted, /"id": 9007199254740993/);
+  assert.doesNotMatch(formatted, /9007199254740992/);
+  await page.getByRole("button", { name: /^压缩/ }).click();
+  assert.equal(await documentText(page), source);
+  await page.getByRole("button", { name: /^格式化/ }).click();
+  await page.getByRole("tab", { name: "树视图" }).click();
+  assert.match(await page.getByRole("tabpanel", { name: "树视图" }).textContent(), /9007199254740993/);
+  await page.getByRole("tab", { name: "JSONPath" }).click();
+  const query = page.getByLabel("JSONPath 表达式");
+  await query.fill("$.id");
+  await query.press("Enter");
+  assert.match(await page.locator("[data-jsonpath-results]").textContent(), /9007199254740993/);
+  await page.getByRole("tab", { name: "YAML" }).click();
+  await page.getByRole("button", { name: "JSON 转为 YAML" }).click();
+  assert.match(await page.locator("[data-yaml-error]").textContent(), /YAML|无损|IEEE|安全整数|词素/);
+  await context.close();
+});
+
 test("settings persist only allowlisted preferences and content does not survive reload", async () => {
   const { context, page } = await openWorkbench();
   await setDocument(page, '{"secret":"must-not-persist",}');
