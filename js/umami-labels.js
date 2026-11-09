@@ -8,12 +8,14 @@
   var EVENT_LABELS = {
     nav_click: '导航点击',
     tool_click: '工具点击',
+    selfbuilt_click: '工具点击',
     theme_toggle: '主题切换',
     cta_action: '按钮点击',
     category_click: '分类筛选',
     search_use: '搜索使用',
     external_link: '外部链接',
     tool_used: '工具使用',
+    tool_open: '工具打开',
     copy_click: '复制操作',
     article_click: '博客文章',
     ai_path_click: 'AI 学习路径',
@@ -29,6 +31,16 @@
     perf_lcp: '页面性能',
     scroll_depth: '滚动深度',
     page_exit: '页面离开'
+  };
+
+  var ENTRY_LABELS = {
+    home: '首页',
+    handbook: '手册',
+    tour: '引导',
+    jwt: 'JWT',
+    base64: 'Base64',
+    direct: '直达',
+    unknown: '未知'
   };
 
   var CTA_LABELS = {
@@ -113,7 +125,13 @@
 
   function toolActionLabel(tool, action) {
     if (tool === 'json' && action === 'diff') return '结构对比';
+    if (tool === 'diff' && action === 'run') return '运行';
     return pick(ACTION_LABELS, action);
+  }
+
+  function entryLabel(value) {
+    if (!value) return ENTRY_LABELS.direct;
+    return ENTRY_LABELS[value] || ENTRY_LABELS.unknown;
   }
 
   function buildDesc(name, data) {
@@ -123,12 +141,17 @@
     if (name === 'cta_action') {
       return base + '：' + pick(CTA_LABELS, data.action);
     }
-    if (name === 'tool_click') {
+    if (name === 'tool_click' || name === 'selfbuilt_click') {
       var cat = pick(CATEGORY_LABELS, data.category);
-      return base + '：' + (data.tool_name || data.name || '') + (cat ? '（' + cat + '）' : '');
+      return base + '：' + (data.tool_name || data.name || data.tool || '') + (cat ? '（' + cat + '）' : '');
+    }
+    if (name === 'tool_open') {
+      return base + '：' + pick(TOOL_LABELS, data.tool) + ' · ' + entryLabel(data.entry || data.from);
     }
     if (name === 'tool_used') {
-      return base + '：' + pick(TOOL_LABELS, data.tool) + ' · ' + toolActionLabel(data.tool, data.action);
+      var used = base + '：' + pick(TOOL_LABELS, data.tool) + ' · ' + toolActionLabel(data.tool, data.action);
+      if (data.entry || data.from) used += '（' + entryLabel(data.entry || data.from) + '）';
+      return used;
     }
     if (name === 'search_use') {
       return base + '：「' + (data.query || '') + '」' + (data.results != null ? '（' + data.results + ' 条）' : '');
@@ -184,9 +207,14 @@
     if (name === 'tool_used') {
       cn['工具'] = pick(TOOL_LABELS, data.tool);
       cn['操作'] = toolActionLabel(data.tool, data.action);
-    } else if (name === 'tool_click') {
-      cn['工具'] = data.tool_name || data.name || '';
+      if (data.entry || data.from) cn['入口'] = entryLabel(data.entry || data.from);
+    } else if (name === 'tool_open') {
+      cn['工具'] = pick(TOOL_LABELS, data.tool);
+      cn['入口'] = entryLabel(data.entry || data.from);
+    } else if (name === 'tool_click' || name === 'selfbuilt_click') {
+      cn['工具'] = data.tool_name || data.name || pick(TOOL_LABELS, data.tool) || '';
       cn['分类'] = pick(CATEGORY_LABELS, data.category);
+      if (data.entry || data.from) cn['入口'] = entryLabel(data.entry || data.from);
     } else if (name === 'category_click' || name === 'blog_category' || name === 'prompt_category') {
       cn['分类'] = pick(CATEGORY_LABELS, data.category) || data.category || '';
     } else if (name === 'search_use') {

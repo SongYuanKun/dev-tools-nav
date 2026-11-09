@@ -118,26 +118,30 @@
       status.classList.toggle("is-error", !!isError);
     }
 
-    async function run() {
+    async function run(options) {
+      var trackSuccess = !!(options && options.track);
       try {
         var algo = algoEl.value;
         var format = formatEl ? formatEl.value : "hex";
         var result = await digest(algo, input.value, format);
         output.value = result;
         setStatus(algo + " · " + format + " · " + toUtf8Bytes(input.value).length + " 字节");
-        window.umamiTrack?.("tool_used", { tool: "hash", action: "digest", algorithm: algo });
+        // 仅显式点击计入有效使用；自动预览/输入防抖不计入。
+        if (trackSuccess) {
+          window.umamiTrack?.("tool_used", { tool: "hash", action: "digest", algorithm: algo });
+        }
       } catch (err) {
         output.value = "";
         setStatus(err && err.message ? err.message : "计算失败", true);
       }
     }
 
-    if (btnRun) btnRun.addEventListener("click", function () { void run(); });
-    algoEl.addEventListener("change", function () { void run(); });
-    if (formatEl) formatEl.addEventListener("change", function () { void run(); });
+    if (btnRun) btnRun.addEventListener("click", function () { void run({ track: true }); });
+    algoEl.addEventListener("change", function () { void run({ track: false }); });
+    if (formatEl) formatEl.addEventListener("change", function () { void run({ track: false }); });
     input.addEventListener("input", function () {
       clearTimeout(input._hashTimer);
-      input._hashTimer = setTimeout(function () { void run(); }, 200);
+      input._hashTimer = setTimeout(function () { void run({ track: false }); }, 200);
     });
 
     if (fileInput) {
@@ -151,7 +155,7 @@
         var reader = new FileReader();
         reader.onload = function () {
           input.value = String(reader.result || "");
-          void run();
+          void run({ track: true });
         };
         reader.readAsText(file);
       });
@@ -174,7 +178,7 @@
     }
 
     if (!input.value) input.value = "Koen's 工具箱";
-    void run();
+    void run({ track: false });
   }
 
   var ready = window.ToolChrome && ToolChrome.ready ? ToolChrome.ready : function (fn) {

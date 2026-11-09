@@ -367,20 +367,23 @@
 
     document.getElementById("btnFormat")?.addEventListener("click", function () {
       switchMode("format");
+      var sql = getInput();
       runModeAction(false);
-      window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "format" });
+      if (sql) window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "format" });
     });
 
     document.getElementById("btnMinify")?.addEventListener("click", function () {
       switchMode("minify");
+      var sql = getInput();
       runModeAction(false);
-      window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "minify" });
+      if (sql) window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "minify" });
     });
 
     document.getElementById("btnAnalyze")?.addEventListener("click", function () {
       switchMode("analyze");
+      var sql = getInput();
       runModeAction(false);
-      window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "analyze" });
+      if (sql) window.umamiTrack?.("tool_used", { tool: "sql_formatter", action: "analyze" });
     });
 
     document.getElementById("btnCopy")?.addEventListener("click", function () {

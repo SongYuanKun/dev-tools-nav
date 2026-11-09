@@ -47,7 +47,7 @@
       targetSel: '.tool-row[data-tool-id="json"]',
       pos: 'top',
       ctaText: '打开 JSON 工作台',
-      ctaHref: 'tools/json/'
+      ctaHref: 'tools/json/?from=tour'
     }
   ];
 

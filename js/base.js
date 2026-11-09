@@ -359,6 +359,19 @@
     return v === "1" || v === "yes";
   }
 
+  var SELFTEST_KEY = "umami.selftest";
+  var selftestEnabled = false;
+
+  // 显式可逆自测标记：?selftest=1 开启，?selftest=0 关闭；亦可用 localStorage。
+  try {
+    var selftestParam = new URLSearchParams(window.location.search).get("selftest");
+    if (selftestParam === "1") localStorage.setItem(SELFTEST_KEY, "1");
+    if (selftestParam === "0") localStorage.removeItem(SELFTEST_KEY);
+    selftestEnabled = localStorage.getItem(SELFTEST_KEY) === "1";
+  } catch (_) {
+    selftestEnabled = false;
+  }
+
   try {
     if (localStorage.getItem("umami.disabled") || dntEnabled()) return;
   } catch (_) {
@@ -432,13 +445,18 @@
       theme = document.documentElement.getAttribute("data-theme") || localStorage.getItem("dev-tools-theme") || "dark";
       since = localStorage.getItem(SINCE_KEY) || "";
     } catch (_) {}
-    return {
+    var data = {
       主题: theme,
       区域: pageTag,
       回访: isNewVisitor ? "否" : "是",
       首访: since,
       嵌入: document.documentElement.classList.contains("is-embed") ? "是" : "否"
     };
+    if (selftestEnabled) {
+      data["自测"] = "是";
+      data["标记"] = "自测";
+    }
+    return data;
   }
 
   function basePayload() {
@@ -453,6 +471,14 @@
       tag: pageTag,
       id: distinctId || undefined
     };
+  }
+
+  function withSelftestMark(data) {
+    if (!selftestEnabled) return data;
+    var next = data ? Object.assign({}, data) : {};
+    if (!next["标记"]) next["标记"] = "自测";
+    if (!next["自测"]) next["自测"] = "是";
+    return next;
   }
 
   function beforeSend(type, payload) {
@@ -502,7 +528,7 @@
     if (data && data.描述) {
       var ready = basePayload();
       ready.name = name;
-      ready.data = data;
+      ready.data = withSelftestMark(data);
       send(ready, "event");
       return;
     }
@@ -515,7 +541,7 @@
     if (window.umamiEnrich) props = window.umamiEnrich(name, data);
     var payload = basePayload();
     payload.name = name;
-    payload.data = props;
+    payload.data = withSelftestMark(props);
     send(payload, "event");
   }
 

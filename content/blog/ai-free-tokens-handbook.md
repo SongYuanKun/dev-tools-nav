@@ -153,6 +153,8 @@ featured: true
 https://tools.songyuankun.top
 https://songyuankun.github.io/dev-tools-nav/
 
+拿到密钥或接口返回的 JSON 时，可以直接打开站内 **[JSON 格式化](../../tools/json/?from=handbook)**：粘贴后在本机处理，不上传内容，立刻能格式化、校验或对比。
+
 如果你会用 GitHub：仓库在 GitHub 上也会更新，觉得有用可以点个 **Star**（相当于收藏 + 给作者一点反馈），我写起来更有劲。完全不用 GitHub 的读者，把链接**加到微信收藏**也一样。
 
 ---
