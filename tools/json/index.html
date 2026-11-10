@@ -80,7 +80,12 @@
         {
           "@type": "Question",
           "name": "JSON 与 YAML 转换是否完全无损？",
-          "acceptedAnswer": { "@type": "Answer", "text": "工具会拒绝 JSON 无法无损表示的 YAML 类型、复杂键、多文档和别名。" }
+          "acceptedAnswer": { "@type": "Answer", "text": "工具会拒绝 JSON 无法无损表示的 YAML 类型、复杂键、多文档、别名，以及超出 IEEE 双精度安全整数的数字词素。" }
+        },
+        {
+          "@type": "Question",
+          "name": "大整数会不会在格式化时丢精度？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不会静默丢精度。超出 Number.MAX_SAFE_INTEGER 的整数词素会按原文保留；YAML 互转遇到无法保真的数字会明确失败。" }
         },
         {
           "@type": "Question",
@@ -163,9 +168,12 @@
     <header class="json-hero">
       <div class="json-hero-copy">
         <a class="json-back" href="../">← 全部工具</a>
-        <p class="json-eyebrow">Developer workspace · JSON</p>
         <h1>JSON 工作台</h1>
-        <p>从粘贴到定位错误，再到查询、转换和对比，在一个安静、专业的工作区完成。</p>
+        <p class="json-hero-lede">本地格式化、校验与结构分析，不上传。</p>
+        <details class="json-hero-more">
+          <summary>功能说明</summary>
+          <p>从粘贴到定位错误，再到查询、转换和对比；大整数按词素保真，无法安全转换时会明确失败。</p>
+        </details>
       </div>
       <div class="json-hero-aside">
         <div class="json-privacy" role="note">
@@ -320,7 +328,8 @@
       <div class="json-faq-list">
         <details open><summary>输入的 JSON 会上传到服务器吗？</summary><p>不会。输入、转换和对比都只在当前浏览器中处理。</p></details>
         <details><summary>宽松解析会修改哪些内容？</summary><p>宽松解析只接受注释和尾逗号；单引号转换必须由你明确选择安全修复。</p></details>
-        <details><summary>JSON 与 YAML 转换是否完全无损？</summary><p>工具会拒绝 JSON 无法无损表示的 YAML 类型、复杂键、多文档和别名。</p></details>
+        <details><summary>JSON 与 YAML 转换是否完全无损？</summary><p>工具会拒绝 JSON 无法无损表示的 YAML 类型、复杂键、多文档、别名，以及超出 IEEE 双精度安全整数的数字词素。</p></details>
+        <details><summary>大整数会不会在格式化时丢精度？</summary><p>不会静默丢精度。超出 Number.MAX_SAFE_INTEGER 的整数词素会按原文保留；YAML 互转遇到无法保真的数字会明确失败。</p></details>
         <details><summary>如何快速定位 JSON 错误？</summary><p>错误横幅会显示行列；选择定位即可把光标移动到首个错误字符。</p></details>
       </div>
     </section>

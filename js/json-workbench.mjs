@@ -10,12 +10,15 @@ import {
   diffJson,
   escapeUnicode,
   formatJson,
+  formatJsonPrimitive,
+  isJsonNumber,
   jsonToYaml,
   minifyJson,
   parseJson,
   queryJsonPath,
   repairJson,
   sortJsonKeys,
+  stringifyJson,
   summarizeDiffChanges,
   unescapeUnicode,
   yamlToJson,
@@ -201,6 +204,7 @@ function jsonPathFor(parent, key) {
 function valueType(value) {
   if (Array.isArray(value)) return "array";
   if (value === null) return "null";
+  if (isJsonNumber(value)) return "number";
   return typeof value;
 }
 
@@ -306,7 +310,9 @@ function renderTreePanel(panel, text, preferences, announce, force = false) {
     if (!container) {
       const valueNode = document.createElement("span");
       valueNode.className = "json-tree-value";
-      valueNode.textContent = typeof value === "string" ? JSON.stringify(value) : String(value);
+      valueNode.textContent = typeof value === "string"
+        ? JSON.stringify(value)
+        : formatJsonPrimitive(value);
       row.append(valueNode);
     }
     const copy = document.createElement("button");
@@ -438,7 +444,13 @@ function initializeJsonPathPanel(panel, source, preferences, announce) {
       return;
     }
     error.textContent = "";
-    resultText = JSON.stringify(result.value, null, 2);
+    try {
+      resultText = stringifyJson(result.value, { indent: 2 });
+    } catch (cause) {
+      count.textContent = "0 个匹配";
+      error.textContent = cause instanceof Error ? cause.message : "无法序列化查询结果";
+      return;
+    }
     count.textContent = "1 个匹配";
     results.textContent = `${query}\n${resultText}`;
     copy.disabled = false;
@@ -501,7 +513,12 @@ function initializeYamlPanel(panel, source, replaceDocument, preferences, announ
       error.textContent = `JSON 转换失败：${parsed.error.message}`;
       return;
     }
-    replaceYaml(jsonToYaml(parsed.value));
+    const converted = jsonToYaml(parsed.value);
+    if (!converted.ok) {
+      error.textContent = `JSON 转换失败：${converted.error.message}`;
+      return;
+    }
+    replaceYaml(converted.text);
     error.textContent = "";
     announce("已从主 JSON 刷新 YAML");
   });
@@ -511,7 +528,7 @@ function initializeYamlPanel(panel, source, replaceDocument, preferences, announ
       error.textContent = `YAML 转换失败：${result.error.message}`;
       return;
     }
-    replaceDocument(JSON.stringify(result.value, null, preferences.indent));
+    replaceDocument(result.text);
     error.textContent = "";
     announce("已将 YAML 应用为主 JSON");
   });
@@ -771,12 +788,16 @@ export function mountJsonWorkbench(mount) {
     feedback.dataset.kind = error ? "error" : "success";
   };
   const source = () => view.state.doc.toString();
-  const replaceDocument = (text) => view.dispatch({
-    changes: { from: 0, to: view.state.doc.length, insert: text },
-    selection: { anchor: 0 },
-    scrollIntoView: true,
-    annotations: isolateHistory.of("full"),
-  });
+  let forceImmediateDiagnostics = false;
+  const replaceDocument = (text) => {
+    forceImmediateDiagnostics = true;
+    view.dispatch({
+      changes: { from: 0, to: view.state.doc.length, insert: text },
+      selection: { anchor: 0 },
+      scrollIntoView: true,
+      annotations: isolateHistory.of("full"),
+    });
+  };
   const sizeNote = document.querySelector("[data-json-size-note]");
   const errorHint = document.querySelector("[data-json-error-hint]");
   const updateSizeNote = (text) => {
@@ -855,8 +876,12 @@ export function mountJsonWorkbench(mount) {
       }
     } catch (_) {}
   };
-  const scheduleDiagnostics = () => {
+  const scheduleDiagnostics = ({ immediate = false } = {}) => {
     clearTimeout(diagnosticTimer);
+    if (immediate) {
+      renderDiagnostics();
+      return;
+    }
     diagnosticTimer = setTimeout(renderDiagnostics, 220);
   };
   const diagnostics = (editor) => {
@@ -872,7 +897,10 @@ export function mountJsonWorkbench(mount) {
     const text = source();
     countsNode.textContent = `${text.length} 字符 · ${bytes(text)} B`;
     syncEmptyHint(text);
-    scheduleDiagnostics();
+    const immediate = forceImmediateDiagnostics;
+    forceImmediateDiagnostics = false;
+    scheduleDiagnostics({ immediate });
+    if (immediate) forceLinting(view);
   };
 
   // 初值：空编辑器起步；仅 dataset / #data= / 跨工具 sessionStorage 预填。
@@ -883,15 +911,21 @@ export function mountJsonWorkbench(mount) {
     const fromJwt = sessionStorage.getItem("jwt_decode_payload_v1");
     if (fromJwt) {
       try {
-        const parsed = JSON.parse(fromJwt);
-        if (parsed && typeof parsed === "object") {
-          initialDoc = JSON.stringify(
-            Object.prototype.hasOwnProperty.call(parsed, "payload") && parsed.payload
-              ? parsed.payload
-              : parsed,
-            null,
-            preferences.indent || 2
-          );
+        const wrapper = parseJson(fromJwt);
+        if (wrapper.ok && wrapper.value && typeof wrapper.value === "object" && !Array.isArray(wrapper.value)
+          && Object.prototype.hasOwnProperty.call(wrapper.value, "payload")
+          && wrapper.value.payload != null) {
+          const payload = wrapper.value.payload;
+          if (typeof payload === "string") {
+            const payloadParsed = parseJson(payload);
+            initialDoc = payloadParsed.ok
+              ? stringifyJson(payloadParsed.value, { indent: preferences.indent || 2 })
+              : payload;
+          } else {
+            initialDoc = stringifyJson(payload, { indent: preferences.indent || 2 });
+          }
+        } else if (wrapper.ok) {
+          initialDoc = stringifyJson(wrapper.value, { indent: preferences.indent || 2 });
         } else {
           initialDoc = fromJwt;
         }
@@ -908,7 +942,10 @@ export function mountJsonWorkbench(mount) {
     const fromBase64 = sessionStorage.getItem("base64_decode_json_v1");
     if (fromBase64) {
       try {
-        initialDoc = JSON.stringify(JSON.parse(fromBase64), null, preferences.indent || 2);
+        const parsed = parseJson(fromBase64);
+        initialDoc = parsed.ok
+          ? stringifyJson(parsed.value, { indent: preferences.indent || 2 })
+          : fromBase64;
       } catch {
         initialDoc = fromBase64;
       }
@@ -989,7 +1026,7 @@ export function mountJsonWorkbench(mount) {
               announce(`无法转换 YAML：${converted.error.message}`, true);
               return;
             }
-            replaceDocument(JSON.stringify(converted.value, null, preferences.indent));
+            replaceDocument(converted.text);
           } else {
             replaceDocument(fileText);
           }
@@ -1024,7 +1061,7 @@ export function mountJsonWorkbench(mount) {
           announce("排序失败，请先修正 JSON 语法。", true);
           return;
         }
-        let output = JSON.stringify(sortJsonKeys(result.value), null, preferences.indent);
+        let output = stringifyJson(sortJsonKeys(result.value), { indent: preferences.indent });
         if (preferences.escapeUnicode) output = escapeUnicode(output);
         replaceDocument(output);
         track(action);
@@ -1042,7 +1079,7 @@ export function mountJsonWorkbench(mount) {
         if (shouldDecode) {
           output = parseJson(decoded.text, { relaxed: preferences.relaxed }).ok
             ? decoded.text
-            : JSON.stringify(parsed.value, null, preferences.indent);
+            : stringifyJson(parsed.value, { indent: preferences.indent });
         }
         replaceDocument(output);
         track(action);

@@ -1,4 +1,11 @@
-import { parseAllDocuments, stringify as stringifyYaml, visit } from "yaml";
+import {
+  isMap,
+  isScalar,
+  isSeq,
+  parseAllDocuments,
+  stringify as stringifyYaml,
+  visit,
+} from "yaml";
 
 class JsonPreprocessError extends Error {
   constructor(message, offset) {
@@ -226,6 +233,294 @@ function positionFromOffset(source, offset) {
   return { offset, line, column: offset - lastNewline };
 }
 
+const JSON_NUMBER_TAG = Symbol.for("dev-tools-nav.jsonNumber");
+
+/** 保留 JSON 数字词素；仅在 Number 无法无损表示时使用。 */
+export class JsonNumber {
+  constructor(raw, { reason = "unsafe-integer" } = {}) {
+    this.raw = String(raw);
+    this.reason = reason;
+    Object.defineProperty(this, JSON_NUMBER_TAG, { value: true });
+  }
+
+  toString() {
+    return this.raw;
+  }
+
+  valueOf() {
+    return Number(this.raw);
+  }
+
+  toJSON() {
+    // JSON.stringify 无法保真；业务路径必须走 stringifyJson。
+    return Number(this.raw);
+  }
+}
+
+export function isJsonNumber(value) {
+  return Boolean(value) && typeof value === "object" && value[JSON_NUMBER_TAG] === true;
+}
+
+export function formatJsonPrimitive(value) {
+  if (isJsonNumber(value)) return value.raw;
+  if (typeof value === "string") return JSON.stringify(value);
+  if (typeof value === "number") return Number.isFinite(value) ? String(value) : "null";
+  if (typeof value === "boolean" || value === null) return String(value);
+  return String(value);
+}
+
+function isPlainObject(value) {
+  if (value === null || typeof value !== "object" || isJsonNumber(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function isContainer(value) {
+  return Array.isArray(value) || isPlainObject(value);
+}
+
+function numberNeedsLexeme(raw) {
+  const lexeme = String(raw);
+  const asNumber = Number(lexeme);
+  if (!Number.isFinite(asNumber)) return { preserve: true, reason: "non-finite" };
+  const integerLike = !/[.eE]/.test(lexeme);
+  if (integerLike) {
+    try {
+      if (BigInt(lexeme) !== BigInt(asNumber) || !Number.isSafeInteger(asNumber)) {
+        return { preserve: true, reason: "unsafe-integer" };
+      }
+    } catch {
+      return { preserve: true, reason: "unsafe-integer" };
+    }
+    if (Object.is(asNumber, -0) && lexeme === "-0") {
+      return { preserve: true, reason: "negative-zero" };
+    }
+    return { preserve: false, value: asNumber };
+  }
+  // 小数/指数：若经 Number↔JSON 往返改变数值，则保留词素；否则用 Number（格式化可能改写 1e2→100）。
+  const roundTrip = JSON.parse(JSON.stringify(asNumber));
+  if (!Object.is(roundTrip, asNumber)) {
+    return { preserve: true, reason: "float-precision" };
+  }
+  if (Number.isInteger(asNumber) && !Number.isSafeInteger(asNumber)) {
+    return { preserve: true, reason: "unsafe-integer" };
+  }
+  return { preserve: false, value: asNumber };
+}
+
+function decodeJsonStringBody(body, startOffset, fail) {
+  let output = "";
+  for (let index = 0; index < body.length; index += 1) {
+    const char = body[index];
+    if (char !== "\\") {
+      if (body.charCodeAt(index) <= 0x1f) fail(startOffset + index);
+      output += char;
+      continue;
+    }
+    const escaped = body[index + 1];
+    if (escaped === undefined) fail(startOffset + index);
+    if ('"\\/bfnrt'.includes(escaped)) {
+      const map = {
+        '"': '"',
+        "\\": "\\",
+        "/": "/",
+        b: "\b",
+        f: "\f",
+        n: "\n",
+        r: "\r",
+        t: "\t",
+      };
+      output += map[escaped];
+      index += 1;
+      continue;
+    }
+    if (escaped === "u") {
+      const hex = body.slice(index + 2, index + 6);
+      if (!/^[0-9a-fA-F]{4}$/.test(hex)) fail(startOffset + index);
+      output += String.fromCharCode(Number.parseInt(hex, 16));
+      index += 5;
+      continue;
+    }
+    fail(startOffset + index);
+  }
+  return output;
+}
+
+function parseJsonDocument(source) {
+  let index = 0;
+  let preservedNumbers = 0;
+  const fail = (offset = index, message = "无效 JSON") => {
+    const error = new Error(message);
+    error.offset = offset;
+    throw error;
+  };
+  const skipWhitespace = () => {
+    while (/\s/.test(source[index] ?? "")) index += 1;
+  };
+  const parseString = () => {
+    if (source[index] !== '"') fail();
+    const start = index;
+    index += 1;
+    let end = index;
+    while (end < source.length) {
+      if (source[end] === '"') break;
+      if (source[end] === "\\") {
+        end += 2;
+        continue;
+      }
+      if (source.charCodeAt(end) <= 0x1f) fail(end);
+      end += 1;
+    }
+    if (end >= source.length) fail(source.length, "字符串缺少结束引号");
+    const body = source.slice(index, end);
+    const value = decodeJsonStringBody(body, index, fail);
+    index = end + 1;
+    return value;
+  };
+  const parseNumberToken = () => {
+    const match = source.slice(index).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/);
+    if (!match) fail();
+    const raw = match[0];
+    index += raw.length;
+    const decision = numberNeedsLexeme(raw);
+    if (decision.preserve) {
+      preservedNumbers += 1;
+      return new JsonNumber(raw, { reason: decision.reason });
+    }
+    return decision.value;
+  };
+  const parseLiteral = (literal, value) => {
+    for (let literalIndex = 0; literalIndex < literal.length; literalIndex += 1) {
+      if (source[index + literalIndex] !== literal[literalIndex]) fail(index + literalIndex);
+    }
+    index += literal.length;
+    return value;
+  };
+  const parseValue = (depth) => {
+    if (depth > MAX_JSON_DEPTH) {
+      fail(index, `JSON 嵌套层级不能超过 ${MAX_JSON_DEPTH}`);
+    }
+    skipWhitespace();
+    const char = source[index];
+    if (char === '"') return parseString();
+    if (char === "{") return parseObject(depth);
+    if (char === "[") return parseArray(depth);
+    if (char === "-" || /\d/.test(char ?? "")) return parseNumberToken();
+    if (char === "t") return parseLiteral("true", true);
+    if (char === "f") return parseLiteral("false", false);
+    if (char === "n") return parseLiteral("null", null);
+    fail();
+  };
+  const parseObject = (depth) => {
+    index += 1;
+    skipWhitespace();
+    const object = {};
+    if (source[index] === "}") {
+      index += 1;
+      return object;
+    }
+    while (index < source.length) {
+      skipWhitespace();
+      const key = parseString();
+      skipWhitespace();
+      if (source[index] !== ":") fail();
+      index += 1;
+      const value = parseValue(depth + 1);
+      Object.defineProperty(object, key, {
+        value,
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      });
+      skipWhitespace();
+      if (source[index] === "}") {
+        index += 1;
+        return object;
+      }
+      if (source[index] !== ",") fail();
+      index += 1;
+    }
+    fail(source.length);
+  };
+  const parseArray = (depth) => {
+    index += 1;
+    skipWhitespace();
+    const array = [];
+    if (source[index] === "]") {
+      index += 1;
+      return array;
+    }
+    while (index < source.length) {
+      array.push(parseValue(depth + 1));
+      skipWhitespace();
+      if (source[index] === "]") {
+        index += 1;
+        return array;
+      }
+      if (source[index] !== ",") fail();
+      index += 1;
+    }
+    fail(source.length);
+  };
+
+  const value = parseValue(0);
+  skipWhitespace();
+  if (index !== source.length) fail(index, "JSON 末尾存在多余内容");
+  return { value, preservedNumbers };
+}
+
+export function stringifyJson(value, { indent = 2, compact = false } = {}) {
+  const spacer = compact ? null : indentation(indent);
+  const colon = spacer === null ? ":" : ": ";
+  const seen = new WeakSet();
+
+  const write = (current, depth) => {
+    if (isJsonNumber(current)) return current.raw;
+    if (current === null) return "null";
+    if (typeof current === "boolean") return current ? "true" : "false";
+    if (typeof current === "number") {
+      if (!Number.isFinite(current)) {
+        throw new TypeError("无法序列化非有限数字；请改用保留词素的 JsonNumber");
+      }
+      return Object.is(current, -0) ? "-0" : String(current);
+    }
+    if (typeof current === "string") return JSON.stringify(current);
+    if (typeof current !== "object") {
+      throw new TypeError(`无法序列化类型 ${typeof current}`);
+    }
+    if (seen.has(current)) throw new TypeError("无法序列化循环引用");
+    seen.add(current);
+    try {
+      if (Array.isArray(current)) {
+        if (current.length === 0) return "[]";
+        if (spacer === null) {
+          return `[${current.map((item) => write(item, depth + 1)).join(",")}]`;
+        }
+        const pad = spacer === "\t" ? "\t".repeat(depth + 1) : " ".repeat(spacer * (depth + 1));
+        const close = spacer === "\t" ? "\t".repeat(depth) : " ".repeat(spacer * depth);
+        const rows = current.map((item) => `${pad}${write(item, depth + 1)}`);
+        return `[\n${rows.join(",\n")}\n${close}]`;
+      }
+      if (!isPlainObject(current)) {
+        throw new TypeError("只能序列化普通对象、数组与 JSON 原始值");
+      }
+      const keys = Object.keys(current);
+      if (keys.length === 0) return "{}";
+      if (spacer === null) {
+        return `{${keys.map((key) => `${JSON.stringify(key)}:${write(current[key], depth + 1)}`).join(",")}}`;
+      }
+      const pad = spacer === "\t" ? "\t".repeat(depth + 1) : " ".repeat(spacer * (depth + 1));
+      const close = spacer === "\t" ? "\t".repeat(depth) : " ".repeat(spacer * depth);
+      const rows = keys.map((key) => `${pad}${JSON.stringify(key)}${colon}${write(current[key], depth + 1)}`);
+      return `{\n${rows.join(",\n")}\n${close}}`;
+    } finally {
+      seen.delete(current);
+    }
+  };
+
+  return write(value, 0);
+}
+
 export function parseJson(text, { relaxed = false } = {}) {
   const source = String(text);
   let processed;
@@ -253,9 +548,14 @@ export function parseJson(text, { relaxed = false } = {}) {
     };
   }
   try {
-    return { ok: true, value: JSON.parse(processed) };
+    const parsed = parseJsonDocument(processed);
+    const result = { ok: true, value: parsed.value };
+    if (parsed.preservedNumbers > 0) result.preservedNumbers = parsed.preservedNumbers;
+    return result;
   } catch (cause) {
-    const offset = locateJsonSyntaxError(processed) ?? processed.length;
+    const offset = typeof cause?.offset === "number"
+      ? cause.offset
+      : (locateJsonSyntaxError(processed) ?? processed.length);
     return {
       ok: false,
       error: {
@@ -274,11 +574,25 @@ function indentation(value) {
 function transformJson(text, { relaxed = false, indent = 2, compact = false } = {}) {
   const parsed = parseJson(text, { relaxed });
   if (!parsed.ok) return parsed;
-  return {
-    ok: true,
-    text: JSON.stringify(parsed.value, null, compact ? undefined : indentation(indent)),
-    value: parsed.value,
-  };
+  try {
+    const result = {
+      ok: true,
+      text: stringifyJson(parsed.value, { indent, compact }),
+      value: parsed.value,
+    };
+    if ((parsed.preservedNumbers ?? 0) > 0) result.preservedNumbers = parsed.preservedNumbers;
+    return result;
+  } catch (cause) {
+    return {
+      ok: false,
+      error: {
+        message: cause instanceof Error ? cause.message : "无法序列化 JSON",
+        offset: 0,
+        line: 1,
+        column: 1,
+      },
+    };
+  }
 }
 
 export function formatJson(text, options = {}) {
@@ -421,7 +735,7 @@ export function repairJson(text) {
 }
 
 export function sortJsonKeys(value) {
-  if (value === null || typeof value !== "object") return value;
+  if (value === null || typeof value !== "object" || isJsonNumber(value)) return value;
   const root = Array.isArray(value) ? [] : {};
   const seen = new WeakMap([[value, root]]);
   const stack = [{ source: value, target: root }];
@@ -430,7 +744,7 @@ export function sortJsonKeys(value) {
     const keys = Array.isArray(source) ? Object.keys(source) : Object.keys(source).sort();
     for (const key of keys) {
       const item = source[key];
-      if (item === null || typeof item !== "object") {
+      if (item === null || typeof item !== "object" || isJsonNumber(item)) {
         Object.defineProperty(target, key, { value: item, enumerable: true, configurable: true, writable: true });
         continue;
       }
@@ -458,7 +772,7 @@ export function jsonStats(value) {
       seen.add(current);
       stats.arrays += 1;
       for (let index = current.length - 1; index >= 0; index -= 1) stack.push({ value: current[index], depth: depth + 1 });
-    } else if (current !== null && typeof current === "object") {
+    } else if (current !== null && typeof current === "object" && !isJsonNumber(current)) {
       if (seen.has(current)) continue;
       seen.add(current);
       stats.objects += 1;
@@ -653,7 +967,12 @@ export function queryJsonPath(value, path) {
   let current = value;
   for (let index = 0; index < parsed.segments.length; index += 1) {
     const segment = parsed.segments[index];
-    if ((current === null || typeof current !== "object") || !Object.hasOwn(current, segment)) {
+    if (
+      isJsonNumber(current)
+      || current === null
+      || typeof current !== "object"
+      || !Object.hasOwn(current, segment)
+    ) {
       return jsonPathFailure("PATH_NOT_FOUND", `路径不存在：${String(segment)}`, parsed.segmentOffsets[index]);
     }
     current = current[segment];
@@ -661,11 +980,48 @@ export function queryJsonPath(value, path) {
   return { ok: true, value: current, path: parsed.segments };
 }
 
+function yamlCompatibleValue(value, seen = new WeakSet()) {
+  if (isJsonNumber(value)) {
+    // yaml 库会把超大 Number 再丢精度；对需保真的整数改走纯文本 JSON→再失败提示。
+    const asNumber = Number(value.raw);
+    if (numberNeedsLexeme(value.raw).preserve) {
+      const error = new Error("YAML 无法无损表示超出 IEEE 双精度安全整数的数字词素");
+      error.code = "YAML_NUMBER_LOSSY";
+      error.raw = value.raw;
+      throw error;
+    }
+    return asNumber;
+  }
+  if (value === null || typeof value === "string" || typeof value === "boolean" || typeof value === "number") {
+    return value;
+  }
+  if (typeof value !== "object" || seen.has(value)) return value;
+  seen.add(value);
+  if (Array.isArray(value)) return value.map((item) => yamlCompatibleValue(item, seen));
+  const next = {};
+  for (const key of Object.keys(value)) next[key] = yamlCompatibleValue(value[key], seen);
+  return next;
+}
+
 export function jsonToYaml(value) {
-  return stringifyYaml(value, {
-    aliasDuplicateObjects: false,
-    lineWidth: 0,
-  });
+  try {
+    return {
+      ok: true,
+      text: stringifyYaml(yamlCompatibleValue(value), {
+        aliasDuplicateObjects: false,
+        lineWidth: 0,
+      }),
+    };
+  } catch (cause) {
+    return {
+      ok: false,
+      error: {
+        code: cause?.code || "YAML_CONVERT_FAILED",
+        message: cause instanceof Error ? cause.message : "无法转换为 YAML",
+        raw: cause?.raw,
+      },
+    };
+  }
 }
 
 function yamlFailure(code, message, source, error) {
@@ -686,12 +1042,39 @@ function yamlFailure(code, message, source, error) {
 function isJsonCompatible(value, seen = new WeakSet()) {
   if (value === null || typeof value === "string" || typeof value === "boolean") return true;
   if (typeof value === "number") return Number.isFinite(value);
+  if (isJsonNumber(value)) return true;
   if (typeof value !== "object" || seen.has(value)) return false;
   seen.add(value);
   if (Array.isArray(value)) return value.every((item) => isJsonCompatible(item, seen));
   const prototype = Object.getPrototypeOf(value);
   if (prototype !== Object.prototype && prototype !== null) return false;
   return Object.keys(value).every((key) => isJsonCompatible(value[key], seen));
+}
+
+function yamlScalarToJsonValue(node) {
+  if (!isScalar(node)) return node?.toJSON?.() ?? node?.value ?? null;
+  // 显式引号标量保持字符串，避免把 "42" 当成数字。
+  if (node.type === "QUOTE_DOUBLE" || node.type === "QUOTE_SINGLE" || node.type === "BLOCK_LITERAL" || node.type === "BLOCK_FOLDED") {
+    return typeof node.value === "string" ? node.value : String(node.value ?? "");
+  }
+  if (typeof node.value === "number" && !Number.isFinite(node.value)) {
+    throw new TypeError(`无法将非有限 YAML 数值转换为 JSON：${String(node.source ?? node.value)}`);
+  }
+  if (typeof node.value === "bigint") {
+    throw new TypeError(`无法将 YAML bigint 安全转换为 JSON：${String(node.value)}`);
+  }
+  const raw = typeof node.source === "string" && node.source.length > 0
+    ? node.source
+    : (node.value == null ? null : String(node.value));
+  if (raw === null) return node.toJSON();
+  if (typeof node.value === "number" || node.type === "PLAIN") {
+    if (/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(raw)) {
+      const decision = numberNeedsLexeme(raw);
+      if (decision.preserve) return new JsonNumber(raw, { reason: decision.reason });
+      return decision.value;
+    }
+  }
+  return node.toJSON();
 }
 
 export function yamlToJson(text) {
@@ -732,37 +1115,59 @@ export function yamlToJson(text) {
   }
 
   try {
-    const yamlValue = document.toJS({ mapAsMap: true, maxAliasCount: 0 });
-    const convert = (current, depth = 0) => {
+    const convertNode = (node, depth = 0) => {
       if (depth > 512) throw new Error("YAML 嵌套层级超过 512");
-      if (current instanceof Map) {
-        const entries = [];
-        for (const [key, item] of current) {
+      if (node == null) return null;
+      if (isScalar(node)) return yamlScalarToJsonValue(node);
+      if (isSeq(node)) return node.items.map((item) => convertNode(item, depth + 1));
+      if (isMap(node)) {
+        const tag = typeof node.tag === "string" ? node.tag : "";
+        if (tag && tag !== "tag:yaml.org,2002:map") {
+          throw new TypeError(`不支持的 YAML 映射标签：${tag}`);
+        }
+        if (node.constructor?.name === "YAMLSet") {
+          throw new TypeError("YAML set 无法无损转换为 JSON");
+        }
+        const object = {};
+        for (const item of node.items) {
+          const key = convertNode(item.key, depth + 1);
           if (typeof key !== "string") throw new TypeError("YAML map key 必须是字符串");
-          entries.push([key, convert(item, depth + 1)]);
+          object[key] = convertNode(item.value, depth + 1);
+        }
+        return object;
+      }
+      if (typeof node !== "object") return node;
+      if (node instanceof Set) {
+        throw new TypeError("YAML set 无法无损转换为 JSON");
+      }
+      if (node instanceof Map) {
+        const entries = [];
+        for (const [key, item] of node) {
+          if (typeof key !== "string") throw new TypeError("YAML map key 必须是字符串");
+          entries.push([key, convertNode(item, depth + 1)]);
         }
         return Object.fromEntries(entries);
       }
-      if (Array.isArray(current)) return current.map((item) => convert(item, depth + 1));
-      return current;
+      if (Array.isArray(node)) return node.map((item) => convertNode(item, depth + 1));
+      return node;
     };
     let value;
     try {
-      value = convert(yamlValue);
+      value = convertNode(document.contents);
     } catch (error) {
       return yamlFailure("UNSUPPORTED_YAML_VALUE", error.message, source, error);
     }
     if (!isJsonCompatible(value)) {
       return yamlFailure("UNSUPPORTED_YAML_VALUE", "YAML 包含 JSON 无法无损表示的值", source);
     }
-    return { ok: true, text: JSON.stringify(value, null, 2), value };
+    return { ok: true, text: stringifyJson(value, { indent: 2 }), value };
   } catch (error) {
     return yamlFailure("INVALID_YAML", error instanceof Error ? error.message : "无效 YAML", source, error);
   }
 }
 
 function cloneJsonValue(value) {
-  if (value === null || typeof value !== "object") return value;
+  if (value === null || typeof value !== "object" || isJsonNumber(value)) return value;
   const root = Array.isArray(value) ? [] : {};
   const seen = new WeakMap([[value, root]]);
   const stack = [{ source: value, target: root }];
@@ -770,7 +1175,7 @@ function cloneJsonValue(value) {
     const { source, target } = stack.pop();
     for (const key of Object.keys(source)) {
       const item = source[key];
-      if (item === null || typeof item !== "object") {
+      if (item === null || typeof item !== "object" || isJsonNumber(item)) {
         Object.defineProperty(target, key, { value: item, enumerable: true, configurable: true, writable: true });
         continue;
       }
@@ -789,7 +1194,28 @@ function cloneJsonValue(value) {
 function valueKind(value) {
   if (Array.isArray(value)) return "array";
   if (value === null) return "null";
+  if (isJsonNumber(value)) return "primitive";
   return typeof value === "object" ? "object" : "primitive";
+}
+
+function jsonValuesEqual(left, right) {
+  if (Object.is(left, right)) return true;
+  if (isJsonNumber(left) || isJsonNumber(right)) {
+    const leftRaw = isJsonNumber(left) ? left.raw : formatJsonPrimitive(left);
+    const rightRaw = isJsonNumber(right) ? right.raw : formatJsonPrimitive(right);
+    if (leftRaw === rightRaw) return true;
+    // 1e2 vs 100：数值相等且双方都可用有限 Number 表示时视为相等。
+    const leftNumber = isJsonNumber(left) ? Number(left.raw) : left;
+    const rightNumber = isJsonNumber(right) ? Number(right.raw) : right;
+    return typeof leftNumber === "number"
+      && typeof rightNumber === "number"
+      && Number.isFinite(leftNumber)
+      && Number.isFinite(rightNumber)
+      && Object.is(leftNumber, rightNumber)
+      && !numberNeedsLexeme(String(leftRaw)).preserve
+      && !numberNeedsLexeme(String(rightRaw)).preserve;
+  }
+  return false;
 }
 
 export function diffJson(left, right, { includeValues = true, maxChanges = Infinity, maxWork = Infinity } = {}) {
@@ -822,7 +1248,7 @@ export function diffJson(left, right, { includeValues = true, maxChanges = Infin
       if (changes.length >= maxChanges) { truncated = truncated || stack.length > 0; break; }
       continue;
     }
-    if (Object.is(before, after)) continue;
+    if (jsonValuesEqual(before, after)) continue;
     const beforeKind = valueKind(before);
     const afterKind = valueKind(after);
     if (beforeKind !== afterKind || beforeKind === "primitive" || beforeKind === "null") {

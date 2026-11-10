@@ -37,18 +37,18 @@ body.json-page {
 .json-page-main {
   width: min(1440px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 52px 0 96px;
+  padding: 28px 0 72px;
 }
 
 .json-hero {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 32px;
-  margin-bottom: 24px;
+  gap: 20px;
+  margin-bottom: 16px;
 }
 
-.json-hero-copy { max-width: 780px; }
+.json-hero-copy { max-width: 720px; }
 .json-back { color: var(--jw-muted); font-size: 0.88rem; text-decoration: none; }
 .json-back:hover { color: var(--jw-text); }
 body.json-page .navbar a,
@@ -62,32 +62,55 @@ body.json-page .json-site-footer a {
   min-width: 44px;
   min-height: 44px;
 }
-.json-eyebrow, .json-section-heading > p {
+.json-section-heading > p {
   margin: 22px 0 8px;
   color: var(--jw-accent-strong);
   font: 700 0.72rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: 0.14em;
 }
 .json-hero h1 {
-  margin: 0;
+  margin: 8px 0 0;
   color: var(--jw-text);
-  font-size: clamp(2.2rem, 5vw, 4.4rem);
-  line-height: 0.98;
-  letter-spacing: -0.055em;
+  font-size: clamp(1.85rem, 4vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
 }
-.json-hero-copy > p:last-child {
-  max-width: 660px;
-  margin: 18px 0 0;
+.json-hero-lede {
+  max-width: 560px;
+  margin: 10px 0 0;
   color: var(--jw-muted);
-  font-size: 1.05rem;
-  line-height: 1.75;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+.json-hero-more {
+  margin-top: 8px;
+  max-width: 560px;
+  color: var(--jw-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.json-hero-more summary {
+  cursor: pointer;
+  color: var(--jw-accent-strong);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.json-hero-more summary:focus-visible {
+  outline: 2px solid var(--jw-focus);
+  outline-offset: 3px;
+}
+.json-hero-more p {
+  margin: 6px 0 0;
 }
 .json-privacy {
   display: flex;
   align-items: center;
   gap: 11px;
-  min-width: 300px;
-  padding: 13px 16px;
+  min-width: min(300px, 100%);
+  padding: 11px 14px;
   border: 1px solid var(--jw-border);
   border-radius: 14px;
   background: color-mix(in srgb, var(--jw-surface) 88%, transparent);
@@ -448,8 +471,8 @@ body.json-page .json-site-footer a:focus {
 }
 
 @media (max-width: 900px) {
-  .json-page-main { width: min(100% - 28px, 1440px); padding-top: 32px; }
-  .json-hero { align-items: stretch; flex-direction: column; }
+  .json-page-main { width: min(100% - 28px, 1440px); padding-top: 20px; padding-bottom: 56px; }
+  .json-hero { align-items: stretch; flex-direction: column; gap: 12px; margin-bottom: 12px; }
   .json-privacy { min-width: 0; align-self: flex-start; }
   .json-command-area { flex-direction: column; }
   .json-app-topbar, .json-command-area { position: static; }
@@ -460,9 +483,9 @@ body.json-page .json-site-footer a:focus {
 }
 
 @media (max-width: 390px) {
-  .json-page-main { width: calc(100% - 20px); padding-top: 24px; }
-  .json-hero h1 { font-size: 2.45rem; }
-  .json-hero-copy > p:last-child { font-size: 0.93rem; }
+  .json-page-main { width: calc(100% - 20px); padding-top: 16px; }
+  .json-hero h1 { font-size: 1.85rem; }
+  .json-hero-lede { font-size: 0.92rem; }
   .json-privacy { width: 100%; }
   .json-app { border-radius: 13px; }
   .json-app-topbar { display: block; padding: 0; }
