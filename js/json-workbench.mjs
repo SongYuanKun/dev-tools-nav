@@ -29,6 +29,23 @@ const UPLOAD_LIMIT = 5 * 1024 * 1024;
 const TREE_NODE_LIMIT = 2_000;
 const LARGE_INPUT_SOFT_LIMIT = 256 * 1024;
 const PREFS_KEY = "json-workbench-prefs-v1";
+/** CodeMirror 查找/替换面板等内置文案（EditorState.phrases） */
+const EDITOR_PHRASES = Object.freeze({
+  Find: "查找",
+  Replace: "替换",
+  next: "下一个",
+  previous: "上一个",
+  all: "全部",
+  "match case": "区分大小写",
+  regexp: "正则",
+  "by word": "全词",
+  replace: "替换",
+  "replace all": "全部替换",
+  close: "关闭",
+  "current match": "当前匹配",
+  "on line": "位于行",
+});
+const editorPhrases = EditorState.phrases.of(EDITOR_PHRASES);
 const SAMPLE_OBJECT = {
   name: "Koen's 工具箱",
   tools: ["JSON 工作台", "JWT 解码", "Cron 生成器"],
@@ -498,7 +515,7 @@ function initializeYamlPanel(panel, source, replaceDocument, preferences, announ
   const yamlView = new EditorView({
     state: EditorState.create({
       doc: "",
-      extensions: [basicSetup, EditorView.contentAttributes.of({ "aria-label": "YAML 编辑器" })],
+      extensions: [basicSetup, editorPhrases, EditorView.contentAttributes.of({ "aria-label": "YAML 编辑器" })],
     }),
     parent: mount,
   });
@@ -655,11 +672,11 @@ function initializeDiffPanel(panel, source, replaceDocument, preferences, announ
   merge = new MergeView({
     a: {
       doc: initialSource,
-      extensions: [basicSetup, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 左侧 · 请求 / Before" })],
+      extensions: [basicSetup, editorPhrases, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 左侧 · 请求 / Before" })],
     },
     b: {
       doc: "",
-      extensions: [basicSetup, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 右侧 · 响应 / After" })],
+      extensions: [basicSetup, editorPhrases, json(), updateSummary, EditorView.contentAttributes.of({ "aria-label": "Diff 右侧 · 响应 / After" })],
     },
     parent: mount,
     orientation: "a-b",
@@ -963,6 +980,7 @@ export function mountJsonWorkbench(mount) {
     doc: initialDoc,
     extensions: [
       basicSetup,
+      editorPhrases,
       json(),
       lintCompartment.of(linter(diagnostics, { delay: 220 })),
       EditorView.updateListener.of((update) => {
