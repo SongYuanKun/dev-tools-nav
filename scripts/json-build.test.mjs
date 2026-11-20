@@ -17,7 +17,7 @@ test("package scripts expose the JSON and complete generated builds", () => {
   assert.equal(packageJson.scripts["build:json"], "rollup --config");
   assert.equal(
     packageJson.scripts.build,
-    "npm run build:json && node scripts/build-blog.mjs && npm run generate-sitemap",
+    "npm run build:json && node scripts/build-blog.mjs && node scripts/build-tool-details.mjs && npm run generate-sitemap",
   );
   assert.equal(packageJson.scripts["check:generated"], "npm run build && node scripts/check-generated.mjs");
   assert.ok(packageJson.dependencies["@codemirror/state"]);

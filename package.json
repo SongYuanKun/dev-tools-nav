@@ -34,7 +34,7 @@
     "capture-screenshots": "node scripts/capture-screenshots.mjs",
     "generate-sitemap": "node scripts/generate-sitemap.mjs",
     "build:json": "rollup --config",
-    "build": "npm run build:json && node scripts/build-blog.mjs && npm run generate-sitemap",
+    "build": "npm run build:json && node scripts/build-blog.mjs && node scripts/build-tool-details.mjs && npm run generate-sitemap",
     "stamp-assets": "node scripts/stamp-asset-version.mjs",
     "check:asset-versions": "node scripts/stamp-asset-version.mjs --check",
     "check:generated": "npm run build && node scripts/check-generated.mjs",

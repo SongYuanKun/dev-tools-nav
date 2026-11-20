@@ -20,7 +20,7 @@
   </url>
   <url>
     <loc>https://tools.songyuankun.top/pages/ai/dev-api.html</loc>
-    <lastmod>2026-10-28</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -85,457 +85,373 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=better-uptime</loc>
+    <loc>https://tools.songyuankun.top/pages/details/better-uptime/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=bitwarden</loc>
+    <loc>https://tools.songyuankun.top/pages/details/bitwarden/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=caniuse</loc>
+    <loc>https://tools.songyuankun.top/pages/details/caniuse/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=chatgpt</loc>
+    <loc>https://tools.songyuankun.top/pages/details/chatgpt/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=claude</loc>
+    <loc>https://tools.songyuankun.top/pages/details/claude/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=cloudflare</loc>
+    <loc>https://tools.songyuankun.top/pages/details/cloudflare/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=codeium</loc>
+    <loc>https://tools.songyuankun.top/pages/details/codeium/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=codesandbox</loc>
+    <loc>https://tools.songyuankun.top/pages/details/codesandbox/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=codex-quota-overlay</loc>
+    <loc>https://tools.songyuankun.top/pages/details/codex-quota-overlay/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=coolors</loc>
+    <loc>https://tools.songyuankun.top/pages/details/coolors/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=coze</loc>
+    <loc>https://tools.songyuankun.top/pages/details/coze/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=css-gradient</loc>
+    <loc>https://tools.songyuankun.top/pages/details/css-gradient/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=cursor</loc>
+    <loc>https://tools.songyuankun.top/pages/details/cursor/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=datadog</loc>
+    <loc>https://tools.songyuankun.top/pages/details/datadog/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=deepseek</loc>
+    <loc>https://tools.songyuankun.top/pages/details/deepseek/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=devdocs</loc>
+    <loc>https://tools.songyuankun.top/pages/details/devdocs/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=dify</loc>
+    <loc>https://tools.songyuankun.top/pages/details/dify/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=doc2x</loc>
+    <loc>https://tools.songyuankun.top/pages/details/doc2x/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=doubao</loc>
+    <loc>https://tools.songyuankun.top/pages/details/doubao/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=figma</loc>
+    <loc>https://tools.songyuankun.top/pages/details/figma/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=gamma</loc>
+    <loc>https://tools.songyuankun.top/pages/details/gamma/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=github</loc>
+    <loc>https://tools.songyuankun.top/pages/details/github-copilot/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=github-copilot</loc>
+    <loc>https://tools.songyuankun.top/pages/details/github-pages/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=github-pages</loc>
+    <loc>https://tools.songyuankun.top/pages/details/github/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=google-fonts</loc>
+    <loc>https://tools.songyuankun.top/pages/details/google-fonts/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=grafana</loc>
+    <loc>https://tools.songyuankun.top/pages/details/grafana/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=haveibeenpwned</loc>
+    <loc>https://tools.songyuankun.top/pages/details/haveibeenpwned/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=hoppscotch</loc>
+    <loc>https://tools.songyuankun.top/pages/details/hoppscotch/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=iconify</loc>
+    <loc>https://tools.songyuankun.top/pages/details/iconify/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=ideogram</loc>
+    <loc>https://tools.songyuankun.top/pages/details/ideogram/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=json-formatter</loc>
+    <loc>https://tools.songyuankun.top/pages/details/json-formatter/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=kimi</loc>
+    <loc>https://tools.songyuankun.top/pages/details/kimi/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=kling</loc>
+    <loc>https://tools.songyuankun.top/pages/details/kling/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=letsencrypt</loc>
+    <loc>https://tools.songyuankun.top/pages/details/letsencrypt/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=logtail</loc>
+    <loc>https://tools.songyuankun.top/pages/details/logtail/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=midjourney</loc>
+    <loc>https://tools.songyuankun.top/pages/details/midjourney/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=namecheap</loc>
+    <loc>https://tools.songyuankun.top/pages/details/namecheap/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=netlify</loc>
+    <loc>https://tools.songyuankun.top/pages/details/netlify/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=notion-ai</loc>
+    <loc>https://tools.songyuankun.top/pages/details/notion-ai/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=observatory</loc>
+    <loc>https://tools.songyuankun.top/pages/details/observatory/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-base64</loc>
+    <loc>https://tools.songyuankun.top/pages/details/pagespeed/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-color</loc>
+    <loc>https://tools.songyuankun.top/pages/details/perplexity/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-cron</loc>
+    <loc>https://tools.songyuankun.top/pages/details/porkbun/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-diff</loc>
+    <loc>https://tools.songyuankun.top/pages/details/postman/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-hash</loc>
+    <loc>https://tools.songyuankun.top/pages/details/railway/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-json</loc>
+    <loc>https://tools.songyuankun.top/pages/details/recraft/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-jwt</loc>
+    <loc>https://tools.songyuankun.top/pages/details/regex101/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-qrcode</loc>
+    <loc>https://tools.songyuankun.top/pages/details/runway/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-regex</loc>
+    <loc>https://tools.songyuankun.top/pages/details/securityheaders/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-sql</loc>
+    <loc>https://tools.songyuankun.top/pages/details/sentry/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-timestamp</loc>
+    <loc>https://tools.songyuankun.top/pages/details/squoosh/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-tools-hub</loc>
+    <loc>https://tools.songyuankun.top/pages/details/ssl-labs/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-url-encode</loc>
+    <loc>https://tools.songyuankun.top/pages/details/stable-diffusion/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=online-uuid</loc>
+    <loc>https://tools.songyuankun.top/pages/details/stackblitz/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=pagespeed</loc>
+    <loc>https://tools.songyuankun.top/pages/details/suno/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=perplexity</loc>
+    <loc>https://tools.songyuankun.top/pages/details/trae/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=porkbun</loc>
+    <loc>https://tools.songyuankun.top/pages/details/transform-tools/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=postman</loc>
+    <loc>https://tools.songyuankun.top/pages/details/undraw/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=railway</loc>
+    <loc>https://tools.songyuankun.top/pages/details/uptime-robot/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=recraft</loc>
+    <loc>https://tools.songyuankun.top/pages/details/vercel/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=regex101</loc>
+    <loc>https://tools.songyuankun.top/pages/details/virustotal/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=runway</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=securityheaders</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=sentry</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=squoosh</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=ssl-labs</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=stable-diffusion</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=stackblitz</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=suno</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=trae</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=transform-tools</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=undraw</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=uptime-robot</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=vercel</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=virustotal</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tools.songyuankun.top/pages/template.html?id=vscode</loc>
+    <loc>https://tools.songyuankun.top/pages/details/vscode/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -656,7 +572,7 @@
   </url>
   <url>
     <loc>https://tools.songyuankun.top/tools/json/</loc>
-    <lastmod>2026-11-09</lastmod>
+    <lastmod>2026-11-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

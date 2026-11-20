@@ -268,7 +268,7 @@ function createToolCard(tool) {
     <div class="card-tags">${tagsHtml}</div>
     <div class="card-footer">
       ${tool.content
-        ? `<a href="pages/template.html?id=${tool.id}" class="visit-btn" data-tool-id="${tool.id}">教程</a>`
+        ? `<a href="pages/details/${tool.id}/" class="visit-btn" data-tool-id="${tool.id}">教程</a>`
         : (safeCategory === "online-tools")
           ? `<a href="${safeUrl}" class="visit-btn" data-tool-id="${tool.id}">使用</a>`
           : `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="visit-btn" data-tool-id="${tool.id}">
@@ -280,7 +280,7 @@ function createToolCard(tool) {
             </svg>
           </a>`
       }
-      <a href="${safeCategory === "online-tools" ? safeUrl : `pages/template.html?id=${tool.id}`}" class="detail-link" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "打开 →" : "详情 →"}</a>
+      <a href="${safeCategory === "online-tools" ? safeUrl : `pages/details/${tool.id}/`}" class="detail-link" data-tool-id="${tool.id}">${safeCategory === "online-tools" ? "打开 →" : "详情 →"}</a>
     </div>
   `;
 

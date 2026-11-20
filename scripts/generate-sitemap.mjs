@@ -4,8 +4,6 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { parseToolCatalog } from "./audit-tools.mjs";
-
 const MODULE_DIR = fileURLToPath(new URL(".", import.meta.url));
 const DEFAULT_ROOT = join(MODULE_DIR, "..");
 const BASE_URL = "https://tools.songyuankun.top";
@@ -36,7 +34,7 @@ function pageMeta(pathname) {
   if (pathname === "/") return { priority: 1, changefreq: "daily" };
   if (pathname.startsWith("/pages/blog/")) return { priority: 0.9, changefreq: "weekly" };
   if (pathname.startsWith("/pages/ai/")) return { priority: 0.85, changefreq: "weekly" };
-  if (pathname.startsWith("/pages/template.html?id=")) {
+  if (pathname.startsWith("/pages/details/")) {
     return { priority: 0.5, changefreq: "monthly" };
   }
   if (pathname.startsWith("/pages/") || pathname.startsWith("/tools/")) {
@@ -67,6 +65,8 @@ function walkHtml(root, relativePath = "") {
 function pathnameFor(path) {
   if (path === "index.html") return "/";
   if (path === "pages/blog/index.html") return "/pages/blog/";
+  const detailMatch = /^pages\/details\/([a-z0-9-]+)\/index\.html$/.exec(path);
+  if (detailMatch) return `/pages/details/${detailMatch[1]}/`;
   if (path.startsWith("tools/") && path.endsWith("/index.html")) {
     return `/${path.slice(0, -"index.html".length)}`;
   }
@@ -88,14 +88,6 @@ function isNoindexPage(root, path) {
   const source = readFileSync(join(root, path), "utf8");
   return /<meta\b(?=[^>]*\bname=["']robots["'])(?=[^>]*\bcontent=["'][^"']*\bnoindex\b)[^>]*>/i.test(source)
     || /<meta\b(?=[^>]*\bcontent=["'][^"']*\bnoindex\b)(?=[^>]*\bname=["']robots["'])[^>]*>/i.test(source);
-}
-
-function collectTemplateIds(root) {
-  const toolsPath = join(root, "data", "tools.js");
-  if (!existsSync(toolsPath)) return [];
-
-  return parseToolCatalog(readFileSync(toolsPath, "utf-8")).tools
-    .map((tool) => tool.id);
 }
 
 export function resolveGitLastmod(root, relativeSourcePath) {
@@ -147,10 +139,10 @@ export function collectStaticUrls(root, options = {}) {
     const blogLastmod = entry.path === "pages/blog/index.html"
       ? blogIndexLastmod
       : (blogMatch ? blogLastmods.get(blogMatch[1]) : undefined);
-    if (pathname !== "/") addUrl(pathname, entry.path, blogLastmod);
-  }
-  for (const id of collectTemplateIds(root)) {
-    addUrl(`/pages/template.html?id=${id}`, "data/tools.js");
+    const sourcePath = /^pages\/details\/[a-z0-9-]+\/index\.html$/.test(entry.path)
+      ? "data/tools.js"
+      : entry.path;
+    if (pathname !== "/") addUrl(pathname, sourcePath, blogLastmod);
   }
 
   return [...new Map(urls.map((url) => [url.loc, url])).values()]

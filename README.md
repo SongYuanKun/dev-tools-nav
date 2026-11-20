@@ -119,7 +119,8 @@ dev-tools-nav/
 │   ├── tools-hub.js        # 工具汇总页交互
 │   └── ai-related-reads.js # AI 子页底部「延伸阅读」注入
 ├── pages/
-│   ├── template.html       # 工具详情页（?id=xxx）
+│   ├── template.html       # 旧 ?id=xxx 详情链接兼容壳（noindex）
+│   ├── details/            # 从 data/tools.js 生成的可索引静态详情页
 │   ├── ai/                 # AI 专题子页
 │   ├── blog/               # 技术博客
 │   └── tools/              # 在线工具（json、timestamp、cron 等）
@@ -133,6 +134,7 @@ dev-tools-nav/
 ├── assets/                 # Logo、预览截图（screenshot*.png）
 ├── scripts/
 │   ├── build-blog.mjs           # 生成文章、索引、清单与 Atom Feed
+│   ├── build-tool-details.mjs   # 生成工具静态详情页
 │   ├── stamp-asset-version.mjs  # 发布前给 CSS/JS 打 ?v= 版本（cache bust）
 │   ├── capture-screenshots.mjs  # Playwright 截取 README 用预览图
 │   ├── sync-csdn-rss.py         # 同步 CSDN RSS
@@ -155,7 +157,7 @@ AI 专题当前是静态精选手册，已上线能力如下。后续优先级�
 | 模块 | 说明 |
 |------|------|
 | **专题首页** `pages/ai/index.html` | Hero + 术语/安全链；**推荐学习路径** 5 步；**术语折叠预览**；**近期更新**（`AI_TOPIC_CHANGELOG`）；**按角色快选**（`AI_ROLE_QUICK_PICK`）；**场景速查内链**；探索专题卡（含 dev-api；工具名徽章 favicon）；价格 `id="pricing-ai"` + **快照日期**（`AI_PRICING_SNAPSHOT_DATE`）；选型短文；**专题内导航条**；底部 **延伸阅读**（`js/ai-related-reads.js`） |
-| **开发者向** `pages/ai/dev-api.html` | 网页 vs API vs IDE 助手、何时用 API、链主站 `template.html` 与编程横评 |
+| **开发者向** `pages/ai/dev-api.html` | 网页 vs API vs IDE 助手、何时用 API、链静态工具详情与编程横评 |
 | **AI 开源项目雷达** `pages/ai/open-source-radar.html` | 每周筛选 GitHub Trending 中 AI/ML/Agent 热门项目，按本周新增 Star 排序，提供中文概述、核心功能和适用场景标签；数据由 `scripts/sync-open-source-radar.py` + [`.github/workflows/sync-open-source-radar.yml`](.github/workflows/sync-open-source-radar.yml) 每周一自动同步，中文解读可人工润色 |
 | **术语与选型** `pages/ai/glossary.html` | 三条选型原则（`AI_SELECTION_PRINCIPLES`）+ 可展开术语表（`AI_GLOSSARY_DATA`）+ **页内术语目录（TOC）** |
 | **隐私与安全** `pages/ai/safety.html` | 清单式章节（`AI_SAFETY_DATA`） |

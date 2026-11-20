@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <script>
+    (function(){try{var t=localStorage.getItem("dev-tools-theme");if(!t)t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="SSL Labs 对任意域名的 TLS/SSL 配置进行深度检测，给出 A+ 至 F 的评分，并列出协议、套件、证书与已知漏洞，是加固 HTTPS 的必备工具。" />
+  <meta property="og:title" content="SSL Labs · Koen的工具箱" />
+  <meta property="og:description" content="SSL Labs 对任意域名的 TLS/SSL 配置进行深度检测，给出 A+ 至 F 的评分，并列出协议、套件、证书与已知漏洞，是加固 HTTPS 的必备工具。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/pages/details/ssl-labs/" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SSL Labs · Koen的工具箱" />
+  <meta name="twitter:description" content="SSL Labs 对任意域名的 TLS/SSL 配置进行深度检测，给出 A+ 至 F 的评分，并列出协议、套件、证书与已知漏洞，是加固 HTTPS 的必备工具。" />
+  <link rel="canonical" href="https://tools.songyuankun.top/pages/details/ssl-labs/" />
+  <link rel="icon" href="../../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../../css/style.css?v=__ASSET_VERSION__" />
+  <title>SSL Labs · Koen的工具箱</title>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SSL Labs · Koen的工具箱","description":"SSL Labs 对任意域名的 TLS/SSL 配置进行深度检测，给出 A+ 至 F 的评分，并列出协议、套件、证书与已知漏洞，是加固 HTTPS 的必备工具。","url":"https://tools.songyuankun.top/pages/details/ssl-labs/","isPartOf":{"@type":"WebSite","name":"Koen的工具箱","url":"https://tools.songyuankun.top/"}}</script>
+  <script defer src="../../../js/base.js?v=__ASSET_VERSION__"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links"><a href="../../../index.html" class="nav-link">首页</a></div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="detail-page" id="detailPage">
+    <a href="../../../index.html" class="back-btn" aria-label="返回工具列表">← 返回工具列表</a>
+    <article id="detailContent">
+      <div class="detail-header">
+        <div class="detail-icon"><img src="https://icon.horse/icon/www.ssllabs.com" alt="SSL Labs" loading="lazy" referrerpolicy="no-referrer" /></div>
+        <div class="detail-meta">
+          <h1 class="detail-name">SSL Labs</h1>
+          <p class="detail-desc">Qualys 出品的 SSL/TLS 配置检测工具，对网站 HTTPS 配置进行全面评分和漏洞检测。</p>
+          <div class="detail-tags"><span class="tag">SSL</span><span class="tag">扫描</span><span class="tag">评分</span></div>
+          <a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener noreferrer" class="detail-visit-btn">访问官网 ↗</a>
+        </div>
+      </div>
+      <section class="detail-section"><h2>工具简介</h2><p>SSL Labs 对任意域名的 TLS/SSL 配置进行深度检测，给出 A+ 至 F 的评分，并列出协议、套件、证书与已知漏洞，是加固 HTTPS 的必备工具。</p></section><section class="detail-section"><h2>核心特性</h2><ul class="detail-features-list"><li>协议与套件检测</li><li>证书链与 OCSP 检查</li><li>已知漏洞与配置建议</li></ul></section><section class="detail-section"><h2>快速上手</h2><div class="detail-quickstart">
+          <div class="detail-step">
+            <h3>在浏览器中检测</h3>
+            <div class="detail-code-wrap">
+              <button type="button" class="detail-copy-btn">复制</button>
+              <pre><code>打开 https://www.ssllabs.com/ssltest/ 输入域名如 example.com 提交</code></pre>
+            </div>
+          </div>
+          <div class="detail-step">
+            <h3>API 方式提交扫描（需 API Key）</h3>
+            <div class="detail-code-wrap">
+              <button type="button" class="detail-copy-btn">复制</button>
+              <pre><code>curl -X POST &#39;https://api.ssllabs.com/api/v3/analyze?host=example.com&#39;</code></pre>
+            </div>
+          </div></div></section><section class="detail-section"><h2>相关链接</h2><div class="detail-links-wrap"><a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener noreferrer" class="detail-link-btn">SSL Labs 官网</a></div></section>
+      <section class="detail-section">
+        <h2>基本信息</h2>
+        <table class="detail-info-table">
+          <tr class="detail-info-row"><td class="detail-info-label">分类</td><td class="detail-info-value">🔒 安全工具</td></tr>
+          <tr class="detail-info-row"><td class="detail-info-label">官网</td><td class="detail-info-value"><a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener noreferrer" class="detail-info-link">https://www.ssllabs.com/ssltest/</a></td></tr>
+          <tr><td class="detail-info-label">标签</td><td class="detail-info-value">SSL · 扫描 · 评分</td></tr>
+        </table>
+      </section>
+    </article>
+
+      <section class="detail-section">
+        <h2>同类工具推荐</h2>
+        <div class="tools-grid" style="margin-top:16px;">
+          <a href="../virustotal/" class="tool-card" style="text-decoration:none;display:flex;flex-direction:column;gap:10px;">
+            <div class="card-header">
+              <div class="card-icon"><span class="card-icon-fallback">🔒</span></div>
+              <div><div class="card-title">VirusTotal</div><div class="card-category-label">🔒 安全工具</div></div>
+            </div>
+            <p class="card-desc">在线文件和 URL 安全扫描服务，聚合 70+ 杀毒引擎检测结果，快速判断文件是否安全。</p>
+          </a><a href="../haveibeenpwned/" class="tool-card" style="text-decoration:none;display:flex;flex-direction:column;gap:10px;">
+            <div class="card-header">
+              <div class="card-icon"><span class="card-icon-fallback">🔒</span></div>
+              <div><div class="card-title">Have I Been Pwned</div><div class="card-category-label">🔒 安全工具</div></div>
+            </div>
+            <p class="card-desc">查询邮箱或密码是否出现在已知数据泄露事件中，帮助用户及时发现账号安全风险。</p>
+          </a><a href="../securityheaders/" class="tool-card" style="text-decoration:none;display:flex;flex-direction:column;gap:10px;">
+            <div class="card-header">
+              <div class="card-icon"><span class="card-icon-fallback">🔒</span></div>
+              <div><div class="card-title">Security Headers</div><div class="card-category-label">🔒 安全工具</div></div>
+            </div>
+            <p class="card-desc">检测网站 HTTP 安全响应头配置，评估 CSP、HSTS、X-Frame-Options 等安全头设置是否完善。</p>
+          </a><a href="../bitwarden/" class="tool-card" style="text-decoration:none;display:flex;flex-direction:column;gap:10px;">
+            <div class="card-header">
+              <div class="card-icon"><span class="card-icon-fallback">🔒</span></div>
+              <div><div class="card-title">Bitwarden</div><div class="card-category-label">🔒 安全工具</div></div>
+            </div>
+            <p class="card-desc">开源密码管理器，支持跨平台同步，可自托管，提供端到端加密保护所有密码和敏感数据。</p>
+          </a>
+        </div>
+      </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand"><img src="../../../assets/logo.svg" alt="K" class="footer-logo" /><span class="footer-brand-name">Koen's 工具箱</span></div>
+      <div class="footer-links"><a href="../../../index.html">首页</a><span class="footer-divider">|</span><a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+  <script>
+    document.addEventListener("click",function(event){var button=event.target.closest(".detail-copy-btn");if(!button)return;var code=button.closest(".detail-code-wrap").querySelector("code").textContent;navigator.clipboard.writeText(code).then(function(){var original=button.textContent;button.textContent="✓ 已复制";setTimeout(function(){button.textContent=original;},2000);});});
+  </script>
+  <script defer src="../../../js/footer.js?v=__ASSET_VERSION__"></script>
+</body>
+</html>

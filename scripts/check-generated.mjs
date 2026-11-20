@@ -11,6 +11,7 @@ export const GENERATED_PATHS = [
   "js/json-workbench.bundle.js",
   "js/qrcode-tool.bundle.js",
   "pages/blog",
+  "pages/details",
   "data/blog-posts.js",
   "data/blog-manifest.json",
   "feed.xml",
@@ -19,6 +20,7 @@ export const GENERATED_PATHS = [
 
 export const REQUIRED_GENERATED_FILES = [
   "pages/blog/index.html",
+  "pages/details/deepseek/index.html",
   "data/blog-posts.js",
   "data/blog-manifest.json",
   "feed.xml",

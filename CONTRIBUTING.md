@@ -54,7 +54,7 @@ npx serve .                     # 方式 B：Node.js serve
 改动 HTML / CSS / JS 后刷新浏览器就能看到效果，除以下构建产物外**无需额外构建**：
 
 - `js/json-workbench.bundle.js`：CodeMirror 打包产物，改动 `js/json-core.mjs` / `js/json-workbench.mjs` 后执行 `npm run build:json`
-- `sitemap.xml` / `feed.xml` / `pages/blog/*.html` / `data/blog-*`：博客流水线产物，改动源文件后执行 `npm run build` 重新生成并**一并提交**，不要手工编辑生成物。
+- `sitemap.xml` / `feed.xml` / `pages/blog/*.html` / `pages/details/*/index.html` / `data/blog-*`：博客与工具详情流水线产物，改动源文件后执行 `npm run build` 重新生成并**一并提交**，不要手工编辑生成物。
 
 ---
 
@@ -67,7 +67,7 @@ npm test
 # T2. 工具目录审计：ID 唯一性、数量一致性、canonical URL 契约
 npm run audit:tools
 
-# T3. 生成物漂移检查：重建 sitemap/博客/bundle 并与磁盘对比
+# T3. 生成物漂移检查：重建 sitemap/博客/工具详情/bundle 并与磁盘对比
 npm run check:generated
 ```
 

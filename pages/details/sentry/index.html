@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <script>
+    (function(){try{var t=localStorage.getItem("dev-tools-theme");if(!t)t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="Sentry 提供错误追踪与性能监控，支持 JavaScript、Node、Python、Go 等多语言，可捕获异常、面包屑与 Release 关联，便于排查线上问题。" />
+  <meta property="og:title" content="Sentry · Koen的工具箱" />
+  <meta property="og:description" content="Sentry 提供错误追踪与性能监控，支持 JavaScript、Node、Python、Go 等多语言，可捕获异常、面包屑与 Release 关联，便于排查线上问题。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tools.songyuankun.top/pages/details/sentry/" />
+  <meta property="og:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sentry · Koen的工具箱" />
+  <meta name="twitter:description" content="Sentry 提供错误追踪与性能监控，支持 JavaScript、Node、Python、Go 等多语言，可捕获异常、面包屑与 Release 关联，便于排查线上问题。" />
+  <link rel="canonical" href="https://tools.songyuankun.top/pages/details/sentry/" />
+  <link rel="icon" href="../../../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../../css/style.css?v=__ASSET_VERSION__" />
+  <title>Sentry · Koen的工具箱</title>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Sentry · Koen的工具箱","description":"Sentry 提供错误追踪与性能监控，支持 JavaScript、Node、Python、Go 等多语言，可捕获异常、面包屑与 Release 关联，便于排查线上问题。","url":"https://tools.songyuankun.top/pages/details/sentry/","isPartOf":{"@type":"WebSite","name":"Koen的工具箱","url":"https://tools.songyuankun.top/"}}</script>
+  <script defer src="../../../js/base.js?v=__ASSET_VERSION__"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <a href="../../../index.html" class="logo" aria-label="Koen的工具箱 首页">
+          <img src="../../../assets/logo.svg" alt="K" class="logo-img" />
+          <span class="logo-text">Koen<span>'s</span> 工具箱</span>
+        </a>
+        <div class="nav-links"><a href="../../../index.html" class="nav-link">首页</a></div>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="detail-page" id="detailPage">
+    <a href="../../../index.html" class="back-btn" aria-label="返回工具列表">← 返回工具列表</a>
+    <article id="detailContent">
+      <div class="detail-header">
+        <div class="detail-icon"><img src="https://icon.horse/icon/sentry.io" alt="Sentry" loading="lazy" referrerpolicy="no-referrer" /></div>
+        <div class="detail-meta">
+          <h1 class="detail-name">Sentry</h1>
+          <p class="detail-desc">应用错误监控和性能追踪平台，实时捕获前后端异常，提供详细堆栈信息，快速定位问题。</p>
+          <div class="detail-tags"><span class="tag">错误监控</span><span class="tag">性能</span><span class="tag">告警</span></div>
+          <a href="https://sentry.io/" target="_blank" rel="noopener noreferrer" class="detail-visit-btn">访问官网 ↗</a>
+        </div>
+      </div>
+      <section class="detail-section"><h2>工具简介</h2><p>Sentry 提供错误追踪与性能监控，支持 JavaScript、Node、Python、Go 等多语言，可捕获异常、面包屑与 Release 关联，便于排查线上问题。</p></section><section class="detail-section"><h2>核心特性</h2><ul class="detail-features-list"><li>多语言 SDK 与 Source Map</li><li>Release 与用户反馈</li><li>性能事务与告警</li></ul></section><section class="detail-section"><h2>快速上手</h2><div class="detail-quickstart">
+          <div class="detail-step">
+            <h3>前端（如 React）安装</h3>
+            <div class="detail-code-wrap">
+              <button type="button" class="detail-copy-btn">复制</button>
+              <pre><code>npm install @sentry/react</code></pre>
+            </div>
+          </div>
+          <div class="detail-step">
+            <h3>初始化（在应用入口）</h3>
+            <div class="detail-code-wrap">
+              <button type="button" class="detail-copy-btn">复制</button>
+              <pre><code>import * as Sentry from &#39;@sentry/react&#39;;
+Sentry.init({ dsn: &#39;https://xxx@xxx.ingest.sentry.io/xxx&#39; });</code></pre>
+            </div>
+          </div></div></section><section class="detail-section"><h2>相关链接</h2><div class="detail-links-wrap"><a href="https://docs.sentry.io/" target="_blank" rel="noopener noreferrer" class="detail-link-btn">官方文档</a></div></section>
+      <section class="detail-section">
+        <h2>基本信息</h2>
+        <table class="detail-info-table">
+          <tr class="detail-info-row"><td class="detail-info-label">分类</td><td class="detail-info-value">📊 运维监控</td></tr>
+          <tr class="detail-info-row"><td class="detail-info-label">官网</td><td class="detail-info-value"><a href="https://sentry.io/" target="_blank" rel="noopener noreferrer" class="detail-info-link">https://sentry.io/</a></td></tr>
+          <tr><td class="detail-info-label">标签</td><td class="detail-info-value">错误监控 · 性能 · 告警</td></tr>
+        </table>
+      </section>
+    </article>
+
+      <section class="detail-section">
+        <h2>同类工具推荐</h2>
+        <div class="tools-grid" style="margin-top:16px;">
+          <a href="../uptime-robot/" class="tool-card" style="text-decoration:none;display:flex;flex-direction:column;gap:10px;">
+            <div class="card-header">
+              <div class="card-icon"><span class="card-icon-fallback">📊</span></div>
+              <div><div class="card-title">UptimeRobot</div><div class="card-category-label">📊 运维监控</div></div>
+            </div>
+            <p class="card-desc">免费网站监控服务，每 5 分钟检测一次，支持 HTTP/HTTPS/Ping/Port 监控，宕机即时告警。</p>
+          </a><a href="../grafana/" class="tool-card" style="text-decoration:none;display:flex;flex-direction:column;gap:10px;">
+            <div class="card-header">
+              <div class="card-icon"><span class="card-icon-fallback">📊</span></div>
+              <div><div class="card-title">Grafana</div><div class="card-category-label">📊 运维监控</div></div>
+            </div>
+            <p class="card-desc">开源数据可视化和监控平台，支持 Prometheus、InfluxDB 等多种数据源，构建精美监控大盘。</p>
+          </a><a href="../datadog/" class="tool-card" style="text-decoration:none;display:flex;flex-direction:column;gap:10px;">
+            <div class="card-header">
+              <div class="card-icon"><span class="card-icon-fallback">📊</span></div>
+              <div><div class="card-title">Datadog</div><div class="card-category-label">📊 运维监控</div></div>
+            </div>
+            <p class="card-desc">企业级云监控平台，提供基础设施监控、APM、日志管理、安全监控一体化解决方案。</p>
+          </a><a href="../better-uptime/" class="tool-card" style="text-decoration:none;display:flex;flex-direction:column;gap:10px;">
+            <div class="card-header">
+              <div class="card-icon"><span class="card-icon-fallback">📊</span></div>
+              <div><div class="card-title">Better Stack</div><div class="card-category-label">📊 运维监控</div></div>
+            </div>
+            <p class="card-desc">现代化的监控和事件管理平台，提供美观的状态页面、告警通知和事件响应工作流。</p>
+          </a>
+        </div>
+      </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand"><img src="../../../assets/logo.svg" alt="K" class="footer-logo" /><span class="footer-brand-name">Koen's 工具箱</span></div>
+      <div class="footer-links"><a href="../../../index.html">首页</a><span class="footer-divider">|</span><a href="https://github.com/SongYuanKun" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      <p class="footer-copyright">Made with code by Koen · 数据来源于公开信息整理</p>
+    </div>
+  </footer>
+  <script>
+    document.addEventListener("click",function(event){var button=event.target.closest(".detail-copy-btn");if(!button)return;var code=button.closest(".detail-code-wrap").querySelector("code").textContent;navigator.clipboard.writeText(code).then(function(){var original=button.textContent;button.textContent="✓ 已复制";setTimeout(function(){button.textContent=original;},2000);});});
+  </script>
+  <script defer src="../../../js/footer.js?v=__ASSET_VERSION__"></script>
+</body>
+</html>

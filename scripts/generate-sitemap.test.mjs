@@ -39,7 +39,7 @@ test("collectStaticUrls includes all thirteen canonical self-built tools", () =>
   for (const location of expected) assert.ok(locations.includes(location), location);
 });
 
-test("collectStaticUrls creates template URLs only for catalog tools", () => {
+test("collectStaticUrls exposes only generated static detail routes", () => {
   const locations = collectStaticUrls(process.cwd()).map((item) => item.loc);
   const leakedCategoryIds = [
     "ai", "all", "design", "dev",
@@ -48,10 +48,15 @@ test("collectStaticUrls creates template URLs only for catalog tools", () => {
 
   for (const id of leakedCategoryIds) {
     assert.ok(
-      !locations.includes(`https://tools.songyuankun.top/pages/template.html?id=${id}`),
+      !locations.includes(`https://tools.songyuankun.top/pages/details/${id}/`),
       `category ID leaked into sitemap: ${id}`,
     );
   }
+  assert.ok(locations.includes("https://tools.songyuankun.top/pages/details/better-uptime/"));
+  assert.ok(locations.includes("https://tools.songyuankun.top/pages/details/midjourney/"));
+  assert.ok(locations.includes("https://tools.songyuankun.top/pages/details/vscode/"));
+  assert.ok(!locations.some((loc) => loc.includes("/pages/template.html?")));
+  assert.ok(!locations.includes("https://tools.songyuankun.top/pages/details/online-json/"));
 });
 
 test("sitemap keeps no removed activation URLs", () => {
@@ -77,14 +82,14 @@ test("collectStaticUrls excludes local search-engine verification HTML", () => {
   assert.ok(!locations.some((loc) => /\/google[a-f0-9]+\.html$/i.test(loc)));
 });
 
-test("collectStaticUrls keeps template URLs at monthly priority 0.5", () => {
-  const templates = collectStaticUrls(process.cwd())
-    .filter(({ loc }) => loc.includes("/pages/template.html?id="));
+test("collectStaticUrls keeps catalog detail URLs at monthly priority 0.5", () => {
+  const details = collectStaticUrls(process.cwd())
+    .filter(({ loc }) => loc.includes("/pages/details/"));
 
-  assert.ok(templates.length > 0);
-  for (const template of templates) {
-    assert.equal(template.changefreq, "monthly", template.loc);
-    assert.equal(template.priority, 0.5, template.loc);
+  assert.ok(details.length > 0);
+  for (const detail of details) {
+    assert.equal(detail.changefreq, "monthly", detail.loc);
+    assert.equal(detail.priority, 0.5, detail.loc);
   }
 });
 
@@ -168,11 +173,12 @@ test("resolveGitLastmod returns the content source commit date", () => {
   }
 });
 
-test("generateSitemap XML-escapes query URLs", () => {
+test("generateSitemap emits clean static detail URLs without legacy query routes", () => {
   const xml = generateSitemap(process.cwd(), { resolveLastmod: () => undefined });
   assert.match(xml, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
   assert.match(xml, /<\/urlset>$/);
-  assert.match(xml, /template\.html\?id=/);
+  assert.match(xml, /pages\/details\/deepseek\//);
+  assert.doesNotMatch(xml, /template\.html\?id=/);
   assert.doesNotMatch(xml, /<loc>[^<]*&(?!amp;|lt;|gt;|quot;|apos;)[^<]*<\/loc>/);
 });
 

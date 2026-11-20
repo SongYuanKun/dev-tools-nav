@@ -50,7 +50,7 @@ Umami 自定义事件在后台以**中文**展示（如「工具使用」「导�
 ### 技术博客维护
 
 - 站内原创正文只编辑 `content/blog/*.md`；Frontmatter 字段和约束见 `content/blog/README.md`。
-- 编辑后执行 `npm run build`，生成文章 HTML、博客索引、manifest、列表数据、Atom Feed 与 sitemap。
+- 编辑后执行 `npm run build`，生成文章 HTML、工具静态详情、博客索引、manifest、列表数据、Atom Feed 与 sitemap。
 - 不要直接维护生成文件；提交前执行 `npm run check:generated`，确认生成物与 Markdown 源一致。
 - CSDN 外部文章由 `scripts/sync-csdn-rss.py` 同步，只用于博客索引，不进入站内 Atom Feed。
 

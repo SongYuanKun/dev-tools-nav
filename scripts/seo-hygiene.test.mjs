@@ -53,7 +53,7 @@ test("robots.txt points sitemap at the custom domain", () => {
   assert.match(robots, /^User-agent:\s*\*\s*$/m);
 });
 
-test("sitemap locations are absolute custom-domain URLs and omit bare template.html", () => {
+test("sitemap locations are absolute custom-domain URLs and use static detail routes", () => {
   const sitemap = readFileSync("sitemap.xml", "utf8");
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   assert.ok(locs.length > 10);
@@ -61,7 +61,8 @@ test("sitemap locations are absolute custom-domain URLs and omit bare template.h
     assert.ok(loc.startsWith(`${CANONICAL_ORIGIN}/`), loc);
   }
   assert.ok(!locs.includes(`${CANONICAL_ORIGIN}/pages/template.html`));
-  assert.ok(locs.some((loc) => loc.includes("/pages/template.html?id=")));
+  assert.ok(locs.some((loc) => loc.includes("/pages/details/")));
+  assert.ok(!locs.some((loc) => loc.includes("/pages/template.html?")));
 });
 
 test("indexable HTML pages expose a custom-domain canonical link", () => {
@@ -86,7 +87,8 @@ test("template.html defaults to noindex and does not self-canonicalize the bare 
   const html = readFileSync("pages/template.html", "utf8");
   assert.equal(metaContent(html, "name", "robots"), "noindex,follow");
   assert.equal(canonicalHref(html), `${CANONICAL_ORIGIN}/`);
-  assert.match(html, /URLSearchParams\(location\.search\)\.get\(["']id["']\)/);
+  assert.match(html, /URLSearchParams\(window\.location\.search\)\.get\(key\)/);
+  assert.match(html, /const id = getQueryParam\(["']id["']\)/);
 });
 
 test("online tool shell pages have unique titles, descriptions, OG, and canonicals", () => {

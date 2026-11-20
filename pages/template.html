@@ -15,7 +15,7 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Bare /pages/template.html is a JS detail shell; keep noindex until a valid ?id= loads. -->
+  <!-- Legacy ?id= detail shell: always noindex; valid IDs canonicalize to generated static pages. -->
   <meta name="robots" content="noindex,follow" />
   <meta name="description" content="" />
   <meta property="og:title" content="工具详情 · Koen的工具箱" />
@@ -29,16 +29,6 @@
   <meta name="twitter:image" content="https://tools.songyuankun.top/assets/avatar.jpg" />
   <link rel="canonical" href="https://tools.songyuankun.top/" />
   <title>工具详情 · Koen的工具箱</title>
-  <script>
-    (function () {
-      try {
-        var id = new URLSearchParams(location.search).get("id");
-        if (!id) return;
-        var robots = document.querySelector('meta[name="robots"]');
-        if (robots) robots.setAttribute("content", "index,follow,max-image-preview:large");
-      } catch (_) {}
-    })();
-  </script>
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../css/style.css?v=__ASSET_VERSION__" />
   <script defer src="../js/base.js?v=__ASSET_VERSION__"></script>
@@ -236,9 +226,11 @@
         document.title = `${tool.name} · ${siteTitle}`;
 
         const pageDesc = (tool.content && tool.content.intro) ? tool.content.intro : tool.description;
-        const detailUrl = `https://tools.songyuankun.top/pages/template.html?id=${encodeURIComponent(tool.id)}`;
-        const robots = document.querySelector('meta[name="robots"]');
-        if (robots) robots.setAttribute("content", "index,follow,max-image-preview:large");
+        // Legacy ?id= links remain usable, but their canonical target is now static HTML.
+        const detailPath = tool.category === "online-tools"
+          ? `/${String(tool.url || "").replace(/^\/+/, "")}`
+          : `/pages/details/${encodeURIComponent(tool.id)}/`;
+        const detailUrl = `https://tools.songyuankun.top${detailPath}`;
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) metaDesc.setAttribute("content", pageDesc);
         const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -374,7 +366,7 @@
 
         related.forEach((t) => {
           const card = document.createElement("a");
-          card.href = `template.html?id=${t.id}`;
+          card.href = t.category === "online-tools" ? `../${t.url}` : `details/${t.id}/`;
           card.className = "tool-card";
           card.style.cssText = "text-decoration:none; display:flex; flex-direction:column; gap:10px;";
           card.innerHTML = `
