@@ -412,8 +412,33 @@ body.json-page .json-site-footer a {
 
 .json-faq-list { border-top: 1px solid var(--jw-border); }
 .json-faq-list details { border-bottom: 1px solid var(--jw-border); }
-.json-faq-list summary { min-height: 62px; padding: 20px 44px 20px 0; color: var(--jw-text); font-weight: 650; cursor: pointer; }
-.json-faq-list p { max-width: 820px; margin: -8px 0 22px; color: var(--jw-muted); line-height: 1.7; overflow-wrap: anywhere; }
+.json-faq-list summary {
+  min-height: 62px;
+  padding: 20px 44px 12px 0;
+  color: var(--jw-text);
+  font-weight: 650;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.json-faq-list summary:focus {
+  outline: none;
+  box-shadow: none;
+}
+.json-faq-list summary:focus-visible {
+  outline: 2px solid var(--jw-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--jw-accent) 22%, transparent);
+}
+.json-faq-list details[open] summary {
+  padding-bottom: 8px;
+}
+.json-faq-list p {
+  max-width: 820px;
+  margin: 12px 0 22px;
+  color: var(--jw-muted);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
 .json-related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .json-related-grid a { position: relative; min-height: 132px; padding: 24px; border: 1px solid var(--jw-border); border-radius: 16px; background: var(--jw-surface); color: var(--jw-text); text-decoration: none; transition: transform 160ms ease, border-color 160ms ease; }
 .json-related-grid a:hover { transform: translateY(-3px); border-color: var(--jw-accent); }
@@ -439,8 +464,6 @@ body.json-page .json-site-footer a {
 .json-error-locate:focus,
 .json-related-grid a:focus-visible,
 .json-related-grid a:focus,
-.json-faq-list summary:focus-visible,
-.json-faq-list summary:focus,
 .json-back:focus-visible,
 .json-back:focus,
 .json-mode-layout input:focus-visible,
@@ -461,6 +484,155 @@ body.json-page .json-site-footer a {
 .json-dialog input:focus {
   outline: 3px solid var(--jw-focus);
   outline-offset: 3px;
+}
+
+/* CodeMirror 查找/替换面板：覆盖默认亮色皮肤，跟随 Signal Desk 主题变量 */
+.json-editor-shell .cm-panels,
+.json-secondary-editor .cm-panels,
+.json-merge-shell .cm-panels {
+  background: var(--jw-surface-2);
+  color: var(--jw-text);
+  border-color: var(--jw-border);
+}
+.json-editor-shell .cm-panels-bottom,
+.json-secondary-editor .cm-panels-bottom,
+.json-merge-shell .cm-panels-bottom {
+  border-top: 1px solid var(--jw-border);
+}
+.json-editor-shell .cm-panels-top,
+.json-secondary-editor .cm-panels-top,
+.json-merge-shell .cm-panels-top {
+  border-bottom: 1px solid var(--jw-border);
+}
+.json-editor-shell .cm-panel.cm-search,
+.json-secondary-editor .cm-panel.cm-search,
+.json-merge-shell .cm-panel.cm-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 10px 40px 10px 12px;
+  background: var(--jw-surface-2);
+  color: var(--jw-text);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+.json-editor-shell .cm-panel.cm-search input[type="checkbox"],
+.json-secondary-editor .cm-panel.cm-search input[type="checkbox"],
+.json-merge-shell .cm-panel.cm-search input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0 6px 0 0;
+  accent-color: var(--jw-accent);
+  vertical-align: middle;
+}
+.json-editor-shell .cm-panel.cm-search label,
+.json-secondary-editor .cm-panel.cm-search label,
+.json-merge-shell .cm-panel.cm-search label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  color: var(--jw-muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.json-editor-shell .cm-panel.cm-search .cm-textfield,
+.json-secondary-editor .cm-panel.cm-search .cm-textfield,
+.json-merge-shell .cm-panel.cm-search .cm-textfield {
+  min-width: min(220px, 42vw);
+  min-height: 36px;
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid var(--jw-border-strong);
+  border-radius: 8px;
+  background: var(--jw-panel);
+  color: var(--jw-text);
+  font: inherit;
+  font-size: 0.82rem;
+}
+.json-editor-shell .cm-panel.cm-search .cm-textfield:focus-visible,
+.json-secondary-editor .cm-panel.cm-search .cm-textfield:focus-visible,
+.json-merge-shell .cm-panel.cm-search .cm-textfield:focus-visible {
+  outline: 2px solid var(--jw-focus);
+  outline-offset: 1px;
+  border-color: var(--jw-accent);
+}
+.json-editor-shell .cm-panel.cm-search .cm-button,
+.json-secondary-editor .cm-panel.cm-search .cm-button,
+.json-merge-shell .cm-panel.cm-search .cm-button {
+  min-height: 36px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--jw-border);
+  border-radius: 8px;
+  background: var(--jw-surface-3);
+  background-image: none;
+  color: var(--jw-text);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.json-editor-shell .cm-panel.cm-search .cm-button:hover,
+.json-secondary-editor .cm-panel.cm-search .cm-button:hover,
+.json-merge-shell .cm-panel.cm-search .cm-button:hover {
+  border-color: var(--jw-border-strong);
+  background: color-mix(in srgb, var(--jw-accent-soft) 70%, var(--jw-surface-3));
+}
+.json-editor-shell .cm-panel.cm-search .cm-button:focus-visible,
+.json-secondary-editor .cm-panel.cm-search .cm-button:focus-visible,
+.json-merge-shell .cm-panel.cm-search .cm-button:focus-visible,
+.json-editor-shell .cm-panel.cm-search [name="close"]:focus-visible,
+.json-secondary-editor .cm-panel.cm-search [name="close"]:focus-visible,
+.json-merge-shell .cm-panel.cm-search [name="close"]:focus-visible {
+  outline: 2px solid var(--jw-focus);
+  outline-offset: 1px;
+}
+.json-editor-shell .cm-panel.cm-search .cm-button:active,
+.json-secondary-editor .cm-panel.cm-search .cm-button:active,
+.json-merge-shell .cm-panel.cm-search .cm-button:active {
+  border-color: var(--jw-accent);
+  background: var(--jw-accent-soft);
+  background-image: none;
+}
+.json-editor-shell .cm-panel.cm-search [name="close"],
+.json-secondary-editor .cm-panel.cm-search [name="close"],
+.json-merge-shell .cm-panel.cm-search [name="close"] {
+  top: 8px;
+  right: 8px;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--jw-border);
+  border-radius: 8px;
+  background: var(--jw-surface-3);
+  color: var(--jw-muted);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.json-editor-shell .cm-panel.cm-search [name="close"]:hover,
+.json-secondary-editor .cm-panel.cm-search [name="close"]:hover,
+.json-merge-shell .cm-panel.cm-search [name="close"]:hover {
+  color: var(--jw-text);
+  border-color: var(--jw-accent);
+}
+.json-editor-shell .cm-panel.cm-search br,
+.json-secondary-editor .cm-panel.cm-search br,
+.json-merge-shell .cm-panel.cm-search br {
+  display: none;
+}
+.json-editor-shell .cm-searchMatch,
+.json-secondary-editor .cm-searchMatch,
+.json-merge-shell .cm-searchMatch {
+  background-color: color-mix(in srgb, var(--jw-accent) 28%, transparent);
+}
+.json-editor-shell .cm-searchMatch-selected,
+.json-secondary-editor .cm-searchMatch-selected,
+.json-merge-shell .cm-searchMatch-selected {
+  background-color: color-mix(in srgb, var(--jw-accent) 48%, transparent);
 }
 body.json-page .navbar a:focus,
 body.json-page .navbar summary:focus,
@@ -514,6 +686,28 @@ body.json-page .json-site-footer a:focus {
   .json-merge-shell .cm-mergeViewEditor { width: 100%; }
   .json-merge-shell .cm-editor, .json-merge-shell .cm-scroller { min-height: 260px; }
   .json-merge-shell .cm-mergeView { height: min(660px, 78vh); }
+  .json-editor-shell .cm-panel.cm-search,
+  .json-secondary-editor .cm-panel.cm-search,
+  .json-merge-shell .cm-panel.cm-search {
+    gap: 8px;
+    padding: 10px 40px 10px 10px;
+  }
+  .json-editor-shell .cm-panel.cm-search .cm-textfield,
+  .json-secondary-editor .cm-panel.cm-search .cm-textfield,
+  .json-merge-shell .cm-panel.cm-search .cm-textfield {
+    min-width: 100%;
+    flex: 1 1 100%;
+  }
+  .json-editor-shell .cm-panel.cm-search .cm-button,
+  .json-secondary-editor .cm-panel.cm-search .cm-button,
+  .json-merge-shell .cm-panel.cm-search .cm-button {
+    min-height: 40px;
+  }
+  .json-editor-shell .cm-panel.cm-search label,
+  .json-secondary-editor .cm-panel.cm-search label,
+  .json-merge-shell .cm-panel.cm-search label {
+    white-space: normal;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

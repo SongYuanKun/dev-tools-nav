@@ -159,6 +159,28 @@ test("workbench stylesheet encodes touch, narrow-screen, theme, and reduced-moti
   assert.match(css, /focus-visible/i);
 });
 
+test("FAQ summaries keep focus-visible-only rings and open answers have positive spacing", () => {
+  assert.match(css, /\.json-faq-list\s+summary:focus-visible\s*\{[^}]*outline:/i);
+  assert.match(css, /\.json-faq-list\s+summary:focus\s*\{[^}]*outline:\s*none/i);
+  assert.doesNotMatch(css, /\.json-faq-list\s+summary:focus\s*,/);
+  assert.doesNotMatch(css, /\.json-faq-list\s+p\s*\{[^}]*margin:\s*-/i);
+  assert.match(css, /\.json-faq-list\s+p\s*\{[^}]*margin:\s*[1-9]/i);
+});
+
+test("CodeMirror search panel is themed and localized to Chinese", () => {
+  assert.match(css, /\.cm-panel\.cm-search/i);
+  assert.match(css, /\.cm-panels[\s\S]*?background:\s*var\(--jw-surface-2\)/i);
+  assert.match(css, /\.cm-panel\.cm-search\s+\.cm-button[\s\S]*?background-image:\s*none/i);
+  assert.match(css, /\.cm-panel\.cm-search\s+\[name=["']close["']\]/i);
+  assert.match(workbenchSource, /EditorState\.phrases\.of\(EDITOR_PHRASES\)/);
+  assert.match(workbenchSource, /Find:\s*["']查找["']/);
+  assert.match(workbenchSource, /Replace:\s*["']替换["']/);
+  assert.match(workbenchSource, /["']match case["']:\s*["']区分大小写["']/);
+  assert.match(workbenchSource, /["']replace all["']:\s*["']全部替换["']/);
+  assert.match(workbenchSource, /regexp:\s*["']正则["']/);
+  assert.match(workbenchSource, /["']by word["']:\s*["']全词["']/);
+});
+
 test("an empty editor starts clean instead of showing a JSON lint error", () => {
   assert.match(workbenchSource, /state\.doc\.length\s*===\s*0[\s\S]*?return \[\]/);
 });
