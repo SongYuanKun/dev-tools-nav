@@ -1,21 +1,13 @@
 name: Deploy GitHub Pages
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
   workflow_run:
-    workflows: ["Sync CSDN articles"]
+    workflows: [Test]
     types: [completed]
+    branches: [main]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+permissions: {}
 
 # GitHub 将默认用 Node 24 跑 JS Action；显式开启可避免 Node 20 弃用告警
 # 参见 https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
@@ -23,71 +15,95 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  deploy:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+  build:
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      sha: ${{ steps.assemble.outputs.sha }}
+      artifact: ${{ steps.assemble.outputs.artifact }}
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          ref: ${{ github.sha }}
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: npm
 
-      - run: npm ci
-
-      - name: Generate AI topic changelog
-        run: node scripts/generate-ai-changelog.mjs
-
-      - name: Refresh CSDN articles from RSS
+      - name: Verify full Test for the Pages candidate
+        id: verify
         env:
-          CSDN_RSS_URL: https://blog.csdn.net/syk123839070/rss/list
-        run: python3 scripts/sync-csdn-rss.py
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/verify-pages-test.mjs
 
-      - run: npm run build
-
-      - run: npm run check:generated
-
-      - name: Assemble site
+      - name: Assemble tested site
+        if: steps.verify.outputs.sha != ''
+        id: assemble
         env:
-          ASSET_VERSION: ${{ github.sha }}
+          CANDIDATE_SHA: ${{ steps.verify.outputs.sha }}
+          ASSET_VERSION: ${{ steps.verify.outputs.sha }}
         run: |
-          mkdir -p _site
-          echo -n > _site/.nojekyll
-          if test -f CNAME; then cp CNAME _site/CNAME; fi
-          rsync -a \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='README.md' \
-            --exclude='.gitignore' \
-            --exclude='docs' \
-            --exclude='content' \
-            --exclude='package.json' \
-            --exclude='package-lock.json' \
-            --exclude='node_modules' \
-            --exclude='deploy.sh' \
-            --exclude='logs' \
-            --exclude='*.bak' \
-            --exclude='.DS_Store' \
-            --exclude='tasks' \
-            --exclude='scripts' \
-            --exclude='ops' \
-            ./ _site/
-          # Publish copy only: replace __ASSET_VERSION__ / append ?v= so CSS/JS caches bust per deploy
-          node scripts/stamp-asset-version.mjs --root _site
-          node scripts/stamp-asset-version.mjs --root _site --check
-          echo "site size: $(du -sh _site | cut -f1) files: $(find _site -type f | wc -l)"
-
-      - uses: actions/configure-pages@v5
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          site_dir="$RUNNER_TEMP/pages-site"
+          mkdir -p "$site_dir"
+          git archive "$CANDIDATE_SHA" -- . \
+            ':(exclude).github' ':(exclude).gitignore' ':(exclude).cursor' \
+            ':(exclude)README.md' ':(exclude)docs' ':(exclude)content' \
+            ':(exclude)package.json' ':(exclude)package-lock.json' \
+            ':(exclude)deploy.sh' ':(exclude)tasks' ':(exclude)scripts' ':(exclude)ops' \
+            ':(exclude)node_modules' ':(exclude)logs' \
+            ':(exclude,glob)**/*.bak' ':(exclude,glob)**/.DS_Store' \
+            | tar -xf - -C "$site_dir"
+          touch "$site_dir/.nojekyll"
+          node scripts/stamp-asset-version.mjs --root "$site_dir"
+          node scripts/stamp-asset-version.mjs --root "$site_dir" --check
+          printf 'sha=%s\nartifact=github-pages-%s-%s\n' \
+            "$CANDIDATE_SHA" "$CANDIDATE_SHA" "$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
 
       - uses: actions/upload-pages-artifact@v3
+        if: steps.assemble.outputs.sha != ''
         with:
-          path: _site
+          name: ${{ steps.assemble.outputs.artifact }}
+          path: ${{ runner.temp }}/pages-site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.sha != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+
+      - name: Confirm main still points to the tested SHA
+        id: current
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ needs.build.outputs.sha }}
+        run: |
+          set -euo pipefail
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          if [[ "$main_sha" != "$CANDIDATE_SHA" || "$GITHUB_SHA" != "$CANDIDATE_SHA" ]]; then
+            echo '::notice::main moved since validation. Skipping deployment.'
+            exit 0
+          fi
+          printf 'ready=true\n' >> "$GITHUB_OUTPUT"
 
       - id: deployment
+        if: steps.current.outputs.ready == 'true'
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ needs.build.outputs.artifact }}

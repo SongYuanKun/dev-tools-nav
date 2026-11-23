@@ -6,31 +6,30 @@ on:
     - cron: "0 2 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: {}
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   sync:
+    if: github.repository == 'SongYuanKun/dev-tools-nav' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
 
       - name: Sync AI open source radar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 scripts/sync-open-source-radar.py
 
-      - name: Commit and push if changed
+      - name: Push changes and dispatch Test
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/open-source-radar.json
-          if git diff --cached --quiet; then
-            echo "No changes to open-source-radar.json, skip commit."
-          else
-            git commit -m "chore: 同步 AI 开源项目雷达周报"
-            git push origin HEAD
-          fi
+          bash scripts/publish-sync-update.sh data/open-source-radar.json "chore: 同步 AI 开源项目雷达周报"

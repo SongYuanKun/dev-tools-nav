@@ -408,6 +408,11 @@ def main() -> int:
         return 1
 
     payload = merge_payload(trending_items, existing, token)
+    content = {key: value for key, value in payload.items() if key != "updatedAt"}
+    if content == {key: value for key, value in existing.items() if key != "updatedAt"}:
+        print(f"Keep existing radar data (content unchanged): {OUT_PATH}")
+        return 0
+
     write_payload(payload)
 
     trending_count = sum(1 for project in payload["projects"] if project.get("trending"))

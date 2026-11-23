@@ -21,6 +21,7 @@ const verificationFiles = [
   "baidu_verify_codeva-TByQYpVHM2.html",
   "googleb710668c9aa28d4e.html",
 ];
+const releaseSha = 'c6e6e79c79830000000000000000000000000000';
 const publishedRootFiles = [
   "index.html",
   "search-console.html",
@@ -69,10 +70,12 @@ function fixture() {
   const site = join(root, "site");
   const verificationSource = join(root, "verification-source");
   const bin = join(root, "bin");
+  const cache = join(root, "cache");
   mkdirSync(repo, { recursive: true });
   mkdirSync(join(site, "index"), { recursive: true });
   mkdirSync(verificationSource, { recursive: true });
   mkdirSync(bin, { recursive: true });
+  mkdirSync(cache, { recursive: true });
   for (const file of requiredFiles) write(repo, file, `new:${file}`);
   for (const file of publishedRootFiles) write(repo, file, `new:${file}`);
   for (const file of publishedDirectoryFiles) write(repo, file, `new:${file}`);
@@ -87,6 +90,24 @@ function fixture() {
   cpSync("scripts/deploy-1panel-local.sh", join(repo, "scripts/deploy-1panel-local.sh"));
   cpSync("scripts/stamp-asset-version.mjs", join(repo, "scripts/stamp-asset-version.mjs"));
   chmodSync(join(repo, "scripts/deploy-1panel-local.sh"), 0o755);
+  // The poller tests exercise the real Git and GitHub API gates. These tests
+  // isolate the staging and Docker transaction with a simulated verifier.
+  const verifier = join(repo, "scripts/poll-github-deploy.sh");
+  writeFileSync(verifier, `#!/usr/bin/env bash
+set -euo pipefail
+case "$1" in
+  --verify-release)
+    [[ "$2" == "$SITE_SOURCE_DIR" && "$3" == "$RELEASE_SHA" && "$#" -gt 4 ]]
+    if [[ "\${UNVERIFIED_RELEASE:-0}" == 1 ]]; then echo 'unverified release' >&2; exit 1; fi
+    ;;
+  --assert-current-main)
+    [[ "$2" == "$RELEASE_SHA" ]]
+    if [[ "\${ADVANCED_MAIN:-0}" == 1 ]]; then echo 'main has advanced' >&2; exit 1; fi
+    ;;
+  *) exit 2 ;;
+esac
+`);
+  chmodSync(verifier, 0o755);
   const fakeDocker = join(bin, "docker");
   writeFileSync(fakeDocker, `#!/usr/bin/env bash
 set -euo pipefail
@@ -148,11 +169,24 @@ fi
 exec /bin/rm "$@"
 `);
   chmodSync(fakeRm, 0o755);
-  return { root, repo, site, verificationSource, fakeDocker };
+  return { root, repo, site, cache, verificationSource, fakeDocker };
 }
 
-function deploy({ repo, site, verificationSource, fakeDocker }, extraEnv = {}, options = {}) {
-  return spawnSync("bash", [options.script ?? "scripts/deploy-1panel-local.sh"], {
+function installDeployer(data, copyStamp = true) {
+  const installedDir = join(data.root, "installed");
+  mkdirSync(installedDir);
+  const scripts = ["deploy-1panel-local.sh", "poll-github-deploy.sh"];
+  if (copyStamp) scripts.push("stamp-asset-version.mjs");
+  for (const script of scripts) cpSync(join(data.repo, "scripts", script), join(installedDir, script));
+  return join(installedDir, "deploy-1panel-local.sh");
+}
+
+function deploy({ repo, site, cache, verificationSource, fakeDocker }, extraEnv = {}, options = {}) {
+  const script = options.script ?? "scripts/deploy-1panel-local.sh";
+  const args = options.lock === false
+    ? [script]
+    : ["-ec", 'exec 9>"$CACHE_DIR/deploy.lock"; flock -n 9; exec bash "$1"', "test-deployer", script];
+  return spawnSync("bash", args, {
     cwd: options.cwd ?? repo,
     encoding: "utf8",
     env: {
@@ -163,8 +197,9 @@ function deploy({ repo, site, verificationSource, fakeDocker }, extraEnv = {}, o
       SITE_OWNER: `${process.getuid()}:${process.getgid()}`,
       VERIFICATION_SOURCE_DIR: verificationSource,
       PATH: `${dirname(fakeDocker)}:${process.env.PATH}`,
-      // Fixture repos are not git checkouts; production poll/manual paths set this or use git.
-      ASSET_VERSION: "teststamp",
+      CACHE_DIR: cache,
+      SITE_SOURCE_DIR: repo,
+      RELEASE_SHA: releaseSha,
       ...extraEnv,
     },
   });
@@ -173,11 +208,7 @@ function deploy({ repo, site, verificationSource, fakeDocker }, extraEnv = {}, o
 test("deploys from SITE_SOURCE_DIR instead of the installed script directory", () => {
   const data = fixture();
   try {
-    const installedScript = join(data.root, "installed", "deploy-1panel-local.sh");
-    mkdirSync(dirname(installedScript), { recursive: true });
-    cpSync(join(data.repo, "scripts/deploy-1panel-local.sh"), installedScript);
-    cpSync(join(data.repo, "scripts/stamp-asset-version.mjs"), join(dirname(installedScript), "stamp-asset-version.mjs"));
-    chmodSync(installedScript, 0o755);
+    const installedScript = installDeployer(data);
     write(data.repo, "index.html", "new:from-site-source-dir");
 
     const result = deploy(
@@ -212,7 +243,7 @@ test("deploy stamp replaces __ASSET_VERSION__ before publishing", () => {
       `<link rel="stylesheet" href="css/style.css?v=__ASSET_VERSION__" />\n`,
     );
 
-    const result = deploy(data, { ASSET_VERSION: "c6e6e79c7983" });
+    const result = deploy(data, { ASSET_VERSION: "cannot-override-release-sha" });
     assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
     assert.match(result.stdout, /Stamped asset version c6e6e79c7983/);
 
@@ -235,16 +266,12 @@ test("deploy stamp replaces __ASSET_VERSION__ before publishing", () => {
 test("deploy fails closed when stamp-asset-version.mjs is missing", () => {
   const data = fixture();
   try {
-    const installedDir = join(data.root, "installed");
-    const installedScript = join(installedDir, "deploy-1panel-local.sh");
-    mkdirSync(installedDir, { recursive: true });
-    cpSync(join(data.repo, "scripts/deploy-1panel-local.sh"), installedScript);
-    chmodSync(installedScript, 0o755);
+    const installedScript = installDeployer(data, false);
     rmSync(join(data.repo, "scripts/stamp-asset-version.mjs"));
 
     const result = deploy(
       data,
-      { SITE_SOURCE_DIR: data.repo, ASSET_VERSION: "deadbeef" },
+      { SITE_SOURCE_DIR: data.repo },
       { script: installedScript, cwd: data.root },
     );
 
@@ -260,12 +287,7 @@ test("deploy fails closed when stamp-asset-version.mjs is missing", () => {
 test("libexec companion stamp-asset-version.mjs works when checkout scripts/ lacks it", () => {
   const data = fixture();
   try {
-    const installedDir = join(data.root, "installed");
-    const installedScript = join(installedDir, "deploy-1panel-local.sh");
-    mkdirSync(installedDir, { recursive: true });
-    cpSync(join(data.repo, "scripts/deploy-1panel-local.sh"), installedScript);
-    cpSync(join(data.repo, "scripts/stamp-asset-version.mjs"), join(installedDir, "stamp-asset-version.mjs"));
-    chmodSync(installedScript, 0o755);
+    const installedScript = installDeployer(data);
     rmSync(join(data.repo, "scripts/stamp-asset-version.mjs"));
     write(
       data.repo,
@@ -275,25 +297,62 @@ test("libexec companion stamp-asset-version.mjs works when checkout scripts/ lac
 
     const result = deploy(
       data,
-      { SITE_SOURCE_DIR: data.repo, ASSET_VERSION: "libexec1" },
+      { SITE_SOURCE_DIR: data.repo },
       { script: installedScript, cwd: data.root },
     );
 
     assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
-    assert.match(readFileSync(join(data.site, "index/index.html"), "utf8"), /style\.css\?v=libexec1/);
+    assert.match(readFileSync(join(data.site, "index/index.html"), "utf8"), /style\.css\?v=c6e6e79c7983/);
     assert.doesNotMatch(readFileSync(join(data.site, "index/index.html"), "utf8"), /__ASSET_VERSION__/);
   } finally {
     rmSync(data.root, { recursive: true, force: true });
   }
 });
 
-test("deploy fails closed when ASSET_VERSION cannot be resolved", () => {
+test("direct calls without a candidate or inherited lock cannot deploy", () => {
   const data = fixture();
   try {
-    const result = deploy(data, { ASSET_VERSION: "" });
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /cannot resolve asset version/);
+    const missingSha = deploy(data, { RELEASE_SHA: "" });
+    const missingLock = deploy(data, {}, { lock: false });
+    for (const result of [missingSha, missingLock]) {
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr, /requires a candidate SHA and the deploy lock/);
+    }
     assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("missing or failed release verification cannot call Docker", () => {
+  const data = fixture();
+  try {
+    const dockerLog = join(data.root, "docker.log");
+    const unverified = deploy(data, { UNVERIFIED_RELEASE: "1", FAKE_DOCKER_LOG: dockerLog });
+    assert.notEqual(unverified.status, 0);
+    assert.match(unverified.stderr, /unverified release/);
+
+    rmSync(join(data.repo, "scripts/poll-github-deploy.sh"));
+    const missing = deploy(data, { FAKE_DOCKER_LOG: dockerLog });
+    assert.notEqual(missing.status, 0);
+    assert.match(missing.stderr, /release verifier is unavailable/);
+    assert.equal(existsSync(dockerLog), false);
+    assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+  } finally {
+    rmSync(data.root, { recursive: true, force: true });
+  }
+});
+
+test("main advancing after the Docker copy prevents the atomic switch", () => {
+  const data = fixture();
+  try {
+    const dockerLog = join(data.root, "docker.log");
+    const result = deploy(data, { ADVANCED_MAIN: "1", FAKE_DOCKER_LOG: dockerLog });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /main has advanced/);
+    assert.match(readFileSync(dockerLog, "utf8"), /^cp$/m);
+    assert.equal(readFileSync(join(data.site, "index/marker.txt"), "utf8"), "old release");
+    assert.equal(existsSync(join(data.site, ".index-next")), false);
   } finally {
     rmSync(data.root, { recursive: true, force: true });
   }

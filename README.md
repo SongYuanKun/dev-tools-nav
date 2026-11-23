@@ -20,7 +20,7 @@
 
 **Koen's 工具箱是一个非商业的开源项目**：全部源码与站内原创内容都在 [MIT 协议](LICENSE)下公开，任何人都可以自由使用、修改并自行部署。
 
-- **完全开源** — 代码、数据、文档和自动化脚本都在本仓库；`main` 分支即线上版本，构建、测试与发布由仓库内的 [测试工作流](.github/workflows/test.yml)和 [Pages 工作流](.github/workflows/deploy-pages.yml)完成。
+- **完全开源** — 代码、数据、文档和自动化脚本都在本仓库。`main` 是发布来源，通过 [完整测试](.github/workflows/test.yml) 的提交才进入 [Pages 发布流程](.github/workflows/deploy-pages.yml) 和 1Panel 发布流程。
 - **非商业** — 不展示广告，不接入联盟推广、付费排名或赞助位，也不提供付费功能与商业授权；访问统计只用于判断维护投入方向。
 - **内容边界** — 目录只收录正规工具与服务，不收录商业软件的破解、序列号或许可绕过类资源。
 - **数据不出站** — 13 款自研在线工具全部在浏览器内计算，不向服务端上传用户输入。
@@ -166,10 +166,10 @@ AI 专题当前是静态精选手册，已上线能力如下。后续优先级�
 | **Prompt 模板库** `pages/ai/prompts.html` | 按分类筛选、复制模板；分类 section 设 `id="prompt-*"`，URL hash 可定位并自动筛分类 |
 | **新手入门** `pages/ai/beginner.html` | 基础概念、上手步骤、误区、学习路径 |
 | **数据与映射** `data/ai-compare.js` | 上列外加 `AI_TOPIC_CHANGELOG`、`AI_LEARN_PATH_STEPS`、`AI_GLOSSARY_DATA`、`AI_SELECTION_PRINCIPLES`、`AI_SAFETY_DATA`；以及 `AI_COMPARE_DATA`、`AI_COMPARE_META`、`AI_COMPARE_PAGE_DISCLAIMER`、`AI_WORKFLOW_DATA`、`AI_LOOKUP_SCENES`（场景速查 + `toolIds`）、`AI_RELATED_READS_LINKS`、`AI_TRUST_STATEMENT`、`AI_PRICING_SNAPSHOT_DATE`、`AI_ROLE_QUICK_PICK` 等；术语条目支持可选 `termEn` / `seeAlso` |
-| **Changelog 自动化** `scripts/generate-ai-changelog.mjs` | CI 部署前从 git log 提取 AI 专题 commit，按日期分组，智能生成 title/detail，自动写入 `data/ai-compare.js` |
+| **Changelog 生成** `scripts/generate-ai-changelog.mjs` | 从 git log 生成 `data/ai-compare.js` 的更新条目。需要更新时在本地运行并提交生成结果 |
 | **专题样式** `css/ai-topic.css` | 含 `ai-subnav`、changelog、场景速查内链、横评/工作流等各页布局；favicon 与徽章样式 |
 | **全站入口** | `index.html` 导航「AI 专题」、AI 分类下横幅等（与 `js/main.js` 联动） |
-| **SEO** | `scripts/generate-sitemap.mjs` 生成 `sitemap.xml` 时扫描 `pages/ai/*.html` 并写入 URL（CI 部署前执行） |
+| **SEO** | `scripts/generate-sitemap.mjs` 将 `pages/ai/*.html` 写入 `sitemap.xml`，完整 Test 校验生成结果 |
 
 ---
 
@@ -216,25 +216,23 @@ CI 工作流 [`.github/workflows/update-screenshots.yml`](.github/workflows/upda
 
 | 路径 | 何时 stamp |
 |------|------------|
-| GitHub Pages | `deploy-pages.yml` 组装 `_site` 后，`ASSET_VERSION=$GITHUB_SHA` |
-| GTR / 1Panel | `deploy-1panel-local.sh` 写入 STAGE 后，默认 `git rev-parse --short HEAD` |
+| GitHub Pages | `deploy-pages.yml` 组装暂存目录后，用已通过完整 Test 的提交 SHA |
+| GTR / 1Panel | `deploy-1panel-local.sh` 写入 STAGE 后，用已通过完整 Test 的提交 SHA 前 12 位 |
 | 本地预览 | 可选：`ASSET_VERSION=dev npm run stamp-assets`（会改工作区文件，勿提交） |
 
 源码保留占位符，避免每次发布污染 diff；`npm run check:asset-versions` 校验 HTML 均已带版本查询。动态加载的脚本（`base.js` → umami / command-palette，以及 palette 拉取 `data/tools.js`）复用 `base.js` 自身的 `?v=`。
 
 ## 部署到 GitHub Pages
 
-仓库已配置 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)：推送 `main` 后，Test 检查提交，Pages workflow 构建并发布静态资源。GTR 主机通过出站轮询部署同一提交；完整运维流程见 [1Panel 部署说明](docs/deploy-1panel.md)。
+推送 `main` 后，完整 Test 通过才会触发 GitHub Pages 组装并发布该提交的静态资源。CSDN 和开源雷达同步在有内容更新并推送成功时，为对应 SHA 触发同一套 Test。GTR 主机通过出站轮询核验同一门禁，见 [1Panel 部署说明](docs/deploy-1panel.md)。
 
 | 步骤 | 说明 |
 |------|------|
 | 日常发布 | `git push origin main` → 打开 **Actions** → **Deploy GitHub Pages** 成功即可 |
-| 首次 Fork / 新仓库 | 在 **Settings → Pages → Source** 选择 **GitHub Actions**；工作流里已设 `enablement: true`，多数情况下会自动启用 Pages |
+| 首次配置 | 在 **Settings → Pages → Source** 选择 **GitHub Actions**，并将 `github-pages` 环境的发布分支限定为 `main` |
 | 线上地址 | **<https://songyuankun.github.io/dev-tools-nav/>** |
 
 **费用**：本仓库为 **Public** 时，标准 GitHub Actions 用量对公开仓库通常 **不单独计费**；私有仓库有每月分钟数额度，详见 [GitHub Actions 计费](https://docs.github.com/zh/billing/concepts/product-billing/github-actions)。
-
-> 可选：若不用 Actions，可在 Pages 中选 **Deploy from a branch** → `main` → `/ (root)`，与本工作流二选一即可。
 
 ## 部署到 1Panel
 

@@ -1,12 +1,31 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Repo layout: .../scripts/deploy-1panel-local.sh → SCRIPT_ROOT = repo root.
-# Libexec layout: .../dev-tools-nav-deploy/deploy-1panel-local.sh → SCRIPT_ROOT =
-# parent of the install dir (only used as a last-resort default for SOURCE_DIR).
 DEPLOY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCRIPT_ROOT="$(cd "$DEPLOY_DIR/.." && pwd)"
-SOURCE_DIR="${SITE_SOURCE_DIR:-$SCRIPT_ROOT}"
+SOURCE_DIR="${SITE_SOURCE_DIR:-}"
+release_sha="${RELEASE_SHA:-}"
+release_guard="$DEPLOY_DIR/poll-github-deploy.sh"
+lock_file="${CACHE_DIR:-$HOME/.cache/dev-tools-nav-deploy}/deploy.lock"
+FLOCK_BIN="${FLOCK_BIN:-flock}"
+
+if [[ -z "$SOURCE_DIR" || ! "$release_sha" =~ ^[0-9a-f]{40}([0-9a-f]{24})?$ ]] ||
+   [[ ! "$lock_file" -ef /dev/fd/9 ]] || ! "$FLOCK_BIN" -n 9; then
+  echo 'Release requires a candidate SHA and the deploy lock. Start dev-tools-nav-deploy.service.' >&2
+  exit 1
+fi
+if [[ ! -x "$release_guard" ]]; then
+  echo 'The installed release verifier is unavailable.' >&2
+  exit 1
+fi
+
+published_dirs=(assets css data js pages tools)
+published_files=(
+  index.html search-console.html favicon.ico favicon.svg feed.xml robots.txt sitemap.xml
+  manifest.webmanifest sw.js offline.html LICENSE CODE_OF_CONDUCT.md CONTRIBUTING.md manual.md
+)
+"$release_guard" --verify-release "$SOURCE_DIR" "$release_sha" \
+  "${published_dirs[@]}" "${published_files[@]}" scripts/stamp-asset-version.mjs
+
 DOCKER_BIN="${DOCKER_BIN:-docker}"
 OPENRESTY_CONTAINER="${OPENRESTY_CONTAINER:-1Panel-openresty-rRvM}"
 SITE_BASE="${SITE_BASE:-/www/sites/tools.songyuankun.top}"
@@ -57,39 +76,17 @@ for relative in "${required[@]}"; do
   [[ -f "$SOURCE_DIR/$relative" ]] || { echo "Missing build artifact: $relative" >&2; exit 1; }
 done
 
-rsync -a --delete \
-  --include='/assets/***' \
-  --include='/css/***' \
-  --include='/data/***' \
-  --include='/js/***' \
-  --include='/pages/***' \
-  --include='/tools/***' \
-  --include='/index.html' \
-  --include='/search-console.html' \
-  --include='/favicon.ico' \
-  --include='/favicon.svg' \
-  --include='/feed.xml' \
-  --include='/robots.txt' \
-  --include='/sitemap.xml' \
-  --include='/manifest.webmanifest' \
-  --include='/sw.js' \
-  --include='/offline.html' \
-  --include='/LICENSE' \
-  --include='/CODE_OF_CONDUCT.md' \
-  --include='/CONTRIBUTING.md' \
-  --include='/manual.md' \
-  --exclude='*' \
-  "$SOURCE_DIR/" "$STAGE/"
+filters=()
+for path in "${published_dirs[@]}"; do filters+=("--include=/$path/***"); done
+for path in "${published_files[@]}"; do filters+=("--include=/$path"); done
+rsync -a --delete "${filters[@]}" --exclude='*' "$SOURCE_DIR/" "$STAGE/"
 
 # Stamp CSS/JS ?v= on the staging tree only (source keeps __ASSET_VERSION__ placeholder).
-# Lookup order: checkout scripts/ → companion next to this deploy script (libexec) →
-# SCRIPT_ROOT/scripts/ (repo layout when SOURCE_DIR is overridden oddly).
-# Missing stamp, missing node, unresolved version, or leftover placeholders fail the deploy.
+# Prefer the verified checkout script, with the trusted installed companion as fallback.
 stamp_script=""
 for candidate in \
   "$SOURCE_DIR/scripts/stamp-asset-version.mjs" \
-  "$DEPLOY_DIR/stamp-asset-version.mjs" \
-  "$SCRIPT_ROOT/scripts/stamp-asset-version.mjs"
+  "$DEPLOY_DIR/stamp-asset-version.mjs"
 do
   if [[ -f "$candidate" ]]; then
     stamp_script="$candidate"
@@ -97,7 +94,7 @@ do
   fi
 done
 if [[ -z "$stamp_script" ]]; then
-  echo "ERROR: stamp-asset-version.mjs not found (looked under SOURCE_DIR/scripts, $DEPLOY_DIR, SCRIPT_ROOT/scripts). Refusing to publish $ASSET_VERSION_PLACEHOLDER placeholders." >&2
+  echo "ERROR: stamp-asset-version.mjs not found. Refusing to publish $ASSET_VERSION_PLACEHOLDER placeholders." >&2
   exit 1
 fi
 if ! command -v node >/dev/null 2>&1; then
@@ -105,23 +102,7 @@ if ! command -v node >/dev/null 2>&1; then
   exit 1
 fi
 
-stamp_version="${ASSET_VERSION:-}"
-if [[ -z "$stamp_version" ]]; then
-  stamp_version="$(git -C "$SOURCE_DIR" rev-parse --short HEAD 2>/dev/null || true)"
-fi
-if [[ -z "$stamp_version" ]]; then
-  stamp_version="$(git -C "$SCRIPT_ROOT" rev-parse --short HEAD 2>/dev/null || true)"
-fi
-if [[ -z "$stamp_version" ]]; then
-  echo "ERROR: cannot resolve asset version (set ASSET_VERSION or deploy from a git checkout)." >&2
-  exit 1
-fi
-if [[ "$stamp_version" == *"$ASSET_VERSION_PLACEHOLDER"* ]]; then
-  echo "ERROR: invalid ASSET_VERSION resolves to the placeholder itself." >&2
-  exit 1
-fi
-
-node "$stamp_script" --root "$STAGE" --version "$stamp_version"
+node "$stamp_script" --root "$STAGE" --version "${release_sha:0:12}"
 
 leftover="$(grep -R -l --include='*.html' --include='sw.js' -F -- "$ASSET_VERSION_PLACEHOLDER" "$STAGE" 2>/dev/null || true)"
 if [[ -n "$leftover" ]]; then
@@ -161,6 +142,7 @@ for filename in "${preserved[@]}"; do
   "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" chmod 0644 "$NEXT/$filename"
 done
 
+"$release_guard" --assert-current-main "$release_sha"
 required_lines="$(printf '%s\n' "${required[@]}")"
 "$DOCKER_BIN" exec "$OPENRESTY_CONTAINER" sh -ec '
   target=$1; next=$2; old=$3; marker=$4; required=$5; owner=$6

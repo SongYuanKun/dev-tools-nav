@@ -106,17 +106,14 @@ def parse_rss(xml_bytes: bytes) -> list[dict]:
     return items
 
 
-def load_existing_items() -> list[dict]:
+def load_existing() -> dict:
     try:
         with open(OUT_PATH, "r", encoding="utf-8") as f:
             data = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        return []
+        return {}
 
-    items = data.get("items") if isinstance(data, dict) else None
-    if not isinstance(items, list):
-        return []
-    return [item for item in items if isinstance(item, dict)]
+    return data if isinstance(data, dict) else {}
 
 
 def merge_existing_items(items: list[dict], existing_items: list[dict]) -> list[dict]:
@@ -154,14 +151,24 @@ def main() -> int:
         print("Keep existing csdn-articles.json (RSS yielded no usable items).")
         return 0
 
-    existing_items = load_existing_items()
+    existing = load_existing()
+    existing_items = existing.get("items")
+    existing_items = (
+        [item for item in existing_items if isinstance(item, dict)]
+        if isinstance(existing_items, list)
+        else []
+    )
     if existing_items:
         items = merge_existing_items(items, existing_items)
 
+    content = {"source": rss_url, "items": items}
+    if content == {key: value for key, value in existing.items() if key != "updatedAt"}:
+        print("Keep existing csdn-articles.json (content unchanged).")
+        return 0
+
     payload = {
         "updatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "source": rss_url,
-        "items": items,
+        **content,
     }
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)

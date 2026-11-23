@@ -20,6 +20,33 @@ function runPython(script, env) {
   });
 }
 
+function runRadarWithFixedTime(env, now) {
+  const python = `
+from datetime import datetime
+from importlib.util import module_from_spec, spec_from_file_location
+import sys
+
+spec = spec_from_file_location("radar", "scripts/sync-open-source-radar.py")
+radar = module_from_spec(spec)
+spec.loader.exec_module(radar)
+radar.fetch_repo_meta = lambda repo, token: {"stars": 1000}
+
+class FixedTime:
+    @staticmethod
+    def now(tz):
+        return datetime.fromisoformat(sys.argv[1]).astimezone(tz)
+
+radar.datetime = FixedTime
+raise SystemExit(radar.main())
+`;
+
+  return spawnSync(PYTHON, ["-B", "-c", python, now], {
+    cwd: process.cwd(),
+    env: { ...process.env, GITHUB_TOKEN: "", GH_TOKEN: "", ...env },
+    encoding: "utf-8",
+  });
+}
+
 test("CSDN sync preserves existing articles when RSS XML is malformed", () => {
   const dir = tempDir();
   const outPath = join(dir, "csdn-articles.json");
@@ -117,6 +144,44 @@ test("CSDN sync keeps prior articles when RSS returns only a partial feed", () =
   );
 });
 
+test("CSDN sync leaves its output byte-identical for the same valid RSS entries", () => {
+  const dir = tempDir();
+  const outPath = join(dir, "csdn-articles.json");
+  const sourcePath = join(dir, "current.xml");
+  const source = pathToFileURL(sourcePath).href;
+  const existing = JSON.stringify({
+    updatedAt: "2026-01-01T00:00:00Z",
+    source,
+    items: [{
+      title: "unchanged article",
+      description: "already synced",
+      url: "https://example.com/unchanged",
+      date: "2026-05-26",
+      platform: "CSDN",
+      tags: ["Java"],
+    }],
+  });
+  writeFileSync(outPath, existing);
+  writeFileSync(sourcePath, `
+<rss><channel>
+  <item>
+    <title>unchanged article</title>
+    <link>https://example.com/unchanged</link>
+    <description>already synced</description>
+    <pubDate>Tue, 26 May 2026 08:00:00 GMT</pubDate>
+    <category>Java</category>
+  </item>
+</channel></rss>`);
+
+  const result = runPython("scripts/sync-csdn-rss.py", {
+    CSDN_ARTICLES_OUT_PATH: outPath,
+    CSDN_RSS_URL: source,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(readFileSync(outPath, "utf8"), existing);
+});
+
 test("radar sync preserves existing data when trending HTML is empty", () => {
   const dir = tempDir();
   const outPath = join(dir, "open-source-radar.json");
@@ -194,11 +259,11 @@ test("radar sync keeps curated Chinese copy and refreshes trending stats", () =>
     </body></html>`,
   );
 
-  const result = runPython("scripts/sync-open-source-radar.py", {
+  const radarEnv = {
     RADAR_OUT_PATH: outPath,
     GITHUB_TRENDING_URL: pathToFileURL(sourcePath).href,
-    GITHUB_TOKEN: "",
-  });
+  };
+  const result = runRadarWithFixedTime(radarEnv, "2026-01-07T10:00:00+08:00");
 
   assert.equal(result.status, 0, result.stderr);
 
@@ -208,5 +273,34 @@ test("radar sync keeps curated Chinese copy and refreshes trending stats", () =>
   assert.deepEqual(data.projects[0].features, ["人工特性 1", "人工特性 2", "人工特性 3"]);
   assert.equal(data.projects[0].weekStars, 2500);
   assert.equal(data.projects[0].trending, true);
-  assert.match(data.updatedAt, /^2026-/);
+  assert.equal(data.updatedAt, "2026-01-07T10:00:00+08:00");
+});
+
+test("radar sync retains the file for unchanged content and writes a new week label", () => {
+  const dir = tempDir();
+  const sourcePath = join(dir, "trending.html");
+  const outPath = join(dir, "radar.json");
+  writeFileSync(sourcePath, `
+<article class="Box-row">
+  <h2><a href="/example/ai-tool">AI Tool</a></h2>
+  <p class="col-9">AI software</p>
+  <span>20 stars this week</span>
+</article>`);
+  const env = { RADAR_OUT_PATH: outPath, GITHUB_TRENDING_URL: pathToFileURL(sourcePath).href };
+
+  const initial = runRadarWithFixedTime(env, "2026-01-07T10:00:00+08:00");
+  assert.equal(initial.status, 0, initial.stderr);
+  const stable = readFileSync(outPath, "utf8");
+
+  const repeated = runRadarWithFixedTime(env, "2026-01-07T11:00:00+08:00");
+  assert.equal(repeated.status, 0, repeated.stderr);
+  assert.equal(readFileSync(outPath, "utf8"), stable);
+
+  const nextWeek = runRadarWithFixedTime(env, "2026-01-14T10:00:00+08:00");
+  assert.equal(nextWeek.status, 0, nextWeek.stderr);
+  assert.deepEqual(JSON.parse(readFileSync(outPath, "utf8")), {
+    ...JSON.parse(stable),
+    updatedAt: "2026-01-14T10:00:00+08:00",
+    weekLabel: "2026-01-07 ~ 2026-01-14",
+  });
 });

@@ -4,7 +4,7 @@
  * generate-ai-changelog.mjs
  *
  * 从 git log 自动生成 AI_TOPIC_CHANGELOG，写入 data/ai-compare.js。
- * 供 CI 部署前或本地手动运行。
+ * 更新时在本地运行，并提交生成结果供 CI 测试。
  *
  * 用法：
  *   node scripts/generate-ai-changelog.mjs          # 默认写入 data/ai-compare.js

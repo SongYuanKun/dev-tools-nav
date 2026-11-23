@@ -4,12 +4,18 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Full SHA of the main commit to test
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: test-${{ github.ref }}
+  group: test-${{ github.event_name }}-${{ github.ref }}-${{ github.event_name == 'push' && github.sha || inputs.expected_sha || 'pr' }}
   cancel-in-progress: true
 
 env:
@@ -17,7 +23,11 @@ env:
 
 jobs:
   changed-files:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       code_changed: ${{ steps.filter.outputs.code }}
     steps:
@@ -44,12 +54,25 @@ jobs:
 
   unit:
     needs: changed-files
-    if: needs.changed-files.outputs.code_changed == 'true'
+    if: ${{ !cancelled() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (needs.changed-files.result == 'success' && needs.changed-files.outputs.code_changed == 'true')) }}
     runs-on: ubuntu-latest
     steps:
+      - name: Verify dispatch target
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          if [[ "$GITHUB_REF" != refs/heads/main || "$EXPECTED_SHA" != "$GITHUB_SHA" ]]; then
+            echo '::error::Test dispatch must target the expected main SHA.'
+            exit 1
+          fi
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify checkout SHA
+        run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
@@ -62,9 +85,12 @@ jobs:
           restore-keys: playwright-${{ runner.os }}-chromium-
       - run: npm ci
       - run: npx playwright install chromium --with-deps
-      - run: npm test
-      - run: npm run check:asset-versions
-      - run: npm run check:generated
+      - name: Run npm test
+        run: npm test
+      - name: Run npm run check:asset-versions
+        run: npm run check:asset-versions
+      - name: Run npm run check:generated
+        run: npm run check:generated
       - name: Check accessibility and performance baseline
         run: node scripts/a11y-performance-gate.mjs
       - name: Upload test logs on failure

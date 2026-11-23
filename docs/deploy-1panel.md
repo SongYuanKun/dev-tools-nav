@@ -1,6 +1,6 @@
 # GTR 出站轮询部署运维手册
 
-GTR 主机主动读取公开仓库，不接受 GitHub 下发的作业。发布链路中的 GitHub Actions 只运行 Test 和 GitHub Pages；`dev-tools-nav-deploy.timer` 每十分钟检查 `main`，仅在该精确提交的 Test push run 成功后部署。公开仓库不得重新注册任何 GitHub Actions Runner。
+GTR 主机主动读取公开仓库，不接受 GitHub 下发的作业。`dev-tools-nav-deploy.timer` 每十分钟检查 `main`，仅部署通过完整 Test 的当前提交。GitHub Pages 也在完整 Test 通过后发布同一个 SHA。公开仓库不得重新注册任何 GitHub Actions Runner。
 
 ## 固定配置与信任边界
 
@@ -77,13 +77,23 @@ systemctl --user list-timers dev-tools-nav-deploy.timer
 
 ## 精确 SHA 发布门禁
 
-poller 先用 `git ls-remote` 读取 `main` SHA，再查询 Test workflow 的公开 API：
+poller 用 `git ls-remote` 读取 `main` SHA，再从 GitHub 公开 API 查询受信任工作流 `test.yml` 对该 SHA 的运行记录，以及对应运行尝试的 jobs：
 
 ```text
-https://api.github.com/repos/SongYuanKun/dev-tools-nav/actions/workflows/test.yml/runs?branch=main&event=push&head_sha=$remote_sha&per_page=20
+GET /repos/SongYuanKun/dev-tools-nav/actions/workflows/test.yml/runs?branch=main&head_sha=$remote_sha&status=success&per_page=20
+GET /repos/SongYuanKun/dev-tools-nav/actions/runs/{run_id}/attempts/{attempt_number}/jobs?per_page=100
 ```
 
-只有响应中同一 `head_sha`、`event=push` 且 `conclusion=success` 的 run 才能放行。没有匹配成功 run 时，service 正常退出且不写状态；网络、JSON、checkout、测试、构建或部署失败时，service 失败且不写状态。两种情况都会保留待部署 SHA，供下一次十分钟 calendar 触发重试。
+同仓库 `main` 的 `push` 或 `workflow_dispatch` Test 必须成功完成。对应尝试的 `unit` job 及 `npm test`、资源版本检查、生成物检查、可访问性和性能门禁都必须成功。跳过、缺失或失败的 job 或步骤不会放行。发布前会再次核对远端 `main` 与检出和已测试的 SHA。没有匹配的 Test 时，service 退出并等待下次轮询。网络、JSON、checkout、测试、构建或部署失败时，保留上次已发布 SHA。
+
+CSDN 和开源雷达同步仅在内容变化且成功推送 `main` 后，用短期 `GITHUB_TOKEN` 发起 `workflow_dispatch`，传入刚推送的 `expected_sha`。只有抓取时间变化时保留现有文件。若主干已前移，同步会跳过过期的 dispatch，或者由 Test 拒绝 SHA 不匹配的请求。GitHub Pages 由 Test 完成触发，使用已验证 SHA 的提交内容和生成物组装发布副本。Pages 手动发布也需要同一门禁。
+
+如果 `main` 已前移但没有有效 Test，例如自动同步 dispatch 失败，或截图更新机器人单独推进了 `main`，有仓库权限的操作者可为当前提交启动完整 Test：
+
+```bash
+REMOTE_SHA="$(git ls-remote https://github.com/SongYuanKun/dev-tools-nav.git refs/heads/main | awk '{print $1}')"
+test -n "$REMOTE_SHA" && gh workflow run test.yml --ref main -f "expected_sha=$REMOTE_SHA"
+```
 
 ## 日常诊断
 
@@ -98,51 +108,18 @@ git ls-remote https://github.com/SongYuanKun/dev-tools-nav.git refs/heads/main
 
 `service` 显示失败时，先从 journal 找到第一个失败命令。状态 SHA 与远端相同表示无需发布；不同表示 Test 尚未放行或发布失败。缓存中的锁阻止并发执行。
 
-## 手动原子部署
+## 手动运行发布检查
 
-仅在自动路径不可用且已确认本地 checkout 对应目标提交时使用。先禁用 timer，并确认 oneshot 已经停止。若 service 为 `failed`，清除失败记录并重新确认 `inactive`；若仍为 `active`、`activating`、`reloading` 或 `deactivating`，停止手动流程，等待它完成后重试。绝不要 stop 或 kill 正在发布的 service。
+在 GTR 上手动启动已安装的 oneshot，沿用自动轮询的同一把锁与完整 Test 门禁。若 service 正在运行，等待完成后再读取状态。发布器先构造 `.index-next`，保留两个站点验证文件，再用 `.deploy-in-progress`、`.index-old` 和目录重命名切换站点，失败时恢复旧目录。
 
 ```bash
 set -euo pipefail
-systemctl --user disable --now dev-tools-nav-deploy.timer
-service_status=0
-SERVICE_STATE="$(systemctl --user is-active dev-tools-nav-deploy.service)" || service_status=$?
-if [[ "$SERVICE_STATE" == "failed" ]]; then
-  systemctl --user reset-failed dev-tools-nav-deploy.service
-  service_status=0
-  SERVICE_STATE="$(systemctl --user is-active dev-tools-nav-deploy.service)" || service_status=$?
-fi
-case "$SERVICE_STATE" in
-  active|activating|reloading|deactivating)
-    echo "Deployment service is still running; 等待它完成后重试。" >&2
-    exit 1
-    ;;
-esac
-[[ "$service_status" -eq 3 && "$SERVICE_STATE" == "inactive" ]] || {
-  echo "Unexpected deployment service state: $SERVICE_STATE (status $service_status)" >&2
-  exit 1
-}
-
-npm ci
-npm test
-npm run build
-npm run check:generated
-
-install -d -m 0700 "$HOME/.cache/dev-tools-nav-deploy"
-exec 9>"$HOME/.cache/dev-tools-nav-deploy/deploy.lock"
-flock -n 9 || { echo "Another deployment holds the lock; retry later." >&2; exit 1; }
-SITE_SOURCE_DIR="$PWD" "$HOME/.local/libexec/dev-tools-nav-deploy/deploy-1panel-local.sh"
-
-docker ps --filter name=1Panel-openresty-rRvM
-curl -fsS https://tools.songyuankun.top/ >/dev/null
-test "$(curl -sS -o /dev/null -w '%{http_code}' https://tools.songyuankun.top/content/)" = 404
-curl -fsS https://tools.songyuankun.top/baidu_verify_codeva-TByQYpVHM2.html >/dev/null
-curl -fsS https://tools.songyuankun.top/googleb710668c9aa28d4e.html >/dev/null
-
-systemctl --user enable --now dev-tools-nav-deploy.timer
+systemctl --user start dev-tools-nav-deploy.service
+journalctl --user -u dev-tools-nav-deploy.service -n 100 --no-pager
+cat "$HOME/.local/state/dev-tools-nav-deploy/last-deployed-sha"
 ```
 
-非阻塞锁与 poller 使用同一个 `deploy.lock`，防止两条路径并发调用部署器；poller 已自行持锁，不要在 poller 路径外层重复加锁。部署脚本先构造 `.index-next`，保留两个验证文件，再用 `.deploy-in-progress`、`.index-old` 和目录重命名切换站点。失败时恢复旧目录。手动发布不会更新 poller 状态文件；恢复自动路径后运行一次 oneshot，让 poller 核验并记录 SHA。只有上述生产验收全部通过后才能重新启用 timer。
+用下文生产验收核对实际发布 SHA。oneshot 退出成功也可能表示正在等待 Test，或者当前 SHA 已经发布。
 
 ## 注销旧 Runner
 
@@ -185,11 +162,11 @@ remove token 只放在当前 shell，不写入仓库、命令脚本、日志或�
 
 ## 静态资源版本号
 
-`scripts/deploy-1panel-local.sh` 在 STAGE 目录上运行 `scripts/stamp-asset-version.mjs`：把 HTML / `sw.js` 中的 `__ASSET_VERSION__` 换成当前提交 short SHA（可用环境变量 `ASSET_VERSION` 覆盖；poller 会传入 `main` SHA 的前 12 位）。源仓库 HTML 保持占位符；只有发布副本带真实 `?v=`，用于 CSS/JS 缓存失效。GitHub Pages 在组装 `_site` 时做同样的 stamp。
+`scripts/deploy-1panel-local.sh` 在 STAGE 目录上运行 `scripts/stamp-asset-version.mjs`，把 HTML / `sw.js` 中的 `__ASSET_VERSION__` 换成已测试 SHA 的前 12 位。源仓库 HTML 保持占位符，发布副本使用版本查询参数 `?v=` 使 CSS/JS 缓存失效。GitHub Pages 同样用已测试的 SHA 标记发布副本。
 
-安装器会把 `stamp-asset-version.mjs` 一并安装到 `~/.local/libexec/dev-tools-nav-deploy/`，与 `deploy-1panel-local.sh` 同目录。部署器按顺序查找：`SITE_SOURCE_DIR/scripts/` → libexec 旁路副本 → `SCRIPT_ROOT/scripts/`。**找不到 stamp 脚本、缺少 node、无法解析版本号、或 stamp 后 STAGE 仍含 `__ASSET_VERSION__`，部署会立即失败并回滚，不会把占位符发布到生产。**
+安装器会把 `stamp-asset-version.mjs` 一并安装到 `~/.local/libexec/dev-tools-nav-deploy/`，与 `deploy-1panel-local.sh` 同目录。部署器优先使用已验证 checkout 的脚本，其次使用安装副本。找不到脚本、缺少 Node.js、stamp 失败或 STAGE 仍包含 `__ASSET_VERSION__` 时，部署会中止。
 
-合并含 stamp 逻辑的更新后，必须在 GTR 上重新运行 `scripts/install-outbound-deployer.sh` 再启 timer；远端 checkout 不会自动升级 libexec。
+合并本次完整 Test 门禁更新后，在 GTR 审查合并提交，再用 `scripts/install-outbound-deployer.sh` 重新安装可信 poller 与部署脚本。安装完成后先执行 oneshot 并验收，再启用 timer。远端 checkout 不会自动升级 libexec。
 
 ### 部署后校验（GTR 操作者）
 
@@ -206,9 +183,10 @@ curl -fsS https://tools.songyuankun.top/ | grep -oE 'css/style\.css\?v=[0-9a-f]+
 
 ## 生产验收
 
-记录 `main` SHA、状态 SHA、容器状态和 HTTP 结果：
+从已审查的仓库 checkout 记录 `main` SHA、状态 SHA、容器状态和 HTTP 结果，并比较站点上的同步数据与该提交：
 
 ```bash
+set -euo pipefail
 REMOTE_SHA="$(git ls-remote https://github.com/SongYuanKun/dev-tools-nav.git refs/heads/main | awk '{print $1}')"
 STATE_SHA="$(cat "$HOME/.local/state/dev-tools-nav-deploy/last-deployed-sha")"
 test "$REMOTE_SHA" = "$STATE_SHA"
@@ -217,6 +195,9 @@ curl -fsS https://tools.songyuankun.top/ >/dev/null
 test "$(curl -sS -o /dev/null -w '%{http_code}' https://tools.songyuankun.top/content/)" = 404
 curl -fsS https://tools.songyuankun.top/baidu_verify_codeva-TByQYpVHM2.html >/dev/null
 curl -fsS https://tools.songyuankun.top/googleb710668c9aa28d4e.html >/dev/null
+for path in data/csdn-articles.json data/open-source-radar.json; do
+  git show "$STATE_SHA:$path" | cmp - <(curl -fsS "https://tools.songyuankun.top/$path")
+done
 # 静态资源版本号：字面量占位符不得出现在生产 HTML / sw.js
 ! curl -fsS https://tools.songyuankun.top/ | grep -F '__ASSET_VERSION__'
 ! curl -fsS https://tools.songyuankun.top/sw.js | grep -F '__ASSET_VERSION__'
@@ -236,7 +217,11 @@ npm run check:consistency
 
 ## 升级与恢复
 
+GitHub 侧以当前 `main` 的完整 Test 成功、Pages 发布成功以及镜像内容与该 SHA 一致为准。合并仓库及 GitHub Pages 发布均不会更新 GTR 本机的 libexec。
+
 升级时先在本地可信 checkout 审查 `scripts/poll-github-deploy.sh`、`scripts/deploy-1panel-local.sh`、`scripts/stamp-asset-version.mjs`、`scripts/install-outbound-deployer.sh` 和 `ops/dev-tools-nav-deploy.{service,timer}`，再重新运行安装器。安装器必须先禁用已有 timer；若禁用失败或 oneshot 仍在运行，则不写目标文件并退出。安装过程先备份旧文件，再 staging 并原子替换 5 个目标（poller、deploy、stamp、service、timer）；失败时逐项恢复、reload、重新禁用 timer 并验证状态。若恢复替换失败，错误会列出目标和保留的 backup 路径；不要删除该 backup 目录。文件与 timer 状态全部验证后才到 commit point，之后的 backup 清理失败只产生 warning 并保留 backup，不回滚新安装。成功后重复“初次运行和启用”步骤。永远不要让远端 checkout 自行升级本地脚本或 units。
+
+取得生产操作授权后，从已审查版本安装。安装成功时 timer 仍为 `disabled` / `inactive`。运行 oneshot，核对 `last-deployed-sha` 与当前 `main` 相同，并完成上面的站点内容验收。然后显式执行 `systemctl --user enable --now dev-tools-nav-deploy.timer`，用 `systemctl --user list-timers --all dev-tools-nav-deploy.timer` 确认 `NEXT` 显示下一次运行时间。
 
 若发布中断，重新运行 oneshot；原子部署会根据 `.deploy-in-progress` 和 `.index-old` 恢复或完成切换。若必须停止自动发布：
 

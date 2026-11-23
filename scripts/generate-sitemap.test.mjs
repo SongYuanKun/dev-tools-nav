@@ -4,6 +4,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { GENERATED_PATHS } from "./check-generated.mjs";
 
 import {
   collectStaticUrls,
@@ -188,14 +189,11 @@ test("generateSitemap is deterministic for the same Git commit", () => {
   assert.equal(second, first);
 });
 
-test("Pages builds the sitemap before publishing", () => {
-  const pages = readFileSync(".github/workflows/deploy-pages.yml", "utf8");
+test("the build generates the sitemap and the release check verifies its committed copy", () => {
   const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
-  const command = "npm run build";
-
   assert.match(packageJson.scripts.build, /npm run generate-sitemap/);
-  assert.ok(pages.includes(command));
-  assert.ok(pages.indexOf(command) < pages.indexOf("Assemble site"));
+  assert.match(packageJson.scripts["check:generated"], /npm run build && node scripts\/check-generated\.mjs/);
+  assert.ok(GENERATED_PATHS.includes("sitemap.xml"));
 });
 
 test("module can be imported when argv has no script path", () => {

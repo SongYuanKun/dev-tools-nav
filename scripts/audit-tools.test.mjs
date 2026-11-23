@@ -225,24 +225,18 @@ test("CONTRIBUTING states the contribution scope and the self-check commands", (
   assert.match(contributing, /<!-- catalog-total -->/);
 });
 
-test("deploy.sh fails fast when build fails and delegates to the atomic local deployer", () => {
+test("deploy.sh starts the installed gated service and returns its status", () => {
   const root = mkdtempSync(join(tmpdir(), "deploy-wrapper-"));
   try {
-    mkdirSync(join(root, "scripts"), { recursive: true });
     mkdirSync(join(root, "bin"), { recursive: true });
     cpSync("deploy.sh", join(root, "deploy.sh"));
     chmodSync(join(root, "deploy.sh"), 0o755);
-    writeFileSync(join(root, "bin", "npm"), `#!/usr/bin/env bash
+    writeFileSync(join(root, "bin", "systemctl"), `#!/usr/bin/env bash
 set -euo pipefail
-printf 'npm:%s\\n' "$*" >> "$WRAPPER_LOG"
-[[ "\${FAIL_BUILD:-0}" != 1 ]]
+printf '%s\\n' "$*" >> "$WRAPPER_LOG"
+exit "\${SERVICE_STATUS:-0}"
 `);
-    chmodSync(join(root, "bin", "npm"), 0o755);
-    writeFileSync(join(root, "scripts", "deploy-1panel-local.sh"), `#!/usr/bin/env bash
-set -euo pipefail
-printf 'local\\n' >> "$WRAPPER_LOG"
-`);
-    chmodSync(join(root, "scripts", "deploy-1panel-local.sh"), 0o755);
+    chmodSync(join(root, "bin", "systemctl"), 0o755);
     const env = {
       ...process.env,
       PATH: `${join(root, "bin")}:${process.env.PATH}`,
@@ -251,16 +245,16 @@ printf 'local\\n' >> "$WRAPPER_LOG"
 
     const success = spawnSync("bash", [join(root, "deploy.sh")], { cwd: "/", env, encoding: "utf8" });
     assert.equal(success.status, 0, success.stderr);
-    assert.equal(readFileSync(env.WRAPPER_LOG, "utf8"), "npm:run build\nlocal\n");
+    assert.equal(readFileSync(env.WRAPPER_LOG, "utf8"), "--user start dev-tools-nav-deploy.service\n");
 
     writeFileSync(env.WRAPPER_LOG, "");
     const failure = spawnSync("bash", [join(root, "deploy.sh")], {
       cwd: "/",
-      env: { ...env, FAIL_BUILD: "1" },
+      env: { ...env, SERVICE_STATUS: "17" },
       encoding: "utf8",
     });
-    assert.notEqual(failure.status, 0);
-    assert.equal(readFileSync(env.WRAPPER_LOG, "utf8"), "npm:run build\n");
+    assert.equal(failure.status, 17);
+    assert.equal(readFileSync(env.WRAPPER_LOG, "utf8"), "--user start dev-tools-nav-deploy.service\n");
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -270,9 +264,8 @@ test("deploy.sh has fail-fast wrapper text without the legacy rsync target", () 
   const wrapper = readFileSync("deploy.sh", "utf8");
 
   assert.match(wrapper, /set -euo pipefail/);
-  assert.match(wrapper, /npm run build/);
-  assert.doesNotMatch(wrapper, /npm run check:generated/);
-  assert.match(wrapper, /exec .*scripts\/deploy-1panel-local\.sh/);
+  assert.match(wrapper, /exec systemctl --user start dev-tools-nav-deploy\.service/);
+  assert.doesNotMatch(wrapper, /npm run|deploy-1panel-local\.sh/);
   assert.doesNotMatch(wrapper, /rsync|\/opt\/1panel\/www\/sites\/tools\.songyuankun\.top\/index/);
 });
 

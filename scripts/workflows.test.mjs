@@ -1,6 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { parse } from "yaml";
+
+function readWorkflow(name) {
+  return parse(readFileSync(`.github/workflows/${name}.yml`, "utf8"));
+}
 
 function assertStepsInOrder(workflow, steps) {
   let cursor = -1;
@@ -12,27 +18,66 @@ function assertStepsInOrder(workflow, steps) {
   }
 }
 
-test("test workflow gates pushes and pull requests with npm ci and npm test", () => {
+test("Test gates main pushes and dispatches with the complete unit suite", () => {
   const workflow = readFileSync(".github/workflows/test.yml", "utf-8");
-  assert.match(workflow, /pull_request:/);
-  assert.match(workflow, /push:/);
+  const config = parse(workflow);
+  assert.deepEqual(config.on.push.branches, ["main"]);
+  assert.ok(Object.hasOwn(config.on, "pull_request"));
+  assert.equal(config.on.workflow_dispatch.inputs.expected_sha.required, true);
+  assert.equal(config.jobs["changed-files"].if, "github.event_name == 'pull_request'");
+  assert.match(config.jobs.unit.if, /github\.event_name == 'push' \|\| github\.event_name == 'workflow_dispatch'/);
+  const checkout = config.jobs.unit.steps.find((step) => step.uses?.startsWith("actions/checkout@"));
+  assert.equal(checkout.with.ref, "${{ github.sha }}");
   assert.match(workflow, /node-version: ["']24["']/);
   assert.match(workflow, /actions\/checkout@v6[\s\S]*?fetch-depth:\s*0/);
-  assert.match(workflow, /run: npm ci/);
-  assert.match(workflow, /run: npx playwright install chromium --with-deps/);
-  assert.match(workflow, /run: npm test/);
-  assertStepsInOrder(workflow, ["run: npm ci", "run: npx playwright install chromium --with-deps", "run: npm test", "run: npm run check:asset-versions", "run: npm run check:generated", "run: node scripts/a11y-performance-gate.mjs"]);
+  assertStepsInOrder(workflow, ["name: Verify checkout SHA", "run: npm ci", "run: npx playwright install chromium --with-deps", "run: npm test", "run: npm run check:asset-versions", "run: npm run check:generated", "run: node scripts/a11y-performance-gate.mjs"]);
 });
 
-test("Pages installs dependencies and builds before publishing", () => {
-  const pages = readFileSync(".github/workflows/deploy-pages.yml", "utf-8");
-  assert.match(pages, /node-version: ["']24["']/);
-  assertStepsInOrder(pages, ["run: npm ci", "name: Refresh CSDN articles from RSS", "run: npm run build", "run: npm run check:generated", "name: Assemble site"]);
-  assert.match(pages, /name: Assemble site[\s\S]*?--exclude='node_modules'[\s\S]*?\.\/ _site\//);
-  assert.match(pages, /name: Assemble site[\s\S]*?stamp-asset-version\.mjs --root _site/);
-  assert.match(pages, /ASSET_VERSION:\s*\$\{\{\s*github\.sha\s*\}\}/);
-  assert.doesNotMatch(pages, /^\s+enablement:\s*true\s*$/m);
-  assert.doesNotMatch(pages, /static_site_generator:\s*none/);
+test("a stale or non-main Test dispatch is rejected before checkout", () => {
+  const [gate, checkout] = readWorkflow("test").jobs.unit.steps;
+  assert.equal(gate.if, "github.event_name == 'workflow_dispatch'");
+  assert.match(checkout.uses, /^actions\/checkout@/);
+  const sha = "a".repeat(40);
+  const run = (ref, expected) => spawnSync("bash", ["-e", "-c", gate.run], {
+    env: { ...process.env, GITHUB_REF: ref, GITHUB_SHA: sha, EXPECTED_SHA: expected },
+  }).status;
+  assert.equal(run("refs/heads/main", sha), 0);
+  assert.equal(run("refs/heads/main", "b".repeat(40)), 1);
+  assert.equal(run("refs/heads/topic", sha), 1);
+});
+
+test("both data sync workflows publish through the shared exact-SHA dispatch script", () => {
+  for (const [workflow, file] of [["sync-csdn-rss", "csdn-articles.json"], ["sync-open-source-radar", "open-source-radar.json"]]) {
+    const sync = readWorkflow(workflow).jobs.sync;
+    assert.match(sync.if, /github\.ref == 'refs\/heads\/main'/);
+    assert.deepEqual(sync.permissions, { contents: "write", actions: "write" });
+    assert.equal(sync.steps[0].with.ref, "${{ github.sha }}");
+    const publish = sync.steps.at(-1);
+    assert.equal(publish.env.GH_TOKEN, "${{ github.token }}");
+    assert.ok(publish.run.startsWith(`bash scripts/publish-sync-update.sh data/${file} `));
+  }
+});
+
+test("Pages stages the verified commit and checks main again before deployment", () => {
+  const config = readWorkflow("deploy-pages");
+  assert.deepEqual(config.on, {
+    workflow_dispatch: null,
+    workflow_run: { workflows: ["Test"], types: ["completed"], branches: ["main"] },
+  });
+  assert.deepEqual(config.jobs.build.permissions, { actions: "read", contents: "read" });
+  const steps = config.jobs.build.steps;
+  const verify = steps.findIndex((step) => step.run === "node scripts/verify-pages-test.mjs");
+  const assemble = steps.findIndex((step) => step.id === "assemble");
+  assert.ok(verify >= 0 && assemble > verify);
+  assert.equal(steps[assemble].if, "steps.verify.outputs.sha != ''");
+  assert.equal(steps[assemble].env.ASSET_VERSION, "${{ steps.verify.outputs.sha }}");
+  assert.match(steps[assemble].run, /git archive "\$CANDIDATE_SHA"/);
+  assert.match(steps[assemble].run, /stamp-asset-version\.mjs/);
+  assert.doesNotMatch(steps.map((step) => step.run).join("\n"), /npm run build|sync-csdn|generate-ai-changelog/);
+  assert.equal(config.jobs.deploy.needs, "build");
+  assert.equal(config.jobs.deploy.if, "needs.build.outputs.sha != ''");
+  assert.equal(config.jobs.deploy.steps.at(-2).id, "current");
+  assert.equal(config.jobs.deploy.steps.at(-1).if, "steps.current.outputs.ready == 'true'");
 });
 
 test("screenshot workflow builds generated assets before serving the site", () => {
@@ -63,35 +108,16 @@ test("deployment uses one outbound runbook and no repository Runner workflow", (
   const runbook = readFileSync("docs/deploy-1panel.md", "utf8");
   assert.match(runbook, /gtr-dev-tools-nav/);
   assert.match(runbook, /config\.sh["']? remove --token/);
-  assert.match(runbook, /actions\/workflows\/test\.yml\/runs\?branch=main&event=push&head_sha=\$remote_sha/);
+  assert.match(runbook, /actions\/workflows\/test\.yml\/runs\?branch=main&head_sha=\$remote_sha/);
   assert.match(runbook, /OnCalendar=\*:0\/10/);
   assert.match(runbook, /\.local\/state\/dev-tools-nav-deploy\/last-deployed-sha/);
   assert.match(runbook, /offline/i);
   assert.match(runbook, /systemctl --user start dev-tools-nav-deploy\.service/);
   assert.match(runbook, /^VERIFICATION_SOURCE="\$HOME\/\.local\/share\/dev-tools-nav-verification"$/m);
   assert.doesNotMatch(runbook, /\$\{VERIFICATION_SOURCE_DIR:-|VERIFICATION_SOURCE_DIR=/);
-  assertStepsInOrder(runbook, [
-    "systemctl --user disable --now dev-tools-nav-deploy.timer",
-    'SERVICE_STATE="$(systemctl --user is-active dev-tools-nav-deploy.service)"',
-    'if [[ "$SERVICE_STATE" == "failed" ]]',
-    "systemctl --user reset-failed dev-tools-nav-deploy.service",
-    'SERVICE_STATE="$(systemctl --user is-active dev-tools-nav-deploy.service)"',
-    '[[ "$service_status" -eq 3 && "$SERVICE_STATE" == "inactive" ]]',
-    "npm ci",
-    "npm test",
-    "npm run build",
-    "npm run check:generated",
-    'exec 9>"$HOME/.cache/dev-tools-nav-deploy/deploy.lock"',
-    "flock -n 9",
-    'SITE_SOURCE_DIR="$PWD" "$HOME/.local/libexec/dev-tools-nav-deploy/deploy-1panel-local.sh"',
-    "curl -fsS https://tools.songyuankun.top/ >/dev/null",
-    "https://tools.songyuankun.top/content/",
-    "systemctl --user enable --now dev-tools-nav-deploy.timer",
-  ]);
-  assert.match(runbook, /active.*activating|activating.*active/s);
-  assert.match(runbook, /reloading.*deactivating|deactivating.*reloading/s);
-  assert.match(runbook, /active\|activating\|reloading\|deactivating\)/);
-  assert.match(runbook, /等待.*完成.*重试/);
+  const manual = runbook.split("## 手动运行发布检查\n")[1]?.split("\n## ")[0];
+  assert.match(manual, /systemctl --user start dev-tools-nav-deploy\.service/);
+  assert.doesNotMatch(manual, /SITE_SOURCE_DIR=|deploy-1panel-local\.sh/);
   assert.doesNotMatch(runbook, /systemctl --user (?:stop|kill) dev-tools-nav-deploy\.service/);
   assert.doesNotMatch(runbook, /^\s*(?:\.\/deploy\.sh|\.\/scripts\/deploy-1panel-local\.sh)\s*$/m);
   assertStepsInOrder(runbook, [
