@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-11-16T17:08:55+08:00",
-  "weekLabel": "2026-11-09 ~ 2026-11-16",
-  "summary": "本周 GitHub Trending 的 AI 热点集中在 调研 / 知识、Agent Skills、编程 Agent 等方向。代表项目包括 astryx、skills、elephant-goldfish-model。自动同步已更新 star 数据，中文解读可继续人工润色。",
+  "updatedAt": "2026-11-23T18:27:20+08:00",
+  "weekLabel": "2026-11-16 ~ 2026-11-23",
+  "summary": "本周 GitHub Trending 的 AI 热点集中在 调研 / 知识、编程 Agent、Agent Skills 等方向。代表项目包括 univer、last30days-skill、ffmpeg-skill。自动同步已更新 star 数据，中文解读可继续人工润色。",
   "themes": [
     {
       "id": "all",
@@ -31,10 +31,87 @@
   "projects": [
     {
       "rank": 1,
+      "repo": "dream-num/univer",
+      "language": "TypeScript",
+      "stars": 31368,
+      "weekStars": 6436,
+      "trending": true,
+      "topic": "research",
+      "summary": "本周 GitHub Trending：univer — Build your own AI office with Univer Office SDK. Bring editing, calculation, collaboration, and file processing into your product for people and AI agents. Built on an extensible open-source core.",
+      "features": [
+        "Build your own AI office with Univer Office SDK. Bring editing, calculation, collaboration, and file processing into your product for people and AI agents. Built on an extensible open-source core.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "调研 / 知识",
+        "univer"
+      ]
+    },
+    {
+      "rank": 2,
+      "repo": "mvanhorn/last30days-skill",
+      "language": "Python",
+      "stars": 73067,
+      "weekStars": 4731,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：last30days-skill — AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
+      "features": [
+        "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "last30days skill",
+        "Agent Skill"
+      ]
+    },
+    {
+      "rank": 3,
+      "repo": "kajisho5/ffmpeg-skill",
+      "language": "Python",
+      "stars": 9966,
+      "weekStars": 3748,
+      "trending": true,
+      "topic": "skills",
+      "summary": "本周 GitHub Trending：ffmpeg-skill — Local video editor for coding agents: 42 FFmpeg tools with a machine-readable contract and an MCP server, for Claude Code, Cursor and Codex. Cut, captions, reframe, loudness, platform exports. No cloud, no API keys.",
+      "features": [
+        "Local video editor for coding agents: 42 FFmpeg tools with a machine-readable contract and an MCP server, for Claude Code, Cursor and Codex. Cut, captions, reframe, loudness, platform exports. No cloud, no API keys.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "Agent Skills",
+        "ffmpeg skill"
+      ]
+    },
+    {
+      "rank": 4,
+      "repo": "alibaba/open-code-review",
+      "language": "Go",
+      "stars": 55553,
+      "weekStars": 3700,
+      "trending": true,
+      "topic": "coding",
+      "summary": "本周 GitHub Trending：open-code-review — Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+      "features": [
+        "Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+        "本周入选 GitHub Trending，社区关注度上升。",
+        "建议阅读 README 与 License，评估是否适合你的场景。"
+      ],
+      "tags": [
+        "编程 Agent",
+        "open code review"
+      ]
+    },
+    {
+      "rank": 5,
       "repo": "meta/astryx",
       "language": "TypeScript",
-      "stars": 29188,
-      "weekStars": 13501,
+      "stars": 32379,
+      "weekStars": 3626,
       "trending": true,
       "topic": "research",
       "summary": "本周 GitHub Trending：astryx — An open source design system that's fully customizable and agent ready",
@@ -49,125 +126,48 @@
       ]
     },
     {
-      "rank": 2,
-      "repo": "anthropics/skills",
-      "language": "Python",
-      "stars": 195580,
-      "weekStars": 6077,
-      "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：skills — Public repository for Agent Skills",
-      "features": [
-        "Public repository for Agent Skills",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "Agent Skills",
-        "skills",
-        "Agent Skill"
-      ]
-    },
-    {
-      "rank": 3,
-      "repo": "google/elephant-goldfish-model",
-      "language": "Python",
-      "stars": 20022,
-      "weekStars": 5060,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：elephant-goldfish-model — Open-source plugin for designing and reviewing software with agents",
-      "features": [
-        "Open-source plugin for designing and reviewing software with agents",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "elephant goldfish model"
-      ]
-    },
-    {
-      "rank": 4,
-      "repo": "ZhuLinsen/daily_stock_analysis",
-      "language": "Python",
-      "stars": 72653,
-      "weekStars": 4548,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：daily_stock_analysis — LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。 LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
-      "features": [
-        "LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。 LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "daily_stock_analysis"
-      ]
-    },
-    {
-      "rank": 5,
-      "repo": "vercel-labs/agent-browser",
-      "language": "Rust",
-      "stars": 51789,
-      "weekStars": 4217,
-      "trending": true,
-      "topic": "research",
-      "summary": "本周 GitHub Trending：agent-browser — Browser automation CLI for AI agents",
-      "features": [
-        "Browser automation CLI for AI agents",
-        "本周入选 GitHub Trending，社区关注度上升。",
-        "建议阅读 README 与 License，评估是否适合你的场景。"
-      ],
-      "tags": [
-        "调研 / 知识",
-        "agent browser"
-      ]
-    },
-    {
       "rank": 6,
-      "repo": "addyosmani/agent-skills",
-      "language": "JavaScript",
-      "stars": 118088,
-      "weekStars": 3889,
+      "repo": "ag-ui-protocol/ag-ui",
+      "language": "TypeScript",
+      "stars": 21284,
+      "weekStars": 3620,
       "trending": true,
-      "topic": "skills",
-      "summary": "本周 GitHub Trending：agent-skills — Production-grade engineering skills for AI coding agents.",
+      "topic": "research",
+      "summary": "本周 GitHub Trending：ag-ui — AG-UI: the Agent-User Interaction Protocol. Bring Agents into Frontend Applications.",
       "features": [
-        "Production-grade engineering skills for AI coding agents.",
+        "AG-UI: the Agent-User Interaction Protocol. Bring Agents into Frontend Applications.",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
-        "Agent Skills",
-        "Agent Skill"
+        "调研 / 知识",
+        "ag ui"
       ]
     },
     {
       "rank": 7,
-      "repo": "backnotprop/plannotator",
+      "repo": "GoogleChrome/modern-web-guidance-src",
       "language": "TypeScript",
-      "stars": 12131,
-      "weekStars": 1719,
+      "stars": 10355,
+      "weekStars": 3575,
       "trending": true,
       "topic": "coding",
-      "summary": "本周 GitHub Trending：plannotator — The workspace to stay in the loop and on top of agents - shape, decide, plan, annotate, review code, share with team, and send all feedback to agents with one click.",
+      "summary": "本周 GitHub Trending：modern-web-guidance-src — Keep your coding agent up to date with the latest web best practices",
       "features": [
-        "The workspace to stay in the loop and on top of agents - shape, decide, plan, annotate, review code, share with team, and send all feedback to agents with one click.",
+        "Keep your coding agent up to date with the latest web best practices",
         "本周入选 GitHub Trending，社区关注度上升。",
         "建议阅读 README 与 License，评估是否适合你的场景。"
       ],
       "tags": [
         "编程 Agent",
-        "plannotator"
+        "modern web guidance src"
       ]
     },
     {
       "rank": 8,
       "repo": "morluto/rea",
       "language": "TypeScript",
-      "stars": 462761,
+      "stars": 474790,
       "weekStars": 0,
       "trending": false,
       "topic": "research",
@@ -186,7 +186,7 @@
       "rank": 9,
       "repo": "mattpocock/skills",
       "language": "Shell",
-      "stars": 325479,
+      "stars": 330919,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -206,7 +206,7 @@
       "rank": 10,
       "repo": "obra/superpowers",
       "language": "Shell",
-      "stars": 318241,
+      "stars": 324536,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -226,7 +226,7 @@
       "rank": 11,
       "repo": "affaan-m/ECC",
       "language": "JavaScript",
-      "stars": 304045,
+      "stars": 309231,
       "weekStars": 0,
       "trending": false,
       "topic": "skills",
@@ -246,7 +246,7 @@
       "rank": 12,
       "repo": "NousResearch/hermes-agent",
       "language": "Python",
-      "stars": 263748,
+      "stars": 265546,
       "weekStars": 0,
       "trending": false,
       "topic": "memory",
