@@ -494,6 +494,8 @@
   function send(payload, type, attempt) {
     type = type || "event";
     attempt = attempt || 0;
+    // 浏览量没有事件名，报表用逐条保存的 tag 区分自测访问。
+    if (selftestEnabled && type === "event" && payload && !payload.name) payload.tag = "selftest";
     payload = beforeSend(type, payload);
     if (!payload) return;
 

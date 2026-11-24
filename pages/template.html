@@ -231,6 +231,7 @@
           ? `/${String(tool.url || "").replace(/^\/+/, "")}`
           : `/pages/details/${encodeURIComponent(tool.id)}/`;
         const detailUrl = `https://tools.songyuankun.top${detailPath}`;
+        const visitUrl = tool.category === "online-tools" ? `..${detailPath}` : tool.url;
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) metaDesc.setAttribute("content", pageDesc);
         const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -265,7 +266,7 @@
               <p class="detail-desc">${escapeHtml(tool.description)}</p>
               <div class="detail-tags">${tagsHtml}</div>
               <a
-                href="${escapeHtml(tool.url)}"
+                href="${escapeHtml(visitUrl)}"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="detail-visit-btn"
@@ -292,7 +293,7 @@
               <tr class="detail-info-row">
                 <td class="detail-info-label">官网</td>
                 <td class="detail-info-value">
-                  <a href="${escapeHtml(tool.url)}" target="_blank" rel="noopener noreferrer" class="detail-info-link">
+                  <a href="${escapeHtml(visitUrl)}" target="_blank" rel="noopener noreferrer" class="detail-info-link">
                     ${escapeHtml(tool.url)}
                   </a>
                 </td>

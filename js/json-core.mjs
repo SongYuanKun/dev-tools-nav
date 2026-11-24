@@ -107,7 +107,7 @@ function replaceRelaxedSyntax(source) {
     }
     if (char !== ",") continue;
     let next = index + 1;
-    while (/\s/.test(chars[next] ?? "")) next += 1;
+    while (/[ \t\r\n]/.test(chars[next] ?? "")) next += 1;
     if (chars[next] === "}" || chars[next] === "]") chars[index] = " ";
   }
 
@@ -120,7 +120,7 @@ function locateJsonSyntaxError(source) {
     throw { offset };
   };
   const skipWhitespace = () => {
-    while (/\s/.test(source[index] ?? "")) index += 1;
+    while (/[ \t\r\n]/.test(source[index] ?? "")) index += 1;
   };
   const parseString = () => {
     if (source[index] !== '"') fail();
@@ -279,33 +279,36 @@ function isContainer(value) {
   return Array.isArray(value) || isPlainObject(value);
 }
 
+// 按十进制有效数字和指数比较，不经过二进制浮点舍入。
+function decimalKey(raw) {
+  const sign = raw.startsWith("-") ? "-" : "";
+  const [mantissa, exponent = "0"] = raw.slice(sign.length).toLowerCase().split("e");
+  const [whole, fraction = ""] = mantissa.split(".");
+  const digits = (whole + fraction).replace(/^0+/, "");
+  if (!digits) return sign + "0";
+  let end = digits.length;
+  while (digits[end - 1] === "0") end -= 1;
+  const scale = BigInt(exponent) + BigInt(digits.length - end - fraction.length);
+  return sign + digits.slice(0, end) + "e" + scale;
+}
+
 function numberNeedsLexeme(raw) {
-  const lexeme = String(raw);
-  const asNumber = Number(lexeme);
-  if (!Number.isFinite(asNumber)) return { preserve: true, reason: "non-finite" };
-  const integerLike = !/[.eE]/.test(lexeme);
-  if (integerLike) {
-    try {
-      if (BigInt(lexeme) !== BigInt(asNumber) || !Number.isSafeInteger(asNumber)) {
-        return { preserve: true, reason: "unsafe-integer" };
-      }
-    } catch {
-      return { preserve: true, reason: "unsafe-integer" };
-    }
-    if (Object.is(asNumber, -0) && lexeme === "-0") {
-      return { preserve: true, reason: "negative-zero" };
-    }
-    return { preserve: false, value: asNumber };
+  const value = Number(raw);
+  if (!Number.isFinite(value)) return { preserve: true, reason: "non-finite" };
+  if (value === 0) {
+    const mantissa = raw.split(/[eE]/, 1)[0];
+    if (/[1-9]/.test(mantissa)) return { preserve: true, reason: "float-precision" };
+    if (Object.is(value, -0)) return { preserve: true, reason: "negative-zero" };
+    return { preserve: false, value };
   }
-  // 小数/指数：若经 Number↔JSON 往返改变数值，则保留词素；否则用 Number（格式化可能改写 1e2→100）。
-  const roundTrip = JSON.parse(JSON.stringify(asNumber));
-  if (!Object.is(roundTrip, asNumber)) {
-    return { preserve: true, reason: "float-precision" };
-  }
-  if (Number.isInteger(asNumber) && !Number.isSafeInteger(asNumber)) {
+  if (Number.isInteger(value) && !Number.isSafeInteger(value)) {
     return { preserve: true, reason: "unsafe-integer" };
   }
-  return { preserve: false, value: asNumber };
+  const output = String(value);
+  if (raw !== output && decimalKey(raw) !== decimalKey(output)) {
+    return { preserve: true, reason: "float-precision" };
+  }
+  return { preserve: false, value };
 }
 
 function decodeJsonStringBody(body, startOffset, fail) {
@@ -355,7 +358,7 @@ function parseJsonDocument(source) {
     throw error;
   };
   const skipWhitespace = () => {
-    while (/\s/.test(source[index] ?? "")) index += 1;
+    while (/[ \t\r\n]/.test(source[index] ?? "")) index += 1;
   };
   const parseString = () => {
     if (source[index] !== '"') fail();
@@ -982,15 +985,14 @@ export function queryJsonPath(value, path) {
 
 function yamlCompatibleValue(value, seen = new WeakSet()) {
   if (isJsonNumber(value)) {
-    // yaml 库会把超大 Number 再丢精度；对需保真的整数改走纯文本 JSON→再失败提示。
-    const asNumber = Number(value.raw);
-    if (numberNeedsLexeme(value.raw).preserve) {
-      const error = new Error("YAML 无法无损表示超出 IEEE 双精度安全整数的数字词素");
+    const decision = numberNeedsLexeme(value.raw);
+    if (decision.preserve) {
+      const error = new Error("YAML 导出无法保留该数字的精度或符号");
       error.code = "YAML_NUMBER_LOSSY";
       error.raw = value.raw;
       throw error;
     }
-    return asNumber;
+    return decision.value;
   }
   if (value === null || typeof value === "string" || typeof value === "boolean" || typeof value === "number") {
     return value;
@@ -998,9 +1000,7 @@ function yamlCompatibleValue(value, seen = new WeakSet()) {
   if (typeof value !== "object" || seen.has(value)) return value;
   seen.add(value);
   if (Array.isArray(value)) return value.map((item) => yamlCompatibleValue(item, seen));
-  const next = {};
-  for (const key of Object.keys(value)) next[key] = yamlCompatibleValue(value[key], seen);
-  return next;
+  return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, yamlCompatibleValue(item, seen)]));
 }
 
 export function jsonToYaml(value) {
@@ -1052,29 +1052,23 @@ function isJsonCompatible(value, seen = new WeakSet()) {
 }
 
 function yamlScalarToJsonValue(node) {
-  if (!isScalar(node)) return node?.toJSON?.() ?? node?.value ?? null;
-  // 显式引号标量保持字符串，避免把 "42" 当成数字。
-  if (node.type === "QUOTE_DOUBLE" || node.type === "QUOTE_SINGLE" || node.type === "BLOCK_LITERAL" || node.type === "BLOCK_FOLDED") {
-    return typeof node.value === "string" ? node.value : String(node.value ?? "");
-  }
-  if (typeof node.value === "number" && !Number.isFinite(node.value)) {
-    throw new TypeError(`无法将非有限 YAML 数值转换为 JSON：${String(node.source ?? node.value)}`);
-  }
-  if (typeof node.value === "bigint") {
-    throw new TypeError(`无法将 YAML bigint 安全转换为 JSON：${String(node.value)}`);
-  }
-  const raw = typeof node.source === "string" && node.source.length > 0
-    ? node.source
-    : (node.value == null ? null : String(node.value));
-  if (raw === null) return node.toJSON();
-  if (typeof node.value === "number" || node.type === "PLAIN") {
-    if (/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(raw)) {
-      const decision = numberNeedsLexeme(raw);
-      if (decision.preserve) return new JsonNumber(raw, { reason: decision.reason });
-      return decision.value;
+  if (typeof node.value !== "number") return node.value;
+  const raw = node.source;
+  let jsonNumber;
+  if (/^0(?:x[\da-f]+|o[0-7]+)$/i.test(raw)) {
+    jsonNumber = BigInt(raw).toString();
+  } else {
+    // YAML 允许前导加号、前导零和省略整数或小数部分。
+    const match = /^([-+]?)(\d*)(?:\.(\d*))?([eE][-+]?\d+)?$/.exec(raw);
+    if (!match || !(match[2] || match[3])) {
+      throw new TypeError(`无法将 YAML 数值转换为 JSON：${raw}`);
     }
+    const whole = match[2].replace(/^0+/, "") || "0";
+    jsonNumber = (match[1] === "-" ? "-" : "") + whole
+      + (match[3] ? "." + match[3] : "") + (match[4] || "");
   }
-  return node.toJSON();
+  const decision = numberNeedsLexeme(jsonNumber);
+  return decision.preserve ? new JsonNumber(jsonNumber, { reason: decision.reason }) : decision.value;
 }
 
 export function yamlToJson(text) {
@@ -1119,7 +1113,12 @@ export function yamlToJson(text) {
       if (depth > 512) throw new Error("YAML 嵌套层级超过 512");
       if (node == null) return null;
       if (isScalar(node)) return yamlScalarToJsonValue(node);
-      if (isSeq(node)) return node.items.map((item) => convertNode(item, depth + 1));
+      if (isSeq(node)) {
+        if (node.tag && node.tag !== "tag:yaml.org,2002:seq") {
+          throw new TypeError(`不支持的 YAML 序列标签：${node.tag}`);
+        }
+        return node.items.map((item) => convertNode(item, depth + 1));
+      }
       if (isMap(node)) {
         const tag = typeof node.tag === "string" ? node.tag : "";
         if (tag && tag !== "tag:yaml.org,2002:map") {
@@ -1128,13 +1127,11 @@ export function yamlToJson(text) {
         if (node.constructor?.name === "YAMLSet") {
           throw new TypeError("YAML set 无法无损转换为 JSON");
         }
-        const object = {};
-        for (const item of node.items) {
+        return Object.fromEntries(node.items.map((item) => {
           const key = convertNode(item.key, depth + 1);
           if (typeof key !== "string") throw new TypeError("YAML map key 必须是字符串");
-          object[key] = convertNode(item.value, depth + 1);
-        }
-        return object;
+          return [key, convertNode(item.value, depth + 1)];
+        }));
       }
       if (typeof node !== "object") return node;
       if (node instanceof Set) {
@@ -1201,19 +1198,11 @@ function valueKind(value) {
 function jsonValuesEqual(left, right) {
   if (Object.is(left, right)) return true;
   if (isJsonNumber(left) || isJsonNumber(right)) {
-    const leftRaw = isJsonNumber(left) ? left.raw : formatJsonPrimitive(left);
-    const rightRaw = isJsonNumber(right) ? right.raw : formatJsonPrimitive(right);
-    if (leftRaw === rightRaw) return true;
-    // 1e2 vs 100：数值相等且双方都可用有限 Number 表示时视为相等。
-    const leftNumber = isJsonNumber(left) ? Number(left.raw) : left;
-    const rightNumber = isJsonNumber(right) ? Number(right.raw) : right;
-    return typeof leftNumber === "number"
-      && typeof rightNumber === "number"
-      && Number.isFinite(leftNumber)
-      && Number.isFinite(rightNumber)
-      && Object.is(leftNumber, rightNumber)
-      && !numberNeedsLexeme(String(leftRaw)).preserve
-      && !numberNeedsLexeme(String(rightRaw)).preserve;
+    if (!(isJsonNumber(left) || typeof left === "number")
+      || !(isJsonNumber(right) || typeof right === "number")) return false;
+    const leftRaw = isJsonNumber(left) ? left.raw : String(left);
+    const rightRaw = isJsonNumber(right) ? right.raw : String(right);
+    return leftRaw === rightRaw || decimalKey(leftRaw) === decimalKey(rightRaw);
   }
   return false;
 }

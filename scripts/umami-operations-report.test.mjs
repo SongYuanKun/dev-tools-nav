@@ -68,7 +68,7 @@ test("report emits detail and raw-recomputed hostname and all-host summaries wit
   assert.match(sql, /'raw'/);
   assert.match(sql, /'filtered_external'/);
   assert.match(sql, /'suspected_automation'/);
-  assert.match(sql, /'selftest'/);
+  assert.match(sql, /COALESCE\(e\.tag, ''\) = 'selftest'/);
   assert.match(
     sql,
     /FROM\s+pageview_events\s+e[\s\S]*?CROSS\s+JOIN\s+LATERAL\s*\(\s*VALUES[\s\S]*?'detail'[\s\S]*?'hostname_summary'[\s\S]*?'all_hosts_summary'/si,

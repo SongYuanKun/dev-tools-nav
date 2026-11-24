@@ -85,7 +85,7 @@ Umami 3.2.0 实际 schema 已于 2026-07-13 在只读连接上验证：`event_da
 
 - `navigator.doNotTrack`、`window.doNotTrack` 或 `navigator.msDoNotTrack` 为 `1`/`yes` 时，`js/base.js` 不初始化采集。
 - `localStorage.setItem('umami.disabled', '1')` 可在该浏览器禁用采集；删除该 key 后恢复。
-- **自测标记（可逆）**：`?selftest=1` 或 `localStorage.setItem('umami.selftest','1')` 开启；`?selftest=0` 或删除 key 关闭。开启后 identify/事件带 `自测=是`、`标记=自测`，报表进入 `selftest` 队列。主人自动化验收应显式开启，**不要**靠地理推断。
+- **自测标记（可逆）**：`?selftest=1` 或 `localStorage.setItem('umami.selftest','1')` 开启；`?selftest=0` 或删除 key 关闭。开启自测后，浏览量带 `tag=selftest`，identify/自定义事件带 `自测=是`、`标记=自测`，报表进入 `selftest` 队列。主人自动化验收应显式开启，**不要**靠地理推断。
 - localStorage 读写失败会被捕获；如果 DNT 未开启，采集仍可继续。
 - `window.umamiTrack`、中文映射和 helper 的调用均由 `try/catch` 隔离，分析故障不能阻断工具功能。
 - 网络发送使用 `fetch(..., { keepalive: true, credentials: 'omit' })`，失败最多重试两次；失败不会抛回业务事件处理器。

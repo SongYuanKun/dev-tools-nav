@@ -35,6 +35,8 @@ test("selftest explicit tag beats fingerprint and is reversible semantics", () =
     classifyCohort(FIXTURES.selftestOwner.event, FIXTURES.selftestOwner.session),
     "selftest",
   );
+  assert.equal(classifyCohort({ tag: "selftest" }, {}), "selftest");
+  assert.equal(classifyCohort({ tag: "tools" }, {}), "filtered_external");
   assert.equal(isSelftestEvent({ 标记: "自测" }, {}), true);
   assert.equal(isSelftestEvent({}, { 自测: "是" }), true);
   assert.equal(isSelftestEvent({}, FIXTURES.botCn.session), false);

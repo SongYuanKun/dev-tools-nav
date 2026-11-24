@@ -140,6 +140,7 @@ export function countryAloneIsNotAutomation(session = {}) {
 }
 
 export function isSelftestEvent(event = {}, session = {}) {
+  if (event.tag === "selftest" || event.自测 === "是") return true;
   const mark = event.标记 ?? event.tag_mark ?? event.selftest;
   if (mark === "自测" || mark === "selftest" || mark === true || mark === "1") return true;
   const sessionFlag = session.自测 ?? session.selftest;

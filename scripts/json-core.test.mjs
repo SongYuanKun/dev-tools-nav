@@ -593,3 +593,33 @@ test("yamlToJson preserves safe numbers and unsafe integer lexemes when represen
   assert.equal(unsafe.value.id.raw, "9007199254740993");
   assert.match(unsafe.text, /9007199254740993/);
 });
+
+test("strict JSON accepts only space, tab, CR and LF between tokens", () => {
+  assert.equal(parseJson("[ \t\r\n1]").ok, true);
+  for (const space of ["\u00a0", "\v", "\ufeff"]) {
+    assert.equal(parseJson(`[${space}1]`).error.offset, 1);
+    assert.equal(parseJson(JSON.stringify(space)).value, space);
+  }
+});
+
+test("JSON transformations and diff compare exact decimal values", () => {
+  for (const raw of ["1e-324", "-1e-324", "0.1234567890123456789", "1.00000000000000001"]) {
+    assert.equal(minifyJson(formatJson(raw).text).text, raw);
+    assert.equal(diffJson(parseJson(raw).value, Number(raw)).equal, false);
+    assert.equal(jsonToYaml(parseJson(raw).value).error.code, "YAML_NUMBER_LOSSY");
+    assert.equal(yamlToJson(raw).text, raw);
+  }
+  assert.equal(minifyJson("[1.2300e2,100e-3]").text, "[123,0.1]");
+  assert.equal(diffJson(parseJson("10e-325").value, parseJson("1e-324").value).equal, true);
+});
+
+test("YAML conversion preserves mapping keys, numeric precision and explicit scalar types", () => {
+  const input = '{"__proto__":{"value":2},"constructor":1}';
+  const yaml = jsonToYaml(parseJson(input).value);
+  assert.equal(yaml.ok, true);
+  assert.deepEqual(yamlToJson(yaml.text).value, JSON.parse(input));
+  for (const [source, expected] of [
+    ["!!str 42", '"42"'], ['!!int "42"', "42"],
+    ["0x20000000000001", "9007199254740993"], ["+.12345678901234567890", "0.12345678901234567890"],
+  ]) assert.equal(yamlToJson(source).text, expected);
+});

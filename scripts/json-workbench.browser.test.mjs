@@ -330,9 +330,9 @@ test("repair apply refreshes validity immediately without stale invalid status",
   await context.close();
 });
 
-test("format minify tree path and yaml paths preserve unsafe integer lexemes", async () => {
+test("format, minify, tree, path and YAML preserve precise JSON numbers", async () => {
   const { context, page } = await openWorkbench();
-  const source = '{"id":9007199254740993,"name":"中文","items":[{"x":true},null]}';
+  const source = '{"id":9007199254740993,"tiny":1e-324,"ratio":0.1234567890123456789,"name":"中文","items":[{"x":true},null]}';
   await setDocument(page, source);
   await page.getByRole("button", { name: /^格式化/ }).click();
   const formatted = await documentText(page);
@@ -1022,4 +1022,25 @@ test("shared footer exposes the public JetBrains non-commercial badge", async ()
   assert.match(await privacy.innerText(), /Umami 无 Cookie 的假名化访问统计/);
   assert.match(await privacy.innerText(), /无广告/);
   await context.close();
+});
+
+test("self-test pageviews are marked until the browser explicitly clears self-test mode", async () => {
+  const context = await browser.newContext({ serviceWorkers: "block" });
+  try {
+    const page = await context.newPage();
+    await page.route("https://umami.songyuankun.top/**", (route) => route.fulfill({
+      contentType: "application/json", body: "{}",
+    }));
+    for (const [query, tag] of [["?selftest=1", "selftest"], ["", "selftest"], ["?selftest=0", "tools"]]) {
+      const pageview = page.waitForRequest((request) => {
+        if (!request.url().endsWith("/api/send") || request.method() !== "POST") return false;
+        const { type, payload } = request.postDataJSON();
+        return type === "event" && !payload.name;
+      });
+      await page.goto(origin + "/tools/json/" + query);
+      assert.equal((await pageview).postDataJSON().payload.tag, tag);
+    }
+  } finally {
+    await context.close();
+  }
 });

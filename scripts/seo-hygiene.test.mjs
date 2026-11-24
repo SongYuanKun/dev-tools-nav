@@ -1,24 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
+import { collectSiteHtmlFiles } from "./generate-sitemap.mjs";
 
 import { CANONICAL_ORIGIN } from "./site-host.mjs";
-
-const SKIP_DIRS = new Set(["node_modules", ".git", ".github", "docs", "content", "scripts", "ops", "tasks"]);
-
-function walkHtml(root = ".", relative = "") {
-  const dir = join(root, relative);
-  const out = [];
-  for (const name of readdirSync(dir).sort()) {
-    if (SKIP_DIRS.has(name)) continue;
-    const child = relative ? `${relative}/${name}` : name;
-    const st = statSync(join(root, child));
-    if (st.isDirectory()) out.push(...walkHtml(root, child));
-    else if (name.endsWith(".html")) out.push(child);
-  }
-  return out;
-}
 
 function metaContent(html, attrName, attrValue) {
   const re = new RegExp(
@@ -67,7 +52,7 @@ test("sitemap locations are absolute custom-domain URLs and use static detail ro
 
 test("indexable HTML pages expose a custom-domain canonical link", () => {
   const failures = [];
-  for (const path of walkHtml()) {
+  for (const path of collectSiteHtmlFiles(".")) {
     const html = readFileSync(path, "utf8");
     if (isNoindex(html)) continue;
     // Compatibility redirect shells may omit OG but still need canonical when indexable.

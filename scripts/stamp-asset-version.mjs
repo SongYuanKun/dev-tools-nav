@@ -140,7 +140,7 @@ export function stampText(text, version, options = {}) {
 function walkFiles(root, visit, relativePath = "") {
   const dir = relativePath ? join(root, relativePath) : root;
   for (const name of readdirSync(dir).sort()) {
-    if (!relativePath && SKIP_DIRS.has(name)) continue;
+    if (name.startsWith(".") || (!relativePath && SKIP_DIRS.has(name))) continue;
     if (name === "_site") continue;
     const childRel = relativePath ? `${relativePath}/${name}` : name;
     const full = join(root, childRel);

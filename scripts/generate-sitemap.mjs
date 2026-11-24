@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const MODULE_DIR = fileURLToPath(new URL(".", import.meta.url));
 const DEFAULT_ROOT = join(MODULE_DIR, "..");
 const BASE_URL = "https://tools.songyuankun.top";
-const EXCLUDED_NAMES = new Set(["node_modules", ".git", ".github", "docs"]);
+const PAGE_DIRECTORIES = new Set(["pages", "tools"]);
 const EXCLUDED_FILES = new Set(["template.html", "post.html"]);
 // 搜索引擎站长验证页只部署到 Web 根，不入库；本机残留时不得进入 sitemap
 const EXCLUDED_FILE_PATTERNS = [/^baidu_verify/i, /^google[a-f0-9]+\.html$/i];
@@ -20,14 +20,6 @@ export function xmlEscape(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&apos;");
-}
-
-function shouldExclude(name) {
-  return EXCLUDED_NAMES.has(name) || /_bak|\.bak$|README\.md$/.test(name);
-}
-
-function shouldExcludeHtmlFile(name) {
-  return EXCLUDED_FILES.has(name) || EXCLUDED_FILE_PATTERNS.some((pattern) => pattern.test(name));
 }
 
 function pageMeta(pathname) {
@@ -43,23 +35,21 @@ function pageMeta(pathname) {
   return { priority: 0.5, changefreq: "monthly" };
 }
 
-function walkHtml(root, relativePath = "") {
+export function collectSiteHtmlFiles(root, relativePath = "") {
   const directory = join(root, relativePath);
-  if (!existsSync(directory)) return [];
-
-  const entries = [];
-  for (const name of readdirSync(directory).sort()) {
-    if (shouldExclude(name)) continue;
-    const childRelativePath = relativePath ? `${relativePath}/${name}` : name;
-    const stat = statSync(join(root, childRelativePath));
-
-    if (stat.isDirectory()) {
-      entries.push(...walkHtml(root, childRelativePath));
-    } else if (name.endsWith(".html") && !shouldExcludeHtmlFile(name)) {
-      entries.push({ path: childRelativePath });
+  const files = [];
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const { name } = entry;
+    if (name.startsWith(".") || name.includes("_bak")) continue;
+    const path = relativePath ? `${relativePath}/${name}` : name;
+    if (entry.isDirectory() && (relativePath || PAGE_DIRECTORIES.has(name))) {
+      files.push(...collectSiteHtmlFiles(root, path));
+    } else if (entry.isFile() && name.endsWith(".html")
+      && !EXCLUDED_FILE_PATTERNS.some((pattern) => pattern.test(name))) {
+      files.push(path);
     }
   }
-  return entries;
+  return files.sort();
 }
 
 function pathnameFor(path) {
@@ -129,20 +119,17 @@ export function collectStaticUrls(root, options = {}) {
     });
   };
 
-  addUrl("/", "index.html");
-  // OP-201：Search Console 静态看板（优先级 0.75，每周一次复盘更新）
-  addUrl("/search-console.html", "search-console.html");
-  for (const entry of walkHtml(root)) {
-    if (isNoindexPage(root, entry.path)) continue;
-    const pathname = pathnameFor(entry.path);
-    const blogMatch = /^pages\/blog\/([a-z0-9-]+)\.html$/.exec(entry.path);
-    const blogLastmod = entry.path === "pages/blog/index.html"
+  for (const path of collectSiteHtmlFiles(root)) {
+    if (EXCLUDED_FILES.has(path.split("/").pop()) || isNoindexPage(root, path)) continue;
+    const pathname = pathnameFor(path);
+    const blogMatch = /^pages\/blog\/([a-z0-9-]+)\.html$/.exec(path);
+    const blogLastmod = path === "pages/blog/index.html"
       ? blogIndexLastmod
       : (blogMatch ? blogLastmods.get(blogMatch[1]) : undefined);
-    const sourcePath = /^pages\/details\/[a-z0-9-]+\/index\.html$/.test(entry.path)
+    const sourcePath = /^pages\/details\/[a-z0-9-]+\/index\.html$/.test(path)
       ? "data/tools.js"
-      : entry.path;
-    if (pathname !== "/") addUrl(pathname, sourcePath, blogLastmod);
+      : path;
+    addUrl(pathname, sourcePath, blogLastmod);
   }
 
   return [...new Map(urls.map((url) => [url.loc, url])).values()]

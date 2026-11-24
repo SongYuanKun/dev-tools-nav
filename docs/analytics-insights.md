@@ -21,7 +21,7 @@
   - 开启：`?selftest=1` 或 `localStorage.setItem('umami.selftest','1')`
   - 关闭：`?selftest=0` 或删除该 key
   - 全量停采：`localStorage.setItem('umami.disabled','1')`（原有）
-- 开启自测后，事件属性带 `标记=自测` / `自测=是`，报表进入 `selftest` 队列。历史未标记样本保持 uncertain，不得回写破坏性清洗。
+- 开启自测后，浏览量带 `tag=selftest`，自定义事件属性带 `标记=自测` / `自测=是`，报表进入 `selftest` 队列。历史未标记样本保持 uncertain，不得回写破坏性清洗。
 
 ## 刷新命令
 

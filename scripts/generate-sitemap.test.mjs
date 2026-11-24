@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { GENERATED_PATHS } from "./check-generated.mjs";
@@ -28,6 +28,21 @@ test("collectStaticUrls excludes templates and returns sorted unique locations",
   assert.ok(!locations.some((loc) => loc.endsWith("/pages/template.html")));
   assert.equal(new Set(locations).size, locations.length);
   assert.deepEqual(locations, [...locations].sort());
+});
+
+test("sitemap only indexes published HTML and skips nested worktrees and staging copies", () => {
+  const root = mkdtempSync(join(tmpdir(), "sitemap-layout-"));
+  try {
+    for (const directory of ["pages", ".claude/worktrees/review/pages", "_site/pages", "output"]) {
+      mkdirSync(join(root, directory), { recursive: true });
+      writeFileSync(join(root, directory, "article.html"), "<title>Article</title>");
+    }
+    writeFileSync(join(root, "googleabc123.html"), "verification");
+    const urls = collectStaticUrls(root, { resolveLastmod: () => undefined });
+    assert.deepEqual(urls.map(({ loc }) => new URL(loc).pathname), ["/pages/article.html"]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("collectStaticUrls includes all thirteen canonical self-built tools", () => {

@@ -1,25 +1,15 @@
 import assert from "node:assert/strict";
-import { readdir, readFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import vm from "node:vm";
+import { collectSiteHtmlFiles } from "./generate-sitemap.mjs";
 
 const html = await readFile(new URL("../tools/json/index.html", import.meta.url), "utf8");
 const css = await readFile(new URL("../css/json-workbench.css", import.meta.url), "utf8").catch(() => "");
 const workbenchSource = await readFile(new URL("../js/json-workbench.mjs", import.meta.url), "utf8");
 const legacyHtml = await readFile(new URL("../pages/tools/json.html", import.meta.url), "utf8");
-
-async function collectHtmlFiles(directory) {
-  const entries = await readdir(directory, { withFileTypes: true });
-  const files = [];
-  for (const entry of entries) {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...await collectHtmlFiles(path));
-    else if (entry.isFile() && entry.name.endsWith(".html")) files.push(path);
-  }
-  return files;
-}
 
 function count(pattern) {
   return [...html.matchAll(pattern)].length;
@@ -67,9 +57,8 @@ test("legacy JSON page is a noindex redirect that preserves non-embed query para
 
 test("repository HTML no longer references the legacy JSON implementation or embed URL", async () => {
   const root = fileURLToPath(new URL("..", import.meta.url));
-  const htmlFiles = await collectHtmlFiles(root);
-  for (const path of htmlFiles) {
-    const source = await readFile(path, "utf8");
+  for (const path of collectSiteHtmlFiles(root)) {
+    const source = await readFile(join(root, path), "utf8");
     assert.doesNotMatch(source, /(?:\.\.\/)*js\/json-tool\.js/i, `${path} references json-tool.js`);
     assert.doesNotMatch(source, /pages\/tools\/json\.html[^"'\s>]*[?&]embed=1/i, `${path} references the legacy JSON embed`);
   }

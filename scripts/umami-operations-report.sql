@@ -132,7 +132,8 @@ WITH target_hosts(hostname) AS (
     COALESCE(e.visit_id, e.session_id) AS visit_key,
     COALESCE(sf.is_suspected_automation, FALSE) AS is_suspected_automation,
     (
-      COALESCE(p.mark_label, '') = '自测'
+      COALESCE(e.tag, '') = 'selftest'
+      OR COALESCE(p.mark_label, '') = '自测'
       OR COALESCE(p.selftest_prop, '') IN ('是', 'selftest', '1')
     ) AS is_selftest,
     p.tool_label,

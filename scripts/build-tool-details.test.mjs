@@ -21,7 +21,7 @@ function metaContent(html, name) {
   return html.match(new RegExp(`<meta[^>]+name=["']${name}["'][^>]+content=["']([^"']+)["']`, "i"))?.[1];
 }
 
-function runLegacyTemplate(search) {
+function runLegacyTemplate(search, fixtureId = "deepseek") {
   const script = [...legacyTemplate.matchAll(/<script>([\s\S]*?)<\/script>/gi)]
     .map((match) => match[1])
     .find((body) => /function renderDetail/.test(body));
@@ -52,7 +52,7 @@ function runLegacyTemplate(search) {
     getElementById(id) { return ids.get(id) || null; },
     querySelector(selector) { return selectors.get(selector) || null; },
   };
-  const tool = { ...model.tools.find((item) => item.id === "deepseek"), icon: "" };
+  const tool = { ...model.tools.find((item) => item.id === fixtureId), icon: "" };
   const window = {
     location: { search },
     escapeHtml(value) {
@@ -174,6 +174,11 @@ test("legacy query shell renders valid IDs at static canonicals and rejects empt
     "https://tools.songyuankun.top/pages/details/deepseek/",
   );
   assert.equal(valid.selectors.get('meta[name="robots"]').attributes.content, "noindex,follow");
+
+  const online = runLegacyTemplate("?id=online-json", "online-json");
+  const links = [...online.ids.get("detailContent").innerHTML.matchAll(/href="([^"]+)"/g)];
+  assert.ok(links.length >= 2);
+  for (const [, href] of links) assert.equal(new URL(href, "https://example.org/pages/template.html").pathname, "/tools/json/");
 
   for (const search of ["", "?id=dev"]) {
     const invalid = runLegacyTemplate(search);
