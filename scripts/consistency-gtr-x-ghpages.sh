@@ -148,8 +148,6 @@ gtr_sc="$(fetch_body "$(url_for "$GTR_BASE" "/search-console.html")")"
 pages_sc="$(fetch_body "$(url_for "$PAGES_BASE" "/search-console.html")")"
 gtr_sha="$(sha_of "$gtr_sc")"
 pages_sha="$(sha_of "$pages_sc")"
-gtr_hits="$(grep -cE 'search-gap|search-queries' <<<"$gtr_sc" || true)"
-pages_hits="$(grep -cE 'search-gap|search-queries' <<<"$pages_sc" || true)"
 c_ok=1
 if [[ -z "$gtr_sc" || -z "$pages_sc" ]]; then
   echo "FAIL  search-console 正文为空  GTR_len=${#gtr_sc} Pages_len=${#pages_sc}"
@@ -160,12 +158,17 @@ elif [[ "$gtr_sha" != "$pages_sha" ]]; then
 else
   echo "PASS  search-console SHA match  $gtr_sha"
 fi
-if [[ "${gtr_hits:-0}" -lt 3 || "${pages_hits:-0}" -lt 3 ]]; then
-  echo "FAIL  search-gap/queries hits  GTR=$gtr_hits  Pages=$pages_hits (need ≥3 each)"
-  c_ok=0
-else
-  echo "PASS  search-gap/queries hits  GTR=$gtr_hits  Pages=$pages_hits"
-fi
+for site in GTR Pages; do
+  body="$gtr_sc"
+  if [[ "$site" == "Pages" ]]; then body="$pages_sc"; fi
+  panels="$( { grep -oF '<section class="sc-panel"' <<<"$body" || true; } | wc -l )"
+  if [[ "$panels" -eq 4 ]] && grep -Eq '<a class="sc-gap-cta" href="[^"]+template=search-gap[.]yml' <<<"$body"; then
+    echo "PASS  search-console dashboard sections and feedback link  $site"
+  else
+    echo "FAIL  search-console dashboard sections or feedback link missing  $site sections=$panels"
+    c_ok=0
+  fi
+done
 if [[ "$c_ok" -eq 1 ]]; then
   echo "C_SUMMARY: PASS DIFF=0"
 else

@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { chmodSync, existsSync, readFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const SCRIPT = "scripts/consistency-gtr-x-ghpages.sh";
 
@@ -37,4 +39,44 @@ test("consistency script checks PWA assets, self-built tools, and keyword rows",
 
   assert.match(source, /ROUTE_TOTAL=\$\{\#ROUTES\[@\]\}/);
   assert.match(source, /TOOL_TOTAL=\$\{\#TOOL_KEYWORD_PATHS\[@\]\}/);
+});
+
+test("consistency checks the current dashboard and rejects matching pages without a feedback link", () => {
+  const directory = mkdtempSync(join(tmpdir(), "nav-site-comparison-"));
+  try {
+    writeFileSync(join(directory, "curl"), `#!/usr/bin/env bash
+case " $* " in
+  *" -w "*) printf 200 ;;
+  *)
+    url=\${!#}
+    case "$url" in
+      */search-console.html) cat "$DASHBOARD_FIXTURE" ;;
+      *) cat ".\${url#*://fixture.invalid}" ;;
+    esac
+    ;;
+esac
+`, { mode: 0o755 });
+    const dashboard = readFileSync("search-console.html", "utf8");
+    const fixture = join(directory, "dashboard.html");
+    const env = {
+      ...process.env,
+      PATH: directory + ":" + process.env.PATH,
+      GTR_BASE: "https://fixture.invalid",
+      PAGES_BASE: "https://fixture.invalid",
+      DASHBOARD_FIXTURE: fixture,
+    };
+
+    writeFileSync(fixture, dashboard);
+    const valid = spawnSync("bash", [SCRIPT], { encoding: "utf8", env });
+    assert.equal(valid.status, 0, valid.stderr || valid.stdout);
+    assert.match(valid.stdout, /RESULT: ALL GREEN/);
+
+    writeFileSync(fixture, dashboard.replace("template=search-gap.yml", "template=other.yml"));
+    const invalid = spawnSync("bash", [SCRIPT], { encoding: "utf8", env });
+    assert.equal(invalid.status, 1, invalid.stderr || invalid.stdout);
+    assert.match(invalid.stdout, /PASS  search-console SHA match/);
+    assert.match(invalid.stdout, /FAIL  search-console dashboard sections or feedback link missing/);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

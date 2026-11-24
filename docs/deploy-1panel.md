@@ -213,7 +213,7 @@ done
 npm run check:consistency
 ```
 
-脚本 [`scripts/consistency-gtr-x-ghpages.sh`](../scripts/consistency-gtr-x-ghpages.sh) 检查：A 栏路由双站 HTTP 200（含 PWA 的 `/manifest.webmanifest`、`/sw.js`、`/offline.html` 与全部自建 `/tools/*/`）、B 栏 `pages/tools/*.html` 关键字矩阵、C 栏 `search-console.html` 内容指纹与 `search-gap|search-queries` 命中。全部通过时输出 `RESULT: ALL GREEN`。
+脚本 [`scripts/consistency-gtr-x-ghpages.sh`](../scripts/consistency-gtr-x-ghpages.sh) 检查：A 栏路由双站 HTTP 200（含 PWA 的 `/manifest.webmanifest`、`/sw.js`、`/offline.html` 与全部自建 `/tools/*/`）、B 栏 `pages/tools/*.html` 关键字矩阵、C 栏 `search-console.html` 内容指纹、四个数据区块与 Search Gap 反馈入口。全部通过时输出 `RESULT: ALL GREEN`。
 
 ## 升级与恢复
 
